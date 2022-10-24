@@ -587,6 +587,284 @@ payload3&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=
  ]]></description>
         </item>
         <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/nat%E6%A8%A1%E5%BC%8Fip%E5%88%86%E9%85%8D/</guid>
+            <title>nat模式+ip分配</title>
+            <link>https://blog.xcu.icu/2022/10/24/nat%E6%A8%A1%E5%BC%8Fip%E5%88%86%E9%85%8D/</link>
+            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;实验1centos-8安装-网络配置-远程访问&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实验1centos-8安装-网络配置-远程访问&#34;&gt;#&lt;/a&gt; 实验 1：CentOS 8 安装、网络配置、远程访问&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;实验目的&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1、掌握 Linux 虚拟机的安装方法；&lt;/p&gt;
+&lt;p&gt;2、掌握 Linux 网络配置方法；&lt;/p&gt;
+&lt;p&gt;3、掌握远程访问 Linux 系统的方式。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;1实验要求&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1实验要求&#34;&gt;#&lt;/a&gt; 1. 实验要求&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;任务 1：安装虚拟机；（实验过程可以省略）&lt;br /&gt;
+任务 2：安装 CentOS 8（建议：最小化安装）； （安装成功后的截图即可）&lt;/p&gt;
+&lt;p&gt;任务 3：配置网络为 NAT 模式，实现物理机与虚拟机的相互访问。（要求：IP 地址段为学号后两位，即 192.168. 学号.**）&lt;br /&gt;
+（1）	虚拟机配置为动态 IP 地址，Ping 物理主机测试连通性。&lt;/p&gt;
+&lt;p&gt;（2）	虚拟机配置为静态 IP 地址，Ping 物理主机测试连通性。&lt;/p&gt;
+&lt;p&gt;任务 4：Windows 主机上安装 Xhell，实现远程访问 CentOS 8 系统。&lt;/p&gt;
+&lt;p&gt;任务 5：两台 Linux 相互登陆（可以克隆出另一台 CentOS8，也可以使用其他的 Linux)。参考《跟阿铭学 Linux  第 3 版.pdf》P45，3.3 节 两台 Linux 相互登陆。&lt;/p&gt;
+&lt;p&gt;任务 6：完成后，虚拟机 “拍快照” 保存当前状态。（实验过程可以省略）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;2实验过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2实验过程&#34;&gt;#&lt;/a&gt; 2. 实验过程&lt;/h3&gt;
+&lt;h4 id=&#34;21-安装centos-8&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21-安装centos-8&#34;&gt;#&lt;/a&gt; 2.1 安装 CentOS 8&lt;/h4&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL2lzb3JlZGlyZWN0LmNlbnRvcy5vcmcvY2VudG9zLzcvaXNvcy94ODZfNjQv&#34;&gt;CentOS Mirrors List&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;用上面的链接下载镜像，并安装&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzA4MjM4NjYucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914230823866.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914230823866&amp;quot; style=&amp;quot;zoom: 50%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;h4 id=&#34;22-配置网络为nat模式&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22-配置网络为nat模式&#34;&gt;#&lt;/a&gt; 2.2 配置网络为 NAT 模式&lt;/h4&gt;
+&lt;h5 id=&#34;1虚拟机配置为动态ip地址&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1虚拟机配置为动态ip地址&#34;&gt;#&lt;/a&gt; （1）虚拟机配置为动态 IP 地址&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;点击 vm 编辑，点击虚拟网络编辑器&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzI3MTkzNDAucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914232719340.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914232719340&amp;quot; style=&amp;quot;zoom:80%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;发现需要管理员特权才能更改，点击更改设置&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzI4NDgxODcucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914232848187.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914232848187&amp;quot; style=&amp;quot;zoom: 50%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;进入后，选择 VMnet8，选择 NAT 模式，开启 DHCP，将子网 ip 网段改成我的学号后两位 09，最后点击确定&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzM0MDk1NTEucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914233409551.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914233409551&amp;quot; style=&amp;quot;zoom:50%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;等待加载完成后，查看虚拟网卡的 IP&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzM5MjA5MjUucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914233920925.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914233920925&amp;quot; style=&amp;quot;zoom:50%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;查看虚拟机 ip，这里发现 ip 地址的网段没有更改，重启后也没有改变&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzQwMTgxMzAucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914234018130.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914234018130&amp;quot; style=&amp;quot;zoom:80%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;这里发现物理主机的网段也是 0，判断应该是这台 Linux 虚拟机的网络链接模式还是桥接没有改成 NAT&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzQxNTUwMjQucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914234155024.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914234155024&amp;quot; style=&amp;quot;zoom:80%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;查看本 Linux 设置中的网络适配器，发现是桥接模式，这里更改为 NAT&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzQ0MjM3NTcucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914234423757.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914234423757&amp;quot; style=&amp;quot;zoom:67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;更改完成重新启动虚拟机，查看 ip 地址，网段变更一致&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzQ1MjUxMTIucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914234525112.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914234525112&amp;quot; style=&amp;quot;zoom: 80%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;测试 Linux 和主机的连通性&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914234633267.png&#34; alt=&#34;image-20220914234633267&#34; /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;2虚拟机配置为静态ip地址&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2虚拟机配置为静态ip地址&#34;&gt;#&lt;/a&gt; （2）虚拟机配置为静态 IP 地址&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;进入 /etc/sysconfig/network-scripts/ 目录打开网卡配置文件 ifcfg-ens33&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTQyMzU1MDI0MDcucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220914235502407.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220914235502407&amp;quot; style=&amp;quot;zoom:67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;打开后输入 i 进入插入模式，更改网卡配置文件&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMDAzMTI3NTgucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915000312758.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915000312758&amp;quot; style=&amp;quot;zoom:80%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;BOOTPROTO&amp;#x3D;&amp;quot;static&amp;quot;       &amp;#x2F;&amp;#x2F;修改：将dhcp修改为static，修改后为BOOTPROTO&amp;#x3D;static
+ONBOOT&amp;#x3D;yes               &amp;#x2F;&amp;#x2F;修改为yes, 网卡开机自启动
+
+IPADDR&amp;#x3D;&amp;quot;xxx.xxx.xxx.xxx&amp;quot;    &amp;#x2F;&amp;#x2F;新增：配置静态IP地址，按需配置
+NETMASK&amp;#x3D;&amp;quot;255.xxx.xxx.xxx&amp;quot;   &amp;#x2F;&amp;#x2F;新增：配置子网掩码
+GATEWAY&amp;#x3D;&amp;quot;xxx.xxx.xxx.xxx&amp;quot;   &amp;#x2F;&amp;#x2F;新增：配置网关
+DNS1&amp;#x3D;&amp;quot;xxx.xxx.xxx.xxx&amp;quot;        &amp;#x2F;&amp;#x2F;新增：配置DNS&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;点击 Esc，键入:wq 保存并退出，重启网卡&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915000632584.png&#34; alt=&#34;image-20220915000632584&#34; /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;再次查看虚拟机的 IP 地址，发现更改成功&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMDA3MDk1NzYucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915000709576.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915000709576&amp;quot; style=&amp;quot;zoom:67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;测试 Linux 和主机的连通性&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915000755532.png&#34; alt=&#34;image-20220915000755532&#34; /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;23-远程访问centos-7系统&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23-远程访问centos-7系统&#34;&gt;#&lt;/a&gt; 2.3 远程访问 CentOS 7 系统&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;点击 session&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMDExMDQ3NzgucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915001104778.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915001104778&amp;quot; style=&amp;quot;zoom:50%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;选择 ssh，输入 IP 地址，主机名&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMDExNTMzOTUucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915001153395.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915001153395&amp;quot; style=&amp;quot;zoom:50%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;点击 ok 后，键入密码&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMDEzMzQ3MjUucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915001334725.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915001334725&amp;quot; style=&amp;quot;zoom:67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;24-两台linux密钥登陆&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#24-两台linux密钥登陆&#34;&gt;#&lt;/a&gt; 2.4 两台 Linux 密钥登陆&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;关闭虚拟机，创建一个克隆&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMDIwMTE4OTcucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915002011897.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915002011897&amp;quot; style=&amp;quot;zoom: 67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;打开两台虚拟机，查看克隆机的 ip 地址&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMDIxMjg0ODUucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915002128485.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915002128485&amp;quot; style=&amp;quot;zoom: 67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;这里更改网卡配置，使得两个虚拟机的 IP 地址不同&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMDI1NTQyMDAucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915002554200.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915002554200&amp;quot; style=&amp;quot;zoom:80%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;同样使用 MobaXterm 连接&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMDI4NDgwOTQucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915002848094.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915002848094&amp;quot; style=&amp;quot;zoom:67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用 ssh-keygen 命令生成密钥对儿&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMTM4MTY2MDIucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915013816602.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915013816602&amp;quot; style=&amp;quot;zoom:67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将公钥 /root/.ssh/id_rsa.pub 的内容存入另一台虚拟机的 /root/.ssh/authorized_keys&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MTUwMTQxMTg0ODEucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915014118481.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220915014118481&amp;quot; style=&amp;quot;zoom: 67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;便可以直接登录，相互登录实现&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915015619902.png&#34; alt=&#34;image-20220915015619902&#34; /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;25-使用快照保存当前状态&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#25-使用快照保存当前状态&#34;&gt;#&lt;/a&gt; 2.5 使用快照保存当前状态&lt;/h4&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220915001507112.png&#34; alt=&#34;image-20220915001507112&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3实验小结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3实验小结&#34;&gt;#&lt;/a&gt; 3. 实验小结&lt;/h3&gt;
+&lt;p&gt;经过本次实验，学会了 nat 模式下的动态 ip 和静态 ip 地址的配置，加深了我对桥接和 nat 两种模式的理解，区分了虚拟网卡和物理网卡的联系和区别，学到了两台 Linux 主机的免密登录方式&lt;/p&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/samba%E5%85%B1%E4%BA%AB/</guid>
+            <title>Samba共享</title>
+            <link>https://blog.xcu.icu/2022/10/24/samba%E5%85%B1%E4%BA%AB/</link>
+            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;实验2samba服务器配置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实验2samba服务器配置&#34;&gt;#&lt;/a&gt; 实验 2：Samba 服务器配置&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;实验目的&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1、了解 Samba 协议，理解 Samba 的工作原理&lt;/p&gt;
+&lt;p&gt;3、熟练掌握 Samba 服务器的配置和故障排除的思路、方法技巧&lt;/p&gt;
+&lt;p&gt;4、深入理解 Linux 的文件权限管理&lt;/p&gt;
+&lt;p&gt;4、掌握防火墙 Firewall 的基本配置&lt;/p&gt;
+&lt;p&gt;5、初步学会配置 SELinux&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;实验参考&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;实验步骤可参考《2-1-Samba 服务器配置匿名共享.pdf》文件。&lt;/p&gt;
+&lt;p&gt;实验步骤可参考《2-2-Samba 服务器配置_安全共享.pdf》文件。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;1实验要求&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1实验要求&#34;&gt;#&lt;/a&gt; 1. 实验要求&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;任务 1：配置 yum 源，使用光盘镜像或者阿里云的 YUM 源安装 Samba 服务包。&lt;br /&gt;
+任务 2：Samba 匿名访问（不需要密码的分享），物理主机匿名访问 Samba 服务器上的共享目录 /tmp 和 /share。&lt;/p&gt;
+&lt;p&gt;任务 3：Samba 服务器配置_安全共享。一个小组（公司技术部）共同开发一个项目，所有的项目文件都存放在 Samba 服务器一个共享目录 (/home/project)。要求：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;公司每位成员使用用户名 / 密码访问 Samba 共享服务器，但只有技术部的成员可以访问部门的共享目录 /home/project。&lt;/li&gt;
+&lt;li&gt;技术部每位成员在共享目录 /home/project 新建的文件都属于技术部组。&lt;/li&gt;
+&lt;li&gt;技术部每位成员都可以对其他用户建立的文件进行读写操作，但每位用户只能删除自己的文件，不能删除其他用户建立的文件。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其他要求：&lt;/p&gt;
+&lt;p&gt;虚拟机主机名为 “Samba-xxx”，其中 xxx 为自己的姓名拼音简写；测试客户端的主机名修改为 “Client-xxx”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;2实验过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2实验过程&#34;&gt;#&lt;/a&gt; 2. 实验过程&lt;/h3&gt;
+&lt;h4 id=&#34;21-yum源配置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21-yum源配置&#34;&gt;#&lt;/a&gt; 2.1 yum 源配置&lt;/h4&gt;
+&lt;p&gt;首先将进入到配置目录，将原有的仓库文件进行一个备份&lt;/p&gt;
+&lt;p&gt;先创建一个文件夹来存放备份的文件，如下图 1-1&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjEwMjIyMTEzMDc2MTMucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022211307613.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20221022211307613&amp;quot; style=&amp;quot;zoom: 67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;p&gt;​																			图 1-1，建立文件夹&lt;/p&gt;
+&lt;p&gt;将文件移动进去后，配置一个阿里的 yum 源，如图 1-2&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjEwMjIyMTI0NDc0ODEucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022212447481.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20221022212447481&amp;quot; style=&amp;quot;zoom: 67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;p&gt;​                                                                                 图 1-2，yum 源配置&lt;/p&gt;
+&lt;h4 id=&#34;22-samba匿名共享&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22-samba匿名共享&#34;&gt;#&lt;/a&gt; 2.2 Samba 匿名共享&lt;/h4&gt;
+&lt;h5 id=&#34;221-环境准备&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#221-环境准备&#34;&gt;#&lt;/a&gt; 2.2.1 环境准备&lt;/h5&gt;
+&lt;p&gt;应老师要求这里不关闭防火墙和 SELinux&lt;/p&gt;
+&lt;p&gt;建立一个共享目录 /public，安装 samba 服务程序包如图 2-1&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022213412121.png&#34; alt=&#34;image-20221022213412121&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                                 图 2-1，环境准备&lt;/p&gt;
+&lt;h5 id=&#34;222-修改配置文件etcsambasmbconf&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-修改配置文件etcsambasmbconf&#34;&gt;#&lt;/a&gt; 2.2.2 修改配置文件 /etc/samba/smb.conf&lt;/h5&gt;
+&lt;p&gt;进入 samba 目录，将源文件备份，修改 smb.conf 文件如图 2-2&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214043968.png&#34; alt=&#34;image-20221022214043968&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                    图 2-2，修改配置文件&lt;/p&gt;
+&lt;p&gt;修改配置文件内如如下图 2-3&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214220044.png&#34; alt=&#34;image-20221022214220044&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                      图 2-3，配置文件内容&lt;/p&gt;
+&lt;h5 id=&#34;223启动环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#223启动环境&#34;&gt;#&lt;/a&gt; 2.2.3 启动环境&lt;/h5&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;[root@Samba-lq samba]# testparm #语法检查
+[root@Samba-lq samba]# service nmb start #开启nmb服务
+[root@Samba-lq samba]# service smb start #开启smb服务&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;检查语法如下图 2-4&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214900363.png&#34; alt=&#34;image-20221022214900363&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                          图 2-4，语法测试&lt;/p&gt;
+&lt;p&gt;开启 nmb 和 smb 服务如图 2-5&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214957516.png&#34; alt=&#34;image-20221022214957516&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                          图 2-5，开启服务&lt;/p&gt;
+&lt;h5 id=&#34;224设置防火墙规则和selinux规则&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#224设置防火墙规则和selinux规则&#34;&gt;#&lt;/a&gt; 2.2.4 设置防火墙规则和 SELinux 规则&lt;/h5&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;[root@Samba-lq samba]# firewall-cmd --permanent --zone&amp;#x3D;public --add-service&amp;#x3D;samba
+[root@Samba-lq samba]# firewall-cmd --reload
+[root@Samba-lq samba]# firewall-cmd --list-services
+[root@Samba-lq samba]# chcon -t samba_share_t &amp;#x2F;public&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;配置如下图 2-5&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221106832.png&#34; alt=&#34;image-20221022221106832&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​																		图 2-5，配置效果图&lt;/p&gt;
+&lt;h5 id=&#34;225共享目录进入要密码解决&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#225共享目录进入要密码解决&#34;&gt;#&lt;/a&gt; 2.2.5 共享目录进入要密码解决&lt;/h5&gt;
+&lt;p&gt;问题截图如下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221620593.png&#34; alt=&#34;image-20221022221620593&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里因为我使用的是老师给的配置文件，发现配置文件在 public 的配置中没有 guest ok 允许匿名共享&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221815533.png&#34; alt=&#34;image-20221022221815533&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;tmp 能够正常访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221859980.png&#34; alt=&#34;image-20221022221859980&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;修改后能正常访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222048533.png&#34; alt=&#34;image-20221022222048533&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;226共享目录不能正常写入文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#226共享目录不能正常写入文件&#34;&gt;#&lt;/a&gt; 2.2.6 共享目录不能正常写入文件&lt;/h5&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222139179.png&#34; alt=&#34;image-20221022222139179&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里是因为 public 权限问题，这里更改权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222345913.png&#34; alt=&#34;image-20221022222345913&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;更改后能够正常访问文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222414216.png&#34; alt=&#34;image-20221022222414216&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;23samba安全共享&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23samba安全共享&#34;&gt;#&lt;/a&gt; 2.3Samba 安全共享&lt;/h4&gt;
+&lt;h5 id=&#34;231环境准备&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#231环境准备&#34;&gt;#&lt;/a&gt; 2.3.1 环境准备&lt;/h5&gt;
+&lt;p&gt;关闭防火墙和 SELinux&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022230620906.png&#34; alt=&#34;image-20221022230620906&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;创建共享目录并设置权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022230755058.png&#34; alt=&#34;image-20221022230755058&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;232修改配置文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#232修改配置文件&#34;&gt;#&lt;/a&gt; 2.3.2 修改配置文件&lt;/h5&gt;
+&lt;p&gt;进入 /etc/samba 目录修改 smb.conf 文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022231259199.png&#34; alt=&#34;image-20221022231259199&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;重启服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022231355253.png&#34; alt=&#34;image-20221022231355253&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;233创建共享用户根据权限访问&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#233创建共享用户根据权限访问&#34;&gt;#&lt;/a&gt; 2.3.3 创建共享用户，根据权限访问&lt;/h5&gt;
+&lt;p&gt;创建系统用户&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221022231649122.png&#34; alt=&#34;image-20221022231649122&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;修改系统用户密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022232021237.png&#34; alt=&#34;image-20221022232021237&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;创建管理 shamab 用户（使用 pdbedit 管理 Samba）&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022232202251.png&#34; alt=&#34;image-20221022232202251&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;查看所有的共享用户&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022232421854.png&#34; alt=&#34;image-20221022232421854&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;2.3.4windows 客户端利用账户 lisi 访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022235143521.png&#34; alt=&#34;image-20221022234754805&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;创建测试文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022235324326.png&#34; alt=&#34;image-20221022235324326&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;linu 上面用张三登录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022235809958.png&#34; alt=&#34;image-20221022235809958&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;利用账号 zhangsan 挂载目录到本地&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000130466.png&#34; alt=&#34;image-20221023000130466&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;进入挂载目录创建目录文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000217590.png&#34; alt=&#34;image-20221023000217590&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;给共享目录设置防删除位&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000438265.png&#34; alt=&#34;image-20221023000438265&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;test-one&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#test-one&#34;&gt;#&lt;/a&gt; test-one&lt;/h5&gt;
+&lt;p&gt;windows 账号 lisi 删除 zhangsan 创建的文件失败&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000515094.png&#34; alt=&#34;image-20221023000515094&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;test-two&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#test-two&#34;&gt;#&lt;/a&gt; test-two&lt;/h5&gt;
+&lt;p&gt;zhangsan 删除 lisi 用户文件失败&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000623905.png&#34; alt=&#34;image-20221023000623905&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3实验小结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3实验小结&#34;&gt;#&lt;/a&gt; 3. 实验小结&lt;/h3&gt;
+ ]]></description>
+        </item>
+        <item>
             <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
             <title>关系数据库</title>
             <link>https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
