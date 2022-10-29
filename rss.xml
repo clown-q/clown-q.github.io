@@ -762,6 +762,229 @@ payload3&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=
  ]]></description>
         </item>
         <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB/</guid>
+            <title>XSS跨站脚本攻击</title>
+            <link>https://blog.xcu.icu/2022/10/24/XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB/</link>
+            <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
+            <category term="XSS" scheme="https://blog.xcu.icu/tags/XSS/" />
+            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;xss跨站脚本攻击&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#xss跨站脚本攻击&#34;&gt;#&lt;/a&gt; XSS 跨站脚本攻击&lt;/h1&gt;
+&lt;p&gt;xss 也叫 css 为了和层叠样式表（Cascading Style Sheets，CSS）的缩写区分。因此将跨站脚本攻击缩写为 XSS。&lt;/p&gt;
+&lt;p&gt;xss 攻击是指攻击者在网页中嵌入客户端脚本，通常是 js 代码，在用户访问时，恶意代码执行&lt;/p&gt;
+&lt;h1 id=&#34;原理刨析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#原理刨析&#34;&gt;#&lt;/a&gt; 原理刨析&lt;/h1&gt;
+&lt;p&gt;攻击者可以通过一些方式向网页中写入恶意代码，导致用户在加载网页时浏览器渲染执行了恶意脚本&lt;/p&gt;
+&lt;p&gt;上面提到 xss 攻击是嵌入客户端脚本，大多数是 js，少部分使用 AS 和 VBS，那么也就是说在能够利用漏洞的情况下，js 能做到什么效果，xss 的利用就能做到什么效果&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;javaScript加载外部的代码文件可以是任意文件扩展名，即使是图片扩展名只要包含js代码就能执行&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;h1 id=&#34;xss分类&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#xss分类&#34;&gt;#&lt;/a&gt; xss 分类&lt;/h1&gt;
+&lt;p&gt;主要被分为三种，反射型，储存型和 DOM 型，接下来详细说明&lt;/p&gt;
+&lt;h3 id=&#34;反射型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#反射型&#34;&gt;#&lt;/a&gt; 反射型&lt;/h3&gt;
+&lt;p&gt;首先，先盗个图&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221025215134992.png&#34; alt=&#34;image-20221025215134992&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;反射型 xss 也被称为非持久型的 xss，反射型 xss 是当先最常见的一种 xss 漏洞。攻击者将带有 xss 恶意脚本的连接发给用户诱导其点击，用户向服务器请求了一个带有 xss 脚本的 url 请求，服务器返回给浏览器，浏览器解析 xss 脚本区访问了恶意服务器造成漏洞&lt;/p&gt;
+&lt;p&gt;demo&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-php&#34; data-language=&#34;php&#34;&gt;&lt;code class=&#34;language-php&#34;&gt;&lt;span class=&#34;token php language-php&#34;&gt;&lt;span class=&#34;token delimiter important&#34;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&#34;token variable&#34;&gt;$name&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;name&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;token string double-quoted-string&#34;&gt;&#34;Hello &lt;span class=&#34;token interpolation&#34;&gt;&lt;span class=&#34;token variable&#34;&gt;$name&lt;/span&gt;&lt;/span&gt;&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token delimiter important&#34;&gt;?&gt;&lt;/span&gt;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;服务端对用户的 name 没有进行过滤，服务器解析后通过 echo 插入到 HTML 中&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221025221057624.png&#34; alt=&#34;image-20221025221057624&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里插入 js，便可执行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221025221207814.png&#34; alt=&#34;image-20221025221207814&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;存储型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#存储型&#34;&gt;#&lt;/a&gt; 存储型&lt;/h3&gt;
+&lt;p&gt;还是先盗个图（我发四，本篇最后一张）&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221025220126444.png&#34; alt=&#34;image-20221025220126444&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;刚刚说到反射型也叫非持久性，那么存储型就是持久型 xss，与 xss 的区别就是提交的 xss 代码是否会被存储在服务端，下次访问到这个页面时还会执行恶意脚本。（存储型 xss 不在是攻击者诱导受害者点击连接，而是将 xss 脚本留在目标服务器上，当受害者访问了存有 xss 脚本的页面时就受到了攻击，允许用户进行数据存储的地方都有可能存在 xss 漏洞，这种 xss 攻击比反射型危害更大。）&lt;/p&gt;
+&lt;p&gt;demo&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;&amp;lt;?php
+echo &amp;quot;&amp;lt;script&amp;gt;alert(&amp;#39;xss&amp;#39;)&amp;lt;&amp;#x2F;script&amp;gt;&amp;quot;;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;保存到文件中，每次访问时都会执行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221025221521051.png&#34; alt=&#34;image-20221025221521051&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;dom型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#dom型&#34;&gt;#&lt;/a&gt; DOM 型&lt;/h3&gt;
+&lt;p&gt;个人理解其实也算是反射型，但是 DOM 型的 xss 不需要与服务端交互，仅仅发生在客户端处理数据的阶段，DOM 全称 Document Object Model（文档对象模型），对于浏览器来说 DOM 就是一份 xml，JavaScript 重构 HTML 页面的过程中使用 DOM 提供结构化表示，DOM 规定 HTML 中每个成分都是一个结点&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;DOM规定：
+整个文档是一个文档结点
+每一个HTML标签是一个元素结点
+包含在HTML元素中的文本是文本结点
+每个HTML属性是一个属性结点
+结点与结点之间都有等级关系&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;HTML DOM 树&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221025224329456.png&#34; alt=&#34;image-20221025224329456&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;可能触发DOM型XSS的属性
+document.referer属性
+
+window.name属性
+
+location属性
+
+innerHTML属性
+
+documen.write属性&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;h4 id=&#34;dom型xss利用原理&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#dom型xss利用原理&#34;&gt;#&lt;/a&gt; DOM 型 xss 利用原理&lt;/h4&gt;
+&lt;p&gt;利用前提是 js 可以访问 DOM 文本对象模型，如果客户端代码中有 xss 脚本诱导用户点击可以使得用户访问自己构造的 url，达到和反射型类似的效果，因其不与服务器进行交互，可以用来绕过 waf&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-markup&#34; data-language=&#34;markup&#34;&gt;&lt;code class=&#34;language-markup&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;script&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token script&#34;&gt;&lt;span class=&#34;token language-javascript&#34;&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;var&lt;/span&gt; tem &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; document&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;URL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;// 获取当前页面的 URL&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;var&lt;/span&gt; index &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; document&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;URL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;indexOf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;content=&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;// 获取 content = 后面的内容&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;var&lt;/span&gt; par &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; tem&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;substring&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;index&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;// 获取参数&lt;/span&gt;
+    document&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;write&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;decodeURI&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;par&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;//decodeURI () 解码 // 输出参数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;script&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221026213845778.png&#34; alt=&#34;image-20221026213845778&#34; /&gt;&lt;/p&gt;
+&lt;h1 id=&#34;xss的检测&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#xss的检测&#34;&gt;#&lt;/a&gt; Xss 的检测&lt;/h1&gt;
+&lt;p&gt;检测 xss 主要有两种方法，一种是手工检测，一种是通过自动化工具检测，个人感觉两种方法没有先后各有利弊吧。手工检测的精度更高，但是当一个 web 应用程序过于庞大的情况，手工检测是非常困难的，用工具自动化检测精度相对要低上不少&lt;/p&gt;
+&lt;h3 id=&#34;手工检测xss&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#手工检测xss&#34;&gt;#&lt;/a&gt; 手工检测 xss&lt;/h3&gt;
+&lt;p&gt;手工检测时，主要考虑有输出和能够存储的地方进行测试，可以尝试使用特征明显的字符来进行测试&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;&amp;lt; &amp;gt; &amp;quot;  &amp;#39; ( )等字符&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;同时携带上如 AAAAAAA 字便于查找插入到 HTML 中的位置&lt;/p&gt;
+&lt;h3 id=&#34;xss工具&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#xss工具&#34;&gt;#&lt;/a&gt; Xss 工具&lt;/h3&gt;
+&lt;p&gt;这里工具很多不再一一赘述，推荐去 GitHub 上寻找开源的工具&lt;/p&gt;
+&lt;h1 id=&#34;xss的利用种类&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#xss的利用种类&#34;&gt;#&lt;/a&gt; Xss 的利用种类&lt;/h1&gt;
+&lt;p&gt;在一些情况下 xss 漏洞的危害不亚于 sql 注入，常见的利用方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;盗取用户 cookie&lt;/li&gt;
+&lt;li&gt;修改网页内容&lt;/li&gt;
+&lt;li&gt;网站挂马&lt;/li&gt;
+&lt;li&gt;利用网站重定向&lt;/li&gt;
+&lt;li&gt;xss 蠕虫&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;xss会话劫持&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#xss会话劫持&#34;&gt;#&lt;/a&gt; xss 会话劫持&lt;/h3&gt;
+&lt;p&gt;这里多数是指劫持 cookie 或 session 达到目的&lt;/p&gt;
+&lt;h4 id=&#34;cookie&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cookie&#34;&gt;#&lt;/a&gt; cookie&lt;/h4&gt;
+&lt;p&gt;cookie 是一种能够将少量文本存储到客户端的磁盘、内存上面或者从客户端的内存、磁盘上面读取的一种技术&lt;/p&gt;
+&lt;p&gt;一位我尊敬的师长说过，每一种技术或者协议的产生都是由需求驱动的，cookie 的产生主要是为了解决 http 协议的无状态，web 服务器需要额外的数据用于维持会话，cookie 正是一一段随 http 请求的响应的额外数据，他的主要作用是标识用户维持会话&lt;/p&gt;
+&lt;p&gt;cookie 主要分为持久 cookie 和非持久 cookie，这两种分类的主要区别就是持久 cookie 是存储到客户端的磁盘中的只有到了过期时间或者手动删除才会失效，非辞旧 cookie 是存储到客户端的内存上的，浏览器关闭后就会消失&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;cookie一般会经过加密，只有服务器的处理程序才知道cookie的含义&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;部分开发者将 cookie 作为用户的标识，那么我们就可以通过劫持 cookie 来登录账号，而部分开发者不会将 cookie 当作用户的标识，而是储存一些临时信息，那么我们拿到 cookie 也是没用的&lt;/p&gt;
+&lt;h4 id=&#34;session&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#session&#34;&gt;#&lt;/a&gt; session&lt;/h4&gt;
+&lt;p&gt;除去 cookie 外维持会话的另一种形式就是 session，session 在网络应用中被称为会话是一种服务端的机制，我们打开网站到关闭浏览器这段时间被称为会话，如果我们在服务端与客户端的会话没结束时就拿到 session 就能做到劫持会话的效果&lt;/p&gt;
+&lt;h1 id=&#34;xss漏洞攻与防&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#xss漏洞攻与防&#34;&gt;#&lt;/a&gt; xss 漏洞攻与防&lt;/h1&gt;
+&lt;p&gt;xss 跨站脚本漏洞的根本原因还是开发者对用户的输入输出没有进行严格的过滤，而导致的客户端脚本被浏览器正常执行导致，这也就意味着如果我们能够将敏感字符过滤就能够修补 xss 漏洞&lt;/p&gt;
+&lt;h3 id=&#34;特定的标签过滤&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#特定的标签过滤&#34;&gt;#&lt;/a&gt; 特定的标签过滤&lt;/h3&gt;
+&lt;p&gt;部分开发者认为将危险的标签过滤掉就不会执行 js 脚本，但是实际上任何一种标签无论是否合法都能够正常执行 js 脚本&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-javascript&#34; data-language=&#34;javascript&#34;&gt;&lt;code class=&#34;language-javascript&#34;&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;not_real_tag onclick&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;alert(/xss/)&#34;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;click me&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;not_real_tag&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;像这样构造也能正常执行 xss 脚本，也就是说如果输出点在 HTML 标签中或者 js 脚本中，那么我们可以通过简单的闭合拼接属性那么就可以成功执行 xss&lt;/p&gt;
+&lt;h3 id=&#34;事件过滤&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#事件过滤&#34;&gt;#&lt;/a&gt; 事件过滤&lt;/h3&gt;
+&lt;p&gt;很多时候开发者者会选择过滤事件来防止 xss，但是不排除有漏网之鱼，这里可以 fuzz 尝试&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;Fuzz字典分享:
+onafterprint
+oninput
+onscrol1
+onbeforeprint
+oninvalid
+onabort
+onbeforeunload
+onreset
+oncanplay
+onerror
+onselect
+oncanplaythrough
+onhaschange
+onsubmit
+ondurationchange
+onload
+onkeydown
+onemptied
+onmessage
+onkeypress
+onended
+onoffline
+onkeyup
+onerror
+ononline
+onclick
+onloadeddata
+onpagehide
+ondblclick
+onloadedmetadata
+onpageshow
+ondrag
+onloadstart
+onpopstate
+ondragend
+onpause
+onredo
+ondragenter
+onplay
+onresize
+ondragleave
+onplaying
+onstorage
+ondragover
+onprogress
+onundo
+ondragstart
+onratechange
+onunload
+ondrop
+onreadystatechange
+onblur
+onmous edown
+onseeked
+onchange
+onmous emove
+onseeking
+oncontextmenu
+onmouseout
+onstalled
+onfocus
+onmouseover
+onsuspend
+onformchange
+onmouseup
+ontimeupdate
+onforminput
+onmousewheel
+onvolumechange&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;同样还有一些不属于事件属性，但可以用于执行 js 代码，比如常见的 js 伪协议&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-javascript&#34; data-language=&#34;javascript&#34;&gt;&lt;code class=&#34;language-javascript&#34;&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;a herf&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;javascript:alert(/xss/)&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;click me &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;a&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;h3 id=&#34;敏感字符的过滤&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#敏感字符的过滤&#34;&gt;#&lt;/a&gt; 敏感字符的过滤&lt;/h3&gt;
+&lt;p&gt;在 html 中，&amp;lt;&amp;gt;&amp;quot; 和 &#39;&amp;amp; 都有特殊的意义，HTML 的标签属性就是由这几个字符组成的，如果直接输出可能会导致整个 HTML 文档的结构，所以我们通常情况将这些字符转义，比如 php 提供了 htmlspeciachars 和 htmlentities 两个函数把一些预定字符转义转换成 HTML 实体&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(&amp;amp;) 成为 &amp;amp; amp&lt;/li&gt;
+&lt;li&gt;(&amp;quot;) 成为 &amp;amp; quot&lt;/li&gt;
+&lt;li&gt;(&#39;) 成为 &amp;amp;#039&lt;/li&gt;
+&lt;li&gt;(&amp;lt;) 成为 &amp;amp; lt&lt;/li&gt;
+&lt;li&gt;(&amp;gt;) 成为 &amp;amp; gt&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;关键字过滤其实大部分是针对敏感变量或者函数进行的，如 eval，cookie 等，这部分的过滤可以通过字符串拼接，编码解码等方法绕过&lt;/p&gt;
+&lt;h4 id=&#34;字符串拼接混淆&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#字符串拼接混淆&#34;&gt;#&lt;/a&gt; 字符串拼接混淆&lt;/h4&gt;
+&lt;p&gt;js 中的对象方法可以通过数组的方式进行调用，比如调用 alert 函数&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-javascript&#34; data-language=&#34;javascript&#34;&gt;&lt;code class=&#34;language-javascript&#34;&gt;window&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;alert&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token regex&#34;&gt;&lt;span class=&#34;token regex-delimiter&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token regex-source language-regex&#34;&gt;xss&lt;/span&gt;&lt;span class=&#34;token regex-delimiter&#34;&gt;/&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;这里数组的下标是先要调用函数名字的字符串，既然说是字符串那么就可以通过字符串拼接的方式&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-javascript&#34; data-language=&#34;javascript&#34;&gt;&lt;code class=&#34;language-javascript&#34;&gt;window&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;al&#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;ert&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token regex&#34;&gt;&lt;span class=&#34;token regex-delimiter&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token regex-source language-regex&#34;&gt;xss&lt;/span&gt;&lt;span class=&#34;token regex-delimiter&#34;&gt;/&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;或者通过 js 自带的 base 编码来实现字符串的绕过&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-javascript&#34; data-language=&#34;javascript&#34;&gt;&lt;code class=&#34;language-javascript&#34;&gt;window&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;atob&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;YWxl&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;cnQ=&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token regex&#34;&gt;&lt;span class=&#34;token regex-delimiter&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token regex-source language-regex&#34;&gt;xss&lt;/span&gt;&lt;span class=&#34;token regex-delimiter&#34;&gt;/&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;h4 id=&#34;编码解码&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#编码解码&#34;&gt;#&lt;/a&gt; 编码解码&lt;/h4&gt;
+&lt;p&gt;基于字符串的代码混淆不仅可以通过字符串拼接的方式，还可以通过各种编码的方式，常用的有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTML 进制编码&lt;/li&gt;
+&lt;li&gt;css 进制编码&lt;/li&gt;
+&lt;li&gt;js 进制编码&lt;/li&gt;
+&lt;li&gt;url 编码&lt;/li&gt;
+&lt;li&gt;jsfuck 编码（一种只有&lt;a href=&#34;&#34;&gt;&lt;/a&gt;！+6 个字符来编写 js 程序）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;locationwindowname&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#locationwindowname&#34;&gt;#&lt;/a&gt; location*,&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3dpbmRvdy5uYW1l&#34;&gt;window.name&lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;既然开发者会对输入的敏感字符进行过滤，可以将 xss 脚本放到不会交付到服务端的部分&lt;/p&gt;
+&lt;h4 id=&#34;过滤&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#过滤&#34;&gt;#&lt;/a&gt; 过滤 &amp;quot;.&amp;quot;&lt;/h4&gt;
+&lt;p&gt;事件拼接都由点组成，可以过滤点来防御&lt;/p&gt;
+&lt;p&gt;但是在 js 中可以用 with 关键字设置变量的作用域。利用这个特性可以绕过点的过滤&lt;/p&gt;
+&lt;p&gt;with(document)with(cookie)&lt;/p&gt;
+&lt;h4 id=&#34;过滤-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#过滤-2&#34;&gt;#&lt;/a&gt; 过滤 &amp;quot;()&amp;quot;&lt;/h4&gt;
+&lt;p&gt;js 脚本中调用对象方法要使用 (), 使用 throw 关键字传递阐述可以绕过限制&lt;/p&gt;
+&lt;p&gt;window.onerror=alert; throw 1;&lt;/p&gt;
+&lt;h4 id=&#34;过滤空格&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#过滤空格&#34;&gt;#&lt;/a&gt; 过滤空格&lt;/h4&gt;
+&lt;p&gt;在标签属性间可以通过换行符 0x09、0x10、0x12、0x13、0x0a 等字符代替空格绕过过滤&lt;/p&gt;
+&lt;p&gt;&amp;lt;img%0asrc=x%0aonerror=alert(/xss/)&amp;gt;&lt;/p&gt;
+&lt;p&gt;在标签名称和第一个属性间也可以使用 &amp;quot;/&amp;quot; 代替空格&lt;/p&gt;
+&lt;p&gt;&amp;lt;input/onfocus=alert(/xss/)&amp;gt;&lt;/p&gt;
+&lt;h3 id=&#34;httponly绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#httponly绕过&#34;&gt;#&lt;/a&gt; HTTPonly 绕过&lt;/h3&gt;
+&lt;p&gt;HTTPonly 是 cookie 的一个安全属性，设置后可以防止 xss 漏洞产生的时候避免 js 脚本获取到 cookie&lt;/p&gt;
+&lt;h4 id=&#34;cve-2012-0053&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cve-2012-0053&#34;&gt;#&lt;/a&gt; cve-2012-0053&lt;/h4&gt;
+&lt;p&gt;Apache 服务器在 2.2.0-2.2.21 版本中存在一个漏洞，我们可以通过向网站植入一个超大的 cookie，令其 HTTP 头超过 Apache 的最大请求长度（4192 字节），使得 apache 返回 400 错误，状态也中包含了 HTTPonly 保护的 Cookie&lt;/p&gt;
+&lt;h4 id=&#34;phpinfo页面&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#phpinfo页面&#34;&gt;#&lt;/a&gt; phpinfo 页面&lt;/h4&gt;
+&lt;p&gt;无论设置是否设置了 HTTPonly 在 phpinfo 中都能看到 Cookie&lt;/p&gt;
+ ]]></description>
+        </item>
+        <item>
             <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/nat%E6%A8%A1%E5%BC%8Fip%E5%88%86%E9%85%8D/</guid>
             <title>nat模式+ip分配</title>
             <link>https://blog.xcu.icu/2022/10/24/nat%E6%A8%A1%E5%BC%8Fip%E5%88%86%E9%85%8D/</link>
@@ -1041,6 +1264,128 @@ DNS1&amp;#x3D;&amp;quot;xxx.xxx.xxx.xxx&amp;quot;        &amp;#x2F;&amp;#x2F;新
 &lt;p&gt;zhangsan 删除 lisi 用户文件失败&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000623905.png&#34; alt=&#34;image-20221023000623905&#34; /&gt;&lt;/p&gt;
 &lt;h3 id=&#34;3实验小结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3实验小结&#34;&gt;#&lt;/a&gt; 3. 实验小结&lt;/h3&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/</guid>
+            <title>user.ini和htaccess文件的利用</title>
+            <link>https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/</link>
+            <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
+            <category term="文件上传" scheme="https://blog.xcu.icu/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" />
+            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;htaccess文件的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#htaccess文件的利用&#34;&gt;#&lt;/a&gt; .htaccess 文件的利用&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9saW5rLmppYW5zaHUuY29tLz90PWh0dHA6Ly9odGFjY2Vzcy51dXouY2MvI2FfV1dX&#34;&gt;自动生成.htaccess 的网站&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;分布式配置文件，它里面存放着 apache 服务器配置相关命令，提供了针对目录改变配置的方法，作用范围是当前目录及其子目录&lt;/p&gt;
+&lt;p&gt;使用前，首先要启用 htacces，将 AllowOveride 的配置改为 all&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AllowOverride 从字面上解释是允许覆盖的意思，即 Apache 允许另一配置文件覆盖现有配置文件。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在 AllowOverride 设置为 None 时， .htaccess 文件将被完全忽略。当此指令设置为 All 时，所有具有 “.htaccess” 作用域的指令都允许出现在 .htaccess 文件中。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019211017128.png&#34; alt=&#34;image-20221019211017128&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;问题点一&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#问题点一&#34;&gt;#&lt;/a&gt; 问题点一&lt;/h3&gt;
+&lt;p&gt;PHPStudy 中 AddType application/x-httpd-php 等 Apache 命令之所以在 Apache 的设置文件中设置后未实现目标效果是由于 PHP 的版本不符导致的，但注意这里的 PHP 版本并不是指 PHP7.3.0、PHP7.4.0 这种版本号，也不是适用于 32 位的 PHP、适用于 64 位的 PHP 这种不同机型的版本，而&lt;strong&gt;是 PHP 的 NTS (Non Thread Safe) 与 TS (Thread Safe) 的这种不同版本导致的&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93aW5kb3dzLnBocC5uZXQvZG93bmxvYWQv&#34;&gt;PHP For Windows: Binaries and sources Releases&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019230226348.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;ts(Thread-Safety)&lt;strong&gt; 即&lt;/strong&gt;线程安全&lt;/strong&gt;，多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;nts(None-Thread Safe)&lt;strong&gt; 即&lt;/strong&gt;非线程安全&lt;/strong&gt;，就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的是 脏数据 php 以 fast cgi 方式运行的时候选择这个版本，具有更好的性能；&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;解决办法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#解决办法&#34;&gt;#&lt;/a&gt; 解决办法&lt;/h4&gt;
+&lt;p&gt;安装 TS 版本的 php，在 apache 配置中设置好&lt;/p&gt;
+&lt;p&gt;在 php 文件夹中将 php.ini-development 文件复制一份命名为 php.ini&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234241421.png&#34; alt=&#34;image-20221019234241421&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;新下载的 php 本来没有现成的 php.ini 文件。只是给了&lt;/p&gt;
+&lt;p&gt;php.ini-development （开发环境用）与 php.ini-production（生产环境用）两个建议。&lt;/p&gt;
+&lt;p&gt;而 php 去加载 php.ini 作为配置文件的。我们更喜欢哪个建议，就把它备份，然后重命名为 php.ini 然后加入自己个性化的配置即可。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234518254.png&#34; alt=&#34;image-20221019234518254&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;打开 php.ini，找到 extension_dir，并把前面的 &amp;quot;;&amp;quot; 符号删掉 (在 php.ini 相当于注释符)，其值改为 &amp;quot;PHP 文件的路径 /ext&amp;quot;。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234918061.png&#34; alt=&#34;image-20221019234918061&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;他是放 php 扩展的目录，保存后，我们 PHP 就设置完成了，接下来要设置 Apache。&lt;/p&gt;
+&lt;p&gt;来到 PHPStudy 安装 Apache 的目录下，打开 Apache 的配置文件 httpd.conf, 搜索 LoadModule，找到有很多 LoadModule 语句的地方。( &lt;strong&gt;LoadModule：加载特定的 DSO 模块。&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;在末尾加上 LoadModule php7_module &amp;quot;PHP 文件的路径 /php7apache2_4.dll&amp;quot; 和 PHPIniDir &amp;quot;PHP 文件的路径&amp;quot;。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019235835759.png&#34; alt=&#34;image-20221019235835759&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;再加上一句 AddType application/x-httpd-php .php，配置就完成了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020000146394.png&#34; alt=&#34;image-20221020000146394&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
+&lt;h5 id=&#34;文件解析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件解析&#34;&gt;#&lt;/a&gt; 文件解析&lt;/h5&gt;
+&lt;p&gt;首先还是先说文件上传中常用的利用方式&lt;/p&gt;
+&lt;p&gt;(8.* 无法使用)&lt;/p&gt;
+&lt;p&gt;在 htaccess 文件中写入如下内容，上传到服务端后再上传一个其他任意后缀的文件，都会被当作 php 文件解析&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;&amp;lt;FilesMatch “.png”&amp;gt;
+SetHandler application&amp;#x2F;x-httpd-php
+&amp;lt;&amp;#x2F;FilesMatch&amp;gt;
+#匹配文件中有haha存在
+SetHandler application&amp;#x2F;x-httpd-php
+#SetHandler强制所有匹配的文件由指定处理程序处理
+AddType application&amp;#x2F;x-httpd-php .txt
+#AddType将给定的文件扩展名映射到指定的内容类型&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020180621597.png&#34; alt=&#34;image-20221020180621597&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着聊一聊别的利用方式&lt;/p&gt;
+&lt;h5 id=&#34;源码泄露&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#源码泄露&#34;&gt;#&lt;/a&gt; 源码泄露&lt;/h5&gt;
+&lt;p&gt;当使用 PHP 作为 Apache 模块时，也可以用 Apache 的配置文件（例如 httpd.conf）和 .htaccess 文件中的指令来修改 php 的配置设定&lt;/p&gt;
+&lt;p&gt;我们可以通过 .htaccess 文件的 php_value 指令对 PHP 的 engine 配置选项进行设定，当把 engine 的值设为 off（或 0）时可以禁用一个本目录和子目录中的 PHP 解析，此时将会造成源码泄露：&lt;/p&gt;
+&lt;p&gt;在 htaccess 文件中写入&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value engine 0&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020210713349.png&#34; alt=&#34;image-20221020210713349&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;文件包含&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件包含&#34;&gt;#&lt;/a&gt; 文件包含&lt;/h5&gt;
+&lt;p&gt;htaccess 文件中同样有两个配置 auto_prepend_file 和 auto_append_file，我们可以通过 php_value 来设置，条件是同级目录下有 php 文件&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value auto_append_file &amp;#x2F;etc&amp;#x2F;passwd&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020211527232.png&#34; alt=&#34;image-20221020211527232&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;防御&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御&#34;&gt;#&lt;/a&gt; 防御&lt;/h5&gt;
+&lt;p&gt;最直接的就是过滤 htaccess 后缀&lt;/p&gt;
+&lt;p&gt;对文件重命名（htaccess 文件命名固定）&lt;/p&gt;
+&lt;h2 id=&#34;userini的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#userini的利用&#34;&gt;#&lt;/a&gt; user.ini 的利用&lt;/h2&gt;
+&lt;p&gt;php.ini 是 php 的全局配置文件，只要是以 fastcgi 运行的 php 都可以用这个方法，对整个 web 环境起作用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018203121751.png&#34; alt=&#34;image-20221018203121751&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;user.ini 是用户自定义的 php.ini，如果在文件上传中没有对其进行限制，那么我们就可以修改 php.ini 的配置，既然是用户自定义，那么肯定要提到权限问题。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018204408073.png&#34; alt=&#34;image-20221018204408073&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;官方文档提到只有在这两种模式的 ini 设置可以被识别，那么就不得不提到什么是 PHP_INI_* 模式&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018175831433.png&#34; alt=&#34;image-20221018175831433&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这些模式决定着一个 PHP 的指令在何时何地，是否能够被设定。手册中的每个指令都有其所属的模式。例如有些指令可以在 PHP 脚本中用 ini_set () 来设定，而有些则只能在 php.ini 或 httpd.conf 中。(上面表格中没有提到的 PHP_INI_PERDIR 也可以在.user.ini 中设置)，user_ini.cache_ttl 控制着重新读取用户 INI 文件的间隔时间。默认是 300 秒（5 分钟）。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022120119084.png&#34; alt=&#34;image-20221022120119084&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;PHP ini_set用来设置php.ini的值，在函数执行的时候生效，脚本结束后，设置失效。无需打开php.ini文件，就能修改配置&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;也就是说我们想利用.user.ini 需要在 PHP_INI_USER 模式（PHP_INI_ALL 模式）中，那么哪些配置可以在 &lt;strong&gt;.user.ini&lt;/strong&gt; 中设定呢？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;php.ini 配置选项列表（&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3BocC5uZXQvbWFudWFsL3poL2luaS5saXN0LnBocA==&#34;&gt;http://php.net/manual/zh/ini.list.php&lt;/span&gt; ）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;利用-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用-2&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
+&lt;p&gt;.user.ini 中两个中的配置就是 auto_prepend_file 和 auto_append_file。这两个配置的意思就是：我们指定一个文件（如 1.jpg，对后缀名没有太多要求），那么该文件就会被包含在要执行的 php 文件，相当于在 php 文件中中插入一句：require (./1.jpg)。这两个设置的区别只是在于 auto_prepend_file 是在文件前插入，auto_append_file 在文件最后插入 (文件后插入如果程序以 exit () 结束就无法利用)。&lt;/p&gt;
+&lt;p&gt;demo：&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212902209.png&#34; alt=&#34;image-20221018212902209&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212921996.png&#34; alt=&#34;image-20221018212921996&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;经过测试 php 版本从 5.3 开始到 7.4 都是可用的，php8.* 的没有成功&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018213744658.png&#34; alt=&#34;image-20221018213744658&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;防御-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御-2&#34;&gt;#&lt;/a&gt; 防御&lt;/h3&gt;
+&lt;p&gt;利用条件：&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;服务器脚本语言为PHP 服务器使用CGI
+FastCGI模式
+上传目录下要有可执行的php文件&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;上面提到有 php8.* 是不可用的，那么可使用 php8.* 可用从根源解决问题&lt;/p&gt;
+&lt;p&gt;user.ini 使用这两条条配置也有限制说了是在同目录下的其他.php 文件中包含配置中所指定的文件，也就是说需要该目录下存在.php 文件，不要将文件上传路径设置成为本目录下，存放上传文件的地方不要存有 php 文件（通常在文件上传中，一般是专门有一个目录用来存在图片，可能小概率会存在.php 文件。但是有时可以使用  &lt;code&gt;../&lt;/code&gt;  来将文件上传到其他目录，达到一个利用的效果。）严格限制文件上传的路径&lt;/p&gt;
+&lt;p&gt;再者结束对 ini 扩展名的过滤，对文件内容 auto_prepend_file、auto_append_file 的过滤&lt;/p&gt;
+&lt;h3 id=&#34;补充&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#补充&#34;&gt;#&lt;/a&gt; 补充&lt;/h3&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150904047.png&#34; alt=&#34;image-20221022150904047&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150917949.png&#34; alt=&#34;image-20221022150917949&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;了解什么是 FastCGI，首先应该知道什么是 cgi&lt;/p&gt;
+&lt;p&gt;全称是 “通用网关接口”，是一种让客户端（web 浏览器）与 Web 服务器（apache，nginx 等）程序进行通信（数据传输）的协议。&lt;/p&gt;
+&lt;h5 id=&#34;cgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cgi工作流程&#34;&gt;#&lt;/a&gt; CGI 工作流程&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;每次当 web server 收到 index.php 这种类型的动态请求后，会启动对应的 CGI 程序 - PHP 的解析器；&lt;/li&gt;
+&lt;li&gt;PHP 解析器会解析 php.ini 配置文件，初始化运行环境，然后处理请求，处理完成后将数据按照 CGI 规定的格式返回给 web server 然后退出进程；&lt;/li&gt;
+&lt;li&gt;最后 web server 再把结果返回给浏览器。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;高并发时的性能较差：&lt;br /&gt;
+CGI 程序的每一次 web 请求都会有启动和退出过程 —— 每次 HTTP 服务器遇到动态请求时都需要重新启动脚本解析器来解析 php.ini，重新载入全部 DLL 扩展并重初始化全部数据结构，然后把结果返回给 HTTP 服务器&lt;/p&gt;
+&lt;h5 id=&#34;fastcgi&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi&#34;&gt;#&lt;/a&gt; FastCGI&lt;/h5&gt;
+&lt;p&gt;因 CGI 高并发时性能差，未解决这一问题产生了 FastCGI&lt;/p&gt;
+&lt;h5 id=&#34;fastcgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi工作流程&#34;&gt;#&lt;/a&gt; FastCGI 工作流程&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;Web Server 启动同时，加载 FastCGI 进程管理器&lt;/li&gt;
+&lt;li&gt;FastCGI 进程管理器读取 php.ini 配置文件，对自身进行初始化，启动多个 CGI 解释器进程 (php-cgi)，等待来自 Web Server 的连接。&lt;/li&gt;
+&lt;li&gt;当 Web Server 接收到客户端请求时，FastCGI 进程管理器选择并连接到一个 CGI 解释器。Web server 会将相关环境变量和标准输入发送到 FastCGI 子进程 php-cgi 进行处理&lt;/li&gt;
+&lt;li&gt;FastCGI 子进程完成处理后将数据按照 CGI 规定的格式返回给 Web Server，然后关闭 FastCGI 子进程或者等待下一次请求。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;fastcgi解决方案&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi解决方案&#34;&gt;#&lt;/a&gt; FastCGI 解决方案&lt;/h5&gt;
+&lt;p&gt;Master-Worker 模式&lt;/p&gt;
+&lt;p&gt;Fastcgi 会先启一个 master，解析配置文件，初始化执行环境，然后再启动多个 worker。当请求过来时，master 会传递给一个 worker，然后立即可以接受下一个请求。这样就避免了重复的劳动，效率自然提高。而且当 worker 不够用时，master 可以根据配置预先启动几个 worker 等着；当然空闲 worker 太多时，也会停掉一些，这样就提高了性能，也节约了资源。这就是 fastcgi 的对进程的管理。&lt;/p&gt;
  ]]></description>
         </item>
         <item>
@@ -1396,128 +1741,6 @@ select username from user id&amp;#x3D;$id
 &lt;p&gt;防御数字型的注入相对来说要简单，只要在程序中进行数据类型的判断即可&lt;/p&gt;
 &lt;h3 id=&#34;特殊字符转义&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#特殊字符转义&#34;&gt;#&lt;/a&gt; 特殊字符转义&lt;/h3&gt;
 &lt;p&gt;通过加强数据类型验证可以解决数字型的 SQL 注入，但是字符型的 SQL 注入却不行因为字符型就是 string 类型的，所以就无法判断输入是否是恶意攻击，那么最好的办法就是对特殊字符进行转义，在查询任意字符都需要单引号，我们可以通过闭合单引号来防御 sql 注入&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/</guid>
-            <title>user.ini和htaccess文件的利用</title>
-            <link>https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/</link>
-            <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
-            <category term="文件上传" scheme="https://blog.xcu.icu/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" />
-            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;htaccess文件的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#htaccess文件的利用&#34;&gt;#&lt;/a&gt; .htaccess 文件的利用&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9saW5rLmppYW5zaHUuY29tLz90PWh0dHA6Ly9odGFjY2Vzcy51dXouY2MvI2FfV1dX&#34;&gt;自动生成.htaccess 的网站&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;分布式配置文件，它里面存放着 apache 服务器配置相关命令，提供了针对目录改变配置的方法，作用范围是当前目录及其子目录&lt;/p&gt;
-&lt;p&gt;使用前，首先要启用 htacces，将 AllowOveride 的配置改为 all&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;AllowOverride 从字面上解释是允许覆盖的意思，即 Apache 允许另一配置文件覆盖现有配置文件。&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;在 AllowOverride 设置为 None 时， .htaccess 文件将被完全忽略。当此指令设置为 All 时，所有具有 “.htaccess” 作用域的指令都允许出现在 .htaccess 文件中。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019211017128.png&#34; alt=&#34;image-20221019211017128&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;问题点一&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#问题点一&#34;&gt;#&lt;/a&gt; 问题点一&lt;/h3&gt;
-&lt;p&gt;PHPStudy 中 AddType application/x-httpd-php 等 Apache 命令之所以在 Apache 的设置文件中设置后未实现目标效果是由于 PHP 的版本不符导致的，但注意这里的 PHP 版本并不是指 PHP7.3.0、PHP7.4.0 这种版本号，也不是适用于 32 位的 PHP、适用于 64 位的 PHP 这种不同机型的版本，而&lt;strong&gt;是 PHP 的 NTS (Non Thread Safe) 与 TS (Thread Safe) 的这种不同版本导致的&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93aW5kb3dzLnBocC5uZXQvZG93bmxvYWQv&#34;&gt;PHP For Windows: Binaries and sources Releases&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019230226348.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;ts(Thread-Safety)&lt;strong&gt; 即&lt;/strong&gt;线程安全&lt;/strong&gt;，多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;nts(None-Thread Safe)&lt;strong&gt; 即&lt;/strong&gt;非线程安全&lt;/strong&gt;，就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的是 脏数据 php 以 fast cgi 方式运行的时候选择这个版本，具有更好的性能；&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4 id=&#34;解决办法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#解决办法&#34;&gt;#&lt;/a&gt; 解决办法&lt;/h4&gt;
-&lt;p&gt;安装 TS 版本的 php，在 apache 配置中设置好&lt;/p&gt;
-&lt;p&gt;在 php 文件夹中将 php.ini-development 文件复制一份命名为 php.ini&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234241421.png&#34; alt=&#34;image-20221019234241421&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;新下载的 php 本来没有现成的 php.ini 文件。只是给了&lt;/p&gt;
-&lt;p&gt;php.ini-development （开发环境用）与 php.ini-production（生产环境用）两个建议。&lt;/p&gt;
-&lt;p&gt;而 php 去加载 php.ini 作为配置文件的。我们更喜欢哪个建议，就把它备份，然后重命名为 php.ini 然后加入自己个性化的配置即可。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234518254.png&#34; alt=&#34;image-20221019234518254&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;打开 php.ini，找到 extension_dir，并把前面的 &amp;quot;;&amp;quot; 符号删掉 (在 php.ini 相当于注释符)，其值改为 &amp;quot;PHP 文件的路径 /ext&amp;quot;。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234918061.png&#34; alt=&#34;image-20221019234918061&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;他是放 php 扩展的目录，保存后，我们 PHP 就设置完成了，接下来要设置 Apache。&lt;/p&gt;
-&lt;p&gt;来到 PHPStudy 安装 Apache 的目录下，打开 Apache 的配置文件 httpd.conf, 搜索 LoadModule，找到有很多 LoadModule 语句的地方。( &lt;strong&gt;LoadModule：加载特定的 DSO 模块。&lt;/strong&gt;)&lt;/p&gt;
-&lt;p&gt;在末尾加上 LoadModule php7_module &amp;quot;PHP 文件的路径 /php7apache2_4.dll&amp;quot; 和 PHPIniDir &amp;quot;PHP 文件的路径&amp;quot;。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019235835759.png&#34; alt=&#34;image-20221019235835759&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;再加上一句 AddType application/x-httpd-php .php，配置就完成了&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020000146394.png&#34; alt=&#34;image-20221020000146394&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
-&lt;h5 id=&#34;文件解析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件解析&#34;&gt;#&lt;/a&gt; 文件解析&lt;/h5&gt;
-&lt;p&gt;首先还是先说文件上传中常用的利用方式&lt;/p&gt;
-&lt;p&gt;(8.* 无法使用)&lt;/p&gt;
-&lt;p&gt;在 htaccess 文件中写入如下内容，上传到服务端后再上传一个其他任意后缀的文件，都会被当作 php 文件解析&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;&amp;lt;FilesMatch “.png”&amp;gt;
-SetHandler application&amp;#x2F;x-httpd-php
-&amp;lt;&amp;#x2F;FilesMatch&amp;gt;
-#匹配文件中有haha存在
-SetHandler application&amp;#x2F;x-httpd-php
-#SetHandler强制所有匹配的文件由指定处理程序处理
-AddType application&amp;#x2F;x-httpd-php .txt
-#AddType将给定的文件扩展名映射到指定的内容类型&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020180621597.png&#34; alt=&#34;image-20221020180621597&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;接着聊一聊别的利用方式&lt;/p&gt;
-&lt;h5 id=&#34;源码泄露&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#源码泄露&#34;&gt;#&lt;/a&gt; 源码泄露&lt;/h5&gt;
-&lt;p&gt;当使用 PHP 作为 Apache 模块时，也可以用 Apache 的配置文件（例如 httpd.conf）和 .htaccess 文件中的指令来修改 php 的配置设定&lt;/p&gt;
-&lt;p&gt;我们可以通过 .htaccess 文件的 php_value 指令对 PHP 的 engine 配置选项进行设定，当把 engine 的值设为 off（或 0）时可以禁用一个本目录和子目录中的 PHP 解析，此时将会造成源码泄露：&lt;/p&gt;
-&lt;p&gt;在 htaccess 文件中写入&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value engine 0&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020210713349.png&#34; alt=&#34;image-20221020210713349&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;文件包含&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件包含&#34;&gt;#&lt;/a&gt; 文件包含&lt;/h5&gt;
-&lt;p&gt;htaccess 文件中同样有两个配置 auto_prepend_file 和 auto_append_file，我们可以通过 php_value 来设置，条件是同级目录下有 php 文件&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value auto_append_file &amp;#x2F;etc&amp;#x2F;passwd&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020211527232.png&#34; alt=&#34;image-20221020211527232&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;防御&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御&#34;&gt;#&lt;/a&gt; 防御&lt;/h5&gt;
-&lt;p&gt;最直接的就是过滤 htaccess 后缀&lt;/p&gt;
-&lt;p&gt;对文件重命名（htaccess 文件命名固定）&lt;/p&gt;
-&lt;h2 id=&#34;userini的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#userini的利用&#34;&gt;#&lt;/a&gt; user.ini 的利用&lt;/h2&gt;
-&lt;p&gt;php.ini 是 php 的全局配置文件，只要是以 fastcgi 运行的 php 都可以用这个方法，对整个 web 环境起作用&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018203121751.png&#34; alt=&#34;image-20221018203121751&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;user.ini 是用户自定义的 php.ini，如果在文件上传中没有对其进行限制，那么我们就可以修改 php.ini 的配置，既然是用户自定义，那么肯定要提到权限问题。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018204408073.png&#34; alt=&#34;image-20221018204408073&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;官方文档提到只有在这两种模式的 ini 设置可以被识别，那么就不得不提到什么是 PHP_INI_* 模式&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018175831433.png&#34; alt=&#34;image-20221018175831433&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这些模式决定着一个 PHP 的指令在何时何地，是否能够被设定。手册中的每个指令都有其所属的模式。例如有些指令可以在 PHP 脚本中用 ini_set () 来设定，而有些则只能在 php.ini 或 httpd.conf 中。(上面表格中没有提到的 PHP_INI_PERDIR 也可以在.user.ini 中设置)，user_ini.cache_ttl 控制着重新读取用户 INI 文件的间隔时间。默认是 300 秒（5 分钟）。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022120119084.png&#34; alt=&#34;image-20221022120119084&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;PHP ini_set用来设置php.ini的值，在函数执行的时候生效，脚本结束后，设置失效。无需打开php.ini文件，就能修改配置&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;也就是说我们想利用.user.ini 需要在 PHP_INI_USER 模式（PHP_INI_ALL 模式）中，那么哪些配置可以在 &lt;strong&gt;.user.ini&lt;/strong&gt; 中设定呢？&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;php.ini 配置选项列表（&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3BocC5uZXQvbWFudWFsL3poL2luaS5saXN0LnBocA==&#34;&gt;http://php.net/manual/zh/ini.list.php&lt;/span&gt; ）&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;利用-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用-2&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
-&lt;p&gt;.user.ini 中两个中的配置就是 auto_prepend_file 和 auto_append_file。这两个配置的意思就是：我们指定一个文件（如 1.jpg，对后缀名没有太多要求），那么该文件就会被包含在要执行的 php 文件，相当于在 php 文件中中插入一句：require (./1.jpg)。这两个设置的区别只是在于 auto_prepend_file 是在文件前插入，auto_append_file 在文件最后插入 (文件后插入如果程序以 exit () 结束就无法利用)。&lt;/p&gt;
-&lt;p&gt;demo：&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212902209.png&#34; alt=&#34;image-20221018212902209&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212921996.png&#34; alt=&#34;image-20221018212921996&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;经过测试 php 版本从 5.3 开始到 7.4 都是可用的，php8.* 的没有成功&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018213744658.png&#34; alt=&#34;image-20221018213744658&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;防御-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御-2&#34;&gt;#&lt;/a&gt; 防御&lt;/h3&gt;
-&lt;p&gt;利用条件：&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;服务器脚本语言为PHP 服务器使用CGI
-FastCGI模式
-上传目录下要有可执行的php文件&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;上面提到有 php8.* 是不可用的，那么可使用 php8.* 可用从根源解决问题&lt;/p&gt;
-&lt;p&gt;user.ini 使用这两条条配置也有限制说了是在同目录下的其他.php 文件中包含配置中所指定的文件，也就是说需要该目录下存在.php 文件，不要将文件上传路径设置成为本目录下，存放上传文件的地方不要存有 php 文件（通常在文件上传中，一般是专门有一个目录用来存在图片，可能小概率会存在.php 文件。但是有时可以使用  &lt;code&gt;../&lt;/code&gt;  来将文件上传到其他目录，达到一个利用的效果。）严格限制文件上传的路径&lt;/p&gt;
-&lt;p&gt;再者结束对 ini 扩展名的过滤，对文件内容 auto_prepend_file、auto_append_file 的过滤&lt;/p&gt;
-&lt;h3 id=&#34;补充&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#补充&#34;&gt;#&lt;/a&gt; 补充&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150904047.png&#34; alt=&#34;image-20221022150904047&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150917949.png&#34; alt=&#34;image-20221022150917949&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;了解什么是 FastCGI，首先应该知道什么是 cgi&lt;/p&gt;
-&lt;p&gt;全称是 “通用网关接口”，是一种让客户端（web 浏览器）与 Web 服务器（apache，nginx 等）程序进行通信（数据传输）的协议。&lt;/p&gt;
-&lt;h5 id=&#34;cgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cgi工作流程&#34;&gt;#&lt;/a&gt; CGI 工作流程&lt;/h5&gt;
-&lt;ol&gt;
-&lt;li&gt;每次当 web server 收到 index.php 这种类型的动态请求后，会启动对应的 CGI 程序 - PHP 的解析器；&lt;/li&gt;
-&lt;li&gt;PHP 解析器会解析 php.ini 配置文件，初始化运行环境，然后处理请求，处理完成后将数据按照 CGI 规定的格式返回给 web server 然后退出进程；&lt;/li&gt;
-&lt;li&gt;最后 web server 再把结果返回给浏览器。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;高并发时的性能较差：&lt;br /&gt;
-CGI 程序的每一次 web 请求都会有启动和退出过程 —— 每次 HTTP 服务器遇到动态请求时都需要重新启动脚本解析器来解析 php.ini，重新载入全部 DLL 扩展并重初始化全部数据结构，然后把结果返回给 HTTP 服务器&lt;/p&gt;
-&lt;h5 id=&#34;fastcgi&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi&#34;&gt;#&lt;/a&gt; FastCGI&lt;/h5&gt;
-&lt;p&gt;因 CGI 高并发时性能差，未解决这一问题产生了 FastCGI&lt;/p&gt;
-&lt;h5 id=&#34;fastcgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi工作流程&#34;&gt;#&lt;/a&gt; FastCGI 工作流程&lt;/h5&gt;
-&lt;ol&gt;
-&lt;li&gt;Web Server 启动同时，加载 FastCGI 进程管理器&lt;/li&gt;
-&lt;li&gt;FastCGI 进程管理器读取 php.ini 配置文件，对自身进行初始化，启动多个 CGI 解释器进程 (php-cgi)，等待来自 Web Server 的连接。&lt;/li&gt;
-&lt;li&gt;当 Web Server 接收到客户端请求时，FastCGI 进程管理器选择并连接到一个 CGI 解释器。Web server 会将相关环境变量和标准输入发送到 FastCGI 子进程 php-cgi 进行处理&lt;/li&gt;
-&lt;li&gt;FastCGI 子进程完成处理后将数据按照 CGI 规定的格式返回给 Web Server，然后关闭 FastCGI 子进程或者等待下一次请求。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h5 id=&#34;fastcgi解决方案&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi解决方案&#34;&gt;#&lt;/a&gt; FastCGI 解决方案&lt;/h5&gt;
-&lt;p&gt;Master-Worker 模式&lt;/p&gt;
-&lt;p&gt;Fastcgi 会先启一个 master，解析配置文件，初始化执行环境，然后再启动多个 worker。当请求过来时，master 会传递给一个 worker，然后立即可以接受下一个请求。这样就避免了重复的劳动，效率自然提高。而且当 worker 不够用时，master 可以根据配置预先启动几个 worker 等着；当然空闲 worker 太多时，也会停掉一些，这样就提高了性能，也节约了资源。这就是 fastcgi 的对进程的管理。&lt;/p&gt;
  ]]></description>
         </item>
         <item>
@@ -1958,6 +2181,181 @@ sudo apt-get install ufw
 &lt;p&gt;将文件下载下来，然后运行&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204632334.png&#34; alt=&#34;image-20220907204632334&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;攻击机上成功上线&lt;/p&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A8/</guid>
+            <title>数据结构与算法入门</title>
+            <link>https://blog.xcu.icu/2022/10/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A8/</link>
+            <category term="数据结构" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" />
+            <category term="数据结构与算法" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" />
+            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h1 id=&#34;1数据结构与算法入门&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1数据结构与算法入门&#34;&gt;#&lt;/a&gt; 1，数据结构与算法入门&lt;/h1&gt;
+&lt;p&gt;&lt;code&gt;程序=数据结构+算法&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;研究非数值计算的程序设计问题中计算机的操作对象以及它们之间的关系和操作&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;因为操作对象和操作对象之间的关系不同产生不同的数据结构&lt;/p&gt;
+&lt;h2 id=&#34;算法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法&#34;&gt;#&lt;/a&gt; 算法&lt;/h2&gt;
+&lt;p&gt;何为算法，使用计算机 C 语言编程计算 1 到 100 的和（1+2+3+……+100）多数会给出这样的答案&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; ans&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;&amp;lt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+        ans&lt;span class=&#34;token operator&#34;&gt;+=&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
+    &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;%d&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;ans&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;循环计算了一百次，但是如果我们使用等差数列求和&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; ans&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;%d&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;ans&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;使用更加简单的方式，用较小的计算量完成计算&lt;/p&gt;
+&lt;h3 id=&#34;算法的特性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的特性&#34;&gt;#&lt;/a&gt; 算法的特性&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;输入输出：&lt;br /&gt;
+算法具有 0 个或者多个输入，至少一个输出&lt;/li&gt;
+&lt;li&gt;确定性：&lt;br /&gt;
+算法的每一步都具有确定的含义，无二义性，即相同的输入得到的输出结果相同&lt;/li&gt;
+&lt;li&gt;有穷性&lt;br /&gt;
+每个算法都应该在有限的时间内完成&lt;/li&gt;
+&lt;li&gt;可行性&lt;br /&gt;
+一个算法是可以被执行的，即算法的每个操作都可以通过已经实现的基本运算执行有限次数来完成&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;算法的设计要求&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的设计要求&#34;&gt;#&lt;/a&gt; 算法的设计要求&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;正确性：算法能够满足指定的功能，能够得到正确答案&lt;/li&gt;
+&lt;li&gt;健壮性：当输入的数据不合法时，也能够做出相应的处理&lt;/li&gt;
+&lt;li&gt;可读性：指算法是可以阅读，理解和交流的&lt;/li&gt;
+&lt;li&gt;耗时低占用空间少（高效性）：运行时间（Running time）与占用空间（Storage space）概念，在设计算法时，我们总是希望能够更少的使用时间和空间达成我们的目标。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;基本概念和术语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#基本概念和术语&#34;&gt;#&lt;/a&gt; 基本概念和术语&lt;/h2&gt;
+&lt;p&gt;数据是信息的载体，是可以被计算机识别，存储并加工处理的描述客观事物的信息符号的总称&lt;/p&gt;
+&lt;p&gt;数据元素是数据的基本单位，数据元素由若干数据项组成&lt;br /&gt;
+数据项是构成数据元素的最小单位&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905152622667.png&#34; alt=&#34;image-20220905152622667&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;数据对象：相同性质数据元素的集合，是数据的一个子集&lt;/p&gt;
+&lt;p&gt;数据结构：数据结构 = 数据对象 + 结构（带结构的数据对象）&lt;br /&gt;
+数据对象不是孤立存在的，他们之间存在某种关系，数据对象之间的关系成为结构&lt;/p&gt;
+&lt;h2 id=&#34;数据结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据结构&#34;&gt;#&lt;/a&gt; 数据结构&lt;/h2&gt;
+&lt;p&gt;数据结构的两个层次：&lt;/p&gt;
+&lt;p&gt;1、逻辑结构&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;数据的逻辑结构是从数据元素的逻辑关系上描述数据的。&lt;/li&gt;
+&lt;li&gt;是指数据元素之间的逻辑关系的整体，通常是从求解问题中提&lt;br /&gt;
+炼出来的。&lt;/li&gt;
+&lt;li&gt;数据逻辑结构与数据的存储无关，是独立于计算机的。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;2、物理结构&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据元素及其关系在计算机存储器中的存储方式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;逻辑结构实例&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;集合&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;数据元素只是属于一个集合，无其他关系&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150436900.png&#34; alt=&#34;image-20220906150436900&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;线性结构&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一对一，线性表，栈，队列&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150444092.png&#34; alt=&#34;image-20220906150444092&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;树形结构&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一对多&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150452330.png&#34; alt=&#34;image-20220906150452330&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;图形结构&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;多对多&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150458844.png&#34; alt=&#34;image-20220906150458844&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接下来一个列题&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905155124056.png&#34; alt=&#34;image-20220905155124056&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905155321699.png&#34; alt=&#34;image-20220905155321699&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905155137275.png&#34; alt=&#34;image-20220905155137275&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;数据结构分 3 个方面&lt;/p&gt;
+&lt;p&gt;逻辑结构，储存结构，数据运算&lt;/p&gt;
+&lt;p&gt;数据元素之间的逻辑关系是数据的逻辑结构&lt;/p&gt;
+&lt;p&gt;数据元素及其关系在计算器中的储存方式是数据的储存结构（物理结构）&lt;/p&gt;
+&lt;p&gt;施加在该数据上面的操作是数据运算&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;同一逻辑可以对应多种储存结构&lt;/code&gt; &lt;br /&gt;
+ &lt;code&gt;同样的运算，在不同的储存结构中，其实现过程是不同的&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;存储结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#存储结构&#34;&gt;#&lt;/a&gt; 存储结构&lt;/h2&gt;
+&lt;p&gt;顺序储存：&lt;/p&gt;
+&lt;p&gt;借助元素在存储器中的相应位置来表示数据元素间的逻辑关系&lt;/p&gt;
+&lt;p&gt;链式存储结构&lt;/p&gt;
+&lt;p&gt;借助指示元素存储地址的指针表示数据元素间的逻辑关系&lt;/p&gt;
+&lt;h2 id=&#34;数据类型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据类型&#34;&gt;#&lt;/a&gt; 数据类型&lt;/h2&gt;
+&lt;p&gt;数据类型是一个值的集合和定义在此集合上的一组操作的总称&lt;/p&gt;
+&lt;p&gt;数据类型和数据结构之间的关系：数据类型就是已经实现了的数据结构&lt;/p&gt;
+&lt;h3 id=&#34;抽象数据类型adt&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#抽象数据类型adt&#34;&gt;#&lt;/a&gt; 抽象数据类型（ADT）：&lt;/h3&gt;
+&lt;p&gt;更高层次的数据对象，可以通过固有的数据类型来表示或实现&lt;/p&gt;
+&lt;p&gt;抽象数据类型（Abstract Data Type，ADT）只是一个数学模型以及定义在模型上的一组操作。通常是对数据的抽象，定义了数据的取值范围以及对数据操作的集合。&lt;/p&gt;
+&lt;h2 id=&#34;算法分析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法分析&#34;&gt;#&lt;/a&gt; 算法分析&lt;/h2&gt;
+&lt;h3 id=&#34;算法的时间复杂度&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的时间复杂度&#34;&gt;#&lt;/a&gt; 算法的时间复杂度&lt;/h3&gt;
+&lt;p&gt;时间复杂度表示一个程序运行所需要的时间，其具体需要在机器环境中才能得到具体的值，但我们一般并不需要得到详细的值，只是需要比较快慢的区别即可&lt;/p&gt;
+&lt;p&gt;时间频度中，n 称为问题的规模，当 n 不断变化时，时间频度 T (n) 也会不断变化。&lt;br /&gt;
+T（n)/f (n) 的极限值为不等于零的常数，则称 f (n) 是 T (n) 的同数量级函数。记作 T (n)=Ｏ(f (n)), 称Ｏ(f (n)) 为算法的渐进时间复杂度，简称时间复杂度。&lt;/p&gt;
+&lt;h4 id=&#34;度量时间复杂度的两种方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#度量时间复杂度的两种方法&#34;&gt;#&lt;/a&gt; 度量时间复杂度的两种方法&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;h3 id=&#34;事后统计法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#事后统计法&#34;&gt;#&lt;/a&gt; 事后统计法&lt;/h3&gt;
+&lt;p&gt;在程序运行结束之后直接查看运行时间的方式进行时间复杂度的统计&lt;br /&gt;
+（特别依赖计算机环境，算法的测试困难，有时一套算法需要海量的数据才能真正比较出效果）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;h3 id=&#34;事先估计法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#事先估计法&#34;&gt;#&lt;/a&gt; 事先估计法&lt;/h3&gt;
+&lt;p&gt;事先统计法采取在计算机编译程序前对该算法进行预估的方式估算。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;算法的空间复杂度&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的空间复杂度&#34;&gt;#&lt;/a&gt; 算法的空间复杂度&lt;/h3&gt;
+&lt;p&gt;一个程序的空间复杂度是指运行完一个程序所需内存的大小，其包括两个部分。&lt;/p&gt;
+&lt;p&gt;a) 固定部分。这部分空间的大小与输入 / 输出的数据的个数多少、数值无关。主要包括指令空间（即代码空间）、数据空间（常量、简单变量）等所占的空间。这部分属于静态空间。&lt;/p&gt;
+&lt;p&gt;b) 可变空间，这部分空间的主要包括动态分配的空间，以及递归栈所需的空间等。这部分的空间大小与算法有关。&lt;/p&gt;
+&lt;h2 id=&#34;程序允许时的内存与地址&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#程序允许时的内存与地址&#34;&gt;#&lt;/a&gt; 程序允许时的内存与地址&lt;/h2&gt;
+&lt;h3 id=&#34;内存&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#内存&#34;&gt;#&lt;/a&gt; 内存&lt;/h3&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220913002747179.png&#34; alt=&#34;image-20220913002747179&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;首先看这张图，可以看到每一个数据都有一个地址与其对应，也是因为有地址的存在，我们才可以使用计算机轻易的去访问一个数据&lt;/p&gt;
+&lt;p&gt;接下来可以用一串 c 语言代码来体现数据喝地址的关系&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt; array&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;ACDEQSFVCK&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+        &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;The %c Address is %x \n&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;array&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;amp;&lt;/span&gt;array&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+       &lt;span class=&#34;token comment&#34;&gt;//% x 可以换成 % p 都是十六进制表示，只不过 % p 会把所有的位数显示出来&lt;/span&gt;
+    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220913004106041.png&#34; alt=&#34;image-20220913004106041&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这是一段连续的地址，当你把 char 类型换成 int 型之后可能又不太一样，因为 char 是 1 字节的，而 int 占 4 字节，所以 int 的地址会变成 4 个一跳的方式往上增长。&lt;/p&gt;
+&lt;h2 id=&#34;两个必须学会的函数知识&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#两个必须学会的函数知识&#34;&gt;#&lt;/a&gt; 两个必须学会的函数知识&lt;/h2&gt;
+&lt;h3 id=&#34;1-malloc函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-malloc函数&#34;&gt;#&lt;/a&gt; 1. Malloc 函数&lt;/h3&gt;
+&lt;p&gt;malloc（）函数在堆中申请分配一个大小为 size 个字节的连续内存空间，若成功分配，则返回一个指向所分配空间起始地址的指针，否则返回空指针（NULL）。&lt;/p&gt;
+&lt;h3 id=&#34;2free函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2free函数&#34;&gt;#&lt;/a&gt; 2.Free 函数&lt;/h3&gt;
+&lt;p&gt;free（）函数用来释放已分配的内存空间，参数 p 是待释放的内存空间的首指针&lt;/p&gt;
+&lt;p&gt;总结来说 malloc 就是用来申请内存空间，而 free 是为了释放内存空间&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&amp;lt;stdlib.h&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;     &lt;span class=&#34;token comment&#34;&gt;// 定义一个指向整形的指针变量&lt;/span&gt;
+    p&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;malloc&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;sizeof&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  &lt;span class=&#34;token comment&#34;&gt;// 申请 5 个整形大小的内存空间并返回起始地址给 p&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;p&lt;span class=&#34;token operator&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;// 申请失败&lt;/span&gt;
+        &lt;span class=&#34;token comment&#34;&gt;// 执行申请失败的代码，一般 print 一个报错&lt;/span&gt;
+        &lt;span class=&#34;token function&#34;&gt;exit&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;// 退出&lt;/span&gt;
+    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
+    p&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1000&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  &lt;span class=&#34;token comment&#34;&gt;// 为空间中添加数据&lt;/span&gt;
+    &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;%d&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  &lt;span class=&#34;token comment&#34;&gt;// 打印这个数据&lt;/span&gt;
+    &lt;span class=&#34;token function&#34;&gt;free&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;// 释放 p 的内存空间，此时 p 依旧存在，只不过失去了指向的对象，成了野指针&lt;/span&gt;
+    p&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;token comment&#34;&gt;// 为其赋 NULL，此时它不再是一个野指针&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;整个内存申请释放的过程&lt;/p&gt;
  ]]></description>
         </item>
         <item>
@@ -2464,181 +2862,6 @@ sudo apt-get install ufw
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A8/</guid>
-            <title>数据结构与算法入门</title>
-            <link>https://blog.xcu.icu/2022/10/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A8/</link>
-            <category term="数据结构" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" />
-            <category term="数据结构与算法" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" />
-            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h1 id=&#34;1数据结构与算法入门&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1数据结构与算法入门&#34;&gt;#&lt;/a&gt; 1，数据结构与算法入门&lt;/h1&gt;
-&lt;p&gt;&lt;code&gt;程序=数据结构+算法&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;研究非数值计算的程序设计问题中计算机的操作对象以及它们之间的关系和操作&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;因为操作对象和操作对象之间的关系不同产生不同的数据结构&lt;/p&gt;
-&lt;h2 id=&#34;算法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法&#34;&gt;#&lt;/a&gt; 算法&lt;/h2&gt;
-&lt;p&gt;何为算法，使用计算机 C 语言编程计算 1 到 100 的和（1+2+3+……+100）多数会给出这样的答案&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; ans&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;&amp;lt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-        ans&lt;span class=&#34;token operator&#34;&gt;+=&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
-    &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;%d&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;ans&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;循环计算了一百次，但是如果我们使用等差数列求和&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; ans&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;%d&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;ans&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;使用更加简单的方式，用较小的计算量完成计算&lt;/p&gt;
-&lt;h3 id=&#34;算法的特性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的特性&#34;&gt;#&lt;/a&gt; 算法的特性&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;输入输出：&lt;br /&gt;
-算法具有 0 个或者多个输入，至少一个输出&lt;/li&gt;
-&lt;li&gt;确定性：&lt;br /&gt;
-算法的每一步都具有确定的含义，无二义性，即相同的输入得到的输出结果相同&lt;/li&gt;
-&lt;li&gt;有穷性&lt;br /&gt;
-每个算法都应该在有限的时间内完成&lt;/li&gt;
-&lt;li&gt;可行性&lt;br /&gt;
-一个算法是可以被执行的，即算法的每个操作都可以通过已经实现的基本运算执行有限次数来完成&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;算法的设计要求&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的设计要求&#34;&gt;#&lt;/a&gt; 算法的设计要求&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;正确性：算法能够满足指定的功能，能够得到正确答案&lt;/li&gt;
-&lt;li&gt;健壮性：当输入的数据不合法时，也能够做出相应的处理&lt;/li&gt;
-&lt;li&gt;可读性：指算法是可以阅读，理解和交流的&lt;/li&gt;
-&lt;li&gt;耗时低占用空间少（高效性）：运行时间（Running time）与占用空间（Storage space）概念，在设计算法时，我们总是希望能够更少的使用时间和空间达成我们的目标。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;基本概念和术语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#基本概念和术语&#34;&gt;#&lt;/a&gt; 基本概念和术语&lt;/h2&gt;
-&lt;p&gt;数据是信息的载体，是可以被计算机识别，存储并加工处理的描述客观事物的信息符号的总称&lt;/p&gt;
-&lt;p&gt;数据元素是数据的基本单位，数据元素由若干数据项组成&lt;br /&gt;
-数据项是构成数据元素的最小单位&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905152622667.png&#34; alt=&#34;image-20220905152622667&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;数据对象：相同性质数据元素的集合，是数据的一个子集&lt;/p&gt;
-&lt;p&gt;数据结构：数据结构 = 数据对象 + 结构（带结构的数据对象）&lt;br /&gt;
-数据对象不是孤立存在的，他们之间存在某种关系，数据对象之间的关系成为结构&lt;/p&gt;
-&lt;h2 id=&#34;数据结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据结构&#34;&gt;#&lt;/a&gt; 数据结构&lt;/h2&gt;
-&lt;p&gt;数据结构的两个层次：&lt;/p&gt;
-&lt;p&gt;1、逻辑结构&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;数据的逻辑结构是从数据元素的逻辑关系上描述数据的。&lt;/li&gt;
-&lt;li&gt;是指数据元素之间的逻辑关系的整体，通常是从求解问题中提&lt;br /&gt;
-炼出来的。&lt;/li&gt;
-&lt;li&gt;数据逻辑结构与数据的存储无关，是独立于计算机的。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;2、物理结构&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;数据元素及其关系在计算机存储器中的存储方式。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;逻辑结构实例&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;集合&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;数据元素只是属于一个集合，无其他关系&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150436900.png&#34; alt=&#34;image-20220906150436900&#34; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;线性结构&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;一对一，线性表，栈，队列&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150444092.png&#34; alt=&#34;image-20220906150444092&#34; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;树形结构&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;一对多&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150452330.png&#34; alt=&#34;image-20220906150452330&#34; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;图形结构&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;多对多&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150458844.png&#34; alt=&#34;image-20220906150458844&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;接下来一个列题&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905155124056.png&#34; alt=&#34;image-20220905155124056&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905155321699.png&#34; alt=&#34;image-20220905155321699&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905155137275.png&#34; alt=&#34;image-20220905155137275&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;数据结构分 3 个方面&lt;/p&gt;
-&lt;p&gt;逻辑结构，储存结构，数据运算&lt;/p&gt;
-&lt;p&gt;数据元素之间的逻辑关系是数据的逻辑结构&lt;/p&gt;
-&lt;p&gt;数据元素及其关系在计算器中的储存方式是数据的储存结构（物理结构）&lt;/p&gt;
-&lt;p&gt;施加在该数据上面的操作是数据运算&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;同一逻辑可以对应多种储存结构&lt;/code&gt; &lt;br /&gt;
- &lt;code&gt;同样的运算，在不同的储存结构中，其实现过程是不同的&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;存储结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#存储结构&#34;&gt;#&lt;/a&gt; 存储结构&lt;/h2&gt;
-&lt;p&gt;顺序储存：&lt;/p&gt;
-&lt;p&gt;借助元素在存储器中的相应位置来表示数据元素间的逻辑关系&lt;/p&gt;
-&lt;p&gt;链式存储结构&lt;/p&gt;
-&lt;p&gt;借助指示元素存储地址的指针表示数据元素间的逻辑关系&lt;/p&gt;
-&lt;h2 id=&#34;数据类型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据类型&#34;&gt;#&lt;/a&gt; 数据类型&lt;/h2&gt;
-&lt;p&gt;数据类型是一个值的集合和定义在此集合上的一组操作的总称&lt;/p&gt;
-&lt;p&gt;数据类型和数据结构之间的关系：数据类型就是已经实现了的数据结构&lt;/p&gt;
-&lt;h3 id=&#34;抽象数据类型adt&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#抽象数据类型adt&#34;&gt;#&lt;/a&gt; 抽象数据类型（ADT）：&lt;/h3&gt;
-&lt;p&gt;更高层次的数据对象，可以通过固有的数据类型来表示或实现&lt;/p&gt;
-&lt;p&gt;抽象数据类型（Abstract Data Type，ADT）只是一个数学模型以及定义在模型上的一组操作。通常是对数据的抽象，定义了数据的取值范围以及对数据操作的集合。&lt;/p&gt;
-&lt;h2 id=&#34;算法分析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法分析&#34;&gt;#&lt;/a&gt; 算法分析&lt;/h2&gt;
-&lt;h3 id=&#34;算法的时间复杂度&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的时间复杂度&#34;&gt;#&lt;/a&gt; 算法的时间复杂度&lt;/h3&gt;
-&lt;p&gt;时间复杂度表示一个程序运行所需要的时间，其具体需要在机器环境中才能得到具体的值，但我们一般并不需要得到详细的值，只是需要比较快慢的区别即可&lt;/p&gt;
-&lt;p&gt;时间频度中，n 称为问题的规模，当 n 不断变化时，时间频度 T (n) 也会不断变化。&lt;br /&gt;
-T（n)/f (n) 的极限值为不等于零的常数，则称 f (n) 是 T (n) 的同数量级函数。记作 T (n)=Ｏ(f (n)), 称Ｏ(f (n)) 为算法的渐进时间复杂度，简称时间复杂度。&lt;/p&gt;
-&lt;h4 id=&#34;度量时间复杂度的两种方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#度量时间复杂度的两种方法&#34;&gt;#&lt;/a&gt; 度量时间复杂度的两种方法&lt;/h4&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;h3 id=&#34;事后统计法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#事后统计法&#34;&gt;#&lt;/a&gt; 事后统计法&lt;/h3&gt;
-&lt;p&gt;在程序运行结束之后直接查看运行时间的方式进行时间复杂度的统计&lt;br /&gt;
-（特别依赖计算机环境，算法的测试困难，有时一套算法需要海量的数据才能真正比较出效果）&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;h3 id=&#34;事先估计法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#事先估计法&#34;&gt;#&lt;/a&gt; 事先估计法&lt;/h3&gt;
-&lt;p&gt;事先统计法采取在计算机编译程序前对该算法进行预估的方式估算。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;算法的空间复杂度&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的空间复杂度&#34;&gt;#&lt;/a&gt; 算法的空间复杂度&lt;/h3&gt;
-&lt;p&gt;一个程序的空间复杂度是指运行完一个程序所需内存的大小，其包括两个部分。&lt;/p&gt;
-&lt;p&gt;a) 固定部分。这部分空间的大小与输入 / 输出的数据的个数多少、数值无关。主要包括指令空间（即代码空间）、数据空间（常量、简单变量）等所占的空间。这部分属于静态空间。&lt;/p&gt;
-&lt;p&gt;b) 可变空间，这部分空间的主要包括动态分配的空间，以及递归栈所需的空间等。这部分的空间大小与算法有关。&lt;/p&gt;
-&lt;h2 id=&#34;程序允许时的内存与地址&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#程序允许时的内存与地址&#34;&gt;#&lt;/a&gt; 程序允许时的内存与地址&lt;/h2&gt;
-&lt;h3 id=&#34;内存&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#内存&#34;&gt;#&lt;/a&gt; 内存&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220913002747179.png&#34; alt=&#34;image-20220913002747179&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;首先看这张图，可以看到每一个数据都有一个地址与其对应，也是因为有地址的存在，我们才可以使用计算机轻易的去访问一个数据&lt;/p&gt;
-&lt;p&gt;接下来可以用一串 c 语言代码来体现数据喝地址的关系&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt; array&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;ACDEQSFVCK&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-        &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;The %c Address is %x \n&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;array&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;amp;&lt;/span&gt;array&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-       &lt;span class=&#34;token comment&#34;&gt;//% x 可以换成 % p 都是十六进制表示，只不过 % p 会把所有的位数显示出来&lt;/span&gt;
-    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220913004106041.png&#34; alt=&#34;image-20220913004106041&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;可以看到这是一段连续的地址，当你把 char 类型换成 int 型之后可能又不太一样，因为 char 是 1 字节的，而 int 占 4 字节，所以 int 的地址会变成 4 个一跳的方式往上增长。&lt;/p&gt;
-&lt;h2 id=&#34;两个必须学会的函数知识&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#两个必须学会的函数知识&#34;&gt;#&lt;/a&gt; 两个必须学会的函数知识&lt;/h2&gt;
-&lt;h3 id=&#34;1-malloc函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-malloc函数&#34;&gt;#&lt;/a&gt; 1. Malloc 函数&lt;/h3&gt;
-&lt;p&gt;malloc（）函数在堆中申请分配一个大小为 size 个字节的连续内存空间，若成功分配，则返回一个指向所分配空间起始地址的指针，否则返回空指针（NULL）。&lt;/p&gt;
-&lt;h3 id=&#34;2free函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2free函数&#34;&gt;#&lt;/a&gt; 2.Free 函数&lt;/h3&gt;
-&lt;p&gt;free（）函数用来释放已分配的内存空间，参数 p 是待释放的内存空间的首指针&lt;/p&gt;
-&lt;p&gt;总结来说 malloc 就是用来申请内存空间，而 free 是为了释放内存空间&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&amp;lt;stdlib.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;     &lt;span class=&#34;token comment&#34;&gt;// 定义一个指向整形的指针变量&lt;/span&gt;
-    p&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;malloc&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;sizeof&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  &lt;span class=&#34;token comment&#34;&gt;// 申请 5 个整形大小的内存空间并返回起始地址给 p&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;p&lt;span class=&#34;token operator&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;// 申请失败&lt;/span&gt;
-        &lt;span class=&#34;token comment&#34;&gt;// 执行申请失败的代码，一般 print 一个报错&lt;/span&gt;
-        &lt;span class=&#34;token function&#34;&gt;exit&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;// 退出&lt;/span&gt;
-    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
-    p&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1000&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  &lt;span class=&#34;token comment&#34;&gt;// 为空间中添加数据&lt;/span&gt;
-    &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;%d&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  &lt;span class=&#34;token comment&#34;&gt;// 打印这个数据&lt;/span&gt;
-    &lt;span class=&#34;token function&#34;&gt;free&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;// 释放 p 的内存空间，此时 p 依旧存在，只不过失去了指向的对象，成了野指针&lt;/span&gt;
-    p&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;token comment&#34;&gt;// 为其赋 NULL，此时它不再是一个野指针&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;整个内存申请释放的过程&lt;/p&gt;
  ]]></description>
         </item>
         <item>
