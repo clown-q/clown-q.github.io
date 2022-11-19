@@ -54,22 +54,22 @@
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119141733799.png&#34; alt=&#34;image-20221119141733799&#34; /&gt;&lt;/p&gt;
 &lt;h5 id=&#34;214创建主页文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#214创建主页文件&#34;&gt;#&lt;/a&gt; 2.1.4 创建主页文件&lt;/h5&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119142010197.png&#34; alt=&#34;image-20221119142010197&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119145251932.png&#34; alt=&#34;image-20221119145251932&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119145305673.png&#34; alt=&#34;image-20221119145305673&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119145251932.png&#34; alt=&#34;image-20221119145251932&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119145305673.png&#34; alt=&#34;image-20221119145305673&#34; /&gt;&lt;/p&gt;
 &lt;h5 id=&#34;215创建子目录&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#215创建子目录&#34;&gt;#&lt;/a&gt; 2.1.5 创建子目录&lt;/h5&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119145603554.png&#34; alt=&#34;image-20221119145603554&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119145553919.png&#34; alt=&#34;image-20221119145553919&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119145603554.png&#34; alt=&#34;image-20221119145603554&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119145553919.png&#34; alt=&#34;image-20221119145553919&#34; /&gt;&lt;/p&gt;
 &lt;h5 id=&#34;216配置和管理虚拟主机&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#216配置和管理虚拟主机&#34;&gt;#&lt;/a&gt; 2.1.6 配置和管理虚拟主机&lt;/h5&gt;
 &lt;p&gt;增加子配置文件&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119150451651.png&#34; alt=&#34;image-20221119150451651&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;重启服务添加文件&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119150831618.png&#34; alt=&#34;image-20221119150831618&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;配置正向解析文件，开启泛域名解析&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119151351196.png&#34; alt=&#34;image-20221119151351196&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119151440492.png&#34; alt=&#34;image-20221119151440492&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119151351196.png&#34; alt=&#34;image-20221119151351196&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119151440492.png&#34; alt=&#34;image-20221119151440492&#34; /&gt;&lt;/p&gt;
 &lt;h5 id=&#34;217基于端口的虚拟主机&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#217基于端口的虚拟主机&#34;&gt;#&lt;/a&gt; 2.1.7 基于端口的虚拟主机&lt;/h5&gt;
 &lt;p&gt;主配置文件中增加下面的内容&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119152256564.png&#34; alt=&#34;image-20221119152256564&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119152256564.png&#34; alt=&#34;image-20221119152256564&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119152903072.png&#34; alt=&#34;image-20221119152903072&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;拒绝访问&lt;/p&gt;
 &lt;p&gt;主配置文件加上一条&lt;/p&gt;
@@ -106,9 +106,9 @@
 &lt;p&gt;访问目标域名&lt;/p&gt;
 &lt;p&gt;这里将文件解压后放上传无法正常访问，上传整个压缩包之后再解压&lt;/p&gt;
 &lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;http:&amp;#x2F;&amp;#x2F;chanzhi.lq.co&amp;#x2F;install.php&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119161331178.png&#34; alt=&#34;image-20221119161331178&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119161331178.png&#34; alt=&#34;image-20221119161331178&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;在系统检查发现报错&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119161417309.png&#34; alt=&#34;image-20221119161417309&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119161417309.png&#34; alt=&#34;image-20221119161417309&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;这里关闭 SElinu 也没用，按照提示运行命令，给 tmp 一个 7 的权限，修改安全上下文&lt;/p&gt;
 &lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;chcon -t httpd_sys_content_rw_tsystem -R
 chmod o&amp;#x3D;rwx -R &amp;#x2F;var&amp;#x2F;www&amp;#x2F;chanzhi&amp;#x2F;system&amp;#x2F;tmp&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
@@ -191,8 +191,6 @@ MariaDB [mysql]&amp;gt; select host,user from user;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119172829181.png&#34; alt=&#34;image-20221119172829181&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;再次访问 chanzhi 首页&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119172937827.png&#34; alt=&#34;image-20221119172937827&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;实验小结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实验小结&#34;&gt;#&lt;/a&gt; 实验小结&lt;/h3&gt;
-&lt;p&gt;掌握了无图形化 LAMP 架构的配置，熟练了常见报错的解决思路&lt;/p&gt;
 </content>
         <category term="网络服务应用" scheme="https://blog.xcu.icu/categories/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E5%BA%94%E7%94%A8/" />
         <category term="WWW服务器" scheme="https://blog.xcu.icu/tags/WWW%E6%9C%8D%E5%8A%A1%E5%99%A8/" />
