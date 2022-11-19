@@ -8,13 +8,196 @@
     <author>
       <name>Clown</name>
     </author>
-    <updated>2022-11-08T16:00:00.000Z</updated>
+    <updated>2022-11-18T16:00:00.000Z</updated>
     <category term="Clown" />
     <category term="Web" />
     <category term="Pwn" />
     <category term="CTF" />
     <category term="AWD" />
     <category term="ACM" />
+    <entry>
+        <id>https://blog.xcu.icu/2022/11/19/chanzhi%E6%90%AD%E5%BB%BA/</id>
+        <title>WWW服务器搭建CMS</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2022/11/19/chanzhi%E6%90%AD%E5%BB%BA/"/>
+        <content type="html">&lt;h2 id=&#34;实验4www服务器配置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实验4www服务器配置&#34;&gt;#&lt;/a&gt; 实验 4：WWW 服务器配置&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;实验目的&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1、掌握 Apache 服务的安装与启动。&lt;/p&gt;
+&lt;p&gt;2、掌握 Apache 服务的主配置文件。&lt;/p&gt;
+&lt;p&gt;3、掌握各种 Apache 服务器的配置。&lt;/p&gt;
+&lt;p&gt;4、学会创建 Web 网站和虚拟主机。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;1实验要求&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1实验要求&#34;&gt;#&lt;/a&gt; 1. 实验要求&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;任务 1：WWW 服务器基本配置 ，实验步骤可参考《WWW 服务器基本配置.pdf》文件。&lt;/p&gt;
+&lt;p&gt;任务 2：配置 LAMP 环境，实验步骤可参考《安装蝉知 CMS.pdf》文件。&lt;/p&gt;
+&lt;p&gt;其它：结合实验 3-1，已经部署的 DNS 服务器，可以正常解析 WWW 服务器的域名。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;2实验过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2实验过程&#34;&gt;#&lt;/a&gt; 2. 实验过程&lt;/h3&gt;
+&lt;h4 id=&#34;21-www服务器配置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21-www服务器配置&#34;&gt;#&lt;/a&gt; 2.1 WWW 服务器配置&lt;/h4&gt;
+&lt;h5 id=&#34;211-安装apache&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#211-安装apache&#34;&gt;#&lt;/a&gt; 2.1.1 安装 Apache&lt;/h5&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;yum install httpd httpd-devel&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;安装 Apache 服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119135615439.png&#34; alt=&#34;image-20221119135615439&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;212-主配置文件修改&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#212-主配置文件修改&#34;&gt;#&lt;/a&gt; 2.1.2 主配置文件修改&lt;/h5&gt;
+&lt;p&gt;备份&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119135908607.png&#34; alt=&#34;image-20221119135908607&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;删除注释&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119140051324.png&#34; alt=&#34;image-20221119140051324&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;213访问测试&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#213访问测试&#34;&gt;#&lt;/a&gt; 2.1.3 访问测试&lt;/h5&gt;
+&lt;p&gt;将防火墙关闭，访问成功&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119140843844.png&#34; alt=&#34;image-20221119140843844&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;添加防火墙规则&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119141203394.png&#34; alt=&#34;image-20221119141203394&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;正常访问&lt;/p&gt;
+&lt;p&gt;Linux 客户端也可以正常访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119141733799.png&#34; alt=&#34;image-20221119141733799&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;214创建主页文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#214创建主页文件&#34;&gt;#&lt;/a&gt; 2.1.4 创建主页文件&lt;/h5&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119142010197.png&#34; alt=&#34;image-20221119142010197&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119145251932.png&#34; alt=&#34;image-20221119145251932&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119145305673.png&#34; alt=&#34;image-20221119145305673&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;215创建子目录&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#215创建子目录&#34;&gt;#&lt;/a&gt; 2.1.5 创建子目录&lt;/h5&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119145603554.png&#34; alt=&#34;image-20221119145603554&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119145553919.png&#34; alt=&#34;image-20221119145553919&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;216配置和管理虚拟主机&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#216配置和管理虚拟主机&#34;&gt;#&lt;/a&gt; 2.1.6 配置和管理虚拟主机&lt;/h5&gt;
+&lt;p&gt;增加子配置文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119150451651.png&#34; alt=&#34;image-20221119150451651&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;重启服务添加文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119150831618.png&#34; alt=&#34;image-20221119150831618&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;配置正向解析文件，开启泛域名解析&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119151351196.png&#34; alt=&#34;image-20221119151351196&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119151440492.png&#34; alt=&#34;image-20221119151440492&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;217基于端口的虚拟主机&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#217基于端口的虚拟主机&#34;&gt;#&lt;/a&gt; 2.1.7 基于端口的虚拟主机&lt;/h5&gt;
+&lt;p&gt;主配置文件中增加下面的内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119152256564.png&#34; alt=&#34;image-20221119152256564&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119152903072.png&#34; alt=&#34;image-20221119152903072&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;拒绝访问&lt;/p&gt;
+&lt;p&gt;主配置文件加上一条&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;Listen 192.168.9.148:8080&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119153036168.png&#34; alt=&#34;image-20221119153036168&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;218虚拟目录&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#218虚拟目录&#34;&gt;#&lt;/a&gt; 2.1.8 虚拟目录&lt;/h5&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119153247850.png&#34; alt=&#34;image-20221119153247850&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;修改主配置文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119153438412.png&#34; alt=&#34;image-20221119153438412&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119153524691.png&#34; alt=&#34;image-20221119153524691&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;22-配置lamp环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22-配置lamp环境&#34;&gt;#&lt;/a&gt; 2.2 配置 LAMP 环境&lt;/h4&gt;
+&lt;h5 id=&#34;221-安装数据库&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#221-安装数据库&#34;&gt;#&lt;/a&gt; 2.2.1 安装数据库&lt;/h5&gt;
+&lt;p&gt;通过命令安装 mariadb 数据库&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;yum install mariadb mariadb-server mariadb-devel -y&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119153905541.png&#34; alt=&#34;image-20221119153905541&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;启动数据库&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119153957214.png&#34; alt=&#34;image-20221119153957214&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;222-安装php&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-安装php&#34;&gt;#&lt;/a&gt; 2.2.2 安装 PHP&lt;/h5&gt;
+&lt;p&gt;键入下面的命令&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;yum install -y php php-mysql php-devel -y&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119154322001.png&#34; alt=&#34;image-20221119154322001&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;phpinfo 测试&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119154509615.png&#34; alt=&#34;image-20221119154509615&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;发现未能解析&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119154918263.png&#34; alt=&#34;image-20221119154918263&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;向配置文件中加入上面这一句话&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119154947112.png&#34; alt=&#34;image-20221119154947112&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;223上传禅知cms&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#223上传禅知cms&#34;&gt;#&lt;/a&gt; 2.2.3 上传禅知 CMS&lt;/h5&gt;
+&lt;p&gt;这里用 winSCP 上传 chanzhi 的 cms 框架&lt;/p&gt;
+&lt;p&gt;然后更改主配置文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119160455976.png&#34; alt=&#34;image-20221119160455976&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;更改正向解析文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119160641662.png&#34; alt=&#34;image-20221119160641662&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;访问目标域名&lt;/p&gt;
+&lt;p&gt;这里将文件解压后放上传无法正常访问，上传整个压缩包之后再解压&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;http:&amp;#x2F;&amp;#x2F;chanzhi.lq.co&amp;#x2F;install.php&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119161331178.png&#34; alt=&#34;image-20221119161331178&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;在系统检查发现报错&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20221119161417309.png&#34; alt=&#34;image-20221119161417309&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里关闭 SElinu 也没用，按照提示运行命令，给 tmp 一个 7 的权限，修改安全上下文&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;chcon -t httpd_sys_content_rw_tsystem -R
+chmod o&amp;#x3D;rwx -R &amp;#x2F;var&amp;#x2F;www&amp;#x2F;chanzhi&amp;#x2F;system&amp;#x2F;tmp&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;然后就剩下一个错误了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119162330760.png&#34; alt=&#34;image-20221119162330760&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;chmod o&amp;#x3D;rwx -R &amp;#x2F;var&amp;#x2F;www&amp;#x2F;chanzhi&amp;#x2F;www&amp;#x2F;data&amp;#x2F;
+chcon -t httpd_sys_content_rw_t -R &amp;#x2F;var&amp;#x2F;www&amp;#x2F;chanzhi&amp;#x2F;www&amp;#x2F;data&amp;#x2F;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119162521444.png&#34; alt=&#34;image-20221119162521444&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;继续数据配置&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119162654055.png&#34; alt=&#34;image-20221119162654055&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;但是数据库连接失败&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119162824635.png&#34; alt=&#34;image-20221119162824635&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;SELinux 限制了 httpd 对外访问的权限。&lt;/p&gt;
+&lt;p&gt;开启 httpd_can_network_connect 和 httpd_can_network_connect_db&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-linux&#34; data-language=&#34;linux&#34;&gt;&lt;code class=&#34;language-linux&#34;&gt;[root@localhost chanzhi]# setsebool -P httpd_can_network_connect on
+[root@localhost chanzhi]# setsebool -P httpd_can_network_connect_db on
+[root@localhost chanzhi]# semanage boolean -l |grep httpd_can
+httpd_can_network_relay        (关    ,    关)  Allow httpd to can network relay
+httpd_can_connect_mythtv       (关    ,    关)  Allow httpd to can connect mythtv
+httpd_can_network_connect_db   (开    ,    开)  Allow httpd to can network connect db
+httpd_can_network_connect      (开    ,    开)  Allow httpd to can network connect
+httpd_can_connect_ftp          (关    ,    关)  Allow httpd to can connect ftp
+httpd_can_connect_zabbix       (关    ,    关)  Allow httpd to can connect zabbix
+httpd_can_sendmail             (关    ,    关)  Allow httpd to can sendmail
+httpd_can_connect_ldap         (关    ,    关)  Allow httpd to can connect ldap
+httpd_can_check_spam           (关    ,    关)  Allow httpd to can check spam
+httpd_can_network_memcache     (关    ,    关)  Allow httpd to can network memcache
+httpd_can_network_connect_cobbler (关    ,    关)  Allow httpd to can network connect cobbler
+&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;新报错来了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119163116420.png&#34; alt=&#34;image-20221119163116420&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;当时数据库配置的时候设置了不允许远程登录&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;MariaDB [(none)]&amp;gt; use mysql;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MariaDB [mysql]&amp;gt; update user set host&amp;#x3D;&amp;#39;%&amp;#39; where user&amp;#x3D;&amp;#39;root&amp;#39; and host&amp;#x3D;&amp;#39;localhost&amp;#39;;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [mysql]&amp;gt; select host,user from user;
++-----------+------+
+| host      | user |
++-----------+------+
+| %         | root |
+| 127.0.0.1 | root |
+| ::1       | root |
++-----------+------+
+3 rows in set (0.00 sec)
+&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;这里修改一下，然后重启数据库&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119163623743.png&#34; alt=&#34;image-20221119163623743&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;写入配置文件失败，手动写入&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119163749252.png&#34; alt=&#34;image-20221119163749252&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119163827222.png&#34; alt=&#34;image-20221119163827222&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;23实验补充&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23实验补充&#34;&gt;#&lt;/a&gt; 2.3 实验补充&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;https:&amp;#x2F;&amp;#x2F;www.zsite.com&amp;#x2F;download&amp;#x2F;422.html&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;上面的版本视乎不全，去安装一个新的，前面的内容不变，上传 chanzhi 后访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119170049451.png&#34; alt=&#34;image-20221119170049451&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;还是老报错&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119170256805.png&#34; alt=&#34;image-20221119170256805&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;更改安全上下文&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119170643476.png&#34; alt=&#34;image-20221119170643476&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119170921159.png&#34; alt=&#34;image-20221119170921159&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;报错未安装向导&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119171002000.png&#34; alt=&#34;image-20221119171002000&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;点击跳转连接，安装下面的资源&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119171113097.png&#34; alt=&#34;image-20221119171113097&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;将下载后的文件放到 cahnzhi 的跟目录中访问这个文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119171852755.png&#34; alt=&#34;image-20221119171852755&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;会跳转到安装一个向导页面&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kb3dubG9hZHMuaW9uY3ViZS5jb20vbG9hZGVyX2Rvd25sb2Fkcy9pb25jdWJlX2xvYWRlcnNfbGluX3g4Ni02NC56aXA=&#34;&gt;https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.zip&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;将上面的文件下载后解压到 /usr/lib64/php/modules&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119172651412.png&#34; alt=&#34;image-20221119172651412&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL2NoYW56aGkubHEuY28vbG9hZGVyLXdpemFyZC5waHA/dGltZW91dD0wJmFtcDtpbmk9MCZhbXA7cGFnZT1waHBjb25maWcmYW1wO2Rvd25sb2FkPTEmYW1wO25ld2xpbmVzb25seT0xJmFtcDtpbmluYW1lPTAwLWlvbmN1YmUuaW5pJmFtcDtzdHlwZT1s&#34;&gt;http://chanzhi.lq.co/loader-wizard.php?timeout=0&amp;amp;ini=0&amp;amp;page=phpconfig&amp;amp;download=1&amp;amp;newlinesonly=1&amp;amp;ininame=00-ioncube.ini&amp;amp;stype=l&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;将上面的 ini 文件放到 /etc/php.d&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119172515908.png&#34; alt=&#34;image-20221119172515908&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;重启 apache 服务，点击测试&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119172829181.png&#34; alt=&#34;image-20221119172829181&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;再次访问 chanzhi 首页&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221119172937827.png&#34; alt=&#34;image-20221119172937827&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;实验小结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实验小结&#34;&gt;#&lt;/a&gt; 实验小结&lt;/h3&gt;
+&lt;p&gt;掌握了无图形化 LAMP 架构的配置，熟练了常见报错的解决思路&lt;/p&gt;
+</content>
+        <category term="网络服务应用" scheme="https://blog.xcu.icu/categories/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E5%BA%94%E7%94%A8/" />
+        <category term="WWW服务器" scheme="https://blog.xcu.icu/tags/WWW%E6%9C%8D%E5%8A%A1%E5%99%A8/" />
+        <updated>2022-11-18T16:00:00.000Z</updated>
+    </entry>
     <entry>
         <id>https://blog.xcu.icu/2022/11/09/preg_match&amp;&amp;%E6%AD%A3%E5%88%99/</id>
         <title>preg_match&amp;&amp;正则</title>
@@ -4529,181 +4712,6 @@ sudo apt-get install ufw
 </content>
         <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
         <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
-        <updated>2022-10-23T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2022/10/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A8/</id>
-        <title>数据结构与算法入门</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A8/"/>
-        <content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h1 id=&#34;1数据结构与算法入门&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1数据结构与算法入门&#34;&gt;#&lt;/a&gt; 1，数据结构与算法入门&lt;/h1&gt;
-&lt;p&gt;&lt;code&gt;程序=数据结构+算法&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;研究非数值计算的程序设计问题中计算机的操作对象以及它们之间的关系和操作&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;因为操作对象和操作对象之间的关系不同产生不同的数据结构&lt;/p&gt;
-&lt;h2 id=&#34;算法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法&#34;&gt;#&lt;/a&gt; 算法&lt;/h2&gt;
-&lt;p&gt;何为算法，使用计算机 C 语言编程计算 1 到 100 的和（1+2+3+……+100）多数会给出这样的答案&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; ans&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;&amp;lt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-        ans&lt;span class=&#34;token operator&#34;&gt;+=&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
-    &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;%d&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;ans&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;循环计算了一百次，但是如果我们使用等差数列求和&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; ans&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;%d&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;ans&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;使用更加简单的方式，用较小的计算量完成计算&lt;/p&gt;
-&lt;h3 id=&#34;算法的特性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的特性&#34;&gt;#&lt;/a&gt; 算法的特性&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;输入输出：&lt;br /&gt;
-算法具有 0 个或者多个输入，至少一个输出&lt;/li&gt;
-&lt;li&gt;确定性：&lt;br /&gt;
-算法的每一步都具有确定的含义，无二义性，即相同的输入得到的输出结果相同&lt;/li&gt;
-&lt;li&gt;有穷性&lt;br /&gt;
-每个算法都应该在有限的时间内完成&lt;/li&gt;
-&lt;li&gt;可行性&lt;br /&gt;
-一个算法是可以被执行的，即算法的每个操作都可以通过已经实现的基本运算执行有限次数来完成&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;算法的设计要求&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的设计要求&#34;&gt;#&lt;/a&gt; 算法的设计要求&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;正确性：算法能够满足指定的功能，能够得到正确答案&lt;/li&gt;
-&lt;li&gt;健壮性：当输入的数据不合法时，也能够做出相应的处理&lt;/li&gt;
-&lt;li&gt;可读性：指算法是可以阅读，理解和交流的&lt;/li&gt;
-&lt;li&gt;耗时低占用空间少（高效性）：运行时间（Running time）与占用空间（Storage space）概念，在设计算法时，我们总是希望能够更少的使用时间和空间达成我们的目标。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;基本概念和术语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#基本概念和术语&#34;&gt;#&lt;/a&gt; 基本概念和术语&lt;/h2&gt;
-&lt;p&gt;数据是信息的载体，是可以被计算机识别，存储并加工处理的描述客观事物的信息符号的总称&lt;/p&gt;
-&lt;p&gt;数据元素是数据的基本单位，数据元素由若干数据项组成&lt;br /&gt;
-数据项是构成数据元素的最小单位&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905152622667.png&#34; alt=&#34;image-20220905152622667&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;数据对象：相同性质数据元素的集合，是数据的一个子集&lt;/p&gt;
-&lt;p&gt;数据结构：数据结构 = 数据对象 + 结构（带结构的数据对象）&lt;br /&gt;
-数据对象不是孤立存在的，他们之间存在某种关系，数据对象之间的关系成为结构&lt;/p&gt;
-&lt;h2 id=&#34;数据结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据结构&#34;&gt;#&lt;/a&gt; 数据结构&lt;/h2&gt;
-&lt;p&gt;数据结构的两个层次：&lt;/p&gt;
-&lt;p&gt;1、逻辑结构&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;数据的逻辑结构是从数据元素的逻辑关系上描述数据的。&lt;/li&gt;
-&lt;li&gt;是指数据元素之间的逻辑关系的整体，通常是从求解问题中提&lt;br /&gt;
-炼出来的。&lt;/li&gt;
-&lt;li&gt;数据逻辑结构与数据的存储无关，是独立于计算机的。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;2、物理结构&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;数据元素及其关系在计算机存储器中的存储方式。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;逻辑结构实例&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;集合&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;数据元素只是属于一个集合，无其他关系&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150436900.png&#34; alt=&#34;image-20220906150436900&#34; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;线性结构&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;一对一，线性表，栈，队列&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150444092.png&#34; alt=&#34;image-20220906150444092&#34; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;树形结构&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;一对多&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150452330.png&#34; alt=&#34;image-20220906150452330&#34; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;图形结构&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;多对多&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220906150458844.png&#34; alt=&#34;image-20220906150458844&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;接下来一个列题&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905155124056.png&#34; alt=&#34;image-20220905155124056&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905155321699.png&#34; alt=&#34;image-20220905155321699&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220905155137275.png&#34; alt=&#34;image-20220905155137275&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;数据结构分 3 个方面&lt;/p&gt;
-&lt;p&gt;逻辑结构，储存结构，数据运算&lt;/p&gt;
-&lt;p&gt;数据元素之间的逻辑关系是数据的逻辑结构&lt;/p&gt;
-&lt;p&gt;数据元素及其关系在计算器中的储存方式是数据的储存结构（物理结构）&lt;/p&gt;
-&lt;p&gt;施加在该数据上面的操作是数据运算&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;同一逻辑可以对应多种储存结构&lt;/code&gt; &lt;br /&gt;
- &lt;code&gt;同样的运算，在不同的储存结构中，其实现过程是不同的&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;存储结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#存储结构&#34;&gt;#&lt;/a&gt; 存储结构&lt;/h2&gt;
-&lt;p&gt;顺序储存：&lt;/p&gt;
-&lt;p&gt;借助元素在存储器中的相应位置来表示数据元素间的逻辑关系&lt;/p&gt;
-&lt;p&gt;链式存储结构&lt;/p&gt;
-&lt;p&gt;借助指示元素存储地址的指针表示数据元素间的逻辑关系&lt;/p&gt;
-&lt;h2 id=&#34;数据类型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据类型&#34;&gt;#&lt;/a&gt; 数据类型&lt;/h2&gt;
-&lt;p&gt;数据类型是一个值的集合和定义在此集合上的一组操作的总称&lt;/p&gt;
-&lt;p&gt;数据类型和数据结构之间的关系：数据类型就是已经实现了的数据结构&lt;/p&gt;
-&lt;h3 id=&#34;抽象数据类型adt&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#抽象数据类型adt&#34;&gt;#&lt;/a&gt; 抽象数据类型（ADT）：&lt;/h3&gt;
-&lt;p&gt;更高层次的数据对象，可以通过固有的数据类型来表示或实现&lt;/p&gt;
-&lt;p&gt;抽象数据类型（Abstract Data Type，ADT）只是一个数学模型以及定义在模型上的一组操作。通常是对数据的抽象，定义了数据的取值范围以及对数据操作的集合。&lt;/p&gt;
-&lt;h2 id=&#34;算法分析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法分析&#34;&gt;#&lt;/a&gt; 算法分析&lt;/h2&gt;
-&lt;h3 id=&#34;算法的时间复杂度&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的时间复杂度&#34;&gt;#&lt;/a&gt; 算法的时间复杂度&lt;/h3&gt;
-&lt;p&gt;时间复杂度表示一个程序运行所需要的时间，其具体需要在机器环境中才能得到具体的值，但我们一般并不需要得到详细的值，只是需要比较快慢的区别即可&lt;/p&gt;
-&lt;p&gt;时间频度中，n 称为问题的规模，当 n 不断变化时，时间频度 T (n) 也会不断变化。&lt;br /&gt;
-T（n)/f (n) 的极限值为不等于零的常数，则称 f (n) 是 T (n) 的同数量级函数。记作 T (n)=Ｏ(f (n)), 称Ｏ(f (n)) 为算法的渐进时间复杂度，简称时间复杂度。&lt;/p&gt;
-&lt;h4 id=&#34;度量时间复杂度的两种方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#度量时间复杂度的两种方法&#34;&gt;#&lt;/a&gt; 度量时间复杂度的两种方法&lt;/h4&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;h3 id=&#34;事后统计法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#事后统计法&#34;&gt;#&lt;/a&gt; 事后统计法&lt;/h3&gt;
-&lt;p&gt;在程序运行结束之后直接查看运行时间的方式进行时间复杂度的统计&lt;br /&gt;
-（特别依赖计算机环境，算法的测试困难，有时一套算法需要海量的数据才能真正比较出效果）&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;h3 id=&#34;事先估计法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#事先估计法&#34;&gt;#&lt;/a&gt; 事先估计法&lt;/h3&gt;
-&lt;p&gt;事先统计法采取在计算机编译程序前对该算法进行预估的方式估算。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;算法的空间复杂度&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#算法的空间复杂度&#34;&gt;#&lt;/a&gt; 算法的空间复杂度&lt;/h3&gt;
-&lt;p&gt;一个程序的空间复杂度是指运行完一个程序所需内存的大小，其包括两个部分。&lt;/p&gt;
-&lt;p&gt;a) 固定部分。这部分空间的大小与输入 / 输出的数据的个数多少、数值无关。主要包括指令空间（即代码空间）、数据空间（常量、简单变量）等所占的空间。这部分属于静态空间。&lt;/p&gt;
-&lt;p&gt;b) 可变空间，这部分空间的主要包括动态分配的空间，以及递归栈所需的空间等。这部分的空间大小与算法有关。&lt;/p&gt;
-&lt;h2 id=&#34;程序允许时的内存与地址&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#程序允许时的内存与地址&#34;&gt;#&lt;/a&gt; 程序允许时的内存与地址&lt;/h2&gt;
-&lt;h3 id=&#34;内存&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#内存&#34;&gt;#&lt;/a&gt; 内存&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220913002747179.png&#34; alt=&#34;image-20220913002747179&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;首先看这张图，可以看到每一个数据都有一个地址与其对应，也是因为有地址的存在，我们才可以使用计算机轻易的去访问一个数据&lt;/p&gt;
-&lt;p&gt;接下来可以用一串 c 语言代码来体现数据喝地址的关系&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt; array&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;ACDEQSFVCK&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;i&lt;span class=&#34;token operator&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-        &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;The %c Address is %x \n&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;array&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;amp;&lt;/span&gt;array&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-       &lt;span class=&#34;token comment&#34;&gt;//% x 可以换成 % p 都是十六进制表示，只不过 % p 会把所有的位数显示出来&lt;/span&gt;
-    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220913004106041.png&#34; alt=&#34;image-20220913004106041&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;可以看到这是一段连续的地址，当你把 char 类型换成 int 型之后可能又不太一样，因为 char 是 1 字节的，而 int 占 4 字节，所以 int 的地址会变成 4 个一跳的方式往上增长。&lt;/p&gt;
-&lt;h2 id=&#34;两个必须学会的函数知识&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#两个必须学会的函数知识&#34;&gt;#&lt;/a&gt; 两个必须学会的函数知识&lt;/h2&gt;
-&lt;h3 id=&#34;1-malloc函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-malloc函数&#34;&gt;#&lt;/a&gt; 1. Malloc 函数&lt;/h3&gt;
-&lt;p&gt;malloc（）函数在堆中申请分配一个大小为 size 个字节的连续内存空间，若成功分配，则返回一个指向所分配空间起始地址的指针，否则返回空指针（NULL）。&lt;/p&gt;
-&lt;h3 id=&#34;2free函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2free函数&#34;&gt;#&lt;/a&gt; 2.Free 函数&lt;/h3&gt;
-&lt;p&gt;free（）函数用来释放已分配的内存空间，参数 p 是待释放的内存空间的首指针&lt;/p&gt;
-&lt;p&gt;总结来说 malloc 就是用来申请内存空间，而 free 是为了释放内存空间&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-c&#34; data-language=&#34;c&#34;&gt;&lt;code class=&#34;language-c&#34;&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&amp;lt;stdio.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&amp;lt;stdlib.h&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;     &lt;span class=&#34;token comment&#34;&gt;// 定义一个指向整形的指针变量&lt;/span&gt;
-    p&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;malloc&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;sizeof&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  &lt;span class=&#34;token comment&#34;&gt;// 申请 5 个整形大小的内存空间并返回起始地址给 p&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;p&lt;span class=&#34;token operator&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;// 申请失败&lt;/span&gt;
-        &lt;span class=&#34;token comment&#34;&gt;// 执行申请失败的代码，一般 print 一个报错&lt;/span&gt;
-        &lt;span class=&#34;token function&#34;&gt;exit&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;// 退出&lt;/span&gt;
-    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;
-    p&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1000&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  &lt;span class=&#34;token comment&#34;&gt;// 为空间中添加数据&lt;/span&gt;
-    &lt;span class=&#34;token function&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;%d&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;  &lt;span class=&#34;token comment&#34;&gt;// 打印这个数据&lt;/span&gt;
-    &lt;span class=&#34;token function&#34;&gt;free&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;// 释放 p 的内存空间，此时 p 依旧存在，只不过失去了指向的对象，成了野指针&lt;/span&gt;
-    p&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;token comment&#34;&gt;// 为其赋 NULL，此时它不再是一个野指针&lt;/span&gt;
-    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;整个内存申请释放的过程&lt;/p&gt;
-</content>
-        <category term="数据结构" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" />
-        <category term="数据结构与算法" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" />
         <updated>2022-10-23T16:00:00.000Z</updated>
     </entry>
 </feed>
