@@ -4898,145 +4898,6 @@ select username from user id&amp;#x3D;$id
         <updated>2022-10-23T16:00:00.000Z</updated>
     </entry>
     <entry>
-        <id>https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/</id>
-        <title>域环境基础和搭建</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/"/>
-        <content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2 id=&#34;内网渗透的流程概述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#内网渗透的流程概述&#34;&gt;#&lt;/a&gt; 内网渗透的流程概述&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907123946766.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;内网渗透攻击的是一个内网内的所有机器&lt;/p&gt;
-&lt;p&gt;目的：控制内网内的所有机器&lt;/p&gt;
-&lt;p&gt;前提：已经控制了内网里的一台机器&lt;/p&gt;
-&lt;h2 id=&#34;什么是工作域和组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是工作域和组&#34;&gt;#&lt;/a&gt; 什么是工作域和组&lt;/h2&gt;
-&lt;p&gt;工作组：工作组是局域网中的一一个概念。它是最常见最简单最普通的资源管理模式，就是将&lt;br /&gt;
-不同的电脑按功能分别列入不同的组中，以方便管理&lt;/p&gt;
-&lt;p&gt;域: Windows 域是计算机网络的一种形式，其中所有用户帐户，计算机，打印机和其他安全&lt;br /&gt;
-主体都在位于称为域控制器的一 - 个或多个中央计算机集群上的中央数据库中注册。身份验证&lt;br /&gt;
-在域控制器上进行。在域中使用计算机的每个人都会收到一个唯一的用户帐户， 然后可以为&lt;br /&gt;
-该帐户分配对该域内资源的访问权限&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907124937328.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;工作组的缺点：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;缺乏集中管理与控制的机制&lt;/li&gt;
-&lt;li&gt;没用集中的统一账户管理&lt;/li&gt;
-&lt;li&gt;只适合小规模用户的使用&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;控制所有主机的媒介就是找到域控&lt;/p&gt;
-&lt;h2 id=&#34;搭建域环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#搭建域环境&#34;&gt;#&lt;/a&gt; 搭建域环境&lt;/h2&gt;
-&lt;p&gt;实验环境&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;域控 Windows server 2012&lt;/li&gt;
-&lt;li&gt;域内主机 Windows server 2008&lt;/li&gt;
-&lt;li&gt;攻击机 kali&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;先登录域控服务器&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907130458478.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;1-设置服务器&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-设置服务器&#34;&gt;#&lt;/a&gt; 1、设置服务器&lt;/h3&gt;
-&lt;p&gt;在域控服务器中配置 ip 地址（注意：这里 DNS 要与 IP 地址相同，防止找不到域）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907131025908.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;2-更改域控服务器的主机名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-更改域控服务器的主机名&#34;&gt;#&lt;/a&gt; 2、更改域控服务器的主机名&lt;/h3&gt;
-&lt;p&gt;将域控主机名改为 DC（do man controller）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907134746980.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;改完名之后等待域控服务器重启&lt;/p&gt;
-&lt;h3 id=&#34;3-安装域控制器和dns服务&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3-安装域控制器和dns服务&#34;&gt;#&lt;/a&gt; 3、安装域控制器和 DNS 服务&lt;/h3&gt;
-&lt;p&gt;接下来在域控服务器上面安装域控制器和 DNS 服务&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135517911.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;前面的无脑下一步就行&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135603793.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方勾选基于角色功能的安装，无脑下一步&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135758204.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方安装域控制器和 DNS 服务&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135857104.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;等待安装完成&lt;/p&gt;
-&lt;p&gt;在服务器管理页面点击黄旗&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140153956.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;现在还没升级成为域控&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140250376.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;升级&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140436007.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里选择添加新林，就是给域控服务器一个名字&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140531418.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里的跟域名要根据常见域名格式，接着无脑下一步&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140814473.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方的密码随便设置就行，影响不大，用不上，一波无脑下一步&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140937411.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方会检查服务器是否满足升级为域控的先决条件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907141053115.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;检查通过后点击安装，经过重启后域控服务器调试完毕&lt;/p&gt;
-&lt;h3 id=&#34;4-域内主机加入域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#4-域内主机加入域&#34;&gt;#&lt;/a&gt; 4、域内主机加入域&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142503472.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;先查看 2008 的 ip 看是否能联网&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142214395.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里要将 DNS 服务器地址改为域控服务器的 ip 地址&lt;/p&gt;
-&lt;p&gt;接下来改主机名加入域&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142736819.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在跳出的弹窗中输入域控服务器的用户名和密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143008660.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;回车后会弹出成功加入的弹窗&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143217220.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;成功入狱（狗头保命）&lt;/p&gt;
-&lt;h2 id=&#34;活动目录ad的作用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#活动目录ad的作用&#34;&gt;#&lt;/a&gt; 活动目录 AD 的作用&lt;/h2&gt;
-&lt;p&gt;可以理解为域控上面的数据库，在里面添加用户才能登录&lt;/p&gt;
-&lt;p&gt;打开域控服务器找到 Action Directory 用户和计算机&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144119881.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里添加一个用户&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144450484.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;设置密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144504724.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144539400.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;使用 2008 成功登录&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907145139200.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;使用cobalt-strike远控电脑&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#使用cobalt-strike远控电脑&#34;&gt;#&lt;/a&gt; 使用 Cobalt Strike 远控电脑&lt;/h2&gt;
-&lt;p&gt;把 cs 文件导入攻击机&lt;/p&gt;
-&lt;p&gt;进入目录使用命令 sudo bash teamserver 【kali 的 ip】 密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153453234.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;再开一个端口运行 bash cobaltsrike .sh&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153739520.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在弹窗中输入 kali 的 ip&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153947445.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;成功进入 cs&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154002888.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;先开一个监听&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154214414.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;点击 add&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154343665.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;输入对应的 ip 和端口&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154621003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;开始生成木马&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154714949.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154830575.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;使用 python3 起一个 web 环境&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907155034157.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里要关闭防火墙&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-markup&#34; data-language=&#34;markup&#34;&gt;&lt;code class=&#34;language-markup&#34;&gt;先安装
-sudo apt-get install ufw
-
-检查防火墙的状态（默认 inactive） # ufw status
-防火墙版本 # ufw version
-启动ufw防火墙 # ufw enable
-关闭ufw防火墙 # ufw disable
-默认禁止访问所有 # ufw default deny
-开放22/TCP端口 # ufw allow 22/tcp
-开放53端口(tcp/udp) # ufw allow 53
-禁止外部访问 # ufw deny 3306
-删除已经添加过的规则 # ufw delete allow 22
-允许此IP访问所有的本机端口 # ufw allow from 192.168.1.100
-删除上面的规则 # ufw delete allow from 192.168.1.100
-查看规则，显示行号 # ufw status numbered
-删除第三条规则 # ufw delete 3
-关闭ufw # ufw disable
-禁止对8888端口的访问 # ufw deny 8888
-打开来自192.168.0.1的tcp请求的22端口 # ufw allow proto tcp from 192.168.0.1 to any port 22&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204556037.png&#34; alt=&#34;image-20220907204556037&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;将文件下载下来，然后运行&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204632334.png&#34; alt=&#34;image-20220907204632334&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;攻击机上成功上线&lt;/p&gt;
-</content>
-        <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
-        <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
-        <updated>2022-10-23T16:00:00.000Z</updated>
-    </entry>
-    <entry>
         <id>https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/</id>
         <title>关系数据库</title>
         <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
@@ -5334,6 +5195,145 @@ R（D1，D2，…，Dn）&lt;/p&gt;
 </content>
         <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
         <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
+        <updated>2022-10-23T16:00:00.000Z</updated>
+    </entry>
+    <entry>
+        <id>https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/</id>
+        <title>域环境基础和搭建</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/"/>
+        <content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h2 id=&#34;内网渗透的流程概述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#内网渗透的流程概述&#34;&gt;#&lt;/a&gt; 内网渗透的流程概述&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907123946766.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;内网渗透攻击的是一个内网内的所有机器&lt;/p&gt;
+&lt;p&gt;目的：控制内网内的所有机器&lt;/p&gt;
+&lt;p&gt;前提：已经控制了内网里的一台机器&lt;/p&gt;
+&lt;h2 id=&#34;什么是工作域和组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是工作域和组&#34;&gt;#&lt;/a&gt; 什么是工作域和组&lt;/h2&gt;
+&lt;p&gt;工作组：工作组是局域网中的一一个概念。它是最常见最简单最普通的资源管理模式，就是将&lt;br /&gt;
+不同的电脑按功能分别列入不同的组中，以方便管理&lt;/p&gt;
+&lt;p&gt;域: Windows 域是计算机网络的一种形式，其中所有用户帐户，计算机，打印机和其他安全&lt;br /&gt;
+主体都在位于称为域控制器的一 - 个或多个中央计算机集群上的中央数据库中注册。身份验证&lt;br /&gt;
+在域控制器上进行。在域中使用计算机的每个人都会收到一个唯一的用户帐户， 然后可以为&lt;br /&gt;
+该帐户分配对该域内资源的访问权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907124937328.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;工作组的缺点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;缺乏集中管理与控制的机制&lt;/li&gt;
+&lt;li&gt;没用集中的统一账户管理&lt;/li&gt;
+&lt;li&gt;只适合小规模用户的使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;控制所有主机的媒介就是找到域控&lt;/p&gt;
+&lt;h2 id=&#34;搭建域环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#搭建域环境&#34;&gt;#&lt;/a&gt; 搭建域环境&lt;/h2&gt;
+&lt;p&gt;实验环境&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;域控 Windows server 2012&lt;/li&gt;
+&lt;li&gt;域内主机 Windows server 2008&lt;/li&gt;
+&lt;li&gt;攻击机 kali&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;先登录域控服务器&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907130458478.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;1-设置服务器&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-设置服务器&#34;&gt;#&lt;/a&gt; 1、设置服务器&lt;/h3&gt;
+&lt;p&gt;在域控服务器中配置 ip 地址（注意：这里 DNS 要与 IP 地址相同，防止找不到域）&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907131025908.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-更改域控服务器的主机名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-更改域控服务器的主机名&#34;&gt;#&lt;/a&gt; 2、更改域控服务器的主机名&lt;/h3&gt;
+&lt;p&gt;将域控主机名改为 DC（do man controller）&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907134746980.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;改完名之后等待域控服务器重启&lt;/p&gt;
+&lt;h3 id=&#34;3-安装域控制器和dns服务&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3-安装域控制器和dns服务&#34;&gt;#&lt;/a&gt; 3、安装域控制器和 DNS 服务&lt;/h3&gt;
+&lt;p&gt;接下来在域控服务器上面安装域控制器和 DNS 服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135517911.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;前面的无脑下一步就行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135603793.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个地方勾选基于角色功能的安装，无脑下一步&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135758204.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个地方安装域控制器和 DNS 服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135857104.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;等待安装完成&lt;/p&gt;
+&lt;p&gt;在服务器管理页面点击黄旗&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140153956.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;现在还没升级成为域控&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140250376.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;升级&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140436007.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里选择添加新林，就是给域控服务器一个名字&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140531418.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里的跟域名要根据常见域名格式，接着无脑下一步&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140814473.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个地方的密码随便设置就行，影响不大，用不上，一波无脑下一步&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140937411.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个地方会检查服务器是否满足升级为域控的先决条件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907141053115.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;检查通过后点击安装，经过重启后域控服务器调试完毕&lt;/p&gt;
+&lt;h3 id=&#34;4-域内主机加入域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#4-域内主机加入域&#34;&gt;#&lt;/a&gt; 4、域内主机加入域&lt;/h3&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142503472.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;先查看 2008 的 ip 看是否能联网&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142214395.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里要将 DNS 服务器地址改为域控服务器的 ip 地址&lt;/p&gt;
+&lt;p&gt;接下来改主机名加入域&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142736819.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;在跳出的弹窗中输入域控服务器的用户名和密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143008660.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;回车后会弹出成功加入的弹窗&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143217220.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;成功入狱（狗头保命）&lt;/p&gt;
+&lt;h2 id=&#34;活动目录ad的作用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#活动目录ad的作用&#34;&gt;#&lt;/a&gt; 活动目录 AD 的作用&lt;/h2&gt;
+&lt;p&gt;可以理解为域控上面的数据库，在里面添加用户才能登录&lt;/p&gt;
+&lt;p&gt;打开域控服务器找到 Action Directory 用户和计算机&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144119881.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里添加一个用户&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144450484.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;设置密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144504724.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144539400.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;使用 2008 成功登录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907145139200.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;使用cobalt-strike远控电脑&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#使用cobalt-strike远控电脑&#34;&gt;#&lt;/a&gt; 使用 Cobalt Strike 远控电脑&lt;/h2&gt;
+&lt;p&gt;把 cs 文件导入攻击机&lt;/p&gt;
+&lt;p&gt;进入目录使用命令 sudo bash teamserver 【kali 的 ip】 密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153453234.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;再开一个端口运行 bash cobaltsrike .sh&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153739520.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;在弹窗中输入 kali 的 ip&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153947445.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;成功进入 cs&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154002888.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;先开一个监听&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154214414.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;点击 add&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154343665.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;输入对应的 ip 和端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154621003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;开始生成木马&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154714949.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154830575.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;使用 python3 起一个 web 环境&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907155034157.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里要关闭防火墙&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-markup&#34; data-language=&#34;markup&#34;&gt;&lt;code class=&#34;language-markup&#34;&gt;先安装
+sudo apt-get install ufw
+
+检查防火墙的状态（默认 inactive） # ufw status
+防火墙版本 # ufw version
+启动ufw防火墙 # ufw enable
+关闭ufw防火墙 # ufw disable
+默认禁止访问所有 # ufw default deny
+开放22/TCP端口 # ufw allow 22/tcp
+开放53端口(tcp/udp) # ufw allow 53
+禁止外部访问 # ufw deny 3306
+删除已经添加过的规则 # ufw delete allow 22
+允许此IP访问所有的本机端口 # ufw allow from 192.168.1.100
+删除上面的规则 # ufw delete allow from 192.168.1.100
+查看规则，显示行号 # ufw status numbered
+删除第三条规则 # ufw delete 3
+关闭ufw # ufw disable
+禁止对8888端口的访问 # ufw deny 8888
+打开来自192.168.0.1的tcp请求的22端口 # ufw allow proto tcp from 192.168.0.1 to any port 22&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204556037.png&#34; alt=&#34;image-20220907204556037&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;将文件下载下来，然后运行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204632334.png&#34; alt=&#34;image-20220907204632334&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;攻击机上成功上线&lt;/p&gt;
+</content>
+        <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
+        <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
         <updated>2022-10-23T16:00:00.000Z</updated>
     </entry>
 </feed>
