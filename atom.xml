@@ -4420,6 +4420,128 @@ DNS1&amp;#x3D;&amp;quot;xxx.xxx.xxx.xxx&amp;quot;        &amp;#x2F;&amp;#x2F;新
         <updated>2022-10-23T16:00:00.000Z</updated>
     </entry>
     <entry>
+        <id>https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/</id>
+        <title>user.ini和htaccess文件的利用</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/"/>
+        <content type="html">&lt;h2 id=&#34;htaccess文件的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#htaccess文件的利用&#34;&gt;#&lt;/a&gt; .htaccess 文件的利用&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9saW5rLmppYW5zaHUuY29tLz90PWh0dHA6Ly9odGFjY2Vzcy51dXouY2MvI2FfV1dX&#34;&gt;自动生成.htaccess 的网站&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;分布式配置文件，它里面存放着 apache 服务器配置相关命令，提供了针对目录改变配置的方法，作用范围是当前目录及其子目录&lt;/p&gt;
+&lt;p&gt;使用前，首先要启用 htacces，将 AllowOveride 的配置改为 all&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AllowOverride 从字面上解释是允许覆盖的意思，即 Apache 允许另一配置文件覆盖现有配置文件。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在 AllowOverride 设置为 None 时， .htaccess 文件将被完全忽略。当此指令设置为 All 时，所有具有 “.htaccess” 作用域的指令都允许出现在 .htaccess 文件中。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019211017128.png&#34; alt=&#34;image-20221019211017128&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;问题点一&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#问题点一&#34;&gt;#&lt;/a&gt; 问题点一&lt;/h3&gt;
+&lt;p&gt;PHPStudy 中 AddType application/x-httpd-php 等 Apache 命令之所以在 Apache 的设置文件中设置后未实现目标效果是由于 PHP 的版本不符导致的，但注意这里的 PHP 版本并不是指 PHP7.3.0、PHP7.4.0 这种版本号，也不是适用于 32 位的 PHP、适用于 64 位的 PHP 这种不同机型的版本，而&lt;strong&gt;是 PHP 的 NTS (Non Thread Safe) 与 TS (Thread Safe) 的这种不同版本导致的&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93aW5kb3dzLnBocC5uZXQvZG93bmxvYWQv&#34;&gt;PHP For Windows: Binaries and sources Releases&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019230226348.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;ts(Thread-Safety)&lt;strong&gt; 即&lt;/strong&gt;线程安全&lt;/strong&gt;，多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;nts(None-Thread Safe)&lt;strong&gt; 即&lt;/strong&gt;非线程安全&lt;/strong&gt;，就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的是 脏数据 php 以 fast cgi 方式运行的时候选择这个版本，具有更好的性能；&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;解决办法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#解决办法&#34;&gt;#&lt;/a&gt; 解决办法&lt;/h4&gt;
+&lt;p&gt;安装 TS 版本的 php，在 apache 配置中设置好&lt;/p&gt;
+&lt;p&gt;在 php 文件夹中将 php.ini-development 文件复制一份命名为 php.ini&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234241421.png&#34; alt=&#34;image-20221019234241421&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;新下载的 php 本来没有现成的 php.ini 文件。只是给了&lt;/p&gt;
+&lt;p&gt;php.ini-development （开发环境用）与 php.ini-production（生产环境用）两个建议。&lt;/p&gt;
+&lt;p&gt;而 php 去加载 php.ini 作为配置文件的。我们更喜欢哪个建议，就把它备份，然后重命名为 php.ini 然后加入自己个性化的配置即可。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234518254.png&#34; alt=&#34;image-20221019234518254&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;打开 php.ini，找到 extension_dir，并把前面的 &amp;quot;;&amp;quot; 符号删掉 (在 php.ini 相当于注释符)，其值改为 &amp;quot;PHP 文件的路径 /ext&amp;quot;。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234918061.png&#34; alt=&#34;image-20221019234918061&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;他是放 php 扩展的目录，保存后，我们 PHP 就设置完成了，接下来要设置 Apache。&lt;/p&gt;
+&lt;p&gt;来到 PHPStudy 安装 Apache 的目录下，打开 Apache 的配置文件 httpd.conf, 搜索 LoadModule，找到有很多 LoadModule 语句的地方。( &lt;strong&gt;LoadModule：加载特定的 DSO 模块。&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;在末尾加上 LoadModule php7_module &amp;quot;PHP 文件的路径 /php7apache2_4.dll&amp;quot; 和 PHPIniDir &amp;quot;PHP 文件的路径&amp;quot;。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019235835759.png&#34; alt=&#34;image-20221019235835759&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;再加上一句 AddType application/x-httpd-php .php，配置就完成了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020000146394.png&#34; alt=&#34;image-20221020000146394&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
+&lt;h5 id=&#34;文件解析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件解析&#34;&gt;#&lt;/a&gt; 文件解析&lt;/h5&gt;
+&lt;p&gt;首先还是先说文件上传中常用的利用方式&lt;/p&gt;
+&lt;p&gt;(8.* 无法使用)&lt;/p&gt;
+&lt;p&gt;在 htaccess 文件中写入如下内容，上传到服务端后再上传一个其他任意后缀的文件，都会被当作 php 文件解析&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;&amp;lt;FilesMatch “.png”&amp;gt;
+SetHandler application&amp;#x2F;x-httpd-php
+&amp;lt;&amp;#x2F;FilesMatch&amp;gt;
+#匹配文件中有haha存在
+SetHandler application&amp;#x2F;x-httpd-php
+#SetHandler强制所有匹配的文件由指定处理程序处理
+AddType application&amp;#x2F;x-httpd-php .txt
+#AddType将给定的文件扩展名映射到指定的内容类型&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020180621597.png&#34; alt=&#34;image-20221020180621597&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着聊一聊别的利用方式&lt;/p&gt;
+&lt;h5 id=&#34;源码泄露&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#源码泄露&#34;&gt;#&lt;/a&gt; 源码泄露&lt;/h5&gt;
+&lt;p&gt;当使用 PHP 作为 Apache 模块时，也可以用 Apache 的配置文件（例如 httpd.conf）和 .htaccess 文件中的指令来修改 php 的配置设定&lt;/p&gt;
+&lt;p&gt;我们可以通过 .htaccess 文件的 php_value 指令对 PHP 的 engine 配置选项进行设定，当把 engine 的值设为 off（或 0）时可以禁用一个本目录和子目录中的 PHP 解析，此时将会造成源码泄露：&lt;/p&gt;
+&lt;p&gt;在 htaccess 文件中写入&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value engine 0&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020210713349.png&#34; alt=&#34;image-20221020210713349&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;文件包含&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件包含&#34;&gt;#&lt;/a&gt; 文件包含&lt;/h5&gt;
+&lt;p&gt;htaccess 文件中同样有两个配置 auto_prepend_file 和 auto_append_file，我们可以通过 php_value 来设置，条件是同级目录下有 php 文件&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value auto_append_file &amp;#x2F;etc&amp;#x2F;passwd&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020211527232.png&#34; alt=&#34;image-20221020211527232&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;防御&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御&#34;&gt;#&lt;/a&gt; 防御&lt;/h5&gt;
+&lt;p&gt;最直接的就是过滤 htaccess 后缀&lt;/p&gt;
+&lt;p&gt;对文件重命名（htaccess 文件命名固定）&lt;/p&gt;
+&lt;h2 id=&#34;userini的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#userini的利用&#34;&gt;#&lt;/a&gt; user.ini 的利用&lt;/h2&gt;
+&lt;p&gt;php.ini 是 php 的全局配置文件，只要是以 fastcgi 运行的 php 都可以用这个方法，对整个 web 环境起作用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018203121751.png&#34; alt=&#34;image-20221018203121751&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;user.ini 是用户自定义的 php.ini，如果在文件上传中没有对其进行限制，那么我们就可以修改 php.ini 的配置，既然是用户自定义，那么肯定要提到权限问题。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018204408073.png&#34; alt=&#34;image-20221018204408073&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;官方文档提到只有在这两种模式的 ini 设置可以被识别，那么就不得不提到什么是 PHP_INI_* 模式&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018175831433.png&#34; alt=&#34;image-20221018175831433&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这些模式决定着一个 PHP 的指令在何时何地，是否能够被设定。手册中的每个指令都有其所属的模式。例如有些指令可以在 PHP 脚本中用 ini_set () 来设定，而有些则只能在 php.ini 或 httpd.conf 中。(上面表格中没有提到的 PHP_INI_PERDIR 也可以在.user.ini 中设置)，user_ini.cache_ttl 控制着重新读取用户 INI 文件的间隔时间。默认是 300 秒（5 分钟）。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022120119084.png&#34; alt=&#34;image-20221022120119084&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;PHP ini_set用来设置php.ini的值，在函数执行的时候生效，脚本结束后，设置失效。无需打开php.ini文件，就能修改配置&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;也就是说我们想利用.user.ini 需要在 PHP_INI_USER 模式（PHP_INI_ALL 模式）中，那么哪些配置可以在 &lt;strong&gt;.user.ini&lt;/strong&gt; 中设定呢？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;php.ini 配置选项列表（&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3BocC5uZXQvbWFudWFsL3poL2luaS5saXN0LnBocA==&#34;&gt;http://php.net/manual/zh/ini.list.php&lt;/span&gt; ）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;利用-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用-2&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
+&lt;p&gt;.user.ini 中两个中的配置就是 auto_prepend_file 和 auto_append_file。这两个配置的意思就是：我们指定一个文件（如 1.jpg，对后缀名没有太多要求），那么该文件就会被包含在要执行的 php 文件，相当于在 php 文件中中插入一句：require (./1.jpg)。这两个设置的区别只是在于 auto_prepend_file 是在文件前插入，auto_append_file 在文件最后插入 (文件后插入如果程序以 exit () 结束就无法利用)。&lt;/p&gt;
+&lt;p&gt;demo：&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212902209.png&#34; alt=&#34;image-20221018212902209&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212921996.png&#34; alt=&#34;image-20221018212921996&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;经过测试 php 版本从 5.3 开始到 7.4 都是可用的，php8.* 的没有成功&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018213744658.png&#34; alt=&#34;image-20221018213744658&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;防御-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御-2&#34;&gt;#&lt;/a&gt; 防御&lt;/h3&gt;
+&lt;p&gt;利用条件：&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;服务器脚本语言为PHP 服务器使用CGI
+FastCGI模式
+上传目录下要有可执行的php文件&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;上面提到有 php8.* 是不可用的，那么可使用 php8.* 可用从根源解决问题&lt;/p&gt;
+&lt;p&gt;user.ini 使用这两条条配置也有限制说了是在同目录下的其他.php 文件中包含配置中所指定的文件，也就是说需要该目录下存在.php 文件，不要将文件上传路径设置成为本目录下，存放上传文件的地方不要存有 php 文件（通常在文件上传中，一般是专门有一个目录用来存在图片，可能小概率会存在.php 文件。但是有时可以使用  &lt;code&gt;../&lt;/code&gt;  来将文件上传到其他目录，达到一个利用的效果。）严格限制文件上传的路径&lt;/p&gt;
+&lt;p&gt;再者结束对 ini 扩展名的过滤，对文件内容 auto_prepend_file、auto_append_file 的过滤&lt;/p&gt;
+&lt;h3 id=&#34;补充&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#补充&#34;&gt;#&lt;/a&gt; 补充&lt;/h3&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150904047.png&#34; alt=&#34;image-20221022150904047&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150917949.png&#34; alt=&#34;image-20221022150917949&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;了解什么是 FastCGI，首先应该知道什么是 cgi&lt;/p&gt;
+&lt;p&gt;全称是 “通用网关接口”，是一种让客户端（web 浏览器）与 Web 服务器（apache，nginx 等）程序进行通信（数据传输）的协议。&lt;/p&gt;
+&lt;h5 id=&#34;cgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cgi工作流程&#34;&gt;#&lt;/a&gt; CGI 工作流程&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;每次当 web server 收到 index.php 这种类型的动态请求后，会启动对应的 CGI 程序 - PHP 的解析器；&lt;/li&gt;
+&lt;li&gt;PHP 解析器会解析 php.ini 配置文件，初始化运行环境，然后处理请求，处理完成后将数据按照 CGI 规定的格式返回给 web server 然后退出进程；&lt;/li&gt;
+&lt;li&gt;最后 web server 再把结果返回给浏览器。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;高并发时的性能较差：&lt;br /&gt;
+CGI 程序的每一次 web 请求都会有启动和退出过程 —— 每次 HTTP 服务器遇到动态请求时都需要重新启动脚本解析器来解析 php.ini，重新载入全部 DLL 扩展并重初始化全部数据结构，然后把结果返回给 HTTP 服务器&lt;/p&gt;
+&lt;h5 id=&#34;fastcgi&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi&#34;&gt;#&lt;/a&gt; FastCGI&lt;/h5&gt;
+&lt;p&gt;因 CGI 高并发时性能差，未解决这一问题产生了 FastCGI&lt;/p&gt;
+&lt;h5 id=&#34;fastcgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi工作流程&#34;&gt;#&lt;/a&gt; FastCGI 工作流程&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;Web Server 启动同时，加载 FastCGI 进程管理器&lt;/li&gt;
+&lt;li&gt;FastCGI 进程管理器读取 php.ini 配置文件，对自身进行初始化，启动多个 CGI 解释器进程 (php-cgi)，等待来自 Web Server 的连接。&lt;/li&gt;
+&lt;li&gt;当 Web Server 接收到客户端请求时，FastCGI 进程管理器选择并连接到一个 CGI 解释器。Web server 会将相关环境变量和标准输入发送到 FastCGI 子进程 php-cgi 进行处理&lt;/li&gt;
+&lt;li&gt;FastCGI 子进程完成处理后将数据按照 CGI 规定的格式返回给 Web Server，然后关闭 FastCGI 子进程或者等待下一次请求。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;fastcgi解决方案&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi解决方案&#34;&gt;#&lt;/a&gt; FastCGI 解决方案&lt;/h5&gt;
+&lt;p&gt;Master-Worker 模式&lt;/p&gt;
+&lt;p&gt;Fastcgi 会先启一个 master，解析配置文件，初始化执行环境，然后再启动多个 worker。当请求过来时，master 会传递给一个 worker，然后立即可以接受下一个请求。这样就避免了重复的劳动，效率自然提高。而且当 worker 不够用时，master 可以根据配置预先启动几个 worker 等着；当然空闲 worker 太多时，也会停掉一些，这样就提高了性能，也节约了资源。这就是 fastcgi 的对进程的管理。&lt;/p&gt;
+</content>
+        <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
+        <category term="文件上传" scheme="https://blog.xcu.icu/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" />
+        <updated>2022-10-23T16:00:00.000Z</updated>
+    </entry>
+    <entry>
         <id>https://blog.xcu.icu/2022/10/24/sql%E6%B3%A8%E5%85%A5/</id>
         <title>SQL注入</title>
         <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/sql%E6%B3%A8%E5%85%A5/"/>
@@ -4776,125 +4898,142 @@ select username from user id&amp;#x3D;$id
         <updated>2022-10-23T16:00:00.000Z</updated>
     </entry>
     <entry>
-        <id>https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/</id>
-        <title>user.ini和htaccess文件的利用</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/"/>
-        <content type="html">&lt;h2 id=&#34;htaccess文件的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#htaccess文件的利用&#34;&gt;#&lt;/a&gt; .htaccess 文件的利用&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9saW5rLmppYW5zaHUuY29tLz90PWh0dHA6Ly9odGFjY2Vzcy51dXouY2MvI2FfV1dX&#34;&gt;自动生成.htaccess 的网站&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;分布式配置文件，它里面存放着 apache 服务器配置相关命令，提供了针对目录改变配置的方法，作用范围是当前目录及其子目录&lt;/p&gt;
-&lt;p&gt;使用前，首先要启用 htacces，将 AllowOveride 的配置改为 all&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;AllowOverride 从字面上解释是允许覆盖的意思，即 Apache 允许另一配置文件覆盖现有配置文件。&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;在 AllowOverride 设置为 None 时， .htaccess 文件将被完全忽略。当此指令设置为 All 时，所有具有 “.htaccess” 作用域的指令都允许出现在 .htaccess 文件中。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019211017128.png&#34; alt=&#34;image-20221019211017128&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;问题点一&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#问题点一&#34;&gt;#&lt;/a&gt; 问题点一&lt;/h3&gt;
-&lt;p&gt;PHPStudy 中 AddType application/x-httpd-php 等 Apache 命令之所以在 Apache 的设置文件中设置后未实现目标效果是由于 PHP 的版本不符导致的，但注意这里的 PHP 版本并不是指 PHP7.3.0、PHP7.4.0 这种版本号，也不是适用于 32 位的 PHP、适用于 64 位的 PHP 这种不同机型的版本，而&lt;strong&gt;是 PHP 的 NTS (Non Thread Safe) 与 TS (Thread Safe) 的这种不同版本导致的&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93aW5kb3dzLnBocC5uZXQvZG93bmxvYWQv&#34;&gt;PHP For Windows: Binaries and sources Releases&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019230226348.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;ts(Thread-Safety)&lt;strong&gt; 即&lt;/strong&gt;线程安全&lt;/strong&gt;，多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;nts(None-Thread Safe)&lt;strong&gt; 即&lt;/strong&gt;非线程安全&lt;/strong&gt;，就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的是 脏数据 php 以 fast cgi 方式运行的时候选择这个版本，具有更好的性能；&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4 id=&#34;解决办法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#解决办法&#34;&gt;#&lt;/a&gt; 解决办法&lt;/h4&gt;
-&lt;p&gt;安装 TS 版本的 php，在 apache 配置中设置好&lt;/p&gt;
-&lt;p&gt;在 php 文件夹中将 php.ini-development 文件复制一份命名为 php.ini&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234241421.png&#34; alt=&#34;image-20221019234241421&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;新下载的 php 本来没有现成的 php.ini 文件。只是给了&lt;/p&gt;
-&lt;p&gt;php.ini-development （开发环境用）与 php.ini-production（生产环境用）两个建议。&lt;/p&gt;
-&lt;p&gt;而 php 去加载 php.ini 作为配置文件的。我们更喜欢哪个建议，就把它备份，然后重命名为 php.ini 然后加入自己个性化的配置即可。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234518254.png&#34; alt=&#34;image-20221019234518254&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;打开 php.ini，找到 extension_dir，并把前面的 &amp;quot;;&amp;quot; 符号删掉 (在 php.ini 相当于注释符)，其值改为 &amp;quot;PHP 文件的路径 /ext&amp;quot;。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234918061.png&#34; alt=&#34;image-20221019234918061&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;他是放 php 扩展的目录，保存后，我们 PHP 就设置完成了，接下来要设置 Apache。&lt;/p&gt;
-&lt;p&gt;来到 PHPStudy 安装 Apache 的目录下，打开 Apache 的配置文件 httpd.conf, 搜索 LoadModule，找到有很多 LoadModule 语句的地方。( &lt;strong&gt;LoadModule：加载特定的 DSO 模块。&lt;/strong&gt;)&lt;/p&gt;
-&lt;p&gt;在末尾加上 LoadModule php7_module &amp;quot;PHP 文件的路径 /php7apache2_4.dll&amp;quot; 和 PHPIniDir &amp;quot;PHP 文件的路径&amp;quot;。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019235835759.png&#34; alt=&#34;image-20221019235835759&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;再加上一句 AddType application/x-httpd-php .php，配置就完成了&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020000146394.png&#34; alt=&#34;image-20221020000146394&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
-&lt;h5 id=&#34;文件解析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件解析&#34;&gt;#&lt;/a&gt; 文件解析&lt;/h5&gt;
-&lt;p&gt;首先还是先说文件上传中常用的利用方式&lt;/p&gt;
-&lt;p&gt;(8.* 无法使用)&lt;/p&gt;
-&lt;p&gt;在 htaccess 文件中写入如下内容，上传到服务端后再上传一个其他任意后缀的文件，都会被当作 php 文件解析&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;&amp;lt;FilesMatch “.png”&amp;gt;
-SetHandler application&amp;#x2F;x-httpd-php
-&amp;lt;&amp;#x2F;FilesMatch&amp;gt;
-#匹配文件中有haha存在
-SetHandler application&amp;#x2F;x-httpd-php
-#SetHandler强制所有匹配的文件由指定处理程序处理
-AddType application&amp;#x2F;x-httpd-php .txt
-#AddType将给定的文件扩展名映射到指定的内容类型&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020180621597.png&#34; alt=&#34;image-20221020180621597&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;接着聊一聊别的利用方式&lt;/p&gt;
-&lt;h5 id=&#34;源码泄露&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#源码泄露&#34;&gt;#&lt;/a&gt; 源码泄露&lt;/h5&gt;
-&lt;p&gt;当使用 PHP 作为 Apache 模块时，也可以用 Apache 的配置文件（例如 httpd.conf）和 .htaccess 文件中的指令来修改 php 的配置设定&lt;/p&gt;
-&lt;p&gt;我们可以通过 .htaccess 文件的 php_value 指令对 PHP 的 engine 配置选项进行设定，当把 engine 的值设为 off（或 0）时可以禁用一个本目录和子目录中的 PHP 解析，此时将会造成源码泄露：&lt;/p&gt;
-&lt;p&gt;在 htaccess 文件中写入&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value engine 0&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020210713349.png&#34; alt=&#34;image-20221020210713349&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;文件包含&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件包含&#34;&gt;#&lt;/a&gt; 文件包含&lt;/h5&gt;
-&lt;p&gt;htaccess 文件中同样有两个配置 auto_prepend_file 和 auto_append_file，我们可以通过 php_value 来设置，条件是同级目录下有 php 文件&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value auto_append_file &amp;#x2F;etc&amp;#x2F;passwd&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020211527232.png&#34; alt=&#34;image-20221020211527232&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;防御&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御&#34;&gt;#&lt;/a&gt; 防御&lt;/h5&gt;
-&lt;p&gt;最直接的就是过滤 htaccess 后缀&lt;/p&gt;
-&lt;p&gt;对文件重命名（htaccess 文件命名固定）&lt;/p&gt;
-&lt;h2 id=&#34;userini的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#userini的利用&#34;&gt;#&lt;/a&gt; user.ini 的利用&lt;/h2&gt;
-&lt;p&gt;php.ini 是 php 的全局配置文件，只要是以 fastcgi 运行的 php 都可以用这个方法，对整个 web 环境起作用&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018203121751.png&#34; alt=&#34;image-20221018203121751&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;user.ini 是用户自定义的 php.ini，如果在文件上传中没有对其进行限制，那么我们就可以修改 php.ini 的配置，既然是用户自定义，那么肯定要提到权限问题。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018204408073.png&#34; alt=&#34;image-20221018204408073&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;官方文档提到只有在这两种模式的 ini 设置可以被识别，那么就不得不提到什么是 PHP_INI_* 模式&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018175831433.png&#34; alt=&#34;image-20221018175831433&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这些模式决定着一个 PHP 的指令在何时何地，是否能够被设定。手册中的每个指令都有其所属的模式。例如有些指令可以在 PHP 脚本中用 ini_set () 来设定，而有些则只能在 php.ini 或 httpd.conf 中。(上面表格中没有提到的 PHP_INI_PERDIR 也可以在.user.ini 中设置)，user_ini.cache_ttl 控制着重新读取用户 INI 文件的间隔时间。默认是 300 秒（5 分钟）。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022120119084.png&#34; alt=&#34;image-20221022120119084&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;PHP ini_set用来设置php.ini的值，在函数执行的时候生效，脚本结束后，设置失效。无需打开php.ini文件，就能修改配置&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;也就是说我们想利用.user.ini 需要在 PHP_INI_USER 模式（PHP_INI_ALL 模式）中，那么哪些配置可以在 &lt;strong&gt;.user.ini&lt;/strong&gt; 中设定呢？&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;php.ini 配置选项列表（&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3BocC5uZXQvbWFudWFsL3poL2luaS5saXN0LnBocA==&#34;&gt;http://php.net/manual/zh/ini.list.php&lt;/span&gt; ）&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;利用-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用-2&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
-&lt;p&gt;.user.ini 中两个中的配置就是 auto_prepend_file 和 auto_append_file。这两个配置的意思就是：我们指定一个文件（如 1.jpg，对后缀名没有太多要求），那么该文件就会被包含在要执行的 php 文件，相当于在 php 文件中中插入一句：require (./1.jpg)。这两个设置的区别只是在于 auto_prepend_file 是在文件前插入，auto_append_file 在文件最后插入 (文件后插入如果程序以 exit () 结束就无法利用)。&lt;/p&gt;
-&lt;p&gt;demo：&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212902209.png&#34; alt=&#34;image-20221018212902209&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212921996.png&#34; alt=&#34;image-20221018212921996&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;经过测试 php 版本从 5.3 开始到 7.4 都是可用的，php8.* 的没有成功&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018213744658.png&#34; alt=&#34;image-20221018213744658&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;防御-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御-2&#34;&gt;#&lt;/a&gt; 防御&lt;/h3&gt;
-&lt;p&gt;利用条件：&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;服务器脚本语言为PHP 服务器使用CGI
-FastCGI模式
-上传目录下要有可执行的php文件&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;上面提到有 php8.* 是不可用的，那么可使用 php8.* 可用从根源解决问题&lt;/p&gt;
-&lt;p&gt;user.ini 使用这两条条配置也有限制说了是在同目录下的其他.php 文件中包含配置中所指定的文件，也就是说需要该目录下存在.php 文件，不要将文件上传路径设置成为本目录下，存放上传文件的地方不要存有 php 文件（通常在文件上传中，一般是专门有一个目录用来存在图片，可能小概率会存在.php 文件。但是有时可以使用  &lt;code&gt;../&lt;/code&gt;  来将文件上传到其他目录，达到一个利用的效果。）严格限制文件上传的路径&lt;/p&gt;
-&lt;p&gt;再者结束对 ini 扩展名的过滤，对文件内容 auto_prepend_file、auto_append_file 的过滤&lt;/p&gt;
-&lt;h3 id=&#34;补充&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#补充&#34;&gt;#&lt;/a&gt; 补充&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150904047.png&#34; alt=&#34;image-20221022150904047&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150917949.png&#34; alt=&#34;image-20221022150917949&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;了解什么是 FastCGI，首先应该知道什么是 cgi&lt;/p&gt;
-&lt;p&gt;全称是 “通用网关接口”，是一种让客户端（web 浏览器）与 Web 服务器（apache，nginx 等）程序进行通信（数据传输）的协议。&lt;/p&gt;
-&lt;h5 id=&#34;cgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cgi工作流程&#34;&gt;#&lt;/a&gt; CGI 工作流程&lt;/h5&gt;
-&lt;ol&gt;
-&lt;li&gt;每次当 web server 收到 index.php 这种类型的动态请求后，会启动对应的 CGI 程序 - PHP 的解析器；&lt;/li&gt;
-&lt;li&gt;PHP 解析器会解析 php.ini 配置文件，初始化运行环境，然后处理请求，处理完成后将数据按照 CGI 规定的格式返回给 web server 然后退出进程；&lt;/li&gt;
-&lt;li&gt;最后 web server 再把结果返回给浏览器。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;高并发时的性能较差：&lt;br /&gt;
-CGI 程序的每一次 web 请求都会有启动和退出过程 —— 每次 HTTP 服务器遇到动态请求时都需要重新启动脚本解析器来解析 php.ini，重新载入全部 DLL 扩展并重初始化全部数据结构，然后把结果返回给 HTTP 服务器&lt;/p&gt;
-&lt;h5 id=&#34;fastcgi&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi&#34;&gt;#&lt;/a&gt; FastCGI&lt;/h5&gt;
-&lt;p&gt;因 CGI 高并发时性能差，未解决这一问题产生了 FastCGI&lt;/p&gt;
-&lt;h5 id=&#34;fastcgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi工作流程&#34;&gt;#&lt;/a&gt; FastCGI 工作流程&lt;/h5&gt;
-&lt;ol&gt;
-&lt;li&gt;Web Server 启动同时，加载 FastCGI 进程管理器&lt;/li&gt;
-&lt;li&gt;FastCGI 进程管理器读取 php.ini 配置文件，对自身进行初始化，启动多个 CGI 解释器进程 (php-cgi)，等待来自 Web Server 的连接。&lt;/li&gt;
-&lt;li&gt;当 Web Server 接收到客户端请求时，FastCGI 进程管理器选择并连接到一个 CGI 解释器。Web server 会将相关环境变量和标准输入发送到 FastCGI 子进程 php-cgi 进行处理&lt;/li&gt;
-&lt;li&gt;FastCGI 子进程完成处理后将数据按照 CGI 规定的格式返回给 Web Server，然后关闭 FastCGI 子进程或者等待下一次请求。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h5 id=&#34;fastcgi解决方案&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi解决方案&#34;&gt;#&lt;/a&gt; FastCGI 解决方案&lt;/h5&gt;
-&lt;p&gt;Master-Worker 模式&lt;/p&gt;
-&lt;p&gt;Fastcgi 会先启一个 master，解析配置文件，初始化执行环境，然后再启动多个 worker。当请求过来时，master 会传递给一个 worker，然后立即可以接受下一个请求。这样就避免了重复的劳动，效率自然提高。而且当 worker 不够用时，master 可以根据配置预先启动几个 worker 等着；当然空闲 worker 太多时，也会停掉一些，这样就提高了性能，也节约了资源。这就是 fastcgi 的对进程的管理。&lt;/p&gt;
+        <id>https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/</id>
+        <title>域环境基础和搭建</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/"/>
+        <content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h2 id=&#34;内网渗透的流程概述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#内网渗透的流程概述&#34;&gt;#&lt;/a&gt; 内网渗透的流程概述&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907123946766.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;内网渗透攻击的是一个内网内的所有机器&lt;/p&gt;
+&lt;p&gt;目的：控制内网内的所有机器&lt;/p&gt;
+&lt;p&gt;前提：已经控制了内网里的一台机器&lt;/p&gt;
+&lt;h2 id=&#34;什么是工作域和组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是工作域和组&#34;&gt;#&lt;/a&gt; 什么是工作域和组&lt;/h2&gt;
+&lt;p&gt;工作组：工作组是局域网中的一一个概念。它是最常见最简单最普通的资源管理模式，就是将&lt;br /&gt;
+不同的电脑按功能分别列入不同的组中，以方便管理&lt;/p&gt;
+&lt;p&gt;域: Windows 域是计算机网络的一种形式，其中所有用户帐户，计算机，打印机和其他安全&lt;br /&gt;
+主体都在位于称为域控制器的一 - 个或多个中央计算机集群上的中央数据库中注册。身份验证&lt;br /&gt;
+在域控制器上进行。在域中使用计算机的每个人都会收到一个唯一的用户帐户， 然后可以为&lt;br /&gt;
+该帐户分配对该域内资源的访问权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907124937328.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;工作组的缺点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;缺乏集中管理与控制的机制&lt;/li&gt;
+&lt;li&gt;没用集中的统一账户管理&lt;/li&gt;
+&lt;li&gt;只适合小规模用户的使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;控制所有主机的媒介就是找到域控&lt;/p&gt;
+&lt;h2 id=&#34;搭建域环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#搭建域环境&#34;&gt;#&lt;/a&gt; 搭建域环境&lt;/h2&gt;
+&lt;p&gt;实验环境&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;域控 Windows server 2012&lt;/li&gt;
+&lt;li&gt;域内主机 Windows server 2008&lt;/li&gt;
+&lt;li&gt;攻击机 kali&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;先登录域控服务器&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907130458478.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;1-设置服务器&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-设置服务器&#34;&gt;#&lt;/a&gt; 1、设置服务器&lt;/h3&gt;
+&lt;p&gt;在域控服务器中配置 ip 地址（注意：这里 DNS 要与 IP 地址相同，防止找不到域）&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907131025908.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-更改域控服务器的主机名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-更改域控服务器的主机名&#34;&gt;#&lt;/a&gt; 2、更改域控服务器的主机名&lt;/h3&gt;
+&lt;p&gt;将域控主机名改为 DC（do man controller）&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907134746980.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;改完名之后等待域控服务器重启&lt;/p&gt;
+&lt;h3 id=&#34;3-安装域控制器和dns服务&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3-安装域控制器和dns服务&#34;&gt;#&lt;/a&gt; 3、安装域控制器和 DNS 服务&lt;/h3&gt;
+&lt;p&gt;接下来在域控服务器上面安装域控制器和 DNS 服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135517911.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;前面的无脑下一步就行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135603793.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个地方勾选基于角色功能的安装，无脑下一步&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135758204.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个地方安装域控制器和 DNS 服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135857104.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;等待安装完成&lt;/p&gt;
+&lt;p&gt;在服务器管理页面点击黄旗&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140153956.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;现在还没升级成为域控&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140250376.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;升级&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140436007.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里选择添加新林，就是给域控服务器一个名字&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140531418.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里的跟域名要根据常见域名格式，接着无脑下一步&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140814473.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个地方的密码随便设置就行，影响不大，用不上，一波无脑下一步&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140937411.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个地方会检查服务器是否满足升级为域控的先决条件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907141053115.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;检查通过后点击安装，经过重启后域控服务器调试完毕&lt;/p&gt;
+&lt;h3 id=&#34;4-域内主机加入域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#4-域内主机加入域&#34;&gt;#&lt;/a&gt; 4、域内主机加入域&lt;/h3&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142503472.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;先查看 2008 的 ip 看是否能联网&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142214395.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里要将 DNS 服务器地址改为域控服务器的 ip 地址&lt;/p&gt;
+&lt;p&gt;接下来改主机名加入域&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142736819.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;在跳出的弹窗中输入域控服务器的用户名和密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143008660.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;回车后会弹出成功加入的弹窗&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143217220.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;成功入狱（狗头保命）&lt;/p&gt;
+&lt;h2 id=&#34;活动目录ad的作用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#活动目录ad的作用&#34;&gt;#&lt;/a&gt; 活动目录 AD 的作用&lt;/h2&gt;
+&lt;p&gt;可以理解为域控上面的数据库，在里面添加用户才能登录&lt;/p&gt;
+&lt;p&gt;打开域控服务器找到 Action Directory 用户和计算机&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144119881.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里添加一个用户&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144450484.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;设置密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144504724.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144539400.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;使用 2008 成功登录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907145139200.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;使用cobalt-strike远控电脑&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#使用cobalt-strike远控电脑&#34;&gt;#&lt;/a&gt; 使用 Cobalt Strike 远控电脑&lt;/h2&gt;
+&lt;p&gt;把 cs 文件导入攻击机&lt;/p&gt;
+&lt;p&gt;进入目录使用命令 sudo bash teamserver 【kali 的 ip】 密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153453234.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;再开一个端口运行 bash cobaltsrike .sh&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153739520.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;在弹窗中输入 kali 的 ip&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153947445.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;成功进入 cs&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154002888.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;先开一个监听&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154214414.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;点击 add&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154343665.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;输入对应的 ip 和端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154621003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;开始生成木马&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154714949.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154830575.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;使用 python3 起一个 web 环境&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907155034157.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里要关闭防火墙&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-markup&#34; data-language=&#34;markup&#34;&gt;&lt;code class=&#34;language-markup&#34;&gt;先安装
+sudo apt-get install ufw
+
+检查防火墙的状态（默认 inactive） # ufw status
+防火墙版本 # ufw version
+启动ufw防火墙 # ufw enable
+关闭ufw防火墙 # ufw disable
+默认禁止访问所有 # ufw default deny
+开放22/TCP端口 # ufw allow 22/tcp
+开放53端口(tcp/udp) # ufw allow 53
+禁止外部访问 # ufw deny 3306
+删除已经添加过的规则 # ufw delete allow 22
+允许此IP访问所有的本机端口 # ufw allow from 192.168.1.100
+删除上面的规则 # ufw delete allow from 192.168.1.100
+查看规则，显示行号 # ufw status numbered
+删除第三条规则 # ufw delete 3
+关闭ufw # ufw disable
+禁止对8888端口的访问 # ufw deny 8888
+打开来自192.168.0.1的tcp请求的22端口 # ufw allow proto tcp from 192.168.0.1 to any port 22&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204556037.png&#34; alt=&#34;image-20220907204556037&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;将文件下载下来，然后运行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204632334.png&#34; alt=&#34;image-20220907204632334&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;攻击机上成功上线&lt;/p&gt;
 </content>
-        <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
-        <category term="文件上传" scheme="https://blog.xcu.icu/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" />
+        <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
+        <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
         <updated>2022-10-23T16:00:00.000Z</updated>
     </entry>
     <entry>
@@ -5195,145 +5334,6 @@ R（D1，D2，…，Dn）&lt;/p&gt;
 </content>
         <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
         <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-        <updated>2022-10-23T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/</id>
-        <title>域环境基础和搭建</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/"/>
-        <content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2 id=&#34;内网渗透的流程概述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#内网渗透的流程概述&#34;&gt;#&lt;/a&gt; 内网渗透的流程概述&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907123946766.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;内网渗透攻击的是一个内网内的所有机器&lt;/p&gt;
-&lt;p&gt;目的：控制内网内的所有机器&lt;/p&gt;
-&lt;p&gt;前提：已经控制了内网里的一台机器&lt;/p&gt;
-&lt;h2 id=&#34;什么是工作域和组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是工作域和组&#34;&gt;#&lt;/a&gt; 什么是工作域和组&lt;/h2&gt;
-&lt;p&gt;工作组：工作组是局域网中的一一个概念。它是最常见最简单最普通的资源管理模式，就是将&lt;br /&gt;
-不同的电脑按功能分别列入不同的组中，以方便管理&lt;/p&gt;
-&lt;p&gt;域: Windows 域是计算机网络的一种形式，其中所有用户帐户，计算机，打印机和其他安全&lt;br /&gt;
-主体都在位于称为域控制器的一 - 个或多个中央计算机集群上的中央数据库中注册。身份验证&lt;br /&gt;
-在域控制器上进行。在域中使用计算机的每个人都会收到一个唯一的用户帐户， 然后可以为&lt;br /&gt;
-该帐户分配对该域内资源的访问权限&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907124937328.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;工作组的缺点：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;缺乏集中管理与控制的机制&lt;/li&gt;
-&lt;li&gt;没用集中的统一账户管理&lt;/li&gt;
-&lt;li&gt;只适合小规模用户的使用&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;控制所有主机的媒介就是找到域控&lt;/p&gt;
-&lt;h2 id=&#34;搭建域环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#搭建域环境&#34;&gt;#&lt;/a&gt; 搭建域环境&lt;/h2&gt;
-&lt;p&gt;实验环境&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;域控 Windows server 2012&lt;/li&gt;
-&lt;li&gt;域内主机 Windows server 2008&lt;/li&gt;
-&lt;li&gt;攻击机 kali&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;先登录域控服务器&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907130458478.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;1-设置服务器&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-设置服务器&#34;&gt;#&lt;/a&gt; 1、设置服务器&lt;/h3&gt;
-&lt;p&gt;在域控服务器中配置 ip 地址（注意：这里 DNS 要与 IP 地址相同，防止找不到域）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907131025908.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;2-更改域控服务器的主机名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-更改域控服务器的主机名&#34;&gt;#&lt;/a&gt; 2、更改域控服务器的主机名&lt;/h3&gt;
-&lt;p&gt;将域控主机名改为 DC（do man controller）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907134746980.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;改完名之后等待域控服务器重启&lt;/p&gt;
-&lt;h3 id=&#34;3-安装域控制器和dns服务&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3-安装域控制器和dns服务&#34;&gt;#&lt;/a&gt; 3、安装域控制器和 DNS 服务&lt;/h3&gt;
-&lt;p&gt;接下来在域控服务器上面安装域控制器和 DNS 服务&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135517911.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;前面的无脑下一步就行&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135603793.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方勾选基于角色功能的安装，无脑下一步&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135758204.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方安装域控制器和 DNS 服务&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135857104.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;等待安装完成&lt;/p&gt;
-&lt;p&gt;在服务器管理页面点击黄旗&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140153956.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;现在还没升级成为域控&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140250376.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;升级&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140436007.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里选择添加新林，就是给域控服务器一个名字&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140531418.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里的跟域名要根据常见域名格式，接着无脑下一步&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140814473.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方的密码随便设置就行，影响不大，用不上，一波无脑下一步&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140937411.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方会检查服务器是否满足升级为域控的先决条件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907141053115.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;检查通过后点击安装，经过重启后域控服务器调试完毕&lt;/p&gt;
-&lt;h3 id=&#34;4-域内主机加入域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#4-域内主机加入域&#34;&gt;#&lt;/a&gt; 4、域内主机加入域&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142503472.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;先查看 2008 的 ip 看是否能联网&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142214395.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里要将 DNS 服务器地址改为域控服务器的 ip 地址&lt;/p&gt;
-&lt;p&gt;接下来改主机名加入域&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142736819.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在跳出的弹窗中输入域控服务器的用户名和密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143008660.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;回车后会弹出成功加入的弹窗&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143217220.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;成功入狱（狗头保命）&lt;/p&gt;
-&lt;h2 id=&#34;活动目录ad的作用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#活动目录ad的作用&#34;&gt;#&lt;/a&gt; 活动目录 AD 的作用&lt;/h2&gt;
-&lt;p&gt;可以理解为域控上面的数据库，在里面添加用户才能登录&lt;/p&gt;
-&lt;p&gt;打开域控服务器找到 Action Directory 用户和计算机&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144119881.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里添加一个用户&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144450484.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;设置密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144504724.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144539400.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;使用 2008 成功登录&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907145139200.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;使用cobalt-strike远控电脑&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#使用cobalt-strike远控电脑&#34;&gt;#&lt;/a&gt; 使用 Cobalt Strike 远控电脑&lt;/h2&gt;
-&lt;p&gt;把 cs 文件导入攻击机&lt;/p&gt;
-&lt;p&gt;进入目录使用命令 sudo bash teamserver 【kali 的 ip】 密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153453234.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;再开一个端口运行 bash cobaltsrike .sh&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153739520.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在弹窗中输入 kali 的 ip&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153947445.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;成功进入 cs&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154002888.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;先开一个监听&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154214414.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;点击 add&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154343665.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;输入对应的 ip 和端口&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154621003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;开始生成木马&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154714949.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154830575.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;使用 python3 起一个 web 环境&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907155034157.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里要关闭防火墙&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-markup&#34; data-language=&#34;markup&#34;&gt;&lt;code class=&#34;language-markup&#34;&gt;先安装
-sudo apt-get install ufw
-
-检查防火墙的状态（默认 inactive） # ufw status
-防火墙版本 # ufw version
-启动ufw防火墙 # ufw enable
-关闭ufw防火墙 # ufw disable
-默认禁止访问所有 # ufw default deny
-开放22/TCP端口 # ufw allow 22/tcp
-开放53端口(tcp/udp) # ufw allow 53
-禁止外部访问 # ufw deny 3306
-删除已经添加过的规则 # ufw delete allow 22
-允许此IP访问所有的本机端口 # ufw allow from 192.168.1.100
-删除上面的规则 # ufw delete allow from 192.168.1.100
-查看规则，显示行号 # ufw status numbered
-删除第三条规则 # ufw delete 3
-关闭ufw # ufw disable
-禁止对8888端口的访问 # ufw deny 8888
-打开来自192.168.0.1的tcp请求的22端口 # ufw allow proto tcp from 192.168.0.1 to any port 22&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204556037.png&#34; alt=&#34;image-20220907204556037&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;将文件下载下来，然后运行&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204632334.png&#34; alt=&#34;image-20220907204632334&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;攻击机上成功上线&lt;/p&gt;
-</content>
-        <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
-        <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
         <updated>2022-10-23T16:00:00.000Z</updated>
     </entry>
 </feed>
