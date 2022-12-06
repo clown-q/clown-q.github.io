@@ -8,13 +8,223 @@
     <author>
       <name>Clown</name>
     </author>
-    <updated>2022-12-02T16:00:00.000Z</updated>
+    <updated>2022-12-05T16:00:00.000Z</updated>
     <category term="Clown" />
     <category term="Web" />
     <category term="Pwn" />
     <category term="CTF" />
     <category term="AWD" />
     <category term="ACM" />
+    <entry>
+        <id>https://blog.xcu.icu/2022/12/06/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7/</id>
+        <title>数据库安全性</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2022/12/06/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;本篇记录学习数据库系统概论的第四章 -- 数据库安全性&lt;/p&gt;
+&lt;h2 id=&#34;数据库安全性概述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库安全性概述&#34;&gt;#&lt;/a&gt; 数据库安全性概述&lt;/h2&gt;
+&lt;p&gt;数据库的安全性是指保护数据库中的数据，以防止不合法的使用导致数据库中数据的泄露，更改和破坏&lt;/p&gt;
+&lt;h3 id=&#34;数据库的不安全因素&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库的不安全因素&#34;&gt;#&lt;/a&gt; 数据库的不安全因素&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;非授权用户对数据库的恶意存取和破坏&lt;/li&gt;
+&lt;li&gt;数据库中安全或敏感的数据被泄露&lt;/li&gt;
+&lt;li&gt;安全环境的脆弱性&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;安全标准&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#安全标准&#34;&gt;#&lt;/a&gt; 安全标准&lt;/h3&gt;
+&lt;p&gt;桔皮书（TCSEC）和 CC 标准，是最具有影响力的两大准则，当下 CC 已经基本取代了 TCSEC 成为评估信息产品安全性的主要标准&lt;/p&gt;
+&lt;h4 id=&#34;tcsec标准&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#tcsec标准&#34;&gt;#&lt;/a&gt; TCSEC 标准&lt;/h4&gt;
+&lt;p&gt;从四个方面来描述安全性级别划分的指标，即 &lt;code&gt;安全策略&lt;/code&gt; ， &lt;code&gt;责任&lt;/code&gt; ， &lt;code&gt;保证&lt;/code&gt; 和 &lt;code&gt;文档&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;下图是发展史&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206141149070.png&#34; alt=&#34;image-20221206141149070&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;从这四个方面又划分出如下 7 个等级&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206141110402.png&#34; alt=&#34;image-20221206141110402&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;安全级别从上往下越来越低，D 级包含了所有不符合更高标准的系统&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;C1，能够实现用户和数据的分离，进行自主存取控制（DAC）&lt;/li&gt;
+&lt;li&gt;C2，安全产品的最低档，提供受控的存取保护&lt;/li&gt;
+&lt;li&gt;B1，对标记的主体和课题实施强制存取控制（MAC）以及审计等安全机制，被认为是真正意义上的安全产品&lt;/li&gt;
+&lt;li&gt;B2 结构化保护&lt;/li&gt;
+&lt;li&gt;B3，安全域&lt;/li&gt;
+&lt;li&gt;A1，验证设计&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;cc标准&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cc标准&#34;&gt;#&lt;/a&gt; CC 标准&lt;/h4&gt;
+&lt;p&gt;国际公认的表述信息技术安全性的结构，主要由三个部分组成&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;简介和一般模型&lt;/li&gt;
+&lt;li&gt;安全功能要求&lt;/li&gt;
+&lt;li&gt;安全保证要求&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;他的安全级别也是划分为 7 个等级分别对应 TCSEC 安全级别&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206143134148.png&#34; alt=&#34;image-20221206143134148&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;数据库安全性控制&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库安全性控制&#34;&gt;#&lt;/a&gt; 数据库安全性控制&lt;/h2&gt;
+&lt;p&gt;上面所记录仅做了解，接下来是本篇的重心部分&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;再计算机系统中，安全措施是一级一级层层设置的&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206165609085.png&#34; alt=&#34;image-20221206165609085&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这样如上图的一个验证过程&lt;/p&gt;
+&lt;p&gt;数据库安全控制的常用方法&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户身份鉴定&lt;/li&gt;
+&lt;li&gt;存取控制&lt;/li&gt;
+&lt;li&gt;视图&lt;/li&gt;
+&lt;li&gt;审计&lt;/li&gt;
+&lt;li&gt;数据加密&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;用户的身份鉴定&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#用户的身份鉴定&#34;&gt;#&lt;/a&gt; 用户的身份鉴定&lt;/h3&gt;
+&lt;p&gt;用户标识通常由用户名和用户标识号两部分组成&lt;/p&gt;
+&lt;p&gt;常用的身份鉴别方法&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;静态口令鉴别：常用，简单但是安全性低&lt;/li&gt;
+&lt;li&gt;动态口令鉴别：比较安全&lt;/li&gt;
+&lt;li&gt;生物特征鉴别：较高的安全性&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;存取控制&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#存取控制&#34;&gt;#&lt;/a&gt; 存取控制&lt;/h3&gt;
+&lt;p&gt;数据库安全性最重要的一点就是确保只有授权的用户能访问数据库&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;存取控制的机制&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户定义权限&lt;/li&gt;
+&lt;li&gt;合法权限检查&lt;/li&gt;
+&lt;li&gt;二者共同组成了 DBMS 的存取控制子系统&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;自主存取控制&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#自主存取控制&#34;&gt;#&lt;/a&gt; 自主存取控制&lt;/h3&gt;
+&lt;p&gt;通过 SQL 语言的 &lt;code&gt;GRANT&lt;/code&gt; （授予）和 &lt;code&gt;REVOKE&lt;/code&gt; （收回）语句实现，用户的权限组成：数据库对象，操作类型&lt;/p&gt;
+&lt;p&gt;定于用权限，定于用户可以在哪些表上面可以进行哪些操作，下表是关系数据库中的存储权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206174324541.png&#34; alt=&#34;image-20221206174324541&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;授权和权限回收&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#授权和权限回收&#34;&gt;#&lt;/a&gt; 授权和权限回收&lt;/h3&gt;
+&lt;h4 id=&#34;授权&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#授权&#34;&gt;#&lt;/a&gt; 授权&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;GRANT&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;权限&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;权限&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;ON&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象类型&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象名&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象类型&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象名&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;TO&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;用户&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;用户&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;WITH&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;GRANT&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;OPTION&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;/* 又最后一句话的时候证明权限是可以授予给他人的 */&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;把查询Student的权限授予给用户U1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;grant&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;ON&lt;/span&gt; Student &lt;span class=&#34;token keyword&#34;&gt;to&lt;/span&gt; U1&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;把对Student和Course的全部权限授予U2，U3&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;grant&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;All&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;privileges&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;ON&lt;/span&gt; Student&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;Course &lt;span class=&#34;token keyword&#34;&gt;to&lt;/span&gt; U2&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;U3&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;把对SC表的查询权限授予所有用户&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;grant&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;on&lt;/span&gt; SC &lt;span class=&#34;token keyword&#34;&gt;to&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;public&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;把查询Student表和修改Sno的权限授予U4&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;grant&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;update&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Sno&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;on&lt;/span&gt; Student &lt;span class=&#34;token keyword&#34;&gt;to&lt;/span&gt; U4&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;对SC表的INSERT权限授予U5，且可再次授权&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;grant&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;insert&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;on&lt;/span&gt; SC &lt;span class=&#34;token keyword&#34;&gt;to&lt;/span&gt; U5 &lt;span class=&#34;token keyword&#34;&gt;with&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;grant&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;option&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;h4 id=&#34;权限收回&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#权限收回&#34;&gt;#&lt;/a&gt; 权限收回&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;REVOKE&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;权限&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;权限&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;ON&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象类型&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象名&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象类型&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象名&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;用户&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;用户&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;把用户U4修改学号的权限收回&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;revoke&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;update&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Sno&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;ON&lt;/span&gt; Student &lt;span class=&#34;token keyword&#34;&gt;from&lt;/span&gt; U4&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;收回所有用户对表SC的查询权限&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;revoke&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;ON&lt;/span&gt; SC &lt;span class=&#34;token keyword&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;public&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;把用户U5对SC表的Insert权限收回&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;revoke&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;insert&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;on&lt;/span&gt; SC &lt;span class=&#34;token keyword&#34;&gt;from&lt;/span&gt; U5 &lt;span class=&#34;token keyword&#34;&gt;cascade&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#cascade 级联操作，收回 U5 授予出去的权限&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&amp;lt;font color=red&amp;gt; 用户可以自主决定将数据的存取权限授予任何人，决定是否也将授权的权限搜娱给别人，这样的存取控制称为用户自主存取控制 &amp;lt;/font&amp;gt;&lt;/p&gt;
+&lt;h3 id=&#34;数据库角色&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库角色&#34;&gt;#&lt;/a&gt; 数据库角色&lt;/h3&gt;
+&lt;p&gt;数据库角色是数据库权限的集合，为了简化授权过程，为一组具有相同权限的用户创建一个角色&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;角色的创建&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;CREATE&lt;/span&gt; ROLE &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;角色名&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;给角色授权&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;GRANT&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;权限&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;权限&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;ON&lt;/span&gt; 对象名 &lt;span class=&#34;token keyword&#34;&gt;TO&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;角色&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;角色&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将一个角色授予其他的角色或用户&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;GRANT&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;角色&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;角色&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;TO&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;角色&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;用户&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;WITH&lt;/span&gt; ADMIN &lt;span class=&#34;token keyword&#34;&gt;OPTION&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;角色权限的收回&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;REVOKE&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;权限&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;权限&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;ON&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象类型&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;对象名&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;角色&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;角色&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;通过角色来实现将一组权限搜娱一个用户&lt;/code&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;首先创建一个角色 R1&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; role R1&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;然后使用 FRANT 语句，使角色 R1 拥有 Student 表的 SELECT，UPDATE，INSERT 权限&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;grant&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;update&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;insert&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;on&lt;/span&gt; Student &lt;span class=&#34;token keyword&#34;&gt;to&lt;/span&gt; R1&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将这个角色权限授予王平，张明，赵玲，使他们具有角色 R1 所包含的全部权限&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;grant&lt;/span&gt; R1 &lt;span class=&#34;token keyword&#34;&gt;to&lt;/span&gt; 王平&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;张明&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;赵玲&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通过 R1 一次性收回王平的这三个权限&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;revoke&lt;/span&gt; R1 &lt;span class=&#34;token keyword&#34;&gt;from&lt;/span&gt; 王平&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;强取存取控制的方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#强取存取控制的方法&#34;&gt;#&lt;/a&gt; 强取存取控制的方法&lt;/h3&gt;
+&lt;p&gt;自主存取控制缺点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可能存在数据的 “无意泄露”&lt;/li&gt;
+&lt;li&gt;这种机制仅仅通过对数据的存取权限来进行安全控制，而数据本身并无安全性标记&lt;/li&gt;
+&lt;li&gt;解决：对系统控制下的所有主客体实施存取控制策略&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;强制存取控制（MAC）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;保证更高的安全性&lt;/li&gt;
+&lt;li&gt;用户不能直接感知或进行控制&lt;/li&gt;
+&lt;li&gt;适用于对数据有严格而固定密级分类的部门
+&lt;ul&gt;
+&lt;li&gt;军事、政府部门&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;主体是系统中的活动实体&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DBMS 所管理的实际用户&lt;/li&gt;
+&lt;li&gt;代表用户的各进程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;客体是系统中的被动实体，是受主体操纵的&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;文件&lt;/li&gt;
+&lt;li&gt;基表&lt;/li&gt;
+&lt;li&gt;索引&lt;/li&gt;
+&lt;li&gt;视图&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;敏感读标记（Label）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;绝密（Top Secret）&lt;/li&gt;
+&lt;li&gt;机密（Secret）&lt;/li&gt;
+&lt;li&gt;可信（Confidential）&lt;/li&gt;
+&lt;li&gt;公开（public）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;主体的敏感度标记称为许可证级别（Clearabce Level）&lt;/p&gt;
+&lt;p&gt;客体的敏感度标记称为密级（Claccification Level）&lt;/p&gt;
+&lt;p&gt;强制存取控制规则&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;仅当主体的许可证级别大于或等于客体的密级时，该主体才能读取相应的客体&lt;/li&gt;
+&lt;li&gt;仅当主体的许可证级别小于或等于客体的密级时，该主体才能写相应的客体&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;审计&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#审计&#34;&gt;#&lt;/a&gt; 审计&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;审计日志&lt;/p&gt;
+&lt;p&gt;将用户对数据库的所有操作记录都在上面&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DBA 利用审计日记&lt;/p&gt;
+&lt;p&gt;找出非法存取数据的人，时间和内容&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;C2 以上安全级别的 DBMS 必须具有&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;数据加密&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据加密&#34;&gt;#&lt;/a&gt; 数据加密&lt;/h2&gt;
+&lt;p&gt;数据加密&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;防止数据库中数据在存储和传输中失密的有效手段&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;加密的基本思想&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;根据一定的算法将原始数据（明文）变换为不可直接识别的格式（密文）, 从而使得不知道解密算法的人无法获知数据的内容.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;数据加密分类&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;存储加密&lt;/li&gt;
+&lt;li&gt;传输加密&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+        <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
+        <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
+        <updated>2022-12-05T16:00:00.000Z</updated>
+    </entry>
     <entry>
         <id>https://blog.xcu.icu/2022/12/03/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A0%87%E5%87%86%E8%AF%AD%E8%A8%80SQL/</id>
         <title>关系数据库标准语言SQL</title>
@@ -5195,145 +5405,6 @@ R（D1，D2，…，Dn）&lt;/p&gt;
 </content>
         <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
         <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-        <updated>2022-10-23T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/</id>
-        <title>域环境基础和搭建</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/"/>
-        <content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2 id=&#34;内网渗透的流程概述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#内网渗透的流程概述&#34;&gt;#&lt;/a&gt; 内网渗透的流程概述&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907123946766.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;内网渗透攻击的是一个内网内的所有机器&lt;/p&gt;
-&lt;p&gt;目的：控制内网内的所有机器&lt;/p&gt;
-&lt;p&gt;前提：已经控制了内网里的一台机器&lt;/p&gt;
-&lt;h2 id=&#34;什么是工作域和组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是工作域和组&#34;&gt;#&lt;/a&gt; 什么是工作域和组&lt;/h2&gt;
-&lt;p&gt;工作组：工作组是局域网中的一一个概念。它是最常见最简单最普通的资源管理模式，就是将&lt;br /&gt;
-不同的电脑按功能分别列入不同的组中，以方便管理&lt;/p&gt;
-&lt;p&gt;域: Windows 域是计算机网络的一种形式，其中所有用户帐户，计算机，打印机和其他安全&lt;br /&gt;
-主体都在位于称为域控制器的一 - 个或多个中央计算机集群上的中央数据库中注册。身份验证&lt;br /&gt;
-在域控制器上进行。在域中使用计算机的每个人都会收到一个唯一的用户帐户， 然后可以为&lt;br /&gt;
-该帐户分配对该域内资源的访问权限&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907124937328.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;工作组的缺点：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;缺乏集中管理与控制的机制&lt;/li&gt;
-&lt;li&gt;没用集中的统一账户管理&lt;/li&gt;
-&lt;li&gt;只适合小规模用户的使用&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;控制所有主机的媒介就是找到域控&lt;/p&gt;
-&lt;h2 id=&#34;搭建域环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#搭建域环境&#34;&gt;#&lt;/a&gt; 搭建域环境&lt;/h2&gt;
-&lt;p&gt;实验环境&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;域控 Windows server 2012&lt;/li&gt;
-&lt;li&gt;域内主机 Windows server 2008&lt;/li&gt;
-&lt;li&gt;攻击机 kali&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;先登录域控服务器&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907130458478.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;1-设置服务器&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1-设置服务器&#34;&gt;#&lt;/a&gt; 1、设置服务器&lt;/h3&gt;
-&lt;p&gt;在域控服务器中配置 ip 地址（注意：这里 DNS 要与 IP 地址相同，防止找不到域）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907131025908.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;2-更改域控服务器的主机名&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2-更改域控服务器的主机名&#34;&gt;#&lt;/a&gt; 2、更改域控服务器的主机名&lt;/h3&gt;
-&lt;p&gt;将域控主机名改为 DC（do man controller）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907134746980.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;改完名之后等待域控服务器重启&lt;/p&gt;
-&lt;h3 id=&#34;3-安装域控制器和dns服务&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3-安装域控制器和dns服务&#34;&gt;#&lt;/a&gt; 3、安装域控制器和 DNS 服务&lt;/h3&gt;
-&lt;p&gt;接下来在域控服务器上面安装域控制器和 DNS 服务&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135517911.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;前面的无脑下一步就行&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135603793.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方勾选基于角色功能的安装，无脑下一步&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135758204.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方安装域控制器和 DNS 服务&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907135857104.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;等待安装完成&lt;/p&gt;
-&lt;p&gt;在服务器管理页面点击黄旗&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140153956.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;现在还没升级成为域控&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140250376.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;升级&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140436007.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里选择添加新林，就是给域控服务器一个名字&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140531418.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里的跟域名要根据常见域名格式，接着无脑下一步&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140814473.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方的密码随便设置就行，影响不大，用不上，一波无脑下一步&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907140937411.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个地方会检查服务器是否满足升级为域控的先决条件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907141053115.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;检查通过后点击安装，经过重启后域控服务器调试完毕&lt;/p&gt;
-&lt;h3 id=&#34;4-域内主机加入域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#4-域内主机加入域&#34;&gt;#&lt;/a&gt; 4、域内主机加入域&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142503472.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;先查看 2008 的 ip 看是否能联网&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142214395.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里要将 DNS 服务器地址改为域控服务器的 ip 地址&lt;/p&gt;
-&lt;p&gt;接下来改主机名加入域&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907142736819.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在跳出的弹窗中输入域控服务器的用户名和密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143008660.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;回车后会弹出成功加入的弹窗&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907143217220.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;成功入狱（狗头保命）&lt;/p&gt;
-&lt;h2 id=&#34;活动目录ad的作用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#活动目录ad的作用&#34;&gt;#&lt;/a&gt; 活动目录 AD 的作用&lt;/h2&gt;
-&lt;p&gt;可以理解为域控上面的数据库，在里面添加用户才能登录&lt;/p&gt;
-&lt;p&gt;打开域控服务器找到 Action Directory 用户和计算机&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144119881.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里添加一个用户&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144450484.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;设置密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144504724.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907144539400.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;使用 2008 成功登录&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907145139200.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;使用cobalt-strike远控电脑&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#使用cobalt-strike远控电脑&#34;&gt;#&lt;/a&gt; 使用 Cobalt Strike 远控电脑&lt;/h2&gt;
-&lt;p&gt;把 cs 文件导入攻击机&lt;/p&gt;
-&lt;p&gt;进入目录使用命令 sudo bash teamserver 【kali 的 ip】 密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153453234.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;再开一个端口运行 bash cobaltsrike .sh&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153739520.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在弹窗中输入 kali 的 ip&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907153947445.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;成功进入 cs&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154002888.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;先开一个监听&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154214414.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;点击 add&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154343665.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;输入对应的 ip 和端口&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154621003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;开始生成木马&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154714949.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907154830575.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;使用 python3 起一个 web 环境&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907155034157.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里要关闭防火墙&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-markup&#34; data-language=&#34;markup&#34;&gt;&lt;code class=&#34;language-markup&#34;&gt;先安装
-sudo apt-get install ufw
-
-检查防火墙的状态（默认 inactive） # ufw status
-防火墙版本 # ufw version
-启动ufw防火墙 # ufw enable
-关闭ufw防火墙 # ufw disable
-默认禁止访问所有 # ufw default deny
-开放22/TCP端口 # ufw allow 22/tcp
-开放53端口(tcp/udp) # ufw allow 53
-禁止外部访问 # ufw deny 3306
-删除已经添加过的规则 # ufw delete allow 22
-允许此IP访问所有的本机端口 # ufw allow from 192.168.1.100
-删除上面的规则 # ufw delete allow from 192.168.1.100
-查看规则，显示行号 # ufw status numbered
-删除第三条规则 # ufw delete 3
-关闭ufw # ufw disable
-禁止对8888端口的访问 # ufw deny 8888
-打开来自192.168.0.1的tcp请求的22端口 # ufw allow proto tcp from 192.168.0.1 to any port 22&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204556037.png&#34; alt=&#34;image-20220907204556037&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;将文件下载下来，然后运行&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220907204632334.png&#34; alt=&#34;image-20220907204632334&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;攻击机上成功上线&lt;/p&gt;
-</content>
-        <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
-        <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
         <updated>2022-10-23T16:00:00.000Z</updated>
     </entry>
 </feed>
