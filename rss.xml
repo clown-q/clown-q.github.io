@@ -10,14 +10,112 @@
         </author>
         <description>一个妄想全栈web小废物的博客</description>
         <language>zh-CN</language>
-        <pubDate>Tue, 06 Dec 2022 00:00:00 +0800</pubDate>
-        <lastBuildDate>Tue, 06 Dec 2022 00:00:00 +0800</lastBuildDate>
+        <pubDate>Fri, 09 Dec 2022 00:00:00 +0800</pubDate>
+        <lastBuildDate>Fri, 09 Dec 2022 00:00:00 +0800</lastBuildDate>
         <category term="Clown" />
         <category term="Web" />
         <category term="Pwn" />
         <category term="CTF" />
         <category term="AWD" />
         <category term="ACM" />
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2022/12/09/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%8C%E6%95%B4%E6%80%A7/</guid>
+            <title>数据库的完整性</title>
+            <link>https://blog.xcu.icu/2022/12/09/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%8C%E6%95%B4%E6%80%A7/</link>
+            <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
+            <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
+            <pubDate>Fri, 09 Dec 2022 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;以此篇记录数据库系统概述的第五章，数据库完整性的学习&lt;/p&gt;
+&lt;p&gt;数据库的完整性是指数据的&lt;code&gt;正确性&lt;/code&gt;和&lt;code&gt;相容性&lt;/code&gt;，为了维护数据库的完整性，数据库管理系统需要实现如下功能&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;提供定义完整性约束条件的机制&lt;/li&gt;
+&lt;li&gt;提供完整性检查的方法&lt;/li&gt;
+&lt;li&gt;进行违约处理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;实体完整性&#34;&gt;&lt;a href=&#34;#实体完整性&#34; class=&#34;headerlink&#34; title=&#34;实体完整性&#34;&gt;&lt;/a&gt;实体完整性&lt;/h2&gt;&lt;h3 id=&#34;实体完整性定义&#34;&gt;&lt;a href=&#34;#实体完整性定义&#34; class=&#34;headerlink&#34; title=&#34;实体完整性定义&#34;&gt;&lt;/a&gt;实体完整性定义&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;关系模型的实体完整性&lt;ul&gt;
+&lt;li&gt;create table中用PRIMARY KEY定义&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;单属性构成的码有两种说明方法&lt;ul&gt;
+&lt;li&gt;定义为列级约束条件&lt;/li&gt;
+&lt;li&gt;定义为标记约束条件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;对多个属性构成的码只有一种说明方法&lt;ul&gt;
+&lt;li&gt;定义为表级约束条件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;将Student表中的Sno属性定义为码&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; Student &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+    Sno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;PRIMARY&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;KEY&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Sname &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;NOT&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Ssex &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Sage &lt;span class=&#34;token keyword&#34;&gt;smallint&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Sdept &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;将SC表中的Sno、Cno属性组定义为码&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; SC &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+    Sno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;NOT&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Cno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Grade &lt;span class=&#34;token keyword&#34;&gt;smallint&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;primary&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;key&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Sno&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;Cno&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;实体完整性检查和违约处理&#34;&gt;&lt;a href=&#34;#实体完整性检查和违约处理&#34; class=&#34;headerlink&#34; title=&#34;实体完整性检查和违约处理&#34;&gt;&lt;/a&gt;实体完整性检查和违约处理&lt;/h3&gt;&lt;p&gt;插入或对主码进行更行操作时，RDBMS按照实体完整性规则进行检查（通过&lt;code&gt;全表扫描&lt;/code&gt;的方式进行）：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;检查主码是否唯一&lt;/li&gt;
+&lt;li&gt;检查主码的各个属性是否为空&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;参照完整性&#34;&gt;&lt;a href=&#34;#参照完整性&#34; class=&#34;headerlink&#34; title=&#34;参照完整性&#34;&gt;&lt;/a&gt;参照完整性&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;在create table 中用foreign key短语定义哪些列为外码&lt;/li&gt;
+&lt;li&gt;用references短语指明这些外码参照哪些表的主码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;参照完整性的违约处理&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;拒绝执行（默认）&lt;/li&gt;
+&lt;li&gt;级联操作&lt;/li&gt;
+&lt;li&gt;设置为空值&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;用户自定义完整性&#34;&gt;&lt;a href=&#34;#用户自定义完整性&#34; class=&#34;headerlink&#34; title=&#34;用户自定义完整性&#34;&gt;&lt;/a&gt;用户自定义完整性&lt;/h2&gt;&lt;p&gt;用户定义的完整性是针对某一个具体应用的数据必须满足的语义要去，由RDBMS提供，而不必由应用程序承担&lt;/p&gt;
+&lt;h3 id=&#34;属性上的约束条件&#34;&gt;&lt;a href=&#34;#属性上的约束条件&#34; class=&#34;headerlink&#34; title=&#34;属性上的约束条件&#34;&gt;&lt;/a&gt;属性上的约束条件&lt;/h3&gt;&lt;p&gt;CREATE TABLE语句中：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;列值非空（NOT NULL）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;列值唯一（unique）&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;创建部门表DEPT，要去部门名称Dname列取唯一值，部门编号Deptno列为主码&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; DEPT &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+    Deptno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;primary&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Dname &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;unique&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;检查列值是否满足一个布尔表达式（CHAECK）&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;用check短语指定列值应该满足的条件，Student表的Ssex只允许取男或女&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; Student&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+    Sno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;primary&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Sname &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Ssex cahr&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;check&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Ssex &lt;span class=&#34;token operator&#34;&gt;IN&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;男&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;女&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;，
+    Sage &lt;span class=&#34;token keyword&#34;&gt;smallint&lt;/span&gt;，
+    Sdept cahr&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;注：属性上的约束条件检查和违约处理&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;插入元组或者修改属性时，RDBMS检查属性上的约束条件是否被满足，如果不满足则被拒绝执行&lt;/p&gt;
+&lt;h3 id=&#34;元组上的约束条件的定义&#34;&gt;&lt;a href=&#34;#元组上的约束条件的定义&#34; class=&#34;headerlink&#34; title=&#34;元组上的约束条件的定义&#34;&gt;&lt;/a&gt;元组上的约束条件的定义&lt;/h3&gt;&lt;p&gt;与同属性值限制相比，元组级的限制可以设置&lt;code&gt;不同属性&lt;/code&gt;之间的取值的相互约束条件&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;当学生的性别是男的时候，其名字不能以Ms. 开头&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; Student &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+    Sname &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;NOT&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Sno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    Ssex &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;primary&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Sno&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;check&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Ssex&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;女&#39;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;or&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;like&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;Ms.&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;修改需要使用ALTER TABLE语句修改表中的完整性限制，修改时需要先删除原来的约束条件，再增加新的约束条件&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://blog.xcu.icu/2022/12/06/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7/</guid>
             <title>数据库安全性</title>
@@ -5108,306 +5206,6 @@ CGI 程序的每一次 web 请求都会有启动和退出过程 —— 每次 HT
 &lt;h5 id=&#34;fastcgi解决方案&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi解决方案&#34;&gt;#&lt;/a&gt; FastCGI 解决方案&lt;/h5&gt;
 &lt;p&gt;Master-Worker 模式&lt;/p&gt;
 &lt;p&gt;Fastcgi 会先启一个 master，解析配置文件，初始化执行环境，然后再启动多个 worker。当请求过来时，master 会传递给一个 worker，然后立即可以接受下一个请求。这样就避免了重复的劳动，效率自然提高。而且当 worker 不够用时，master 可以根据配置预先启动几个 worker 等着；当然空闲 worker 太多时，也会停掉一些，这样就提高了性能，也节约了资源。这就是 fastcgi 的对进程的管理。&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
-            <title>关系数据库</title>
-            <link>https://blog.xcu.icu/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
-            <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-            <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-            <pubDate>Mon, 24 Oct 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;21关系数据库结构及形式化定义&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#21关系数据库结构及形式化定义&#34;&gt;#&lt;/a&gt; 2.1 关系数据库结构及形式化定义&lt;/h2&gt;
-&lt;h3 id=&#34;211关系&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#211关系&#34;&gt;#&lt;/a&gt; 2.1.1 关系&lt;/h3&gt;
-&lt;p&gt;单一的数据结构 -- 关系&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;现实世界的实体以及实体之间的关系均用关系来表示&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;逻辑结构 --- 二维表&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;从用户角度，关系模型中数据的逻辑结构是一张二维表&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#域&#34;&gt;#&lt;/a&gt; 域&lt;/h4&gt;
-&lt;p&gt;域是一组具有相同数据类型的值的集合&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;整数、实数、自然数&lt;/li&gt;
-&lt;li&gt;某一个范围的数&lt;/li&gt;
-&lt;li&gt;指定长度的字符串集合&lt;/li&gt;
-&lt;li ’男‘，‘女’=&#34;&#34;&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;笛卡尔积&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#笛卡尔积&#34;&gt;#&lt;/a&gt; 笛卡尔积&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;笛卡尔积&lt;/p&gt;
-&lt;p&gt;给定一组域 D1，D2，…，Dn，这些域中可以有相同的。    D1，D2，…，Dn 的笛卡尔积为：    D1×D2×…×Dn ＝ ｛（d1，d2，…，dn）｜diDi，i＝1，2，…，n&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;所有域的所有取值的一个组合&lt;/li&gt;
-&lt;li&gt;不能重复&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;元组&lt;/p&gt;
-&lt;p&gt;笛卡尔积中每一个元素（d1，d2，…，dn）叫作一个 n 元组（n-tuple）或简称元组 (Tuple)&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;分量&lt;/p&gt;
-&lt;p&gt;笛卡尔积元素（d1，d2，…，dn）中的每一个值 di 叫作一个分量&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;基数&lt;/p&gt;
-&lt;p&gt;若 Di（i＝1，2，…，n）为有限集，其基数 (域中所包含的值的个数) 为 mi（i＝1，2，…，n），则 D1×D2×…×Dn 的基数 M 为：&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220918183227871.png&#34; alt=&#34;image-20220918183227871&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;笛卡尔积的表示方法&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;笛卡尔积可以表示为一个二维表&lt;/li&gt;
-&lt;li&gt;表中的每行对应一个元组，表中的每列对应一个域&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;关系&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#关系&#34;&gt;#&lt;/a&gt; 关系&lt;/h4&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;关系&lt;br /&gt;
- D1×D2×…×Dn 的子集叫作在域 D1，D2，…，Dn 上的关系，表示为 ：&lt;br /&gt;
-R（D1，D2，…，Dn）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;关系名&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;关系的目或者度&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;单元关系于二元关系&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;当 n=1 时，称该关系为单元关系或者一元关系&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;关系的表示&lt;/p&gt;
-&lt;p&gt;关系也是一个二维表，表的每行对应一个元组，表的每列对应一个域&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;属性&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;关系中不同列可以对应相同的域&lt;/li&gt;
-&lt;li&gt;为了加以区分，必须对每列起一个名字，称为属性（Attribute）名&lt;/li&gt;
-&lt;li&gt;n 目关系必有 n 个属性&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;码&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;候选码（Candidate key）：若关系中的某一属性组的值能唯一地标识一个元组，则称该属性组为候选码&lt;/li&gt;
-&lt;li&gt;全码（All-key）：关系模式的所有属性是这个关系模式的候选码，称为全码&lt;/li&gt;
-&lt;li&gt;主码（Primary key）：若一个关系有多个候选码，则选定其中一个为主码&lt;/li&gt;
-&lt;li&gt;外部码：不是当前关系的码，但是其它关系的主码&lt;/li&gt;
-&lt;li&gt;主属性：包含在任何候选码中的属性称为主属性。&lt;/li&gt;
-&lt;li&gt;非主属性：不包含在任何侯选码中的属性称为非主属性（ Non-Prime attribute）或非码属性（Non-key attribute）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;三类关系&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;基本关系（基本表或者基表）&lt;/p&gt;
-&lt;p&gt;实际存在的表，是实际存储数据的逻辑表示&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;查询表&lt;/p&gt;
-&lt;p&gt;查询结果对应的表&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;视图表&lt;/p&gt;
-&lt;p&gt;由基本表或者其他识图表导出的表，是虚表，不对应实际的数据&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;基本关系的性质&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;列是同质的&lt;/li&gt;
-&lt;li&gt;不同的列可以出自一个域&lt;br /&gt;
-其中每个列称为一个属性&lt;br /&gt;
-不同的属性要给与不同的属性名&lt;/li&gt;
-&lt;li&gt;列的顺序无所谓，列的次序可以任意交换&lt;/li&gt;
-&lt;li&gt;任意两个元组的候选码不能相同&lt;/li&gt;
-&lt;li&gt;行的顺序无所谓，行的次序可以任意交换&lt;/li&gt;
-&lt;li&gt;分量必须取原子值（最基本的）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;222-关系模式&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-关系模式&#34;&gt;#&lt;/a&gt; 2.2.2、关系模式&lt;/h3&gt;
-&lt;h4 id=&#34;什么是关系模型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是关系模型&#34;&gt;#&lt;/a&gt; 什么是关系模型&lt;/h4&gt;
-&lt;p&gt;关系模式（型）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;对关系的描述&lt;/li&gt;
-&lt;li&gt;静态的稳定的&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系（值）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;关系模式在某一个时刻的状态或者内容&lt;/li&gt;
-&lt;li&gt;动态的，随时间变化的&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系是元组的集合，因此关系模式必须指出这个元组集合的结构，即它由哪些组成，这些属性来自哪些域，以及属性与域之间的映像关系。&lt;/p&gt;
-&lt;h4 id=&#34;定义关系模型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#定义关系模型&#34;&gt;#&lt;/a&gt; 定义关系模型&lt;/h4&gt;
-&lt;p&gt;关系模式可以形式化的表示为：&lt;/p&gt;
-&lt;p&gt;​	R（U，D，DOM，F）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;R       关系名&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;U       组成该关系的属性名集合&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;D       属性组 U 中属性所来自的域&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;DOM  属性向域的映象集合&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;F        属性间的数据依赖关系集合&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系定义模式通常可以简记为&lt;/p&gt;
-&lt;p&gt;R(U)&lt;/p&gt;
-&lt;p&gt;关系模式何关系往往统称为关系&lt;/p&gt;
-&lt;h4 id=&#34;关系模型的存储结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#关系模型的存储结构&#34;&gt;#&lt;/a&gt; 关系模型的存储结构&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;关系模型的逻辑结构 - 表&lt;/li&gt;
-&lt;li&gt;关系模型的物理结构
-&lt;ol&gt;
-&lt;li&gt;有的关系数据库管理中一个表对应一个操作系统文件，将物理数据组织交给操作系统完成；&lt;/li&gt;
-&lt;li&gt;有的关系数据库系统从操作系统那里申请若干个大的文件，自己划分文件空间，组织表，索引等存储结构，并进行存储管理。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;223关系数据库&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#223关系数据库&#34;&gt;#&lt;/a&gt; 2.2.3 关系数据库&lt;/h3&gt;
-&lt;p&gt;在一个给定的应用领域中，所有关系的集合构成一个关系数据库&lt;/p&gt;
-&lt;p&gt;关系数据库也有型和值之分&lt;/p&gt;
-&lt;h2 id=&#34;22关系操作&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#22关系操作&#34;&gt;#&lt;/a&gt; 2.2 关系操作&lt;/h2&gt;
-&lt;h3 id=&#34;221-基本关系操作&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#221-基本关系操作&#34;&gt;#&lt;/a&gt; 2.2.1、基本关系操作&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;常用的关系操作
-&lt;ul&gt;
-&lt;li&gt;查询：选择、投影、连接、除、并、交、差、笛卡尔积&lt;/li&gt;
-&lt;li&gt;数据更新：插入、删除、修改&lt;/li&gt;
-&lt;li&gt;选择、投影、并、差、笛卡尔积是 5 种基本操作&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;关系操作的特点
-&lt;ul&gt;
-&lt;li&gt;集合操作方式：操作的对象和结果都是集合，一次一集合的方式&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;222-关系数据库语言的分类&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#222-关系数据库语言的分类&#34;&gt;#&lt;/a&gt; 2.2.2、关系数据库语言的分类&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;关系代数语言&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;用对关系的运算来表达查询要求&lt;/li&gt;
-&lt;li&gt;代表 ISBL&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;关系演算语言：用谓词来表达查询要求&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;元组关系演算语言&lt;br /&gt;
-谓词变元的基本对象是元组变量&lt;/p&gt;
-&lt;p&gt;代表：APLHA, QUEL&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;域关系演算语言&lt;/p&gt;
-&lt;p&gt;谓词变元的基本对象是域变量&lt;/p&gt;
-&lt;p&gt;代表：QBE&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;介于关系代数何关系演算之间的语言&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;代表 SQL&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;每一个 ISBL 语句都近似于关系代数表达式&lt;br /&gt;
-关系代数、关系演算语言均是抽象的查询语言，这些抽象的语言与具体的关系数据库管理系统中实现的实际语言并不完全一样。但它们能用作评估实际系统中查询语言能力的标准或基础。&lt;/p&gt;
-&lt;h2 id=&#34;23关系的完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#23关系的完整性&#34;&gt;#&lt;/a&gt; 2.3 关系的完整性&lt;/h2&gt;
-&lt;h3 id=&#34;231-关系的三类完整性约束&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#231-关系的三类完整性约束&#34;&gt;#&lt;/a&gt; 2.3.1 关系的三类完整性约束&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;实体完整性何参照完整性&lt;br /&gt;
-关系模型必须满足的完整性约束条件，称为关系的两个不变性，应该由关系系统自动支持&lt;/li&gt;
-&lt;li&gt;用户定义完整性&lt;br /&gt;
-应用领域需要遵循的约束条件，体现了具体领域中的语义约束&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;232-实体完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#232-实体完整性&#34;&gt;#&lt;/a&gt; 2.3.2 实体完整性&lt;/h3&gt;
-&lt;p&gt;(1) 实体完整性规则是针对基本关系而言的。一个基本表通常对应现实世界的一个实体集。&lt;/p&gt;
-&lt;p&gt;(2) 现实世界中的实体是可区分的，即它们具有某种唯一性标识。&lt;/p&gt;
-&lt;p&gt;(3) 关系模型中以主码作为唯一性标识。&lt;/p&gt;
-&lt;p&gt;(4) 主码中的属性即主属性不能取空值。&lt;/p&gt;
-&lt;h3 id=&#34;233-参照完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#233-参照完整性&#34;&gt;#&lt;/a&gt; 2.3.3 参照完整性&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;关系间的引用&lt;/p&gt;
-&lt;p&gt;在关系模型中实体及实体间的联系都是用关系来描     述的，因此可能存在着关系与关系间的引用。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;外码&lt;br /&gt;
-外码：设 F 是基本关系 R 的一个或一组属性，但不是关系 R 的码。如果 F 与基本关系 S 的主码 Ks 相对应，则称 F 是基本关系 R 的外码。&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;基本关系R称为参照关系
-基本关系S称为被参照关系或目标关系&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;参照完整性规则&lt;br /&gt;
-若属性（或属性组）F 是基本关系 R 的外码，它与基本关系 S 的主码 Ks 相对应（基本关系 R 和 S 不一定是不同的关系），则对于 R 中每个元组在 F 上的值必须为：&lt;br /&gt;
-或者取空值（F 的每个属性值均为空值）&lt;br /&gt;
-或者等于 S 中某个元组的主码值&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;234-用户定义的完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#234-用户定义的完整性&#34;&gt;#&lt;/a&gt; 2.3.4 用户定义的完整性&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;针对某一具体关系数据库的约束条件，反映某一具体应用所涉及的数据必须满足的语义要求&lt;/li&gt;
-&lt;li&gt;关系模型应提供定义和检验这类完整性的机制，以便用统一的系统的方法处理它们，而不要由应用程序承担这一功能&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;24关系代数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#24关系代数&#34;&gt;#&lt;/a&gt; 2.4 关系代数&lt;/h2&gt;
-&lt;p&gt;关系代数&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;一种抽象的查询语言&lt;/li&gt;
-&lt;li&gt;用对关系的运算来表达查询&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系代数的三个要素&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;运算对象：关系&lt;/li&gt;
-&lt;li&gt;运算结果：关系&lt;/li&gt;
-&lt;li&gt;运算符：4 类&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;集合运算符（）&amp;lt;img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MjMxNzQ3NTc2NjYucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220923174757666.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220923174757666&amp;quot; style=&amp;quot;zoom: 50%;&amp;quot; /&amp;gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;将关系看成元组的集合&lt;/li&gt;
-&lt;li&gt;运算是从关系的 “水平” 方向即行的角度来进行&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;专门的关系运算符 &amp;lt; img src=&amp;quot;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ub3RlLTEzMTEzMzU0MjcuY29zLmFwLXNoYW5naGFpLm15cWNsb3VkLmNvbS9pbWFnZXMvaW1hZ2UtMjAyMjA5MjMxNzUwMDc3ODYucG5n&#34;&gt;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220923175007786.png&lt;/span&gt;&amp;quot; alt=&amp;quot;image-20220923175007786&amp;quot; style=&amp;quot;zoom:50%;&amp;quot; /&amp;gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;不仅涉及行而且涉及列&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;关系代数运算的分类&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;传统的集合运算&lt;/p&gt;
-&lt;p&gt;并、差、交、广义笛卡尔积&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;专门的关系运算&lt;/p&gt;
-&lt;p&gt;选择、投影、连接、除&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
  ]]></description>
         </item>
     </channel>
