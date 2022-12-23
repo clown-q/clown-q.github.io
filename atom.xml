@@ -8,13 +8,106 @@
     <author>
       <name>Clown</name>
     </author>
-    <updated>2022-12-08T16:00:00.000Z</updated>
+    <updated>2022-12-22T16:00:00.000Z</updated>
     <category term="Clown" />
     <category term="Web" />
     <category term="Pwn" />
     <category term="CTF" />
     <category term="AWD" />
     <category term="ACM" />
+    <entry>
+        <id>https://blog.xcu.icu/2022/12/23/%E5%9F%9F%E5%86%85%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/</id>
+        <title>内网信息收集</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2022/12/23/%E5%9F%9F%E5%86%85%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"/>
+        <content type="html">&lt;h3 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h3&gt;&lt;p&gt;本篇对内网信息收集做一个补充，这里的命令是运行在cs上线的前提下，在命令前要加上shell&lt;/p&gt;
+&lt;h3 id=&#34;控制机信息收集&#34;&gt;&lt;a href=&#34;#控制机信息收集&#34; class=&#34;headerlink&#34; title=&#34;控制机信息收集&#34;&gt;&lt;/a&gt;控制机信息收集&lt;/h3&gt;&lt;h4 id=&#34;网段&#34;&gt;&lt;a href=&#34;#网段&#34; class=&#34;headerlink&#34; title=&#34;网段&#34;&gt;&lt;/a&gt;网段&lt;/h4&gt;&lt;p&gt;这个很简单，使用ipconfig就可以知道ip也就可以知道网段，通过网段可以去扫描其他存活主机&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194008596.png&#34; alt=&#34;image-20221223194008596&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;进程信息&#34;&gt;&lt;a href=&#34;#进程信息&#34; class=&#34;headerlink&#34; title=&#34;进程信息&#34;&gt;&lt;/a&gt;进程信息&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;tasklist&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194159288.png&#34; alt=&#34;image-20221223194159288&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;开机自启&#34;&gt;&lt;a href=&#34;#开机自启&#34; class=&#34;headerlink&#34; title=&#34;开机自启&#34;&gt;&lt;/a&gt;开机自启&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;wmic startup get command,caption&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194454199.png&#34; alt=&#34;image-20221223194454199&#34;&gt;&lt;/p&gt;
+&lt;p&gt;开机自启如果它后面没有引号可以利用它来提权，提到高权限就会很危险，这里仅做信息收集不在展开&lt;/p&gt;
+&lt;h4 id=&#34;开机时间&#34;&gt;&lt;a href=&#34;#开机时间&#34; class=&#34;headerlink&#34; title=&#34;开机时间&#34;&gt;&lt;/a&gt;开机时间&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net statistics workstation&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194903747.png&#34; alt=&#34;image-20221223194903747&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看本地用户&#34;&gt;&lt;a href=&#34;#查看本地用户&#34; class=&#34;headerlink&#34; title=&#34;查看本地用户&#34;&gt;&lt;/a&gt;查看本地用户&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net user&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195008118.png&#34; alt=&#34;image-20221223195008118&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;会话连接情况&#34;&gt;&lt;a href=&#34;#会话连接情况&#34; class=&#34;headerlink&#34; title=&#34;会话连接情况&#34;&gt;&lt;/a&gt;会话连接情况&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;netstat -ano&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195227859.png&#34; alt=&#34;image-20221223195227859&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看补丁信息&#34;&gt;&lt;a href=&#34;#查看补丁信息&#34; class=&#34;headerlink&#34; title=&#34;查看补丁信息&#34;&gt;&lt;/a&gt;查看补丁信息&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;wmic qfe get Caption,Description,HotFixID,InstalledOn&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过这个可以判断一些漏洞有没有被修补&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195521086.png&#34; alt=&#34;image-20221223195521086&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看默认共享&#34;&gt;&lt;a href=&#34;#查看默认共享&#34; class=&#34;headerlink&#34; title=&#34;查看默认共享&#34;&gt;&lt;/a&gt;查看默认共享&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net share&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195825193.png&#34; alt=&#34;image-20221223195825193&#34;&gt;&lt;/p&gt;
+&lt;p&gt;共享是有很多漏洞点控制的&lt;/p&gt;
+&lt;h4 id=&#34;路由信息&#34;&gt;&lt;a href=&#34;#路由信息&#34; class=&#34;headerlink&#34; title=&#34;路由信息&#34;&gt;&lt;/a&gt;路由信息&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;route print&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200054631.png&#34; alt=&#34;image-20221223200054631&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;防火墙信息&#34;&gt;&lt;a href=&#34;#防火墙信息&#34; class=&#34;headerlink&#34; title=&#34;防火墙信息&#34;&gt;&lt;/a&gt;防火墙信息&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net firewall show config&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200348100.png&#34; alt=&#34;image-20221223200348100&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;wifi连接记录&#34;&gt;&lt;a href=&#34;#wifi连接记录&#34; class=&#34;headerlink&#34; title=&#34;wifi连接记录&#34;&gt;&lt;/a&gt;wifi连接记录&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;for &amp;#x2F;f &amp;quot;skip&amp;#x3D;9 tokens&amp;#x3D;1,2 delims&amp;#x3D;:&amp;quot; %i in (&amp;#39;netsh wlan show profiles&amp;#39;) do @echo %j | findstr -i -v echo | netsh wlan show profiles %j key&amp;#x3D;clear&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里因为我搭建的域内服务器没有信息这里放的是我本地的截图&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200840295.png&#34; alt=&#34;image-20221223200840295&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;ARP信息&#34;&gt;&lt;a href=&#34;#ARP信息&#34; class=&#34;headerlink&#34; title=&#34;ARP信息&#34;&gt;&lt;/a&gt;ARP信息&lt;/h4&gt;&lt;p&gt;看还有哪些网段&lt;/p&gt;
+&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;arp -a&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201027450.png&#34; alt=&#34;image-20221223201027450&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看最近打开的文档&#34;&gt;&lt;a href=&#34;#查看最近打开的文档&#34; class=&#34;headerlink&#34; title=&#34;查看最近打开的文档&#34;&gt;&lt;/a&gt;查看最近打开的文档&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;dir %APPDATA%\Microsoft\Windows\Recent&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201310126.png&#34; alt=&#34;image-20221223201310126&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看本地用户组&#34;&gt;&lt;a href=&#34;#查看本地用户组&#34; class=&#34;headerlink&#34; title=&#34;查看本地用户组&#34;&gt;&lt;/a&gt;查看本地用户组&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net localgroup&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201733749.png&#34; alt=&#34;image-20221223201733749&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看组中成员&#34;&gt;&lt;a href=&#34;#查看组中成员&#34; class=&#34;headerlink&#34; title=&#34;查看组中成员&#34;&gt;&lt;/a&gt;查看组中成员&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net localgroup administrators&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201901678.png&#34; alt=&#34;image-20221223201901678&#34;&gt;&lt;/p&gt;
+&lt;p&gt;当电脑加入一个域后，在本地管理员组中有两个默认的管理员，一个是administrator，一个是域里面的domain adminis组。&lt;/p&gt;
+&lt;h3 id=&#34;域内信息收集&#34;&gt;&lt;a href=&#34;#域内信息收集&#34; class=&#34;headerlink&#34; title=&#34;域内信息收集&#34;&gt;&lt;/a&gt;域内信息收集&lt;/h3&gt;&lt;h4 id=&#34;判断是否存在域&#34;&gt;&lt;a href=&#34;#判断是否存在域&#34; class=&#34;headerlink&#34; title=&#34;判断是否存在域&#34;&gt;&lt;/a&gt;判断是否存在域&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;ipconfig &amp;#x2F;all
+systeminfo&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;二者都可，前者目光聚焦于DNS，后者信息很明显&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203436386.png&#34; alt=&#34;image-20221223203436386&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203404441.png&#34; alt=&#34;image-20221223203404441&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看域内上的组&#34;&gt;&lt;a href=&#34;#查看域内上的组&#34; class=&#34;headerlink&#34; title=&#34;查看域内上的组&#34;&gt;&lt;/a&gt;查看域内上的组&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net group &amp;#x2F;domain&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203948352.png&#34; alt=&#34;image-20221223203948352&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看组上的详细成员&#34;&gt;&lt;a href=&#34;#查看组上的详细成员&#34; class=&#34;headerlink&#34; title=&#34;查看组上的详细成员&#34;&gt;&lt;/a&gt;查看组上的详细成员&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net group &amp;quot;domain adminis&amp;quot; &amp;#x2F;domain&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204207707.png&#34; alt=&#34;image-20221223204207707&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;找域控&#34;&gt;&lt;a href=&#34;#找域控&#34; class=&#34;headerlink&#34; title=&#34;找域控&#34;&gt;&lt;/a&gt;找域控&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;nltest &amp;#x2F;DCLIST:liuqi&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204720630.png&#34; alt=&#34;image-20221223204720630&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用这个工具可以找密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204806995.png&#34; alt=&#34;image-20221223204806995&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看远程桌面的凭证&#34;&gt;&lt;a href=&#34;#查看远程桌面的凭证&#34; class=&#34;headerlink&#34; title=&#34;查看远程桌面的凭证&#34;&gt;&lt;/a&gt;查看远程桌面的凭证&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;cmdkey list&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205107289.png&#34; alt=&#34;image-20221223205107289&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我这里没有，登录一下，为后续继续实验铺垫&lt;/p&gt;
+&lt;h4 id=&#34;查看凭证文件的位置&#34;&gt;&lt;a href=&#34;#查看凭证文件的位置&#34; class=&#34;headerlink&#34; title=&#34;查看凭证文件的位置&#34;&gt;&lt;/a&gt;查看凭证文件的位置&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;dir &amp;#x2F;a %userprofile%\appdata\local\microsoft\credentials\*&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205359052.png&#34; alt=&#34;image-20221223205359052&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;破解凭证&#34;&gt;&lt;a href=&#34;#破解凭证&#34; class=&#34;headerlink&#34; title=&#34;破解凭证&#34;&gt;&lt;/a&gt;破解凭证&lt;/h4&gt;&lt;h5 id=&#34;获取guid&#34;&gt;&lt;a href=&#34;#获取guid&#34; class=&#34;headerlink&#34; title=&#34;获取guid&#34;&gt;&lt;/a&gt;获取guid&lt;/h5&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;mimikatz dpapi::cred &amp;#x2F;in:凭证路径&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205642671.png&#34; alt=&#34;image-20221223205642671&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;找到guid对应的key&#34;&gt;&lt;a href=&#34;#找到guid对应的key&#34; class=&#34;headerlink&#34; title=&#34;找到guid对应的key&#34;&gt;&lt;/a&gt;找到guid对应的key&lt;/h5&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;mimikatz sekurlsa::dpapi&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205835271.png&#34; alt=&#34;image-20221223205835271&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;解密凭证&#34;&gt;&lt;a href=&#34;#解密凭证&#34; class=&#34;headerlink&#34; title=&#34;解密凭证&#34;&gt;&lt;/a&gt;解密凭证&lt;/h5&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;mimikatz dpapi::cred &amp;#x2F;in:凭证的文件路径 &amp;#x2F;masterkey:masterkey的值&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223210136351.png&#34; alt=&#34;image-20221223210136351&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
+        <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
+        <updated>2022-12-22T16:00:00.000Z</updated>
+    </entry>
     <entry>
         <id>https://blog.xcu.icu/2022/12/09/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%8C%E6%95%B4%E6%80%A7/</id>
         <title>数据库的完整性</title>
@@ -5081,128 +5174,6 @@ select username from user id&amp;#x3D;$id
 </content>
         <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
         <category term="SQL注入" scheme="https://blog.xcu.icu/tags/SQL%E6%B3%A8%E5%85%A5/" />
-        <updated>2022-10-23T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/</id>
-        <title>user.ini和htaccess文件的利用</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/"/>
-        <content type="html">&lt;h2 id=&#34;htaccess文件的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#htaccess文件的利用&#34;&gt;#&lt;/a&gt; .htaccess 文件的利用&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9saW5rLmppYW5zaHUuY29tLz90PWh0dHA6Ly9odGFjY2Vzcy51dXouY2MvI2FfV1dX&#34;&gt;自动生成.htaccess 的网站&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;分布式配置文件，它里面存放着 apache 服务器配置相关命令，提供了针对目录改变配置的方法，作用范围是当前目录及其子目录&lt;/p&gt;
-&lt;p&gt;使用前，首先要启用 htacces，将 AllowOveride 的配置改为 all&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;AllowOverride 从字面上解释是允许覆盖的意思，即 Apache 允许另一配置文件覆盖现有配置文件。&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;在 AllowOverride 设置为 None 时， .htaccess 文件将被完全忽略。当此指令设置为 All 时，所有具有 “.htaccess” 作用域的指令都允许出现在 .htaccess 文件中。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019211017128.png&#34; alt=&#34;image-20221019211017128&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;问题点一&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#问题点一&#34;&gt;#&lt;/a&gt; 问题点一&lt;/h3&gt;
-&lt;p&gt;PHPStudy 中 AddType application/x-httpd-php 等 Apache 命令之所以在 Apache 的设置文件中设置后未实现目标效果是由于 PHP 的版本不符导致的，但注意这里的 PHP 版本并不是指 PHP7.3.0、PHP7.4.0 这种版本号，也不是适用于 32 位的 PHP、适用于 64 位的 PHP 这种不同机型的版本，而&lt;strong&gt;是 PHP 的 NTS (Non Thread Safe) 与 TS (Thread Safe) 的这种不同版本导致的&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93aW5kb3dzLnBocC5uZXQvZG93bmxvYWQv&#34;&gt;PHP For Windows: Binaries and sources Releases&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019230226348.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;ts(Thread-Safety)&lt;strong&gt; 即&lt;/strong&gt;线程安全&lt;/strong&gt;，多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;nts(None-Thread Safe)&lt;strong&gt; 即&lt;/strong&gt;非线程安全&lt;/strong&gt;，就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的是 脏数据 php 以 fast cgi 方式运行的时候选择这个版本，具有更好的性能；&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4 id=&#34;解决办法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#解决办法&#34;&gt;#&lt;/a&gt; 解决办法&lt;/h4&gt;
-&lt;p&gt;安装 TS 版本的 php，在 apache 配置中设置好&lt;/p&gt;
-&lt;p&gt;在 php 文件夹中将 php.ini-development 文件复制一份命名为 php.ini&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234241421.png&#34; alt=&#34;image-20221019234241421&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;新下载的 php 本来没有现成的 php.ini 文件。只是给了&lt;/p&gt;
-&lt;p&gt;php.ini-development （开发环境用）与 php.ini-production（生产环境用）两个建议。&lt;/p&gt;
-&lt;p&gt;而 php 去加载 php.ini 作为配置文件的。我们更喜欢哪个建议，就把它备份，然后重命名为 php.ini 然后加入自己个性化的配置即可。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234518254.png&#34; alt=&#34;image-20221019234518254&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;打开 php.ini，找到 extension_dir，并把前面的 &amp;quot;;&amp;quot; 符号删掉 (在 php.ini 相当于注释符)，其值改为 &amp;quot;PHP 文件的路径 /ext&amp;quot;。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019234918061.png&#34; alt=&#34;image-20221019234918061&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;他是放 php 扩展的目录，保存后，我们 PHP 就设置完成了，接下来要设置 Apache。&lt;/p&gt;
-&lt;p&gt;来到 PHPStudy 安装 Apache 的目录下，打开 Apache 的配置文件 httpd.conf, 搜索 LoadModule，找到有很多 LoadModule 语句的地方。( &lt;strong&gt;LoadModule：加载特定的 DSO 模块。&lt;/strong&gt;)&lt;/p&gt;
-&lt;p&gt;在末尾加上 LoadModule php7_module &amp;quot;PHP 文件的路径 /php7apache2_4.dll&amp;quot; 和 PHPIniDir &amp;quot;PHP 文件的路径&amp;quot;。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221019235835759.png&#34; alt=&#34;image-20221019235835759&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;再加上一句 AddType application/x-httpd-php .php，配置就完成了&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020000146394.png&#34; alt=&#34;image-20221020000146394&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
-&lt;h5 id=&#34;文件解析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件解析&#34;&gt;#&lt;/a&gt; 文件解析&lt;/h5&gt;
-&lt;p&gt;首先还是先说文件上传中常用的利用方式&lt;/p&gt;
-&lt;p&gt;(8.* 无法使用)&lt;/p&gt;
-&lt;p&gt;在 htaccess 文件中写入如下内容，上传到服务端后再上传一个其他任意后缀的文件，都会被当作 php 文件解析&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;&amp;lt;FilesMatch “.png”&amp;gt;
-SetHandler application&amp;#x2F;x-httpd-php
-&amp;lt;&amp;#x2F;FilesMatch&amp;gt;
-#匹配文件中有haha存在
-SetHandler application&amp;#x2F;x-httpd-php
-#SetHandler强制所有匹配的文件由指定处理程序处理
-AddType application&amp;#x2F;x-httpd-php .txt
-#AddType将给定的文件扩展名映射到指定的内容类型&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020180621597.png&#34; alt=&#34;image-20221020180621597&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;接着聊一聊别的利用方式&lt;/p&gt;
-&lt;h5 id=&#34;源码泄露&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#源码泄露&#34;&gt;#&lt;/a&gt; 源码泄露&lt;/h5&gt;
-&lt;p&gt;当使用 PHP 作为 Apache 模块时，也可以用 Apache 的配置文件（例如 httpd.conf）和 .htaccess 文件中的指令来修改 php 的配置设定&lt;/p&gt;
-&lt;p&gt;我们可以通过 .htaccess 文件的 php_value 指令对 PHP 的 engine 配置选项进行设定，当把 engine 的值设为 off（或 0）时可以禁用一个本目录和子目录中的 PHP 解析，此时将会造成源码泄露：&lt;/p&gt;
-&lt;p&gt;在 htaccess 文件中写入&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value engine 0&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020210713349.png&#34; alt=&#34;image-20221020210713349&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;文件包含&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件包含&#34;&gt;#&lt;/a&gt; 文件包含&lt;/h5&gt;
-&lt;p&gt;htaccess 文件中同样有两个配置 auto_prepend_file 和 auto_append_file，我们可以通过 php_value 来设置，条件是同级目录下有 php 文件&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-htaccess&#34; data-language=&#34;htaccess&#34;&gt;&lt;code class=&#34;language-htaccess&#34;&gt;php_value auto_append_file &amp;#x2F;etc&amp;#x2F;passwd&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221020211527232.png&#34; alt=&#34;image-20221020211527232&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;防御&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御&#34;&gt;#&lt;/a&gt; 防御&lt;/h5&gt;
-&lt;p&gt;最直接的就是过滤 htaccess 后缀&lt;/p&gt;
-&lt;p&gt;对文件重命名（htaccess 文件命名固定）&lt;/p&gt;
-&lt;h2 id=&#34;userini的利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#userini的利用&#34;&gt;#&lt;/a&gt; user.ini 的利用&lt;/h2&gt;
-&lt;p&gt;php.ini 是 php 的全局配置文件，只要是以 fastcgi 运行的 php 都可以用这个方法，对整个 web 环境起作用&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018203121751.png&#34; alt=&#34;image-20221018203121751&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;user.ini 是用户自定义的 php.ini，如果在文件上传中没有对其进行限制，那么我们就可以修改 php.ini 的配置，既然是用户自定义，那么肯定要提到权限问题。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018204408073.png&#34; alt=&#34;image-20221018204408073&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;官方文档提到只有在这两种模式的 ini 设置可以被识别，那么就不得不提到什么是 PHP_INI_* 模式&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018175831433.png&#34; alt=&#34;image-20221018175831433&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这些模式决定着一个 PHP 的指令在何时何地，是否能够被设定。手册中的每个指令都有其所属的模式。例如有些指令可以在 PHP 脚本中用 ini_set () 来设定，而有些则只能在 php.ini 或 httpd.conf 中。(上面表格中没有提到的 PHP_INI_PERDIR 也可以在.user.ini 中设置)，user_ini.cache_ttl 控制着重新读取用户 INI 文件的间隔时间。默认是 300 秒（5 分钟）。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022120119084.png&#34; alt=&#34;image-20221022120119084&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;PHP ini_set用来设置php.ini的值，在函数执行的时候生效，脚本结束后，设置失效。无需打开php.ini文件，就能修改配置&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;也就是说我们想利用.user.ini 需要在 PHP_INI_USER 模式（PHP_INI_ALL 模式）中，那么哪些配置可以在 &lt;strong&gt;.user.ini&lt;/strong&gt; 中设定呢？&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;php.ini 配置选项列表（&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3BocC5uZXQvbWFudWFsL3poL2luaS5saXN0LnBocA==&#34;&gt;http://php.net/manual/zh/ini.list.php&lt;/span&gt; ）&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;利用-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用-2&#34;&gt;#&lt;/a&gt; 利用&lt;/h3&gt;
-&lt;p&gt;.user.ini 中两个中的配置就是 auto_prepend_file 和 auto_append_file。这两个配置的意思就是：我们指定一个文件（如 1.jpg，对后缀名没有太多要求），那么该文件就会被包含在要执行的 php 文件，相当于在 php 文件中中插入一句：require (./1.jpg)。这两个设置的区别只是在于 auto_prepend_file 是在文件前插入，auto_append_file 在文件最后插入 (文件后插入如果程序以 exit () 结束就无法利用)。&lt;/p&gt;
-&lt;p&gt;demo：&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212902209.png&#34; alt=&#34;image-20221018212902209&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018212921996.png&#34; alt=&#34;image-20221018212921996&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;经过测试 php 版本从 5.3 开始到 7.4 都是可用的，php8.* 的没有成功&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221018213744658.png&#34; alt=&#34;image-20221018213744658&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;防御-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防御-2&#34;&gt;#&lt;/a&gt; 防御&lt;/h3&gt;
-&lt;p&gt;利用条件：&lt;/p&gt;
-&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;服务器脚本语言为PHP 服务器使用CGI
-FastCGI模式
-上传目录下要有可执行的php文件&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;上面提到有 php8.* 是不可用的，那么可使用 php8.* 可用从根源解决问题&lt;/p&gt;
-&lt;p&gt;user.ini 使用这两条条配置也有限制说了是在同目录下的其他.php 文件中包含配置中所指定的文件，也就是说需要该目录下存在.php 文件，不要将文件上传路径设置成为本目录下，存放上传文件的地方不要存有 php 文件（通常在文件上传中，一般是专门有一个目录用来存在图片，可能小概率会存在.php 文件。但是有时可以使用  &lt;code&gt;../&lt;/code&gt;  来将文件上传到其他目录，达到一个利用的效果。）严格限制文件上传的路径&lt;/p&gt;
-&lt;p&gt;再者结束对 ini 扩展名的过滤，对文件内容 auto_prepend_file、auto_append_file 的过滤&lt;/p&gt;
-&lt;h3 id=&#34;补充&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#补充&#34;&gt;#&lt;/a&gt; 补充&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150904047.png&#34; alt=&#34;image-20221022150904047&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221022150917949.png&#34; alt=&#34;image-20221022150917949&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;了解什么是 FastCGI，首先应该知道什么是 cgi&lt;/p&gt;
-&lt;p&gt;全称是 “通用网关接口”，是一种让客户端（web 浏览器）与 Web 服务器（apache，nginx 等）程序进行通信（数据传输）的协议。&lt;/p&gt;
-&lt;h5 id=&#34;cgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cgi工作流程&#34;&gt;#&lt;/a&gt; CGI 工作流程&lt;/h5&gt;
-&lt;ol&gt;
-&lt;li&gt;每次当 web server 收到 index.php 这种类型的动态请求后，会启动对应的 CGI 程序 - PHP 的解析器；&lt;/li&gt;
-&lt;li&gt;PHP 解析器会解析 php.ini 配置文件，初始化运行环境，然后处理请求，处理完成后将数据按照 CGI 规定的格式返回给 web server 然后退出进程；&lt;/li&gt;
-&lt;li&gt;最后 web server 再把结果返回给浏览器。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;高并发时的性能较差：&lt;br /&gt;
-CGI 程序的每一次 web 请求都会有启动和退出过程 —— 每次 HTTP 服务器遇到动态请求时都需要重新启动脚本解析器来解析 php.ini，重新载入全部 DLL 扩展并重初始化全部数据结构，然后把结果返回给 HTTP 服务器&lt;/p&gt;
-&lt;h5 id=&#34;fastcgi&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi&#34;&gt;#&lt;/a&gt; FastCGI&lt;/h5&gt;
-&lt;p&gt;因 CGI 高并发时性能差，未解决这一问题产生了 FastCGI&lt;/p&gt;
-&lt;h5 id=&#34;fastcgi工作流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi工作流程&#34;&gt;#&lt;/a&gt; FastCGI 工作流程&lt;/h5&gt;
-&lt;ol&gt;
-&lt;li&gt;Web Server 启动同时，加载 FastCGI 进程管理器&lt;/li&gt;
-&lt;li&gt;FastCGI 进程管理器读取 php.ini 配置文件，对自身进行初始化，启动多个 CGI 解释器进程 (php-cgi)，等待来自 Web Server 的连接。&lt;/li&gt;
-&lt;li&gt;当 Web Server 接收到客户端请求时，FastCGI 进程管理器选择并连接到一个 CGI 解释器。Web server 会将相关环境变量和标准输入发送到 FastCGI 子进程 php-cgi 进行处理&lt;/li&gt;
-&lt;li&gt;FastCGI 子进程完成处理后将数据按照 CGI 规定的格式返回给 Web Server，然后关闭 FastCGI 子进程或者等待下一次请求。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h5 id=&#34;fastcgi解决方案&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#fastcgi解决方案&#34;&gt;#&lt;/a&gt; FastCGI 解决方案&lt;/h5&gt;
-&lt;p&gt;Master-Worker 模式&lt;/p&gt;
-&lt;p&gt;Fastcgi 会先启一个 master，解析配置文件，初始化执行环境，然后再启动多个 worker。当请求过来时，master 会传递给一个 worker，然后立即可以接受下一个请求。这样就避免了重复的劳动，效率自然提高。而且当 worker 不够用时，master 可以根据配置预先启动几个 worker 等着；当然空闲 worker 太多时，也会停掉一些，这样就提高了性能，也节约了资源。这就是 fastcgi 的对进程的管理。&lt;/p&gt;
-</content>
-        <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
-        <category term="文件上传" scheme="https://blog.xcu.icu/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" />
         <updated>2022-10-23T16:00:00.000Z</updated>
     </entry>
 </feed>
