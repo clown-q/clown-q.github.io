@@ -25,90 +25,95 @@
             <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
             <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
             <pubDate>Fri, 23 Dec 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h3 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h3&gt;&lt;p&gt;本篇对内网信息收集做一个补充，这里的命令是运行在cs上线的前提下，在命令前要加上shell&lt;/p&gt;
-&lt;h3 id=&#34;控制机信息收集&#34;&gt;&lt;a href=&#34;#控制机信息收集&#34; class=&#34;headerlink&#34; title=&#34;控制机信息收集&#34;&gt;&lt;/a&gt;控制机信息收集&lt;/h3&gt;&lt;h4 id=&#34;网段&#34;&gt;&lt;a href=&#34;#网段&#34; class=&#34;headerlink&#34; title=&#34;网段&#34;&gt;&lt;/a&gt;网段&lt;/h4&gt;&lt;p&gt;这个很简单，使用ipconfig就可以知道ip也就可以知道网段，通过网段可以去扫描其他存活主机&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194008596.png&#34; alt=&#34;image-20221223194008596&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;进程信息&#34;&gt;&lt;a href=&#34;#进程信息&#34; class=&#34;headerlink&#34; title=&#34;进程信息&#34;&gt;&lt;/a&gt;进程信息&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;tasklist&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194159288.png&#34; alt=&#34;image-20221223194159288&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;开机自启&#34;&gt;&lt;a href=&#34;#开机自启&#34; class=&#34;headerlink&#34; title=&#34;开机自启&#34;&gt;&lt;/a&gt;开机自启&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;wmic startup get command,caption&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194454199.png&#34; alt=&#34;image-20221223194454199&#34;&gt;&lt;/p&gt;
+            <description><![CDATA[ &lt;h3 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h3&gt;
+&lt;p&gt;本篇对内网信息收集做一个补充，这里的命令是运行在 cs 上线的前提下，在命令前要加上 shell&lt;/p&gt;
+&lt;h3 id=&#34;控制机信息收集&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#控制机信息收集&#34;&gt;#&lt;/a&gt; 控制机信息收集&lt;/h3&gt;
+&lt;h4 id=&#34;网段&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#网段&#34;&gt;#&lt;/a&gt; 网段&lt;/h4&gt;
+&lt;p&gt;这个很简单，使用 ipconfig 就可以知道 ip 也就可以知道网段，通过网段可以去扫描其他存活主机&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194008596.png&#34; alt=&#34;image-20221223194008596&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;进程信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#进程信息&#34;&gt;#&lt;/a&gt; 进程信息&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;tasklist&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194159288.png&#34; alt=&#34;image-20221223194159288&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;开机自启&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#开机自启&#34;&gt;#&lt;/a&gt; 开机自启&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;wmic startup get command,caption&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194454199.png&#34; alt=&#34;image-20221223194454199&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;开机自启如果它后面没有引号可以利用它来提权，提到高权限就会很危险，这里仅做信息收集不在展开&lt;/p&gt;
-&lt;h4 id=&#34;开机时间&#34;&gt;&lt;a href=&#34;#开机时间&#34; class=&#34;headerlink&#34; title=&#34;开机时间&#34;&gt;&lt;/a&gt;开机时间&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net statistics workstation&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194903747.png&#34; alt=&#34;image-20221223194903747&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看本地用户&#34;&gt;&lt;a href=&#34;#查看本地用户&#34; class=&#34;headerlink&#34; title=&#34;查看本地用户&#34;&gt;&lt;/a&gt;查看本地用户&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net user&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195008118.png&#34; alt=&#34;image-20221223195008118&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;会话连接情况&#34;&gt;&lt;a href=&#34;#会话连接情况&#34; class=&#34;headerlink&#34; title=&#34;会话连接情况&#34;&gt;&lt;/a&gt;会话连接情况&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;netstat -ano&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195227859.png&#34; alt=&#34;image-20221223195227859&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看补丁信息&#34;&gt;&lt;a href=&#34;#查看补丁信息&#34; class=&#34;headerlink&#34; title=&#34;查看补丁信息&#34;&gt;&lt;/a&gt;查看补丁信息&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;wmic qfe get Caption,Description,HotFixID,InstalledOn&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
+&lt;h4 id=&#34;开机时间&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#开机时间&#34;&gt;#&lt;/a&gt; 开机时间&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net statistics workstation&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194903747.png&#34; alt=&#34;image-20221223194903747&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看本地用户&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看本地用户&#34;&gt;#&lt;/a&gt; 查看本地用户&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net user&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195008118.png&#34; alt=&#34;image-20221223195008118&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;会话连接情况&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#会话连接情况&#34;&gt;#&lt;/a&gt; 会话连接情况&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;netstat -ano&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195227859.png&#34; alt=&#34;image-20221223195227859&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看补丁信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看补丁信息&#34;&gt;#&lt;/a&gt; 查看补丁信息&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;wmic qfe get Caption,Description,HotFixID,InstalledOn&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
 &lt;p&gt;通过这个可以判断一些漏洞有没有被修补&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195521086.png&#34; alt=&#34;image-20221223195521086&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看默认共享&#34;&gt;&lt;a href=&#34;#查看默认共享&#34; class=&#34;headerlink&#34; title=&#34;查看默认共享&#34;&gt;&lt;/a&gt;查看默认共享&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net share&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195825193.png&#34; alt=&#34;image-20221223195825193&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195521086.png&#34; alt=&#34;image-20221223195521086&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看默认共享&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看默认共享&#34;&gt;#&lt;/a&gt; 查看默认共享&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net share&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195825193.png&#34; alt=&#34;image-20221223195825193&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;共享是有很多漏洞点控制的&lt;/p&gt;
-&lt;h4 id=&#34;路由信息&#34;&gt;&lt;a href=&#34;#路由信息&#34; class=&#34;headerlink&#34; title=&#34;路由信息&#34;&gt;&lt;/a&gt;路由信息&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;route print&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200054631.png&#34; alt=&#34;image-20221223200054631&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;防火墙信息&#34;&gt;&lt;a href=&#34;#防火墙信息&#34; class=&#34;headerlink&#34; title=&#34;防火墙信息&#34;&gt;&lt;/a&gt;防火墙信息&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net firewall show config&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200348100.png&#34; alt=&#34;image-20221223200348100&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;wifi连接记录&#34;&gt;&lt;a href=&#34;#wifi连接记录&#34; class=&#34;headerlink&#34; title=&#34;wifi连接记录&#34;&gt;&lt;/a&gt;wifi连接记录&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;for &amp;#x2F;f &amp;quot;skip&amp;#x3D;9 tokens&amp;#x3D;1,2 delims&amp;#x3D;:&amp;quot; %i in (&amp;#39;netsh wlan show profiles&amp;#39;) do @echo %j | findstr -i -v echo | netsh wlan show profiles %j key&amp;#x3D;clear&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
+&lt;h4 id=&#34;路由信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#路由信息&#34;&gt;#&lt;/a&gt; 路由信息&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;route print&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200054631.png&#34; alt=&#34;image-20221223200054631&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;防火墙信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防火墙信息&#34;&gt;#&lt;/a&gt; 防火墙信息&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net firewall show config&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200348100.png&#34; alt=&#34;image-20221223200348100&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;wifi连接记录&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#wifi连接记录&#34;&gt;#&lt;/a&gt; wifi 连接记录&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;for &amp;#x2F;f &amp;quot;skip&amp;#x3D;9 tokens&amp;#x3D;1,2 delims&amp;#x3D;:&amp;quot; %i in (&amp;#39;netsh wlan show profiles&amp;#39;) do @echo %j | findstr -i -v echo | netsh wlan show profiles %j key&amp;#x3D;clear&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
 &lt;p&gt;这里因为我搭建的域内服务器没有信息这里放的是我本地的截图&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200840295.png&#34; alt=&#34;image-20221223200840295&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;ARP信息&#34;&gt;&lt;a href=&#34;#ARP信息&#34; class=&#34;headerlink&#34; title=&#34;ARP信息&#34;&gt;&lt;/a&gt;ARP信息&lt;/h4&gt;&lt;p&gt;看还有哪些网段&lt;/p&gt;
-&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;arp -a&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201027450.png&#34; alt=&#34;image-20221223201027450&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看最近打开的文档&#34;&gt;&lt;a href=&#34;#查看最近打开的文档&#34; class=&#34;headerlink&#34; title=&#34;查看最近打开的文档&#34;&gt;&lt;/a&gt;查看最近打开的文档&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;dir %APPDATA%\Microsoft\Windows\Recent&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201310126.png&#34; alt=&#34;image-20221223201310126&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看本地用户组&#34;&gt;&lt;a href=&#34;#查看本地用户组&#34; class=&#34;headerlink&#34; title=&#34;查看本地用户组&#34;&gt;&lt;/a&gt;查看本地用户组&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net localgroup&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201733749.png&#34; alt=&#34;image-20221223201733749&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看组中成员&#34;&gt;&lt;a href=&#34;#查看组中成员&#34; class=&#34;headerlink&#34; title=&#34;查看组中成员&#34;&gt;&lt;/a&gt;查看组中成员&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net localgroup administrators&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201901678.png&#34; alt=&#34;image-20221223201901678&#34;&gt;&lt;/p&gt;
-&lt;p&gt;当电脑加入一个域后，在本地管理员组中有两个默认的管理员，一个是administrator，一个是域里面的domain adminis组。&lt;/p&gt;
-&lt;h3 id=&#34;域内信息收集&#34;&gt;&lt;a href=&#34;#域内信息收集&#34; class=&#34;headerlink&#34; title=&#34;域内信息收集&#34;&gt;&lt;/a&gt;域内信息收集&lt;/h3&gt;&lt;h4 id=&#34;判断是否存在域&#34;&gt;&lt;a href=&#34;#判断是否存在域&#34; class=&#34;headerlink&#34; title=&#34;判断是否存在域&#34;&gt;&lt;/a&gt;判断是否存在域&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;ipconfig &amp;#x2F;all
-systeminfo&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;二者都可，前者目光聚焦于DNS，后者信息很明显&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203436386.png&#34; alt=&#34;image-20221223203436386&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203404441.png&#34; alt=&#34;image-20221223203404441&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看域内上的组&#34;&gt;&lt;a href=&#34;#查看域内上的组&#34; class=&#34;headerlink&#34; title=&#34;查看域内上的组&#34;&gt;&lt;/a&gt;查看域内上的组&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net group &amp;#x2F;domain&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203948352.png&#34; alt=&#34;image-20221223203948352&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看组上的详细成员&#34;&gt;&lt;a href=&#34;#查看组上的详细成员&#34; class=&#34;headerlink&#34; title=&#34;查看组上的详细成员&#34;&gt;&lt;/a&gt;查看组上的详细成员&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net group &amp;quot;domain adminis&amp;quot; &amp;#x2F;domain&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204207707.png&#34; alt=&#34;image-20221223204207707&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;找域控&#34;&gt;&lt;a href=&#34;#找域控&#34; class=&#34;headerlink&#34; title=&#34;找域控&#34;&gt;&lt;/a&gt;找域控&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;nltest &amp;#x2F;DCLIST:liuqi&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204720630.png&#34; alt=&#34;image-20221223204720630&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200840295.png&#34; alt=&#34;image-20221223200840295&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;arp信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#arp信息&#34;&gt;#&lt;/a&gt; ARP 信息&lt;/h4&gt;
+&lt;p&gt;看还有哪些网段&lt;/p&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;arp -a&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201027450.png&#34; alt=&#34;image-20221223201027450&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看最近打开的文档&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看最近打开的文档&#34;&gt;#&lt;/a&gt; 查看最近打开的文档&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;dir %APPDATA%\Microsoft\Windows\Recent&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201310126.png&#34; alt=&#34;image-20221223201310126&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看本地用户组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看本地用户组&#34;&gt;#&lt;/a&gt; 查看本地用户组&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net localgroup&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201733749.png&#34; alt=&#34;image-20221223201733749&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看组中成员&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看组中成员&#34;&gt;#&lt;/a&gt; 查看组中成员&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net localgroup administrators&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201901678.png&#34; alt=&#34;image-20221223201901678&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;当电脑加入一个域后，在本地管理员组中有两个默认的管理员，一个是 administrator，一个是域里面的 domain adminis 组。&lt;/p&gt;
+&lt;h3 id=&#34;域内信息收集&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#域内信息收集&#34;&gt;#&lt;/a&gt; 域内信息收集&lt;/h3&gt;
+&lt;h4 id=&#34;判断是否存在域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#判断是否存在域&#34;&gt;#&lt;/a&gt; 判断是否存在域&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;ipconfig &amp;#x2F;all
+systeminfo&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;二者都可，前者目光聚焦于 DNS，后者信息很明显&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203436386.png&#34; alt=&#34;image-20221223203436386&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203404441.png&#34; alt=&#34;image-20221223203404441&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看域内上的组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看域内上的组&#34;&gt;#&lt;/a&gt; 查看域内上的组&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net group &amp;#x2F;domain&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203948352.png&#34; alt=&#34;image-20221223203948352&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看组上的详细成员&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看组上的详细成员&#34;&gt;#&lt;/a&gt; 查看组上的详细成员&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;net group &amp;quot;domain adminis&amp;quot; &amp;#x2F;domain&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204207707.png&#34; alt=&#34;image-20221223204207707&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;找域控&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#找域控&#34;&gt;#&lt;/a&gt; 找域控&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;nltest &amp;#x2F;DCLIST:liuqi&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204720630.png&#34; alt=&#34;image-20221223204720630&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;使用这个工具可以找密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204806995.png&#34; alt=&#34;image-20221223204806995&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看远程桌面的凭证&#34;&gt;&lt;a href=&#34;#查看远程桌面的凭证&#34; class=&#34;headerlink&#34; title=&#34;查看远程桌面的凭证&#34;&gt;&lt;/a&gt;查看远程桌面的凭证&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;cmdkey list&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205107289.png&#34; alt=&#34;image-20221223205107289&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204806995.png&#34; alt=&#34;image-20221223204806995&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看远程桌面的凭证&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看远程桌面的凭证&#34;&gt;#&lt;/a&gt; 查看远程桌面的凭证&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;cmdkey list&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205107289.png&#34; alt=&#34;image-20221223205107289&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;我这里没有，登录一下，为后续继续实验铺垫&lt;/p&gt;
-&lt;h4 id=&#34;查看凭证文件的位置&#34;&gt;&lt;a href=&#34;#查看凭证文件的位置&#34; class=&#34;headerlink&#34; title=&#34;查看凭证文件的位置&#34;&gt;&lt;/a&gt;查看凭证文件的位置&lt;/h4&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;dir &amp;#x2F;a %userprofile%\appdata\local\microsoft\credentials\*&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205359052.png&#34; alt=&#34;image-20221223205359052&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;破解凭证&#34;&gt;&lt;a href=&#34;#破解凭证&#34; class=&#34;headerlink&#34; title=&#34;破解凭证&#34;&gt;&lt;/a&gt;破解凭证&lt;/h4&gt;&lt;h5 id=&#34;获取guid&#34;&gt;&lt;a href=&#34;#获取guid&#34; class=&#34;headerlink&#34; title=&#34;获取guid&#34;&gt;&lt;/a&gt;获取guid&lt;/h5&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;mimikatz dpapi::cred &amp;#x2F;in:凭证路径&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205642671.png&#34; alt=&#34;image-20221223205642671&#34;&gt;&lt;/p&gt;
-&lt;h5 id=&#34;找到guid对应的key&#34;&gt;&lt;a href=&#34;#找到guid对应的key&#34; class=&#34;headerlink&#34; title=&#34;找到guid对应的key&#34;&gt;&lt;/a&gt;找到guid对应的key&lt;/h5&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;mimikatz sekurlsa::dpapi&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205835271.png&#34; alt=&#34;image-20221223205835271&#34;&gt;&lt;/p&gt;
-&lt;h5 id=&#34;解密凭证&#34;&gt;&lt;a href=&#34;#解密凭证&#34; class=&#34;headerlink&#34; title=&#34;解密凭证&#34;&gt;&lt;/a&gt;解密凭证&lt;/h5&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;mimikatz dpapi::cred &amp;#x2F;in:凭证的文件路径 &amp;#x2F;masterkey:masterkey的值&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223210136351.png&#34; alt=&#34;image-20221223210136351&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;查看凭证文件的位置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看凭证文件的位置&#34;&gt;#&lt;/a&gt; 查看凭证文件的位置&lt;/h4&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;dir &amp;#x2F;a %userprofile%\appdata\local\microsoft\credentials\*&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205359052.png&#34; alt=&#34;image-20221223205359052&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;破解凭证&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#破解凭证&#34;&gt;#&lt;/a&gt; 破解凭证&lt;/h4&gt;
+&lt;h5 id=&#34;获取guid&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#获取guid&#34;&gt;#&lt;/a&gt; 获取 guid&lt;/h5&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;mimikatz dpapi::cred &amp;#x2F;in:凭证路径&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205642671.png&#34; alt=&#34;image-20221223205642671&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;找到guid对应的key&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#找到guid对应的key&#34;&gt;#&lt;/a&gt; 找到 guid 对应的 key&lt;/h5&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;mimikatz sekurlsa::dpapi&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205835271.png&#34; alt=&#34;image-20221223205835271&#34; /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;解密凭证&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#解密凭证&#34;&gt;#&lt;/a&gt; 解密凭证&lt;/h5&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;mimikatz dpapi::cred &amp;#x2F;in:凭证的文件路径 &amp;#x2F;masterkey:masterkey的值&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223210136351.png&#34; alt=&#34;image-20221223210136351&#34; /&gt;&lt;/p&gt;
  ]]></description>
         </item>
         <item>
@@ -118,53 +123,59 @@ systeminfo&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&
             <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
             <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
             <pubDate>Fri, 09 Dec 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;以此篇记录数据库系统概述的第五章，数据库完整性的学习&lt;/p&gt;
-&lt;p&gt;数据库的完整性是指数据的&lt;code&gt;正确性&lt;/code&gt;和&lt;code&gt;相容性&lt;/code&gt;，为了维护数据库的完整性，数据库管理系统需要实现如下功能&lt;/p&gt;
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;以此篇记录数据库系统概述的第五章，数据库完整性的学习&lt;/p&gt;
+&lt;p&gt;数据库的完整性是指数据的 &lt;code&gt;正确性&lt;/code&gt; 和 &lt;code&gt;相容性&lt;/code&gt; ，为了维护数据库的完整性，数据库管理系统需要实现如下功能&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;提供定义完整性约束条件的机制&lt;/li&gt;
 &lt;li&gt;提供完整性检查的方法&lt;/li&gt;
 &lt;li&gt;进行违约处理&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2 id=&#34;实体完整性&#34;&gt;&lt;a href=&#34;#实体完整性&#34; class=&#34;headerlink&#34; title=&#34;实体完整性&#34;&gt;&lt;/a&gt;实体完整性&lt;/h2&gt;&lt;h3 id=&#34;实体完整性定义&#34;&gt;&lt;a href=&#34;#实体完整性定义&#34; class=&#34;headerlink&#34; title=&#34;实体完整性定义&#34;&gt;&lt;/a&gt;实体完整性定义&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;关系模型的实体完整性&lt;ul&gt;
-&lt;li&gt;create table中用PRIMARY KEY定义&lt;/li&gt;
+&lt;h2 id=&#34;实体完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实体完整性&#34;&gt;#&lt;/a&gt; 实体完整性&lt;/h2&gt;
+&lt;h3 id=&#34;实体完整性定义&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实体完整性定义&#34;&gt;#&lt;/a&gt; 实体完整性定义&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;关系模型的实体完整性
+&lt;ul&gt;
+&lt;li&gt;create table 中用 PRIMARY KEY 定义&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;单属性构成的码有两种说明方法&lt;ul&gt;
+&lt;li&gt;单属性构成的码有两种说明方法
+&lt;ul&gt;
 &lt;li&gt;定义为列级约束条件&lt;/li&gt;
 &lt;li&gt;定义为标记约束条件&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;对多个属性构成的码只有一种说明方法&lt;ul&gt;
+&lt;li&gt;对多个属性构成的码只有一种说明方法
+&lt;ul&gt;
 &lt;li&gt;定义为表级约束条件&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;code&gt;将Student表中的Sno属性定义为码&lt;/code&gt;&lt;/p&gt;
-&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; Student &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; Student &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
     Sno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;PRIMARY&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;KEY&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Sname &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;NOT&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Ssex &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Sage &lt;span class=&#34;token keyword&#34;&gt;smallint&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Sdept &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;将SC表中的Sno、Cno属性组定义为码&lt;/code&gt;&lt;/p&gt;
-&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; SC &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; SC &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
     Sno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;NOT&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Cno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Grade &lt;span class=&#34;token keyword&#34;&gt;smallint&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     &lt;span class=&#34;token keyword&#34;&gt;primary&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;key&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Sno&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;Cno&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;实体完整性检查和违约处理&#34;&gt;&lt;a href=&#34;#实体完整性检查和违约处理&#34; class=&#34;headerlink&#34; title=&#34;实体完整性检查和违约处理&#34;&gt;&lt;/a&gt;实体完整性检查和违约处理&lt;/h3&gt;&lt;p&gt;插入或对主码进行更行操作时，RDBMS按照实体完整性规则进行检查（通过&lt;code&gt;全表扫描&lt;/code&gt;的方式进行）：&lt;/p&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;h3 id=&#34;实体完整性检查和违约处理&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实体完整性检查和违约处理&#34;&gt;#&lt;/a&gt; 实体完整性检查和违约处理&lt;/h3&gt;
+&lt;p&gt;插入或对主码进行更行操作时，RDBMS 按照实体完整性规则进行检查（通过 &lt;code&gt;全表扫描&lt;/code&gt; 的方式进行）：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;检查主码是否唯一&lt;/li&gt;
 &lt;li&gt;检查主码的各个属性是否为空&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;参照完整性&#34;&gt;&lt;a href=&#34;#参照完整性&#34; class=&#34;headerlink&#34; title=&#34;参照完整性&#34;&gt;&lt;/a&gt;参照完整性&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;在create table 中用foreign key短语定义哪些列为外码&lt;/li&gt;
-&lt;li&gt;用references短语指明这些外码参照哪些表的主码&lt;/li&gt;
+&lt;h2 id=&#34;参照完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#参照完整性&#34;&gt;#&lt;/a&gt; 参照完整性&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;在 create table 中用 foreign key 短语定义哪些列为外码&lt;/li&gt;
+&lt;li&gt;用 references 短语指明这些外码参照哪些表的主码&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;参照完整性的违约处理&lt;/p&gt;
 &lt;ul&gt;
@@ -172,41 +183,47 @@ systeminfo&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&
 &lt;li&gt;级联操作&lt;/li&gt;
 &lt;li&gt;设置为空值&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;用户自定义完整性&#34;&gt;&lt;a href=&#34;#用户自定义完整性&#34; class=&#34;headerlink&#34; title=&#34;用户自定义完整性&#34;&gt;&lt;/a&gt;用户自定义完整性&lt;/h2&gt;&lt;p&gt;用户定义的完整性是针对某一个具体应用的数据必须满足的语义要去，由RDBMS提供，而不必由应用程序承担&lt;/p&gt;
-&lt;h3 id=&#34;属性上的约束条件&#34;&gt;&lt;a href=&#34;#属性上的约束条件&#34; class=&#34;headerlink&#34; title=&#34;属性上的约束条件&#34;&gt;&lt;/a&gt;属性上的约束条件&lt;/h3&gt;&lt;p&gt;CREATE TABLE语句中：&lt;/p&gt;
+&lt;h2 id=&#34;用户自定义完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#用户自定义完整性&#34;&gt;#&lt;/a&gt; 用户自定义完整性&lt;/h2&gt;
+&lt;p&gt;用户定义的完整性是针对某一个具体应用的数据必须满足的语义要去，由 RDBMS 提供，而不必由应用程序承担&lt;/p&gt;
+&lt;h3 id=&#34;属性上的约束条件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#属性上的约束条件&#34;&gt;#&lt;/a&gt; 属性上的约束条件&lt;/h3&gt;
+&lt;p&gt;CREATE TABLE 语句中：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;列值非空（NOT NULL）&lt;/p&gt;
+&lt;li&gt;
+&lt;p&gt;列值非空（NOT NULL）&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;p&gt;列值唯一（unique）&lt;/p&gt;
+&lt;li&gt;
+&lt;p&gt;列值唯一（unique）&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;创建部门表DEPT，要去部门名称Dname列取唯一值，部门编号Deptno列为主码&lt;/code&gt;&lt;/p&gt;
-&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; DEPT &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; DEPT &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
     Deptno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;primary&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Dname &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;unique&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;p&gt;检查列值是否满足一个布尔表达式（CHAECK）&lt;/p&gt;
+&lt;li&gt;
+&lt;p&gt;检查列值是否满足一个布尔表达式（CHAECK）&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;用check短语指定列值应该满足的条件，Student表的Ssex只允许取男或女&lt;/code&gt;&lt;/p&gt;
-&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; Student&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; Student&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
     Sno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;primary&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Sname &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Ssex cahr&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;check&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Ssex &lt;span class=&#34;token operator&#34;&gt;IN&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;男&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;女&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;，
     Sage &lt;span class=&#34;token keyword&#34;&gt;smallint&lt;/span&gt;，
     Sdept cahr&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;注：属性上的约束条件检查和违约处理&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;插入元组或者修改属性时，RDBMS检查属性上的约束条件是否被满足，如果不满足则被拒绝执行&lt;/p&gt;
-&lt;h3 id=&#34;元组上的约束条件的定义&#34;&gt;&lt;a href=&#34;#元组上的约束条件的定义&#34; class=&#34;headerlink&#34; title=&#34;元组上的约束条件的定义&#34;&gt;&lt;/a&gt;元组上的约束条件的定义&lt;/h3&gt;&lt;p&gt;与同属性值限制相比，元组级的限制可以设置&lt;code&gt;不同属性&lt;/code&gt;之间的取值的相互约束条件&lt;/p&gt;
+&lt;p&gt;插入元组或者修改属性时，RDBMS 检查属性上的约束条件是否被满足，如果不满足则被拒绝执行&lt;/p&gt;
+&lt;h3 id=&#34;元组上的约束条件的定义&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#元组上的约束条件的定义&#34;&gt;#&lt;/a&gt; 元组上的约束条件的定义&lt;/h3&gt;
+&lt;p&gt;与同属性值限制相比，元组级的限制可以设置 &lt;code&gt;不同属性&lt;/code&gt; 之间的取值的相互约束条件&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;当学生的性别是男的时候，其名字不能以Ms. 开头&lt;/code&gt;&lt;/p&gt;
-&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; Student &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
+&lt;p&gt;&lt;pre class=&#34;line-numbers language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; Student &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
     Sname &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;NOT&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Sno &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     Ssex &lt;span class=&#34;token keyword&#34;&gt;char&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     &lt;span class=&#34;token keyword&#34;&gt;primary&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Sno&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
     &lt;span class=&#34;token keyword&#34;&gt;check&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Ssex&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;女&#39;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;or&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;like&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;Ms.&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;修改需要使用ALTER TABLE语句修改表中的完整性限制，修改时需要先删除原来的约束条件，再增加新的约束条件&lt;/p&gt;
+&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span aria-hidden=&#34;true&#34; class=&#34;line-numbers-rows&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;修改需要使用 ALTER TABLE 语句修改表中的完整性限制，修改时需要先删除原来的约束条件，再增加新的约束条件&lt;/p&gt;
  ]]></description>
         </item>
         <item>
