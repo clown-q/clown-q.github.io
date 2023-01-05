@@ -556,7 +556,7 @@ systeminfo
 &lt;li&gt;单属性构成的码有两种说明方法
 &lt;ul&gt;
 &lt;li&gt;定义为列级约束条件&lt;/li&gt;
-&lt;li&gt;定义为标记约束条件&lt;/li&gt;
+&lt;li&gt;定义为表级约束条件&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;对多个属性构成的码只有一种说明方法
