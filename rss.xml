@@ -511,7 +511,6 @@ if(strlen($code) &amp;lt; 5)&amp;#123;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;长度是 5 位&lt;/p&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717190531729.png&#34; alt=&#34;image-20230717190531729&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;暂时写到这把，后面的就不是 php 的环境了&lt;/p&gt;
  ]]></description>
         </item>
         <item>
