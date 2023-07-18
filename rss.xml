@@ -10,14 +10,118 @@
         </author>
         <description>一个妄想全栈web小废物</description>
         <language>zh-CN</language>
-        <pubDate>Mon, 17 Jul 2023 00:00:00 +0800</pubDate>
-        <lastBuildDate>Mon, 17 Jul 2023 00:00:00 +0800</lastBuildDate>
+        <pubDate>Tue, 18 Jul 2023 00:00:00 +0800</pubDate>
+        <lastBuildDate>Tue, 18 Jul 2023 00:00:00 +0800</lastBuildDate>
         <category term="Clown" />
         <category term="Web" />
         <category term="Pwn" />
         <category term="CTF" />
         <category term="AWD" />
         <category term="ACM" />
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2023/07/18/EvilBox---One%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</guid>
+            <title>EvilBox - One靶机打靶记录</title>
+            <link>https://blog.xcu.icu/2023/07/18/EvilBox---One%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</link>
+            <category term="Vulnhub" scheme="https://blog.xcu.icu/categories/Vulnhub/" />
+            <category term="Vulnhub" scheme="https://blog.xcu.icu/tags/Vulnhub/" />
+            <pubDate>Tue, 18 Jul 2023 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;“关关难过关关过，前路漫漫亦灿灿。日日煎熬日日熬，往事堪堪亦澜澜。”，骚话说完了开始今天了打靶任务&lt;/p&gt;
+&lt;h2 id=&#34;靶机描述&#34;&gt;&lt;a href=&#34;#靶机描述&#34; class=&#34;headerlink&#34; title=&#34;靶机描述&#34;&gt;&lt;/a&gt;靶机描述&lt;/h2&gt;&lt;p&gt;难度等级：中级偏低&lt;/p&gt;
+&lt;p&gt;打靶目标：取得 root 权限&lt;/p&gt;
+&lt;p&gt;涉及攻击方法:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主机发现&lt;/li&gt;
+&lt;li&gt;网络扫描&lt;/li&gt;
+&lt;li&gt;强制访问&lt;/li&gt;
+&lt;li&gt;参数爆破&lt;/li&gt;
+&lt;li&gt;文件包含&lt;/li&gt;
+&lt;li&gt;PHP封装器&lt;/li&gt;
+&lt;li&gt;任意文件读取&lt;/li&gt;
+&lt;li&gt;SSH公钥登录&lt;/li&gt;
+&lt;li&gt;离线密码破解&lt;/li&gt;
+&lt;li&gt;系统权限漏洞利用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虚拟机：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;格式： 虚拟机 （Virtualbox OVA）&lt;/li&gt;
+&lt;li&gt;操作系统： Linux.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;联网：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DHCP 服务：已启用&lt;/li&gt;
+&lt;li&gt;IP 地址自动分配&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;攻击流程&#34;&gt;&lt;a href=&#34;#攻击流程&#34; class=&#34;headerlink&#34; title=&#34;攻击流程&#34;&gt;&lt;/a&gt;攻击流程&lt;/h2&gt;&lt;h3 id=&#34;信息收集&#34;&gt;&lt;a href=&#34;#信息收集&#34; class=&#34;headerlink&#34; title=&#34;信息收集&#34;&gt;&lt;/a&gt;信息收集&lt;/h3&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718155751758.png&#34; alt=&#34;image-20230718155751758&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里扫描到ip为192.168.13.254，接下来扫描开放的接口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718155842513.png&#34; alt=&#34;image-20230718155842513&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接下来协议的发现&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718160051047.png&#34; alt=&#34;image-20230718160051047&#34;&gt;&lt;/p&gt;
+&lt;p&gt;就是老一套的东西，接下来通过浏览器去访问80端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718160308935.png&#34; alt=&#34;image-20230718160308935&#34;&gt;&lt;/p&gt;
+&lt;p&gt; 没有什么能利用的地方，接着去扫描目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718160436987.png&#34; alt=&#34;image-20230718160436987&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里分别访问这几个目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718160810760.png&#34; alt=&#34;image-20230718160810760&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718160905926.png&#34; alt=&#34;image-20230718160905926&#34;&gt;&lt;/p&gt;
+&lt;p&gt;但是这里发现是空的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718164642985.png&#34; alt=&#34;image-20230718164642985&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里进一步路径爆破&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;sudo gobuster dir -u http://192.168.13.254/secret -w /usr/share/seclists/Discovery/Web-Content/directory-list-1.0.txt -x txt,php,html
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718165509161.png&#34; alt=&#34;image-20230718165509161&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;文件包含漏洞利用&#34;&gt;&lt;a href=&#34;#文件包含漏洞利用&#34; class=&#34;headerlink&#34; title=&#34;文件包含漏洞利用&#34;&gt;&lt;/a&gt;文件包含漏洞利用&lt;/h3&gt;&lt;p&gt;这里可以看到，新爆破出来了一个evil.php，这里的暗示已经很明显了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718165631960.png&#34; alt=&#34;image-20230718165631960&#34;&gt;&lt;/p&gt;
+&lt;p&gt;但是这里访问还是没有东西，这里接下来就进行一个参数的爆破&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt:A -w /home/joker/Desktop/1.txt:B -u http://192.168.13.254/secret/evil.php?A=B -fs 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718170700178.png&#34; alt=&#34;image-20230718170700178&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里1.txt是我自己写的一个小字典，这里可以看到当参数为command，值为&amp;#x2F;etc&amp;#x2F;passwd的时候是有回显的，这里去访问尝试一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718170900476.png&#34; alt=&#34;image-20230718170900476&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到，这里是可以直接读取文件，这里去尝试.&amp;#x2F;eval.php&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718171040172.png&#34; alt=&#34;image-20230718171040172&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里发现回显也是空的，这里可以猜测这里是使用了include函数，这里使用php伪协议来读取，先尝试有没有开启远程文件包含，如果有就很简单了&lt;/p&gt;
+&lt;p&gt;这里启动kali上的http服务，用上面的文件包含来包含一个木马文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718171659067.png&#34; alt=&#34;image-20230718171659067&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718171713875.png&#34; alt=&#34;image-20230718171713875&#34;&gt;&lt;/p&gt;
+&lt;p&gt;但是这里很显然失败了，这里可能是远程包含未开启，这里使用伪协议进行文件读取&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718172239263.png&#34; alt=&#34;image-20230718172239263&#34;&gt;&lt;/p&gt;
+&lt;p&gt;解码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718172311460.png&#34; alt=&#34;image-20230718172311460&#34;&gt;&lt;/p&gt;
+&lt;p&gt;很显然刚刚猜测的没有问题，但是这里我没有看见能够进一步利用的点&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718173006388.png&#34; alt=&#34;image-20230718173006388&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;ssh登录&#34;&gt;&lt;a href=&#34;#ssh登录&#34; class=&#34;headerlink&#34; title=&#34;ssh登录&#34;&gt;&lt;/a&gt;ssh登录&lt;/h3&gt;&lt;p&gt;这里可以看到有一个mowre用户，这里很显然要从这里突破，这里又回头去探测了一下ssh连接时的信息&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718173256234.png&#34; alt=&#34;image-20230718173256234&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看见，它可以支持密码和公钥文件，这里可以去读取这个文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718173932714.png&#34; alt=&#34;image-20230718173932714&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里就拿到了这个私钥文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718174234130.png&#34; alt=&#34;image-20230718174234130&#34;&gt;&lt;/p&gt;
+&lt;p&gt;但是这里还有一个密码，这里尝试爆破一下&lt;/p&gt;
+&lt;p&gt;现将文件转化为john能够识别的格式&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718175342641.png&#34; alt=&#34;image-20230718175342641&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里使用john破解&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;john 1 --wordlist=rockyou.txt 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718180455776.png&#34; alt=&#34;image-20230718180455776&#34;&gt;&lt;/p&gt;
+&lt;p&gt;PS:这份密码文档是哪来的请看下图详解&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718180538256.png&#34; alt=&#34;image-20230718180538256&#34;&gt;&lt;/p&gt;
+&lt;p&gt;再去连接&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718182712927.png&#34; alt=&#34;image-20230718182712927&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里就成功拿到一个shell&lt;/p&gt;
+&lt;h3 id=&#34;提权&#34;&gt;&lt;a href=&#34;#提权&#34; class=&#34;headerlink&#34; title=&#34;提权&#34;&gt;&lt;/a&gt;提权&lt;/h3&gt;&lt;p&gt;接下来就是提权到root&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;perl&#34;&gt;find / -writable 2&amp;gt;/dev/null
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718183430018.png&#34; alt=&#34;image-20230718183430018&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里在进一步信息收集的过程中发现，当前用户对&amp;#x2F;etc&amp;#x2F;passwd文件是有可写的权限的，很显然这是不合理的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718183611167.png&#34; alt=&#34;image-20230718183611167&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里看到所有的用户都是可以改写这个文件的，这里就可以更改root用户的密码&lt;/p&gt;
+&lt;p&gt;先生成一个新的密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718185043888.png&#34; alt=&#34;image-20230718185043888&#34;&gt;&lt;/p&gt;
+&lt;p&gt;将这个密码写到passwd文件中&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718185028407.png&#34; alt=&#34;image-20230718185028407&#34;&gt;&lt;/p&gt;
+&lt;p&gt;su&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718185149905.png&#34; alt=&#34;image-20230718185149905&#34;&gt;&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://blog.xcu.icu/2023/07/17/%E5%85%B6%E4%BB%96php%E7%AF%87/</guid>
             <title>CTFshow-web入门其他</title>
@@ -7713,88 +7817,6 @@ echo serialize($a);
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230305134607238.png&#34; alt=&#34;image-20230305134607238&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;后面的跟前面的区别稍微有点大，另起一篇做一个简单的总结&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2023/03/05/%E5%B0%8F%E7%AB%AF%E5%BA%8F%E6%A0%87%E8%AE%B0%E6%B3%95/</guid>
-            <title>小端序标记法</title>
-            <link>https://blog.xcu.icu/2023/03/05/%E5%B0%8F%E7%AB%AF%E5%BA%8F%E6%A0%87%E8%AE%B0%E6%B3%95/</link>
-            <category term="REVERSE" scheme="https://blog.xcu.icu/categories/REVERSE/" />
-            <category term="小端序标记法" scheme="https://blog.xcu.icu/tags/%E5%B0%8F%E7%AB%AF%E5%BA%8F%E6%A0%87%E8%AE%B0%E6%B3%95/" />
-            <pubDate>Sun, 05 Mar 2023 12:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;本篇浅了解一下大端序和小端序&lt;/p&gt;
-&lt;h2 id=&#34;字节序&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#字节序&#34;&gt;#&lt;/a&gt; 字节序&lt;/h2&gt;
-&lt;p&gt;字节序是多字节数据在计算机内存中存储或网络传输时各个数据的存储顺序，主要分为两类，大端序和小端序&lt;/p&gt;
-&lt;p&gt;例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;BYTE b = 0x12;
-WORD w = 0x1234;
-DWORD dw = 0x12345678;
-char str[] = &amp;quot;abcde&amp;quot;;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;上面的例子中一共有四种数据类型，他们大小不同，下表中是同一个数据在不同的字节序保存时的不同&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;TYPE&lt;/th&gt;
-&lt;th&gt;Name&lt;/th&gt;
-&lt;th&gt;SIZE&lt;/th&gt;
-&lt;th&gt;大端序类型&lt;/th&gt;
-&lt;th&gt;小端序类型&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;BYTE&lt;/td&gt;
-&lt;td&gt;b&lt;/td&gt;
-&lt;td&gt;1&lt;/td&gt;
-&lt;td&gt;[12]&lt;/td&gt;
-&lt;td&gt;[12]&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;WORD&lt;/td&gt;
-&lt;td&gt;w&lt;/td&gt;
-&lt;td&gt;2&lt;/td&gt;
-&lt;td&gt;[12][34]&lt;/td&gt;
-&lt;td&gt;[34][12]&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;DWORD&lt;/td&gt;
-&lt;td&gt;dw&lt;/td&gt;
-&lt;td&gt;4&lt;/td&gt;
-&lt;td&gt;[12][34][56][78]&lt;/td&gt;
-&lt;td&gt;[78][56][34][12]&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;char[]&lt;/td&gt;
-&lt;td&gt;str&lt;/td&gt;
-&lt;td&gt;6&lt;/td&gt;
-&lt;td&gt;[61][62][63][64][65][00]&lt;/td&gt;
-&lt;td&gt;[61][62][63][64][65][00]&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;&lt;code&gt;查看ASCLL表，a的ASCLL码的16进制为0x61，这里注意字符串最后是以null结尾&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;当数据类型为 BYTE 的时候，因为长度为 1 个字节，两种字序的字节顺序是一样的，当数据长度为 2 个字节以上的时，大端序采用内存地址地位存数据高位，地址高位存储数据低位，采用一种直观的字节存储循序，而小端序则刚好相反&lt;/p&gt;
-&lt;p&gt;这里第四种情况种，字符串 abcde 被存放在一个字符数组中，因为字符数组在内存中是连续的，故存取顺序与字节序无关&lt;/p&gt;
-&lt;h3 id=&#34;在od中查看小端序&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#在od中查看小端序&#34;&gt;#&lt;/a&gt; 在 OD 中查看小端序&lt;/h3&gt;
-&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;#include &amp;quot;windows.h&amp;quot;
-
-BYTE b = 0x12;
-WORD w = 0x1234;
-DWORD dw = 0x12345678;
-char str[] = &amp;quot;abcde&amp;quot;;
-
-int main(int argc,char *argv[])&amp;#123;
-	byte lb = b;
-	WORD lw = w;
-	DWORD ldw = dw;
-	char *lstr = str;
-	
-	return 0;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230305021739013.png&#34; alt=&#34;image-20230305021739013&#34; /&gt;&lt;/p&gt;
  ]]></description>
         </item>
     </channel>
